@@ -1,0 +1,61 @@
+1.To create a new application based on the IAR Project Template under QuickAI-SDK
+====================================================================
+
+Reference:
+
+https://stackoverflow.com/questions/22020845/renaming-in-iar-embedded-work-bench
+
+Example: 
+ How to create "YourProject" Workspace and Project, from "QuickAI-SDK" Workspace
+
+0.Rename or Make copy of QuickAI-SDK folder to YourProject folder 
+1.Under App/YourProject/IAR_Project directory, copy "QuickAI-SDK.ewp" and rename 
+  it to YourProject.ewp
+2.Open App/YourProject/IAR_Project/QuickAI-SDK.eww
+3.Select Project->Add Existing Project and select YourProject.ewp.
+  It will automatically open YourProject-Debug pannel on left in a tabbed view
+  over QuickAI-SDK - Debug Tab
+5.Select the "QuickAI-SDK" tab at the bottom of the Workspace view,
+  (it is hidden under YourProject-Debug Tab)
+6.Right-click the project (at top root) and select Remove. Only YourProject Tab will be left
+7.Close IAR, and choose "save" the workspace
+8.Rename the .eww, .ewd, .dep, .ewt files to YourProject.eww, YourProject.ewd, etc
+9.Delete all QuickAI-SDK.* files except "QuickAI-SDK.icf" file
+  (If you choose to rename this also, the the projects options for 
+    Linker -> config file should be changed.)
+10.Change to Settings directory and delete all QuickAI-SDK.* files
+11.Open YourProject.eww workspace. Remove  "QuickAI-SDK folder" in YourProject-Debug
+   project and add YourProject folder as new "group. Add src, inc groups
+   under it. Then add files to groups.
+   (Note: Renaming "QuickAI-SDK" as "YourProject" will also work as long as all
+     the source files are relative to the path.) 
+   Make sure the QuickAI-SDK removed else main.c etc files will conflict.
+   
+12.First time when try to download and debug, there may be a message
+   saying,"Un-specified device". Select "Cortex-M4" and OK.
+
+It should download properly.
+
+
+2. To create a new application based on the  GCC Project Template under QuickAI-SDK
+==================================================================================
+
+Example: 
+ How to create "YourProject" makefiles from QuickAI-SDK makefiles
+ 
+ 0.Rename or copy QuickAI-SDK folder to YourProject folder 
+ 1.First do "make clean"
+ 2.Replace "QuickAI-SDK" directory name with "YourProject" in both
+   INCLUDE_DIRS and MAIN_DIR macros, in the file "config-GCC.mk"
+ 3.Change the name of the OUTPUT_FILE in "config-GCC.mk" to YourProject
+ 4.Add new target "YourProject" instead of "QuickAI-SDK" to the target list. 
+   Rename makefile Makefile_QuickAI-SDK in /makefiles directory to 
+   Makefile_YourProject and edit the file to replace MAIN_DIR to YourProject_DIR.
+ 5.Rename QuickAI-SDK.ld file to YourProject.ld
+ 6.Add the new required src and inc files to YourProject/src and YourProject/inc
+
+ 
+ 
+   
+
+ 

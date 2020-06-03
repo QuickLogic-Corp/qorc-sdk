@@ -1,0 +1,34 @@
+# -*- mode: Makefile -*-
+# This is the common stub to be includeed in each make file
+
+D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
+O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.Td
+
+all:$(OBJS)
+
+
+#$(info QLFS SOURCE: ${SRCS})
+#$(info QLFS OBJS: ${OBJS})
+#$(info SRC_PATH: ${SRC_PATH})
+
+
+%.o:%.c
+$(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
+	$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
+	$(CP) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
+	$(RM) $(DEPEND_PATH)$(DIR_SEP)$*.Td 
+	touch $@
+
+-include $(D_FILES))
+	
+
+$(DEPEND_PATH)/%.d: ;
+.PRECIOUS: $(DEPEND_PATH)/%.d
+
+clean:
+	-$(RM) SomeFileSoListIsNotEmpty $(D_FILES)
+	-$(RM) SomeFileSoListIsNotEmpty $(O_FILES)    
+
+
