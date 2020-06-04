@@ -17,7 +17,7 @@
 /*==========================================================
  *
  *    File   : main.c
- *    Purpose: main for QL smart remote test application 
+ *    Purpose: main standalone FPGA applications
  *                                                          
  *=========================================================*/
 
@@ -60,7 +60,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "OP2-QuickFeather-helloworldhw-app";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldhw";
     
     qf_hardwareSetup();                                     // Note: pincfg_table.c has been updated to give FPGA control of LEDs
     nvic_init();
@@ -74,7 +74,7 @@ int main(void)
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic Open Platform 2.0\n");
+    dbg_str( "Quicklogic QuickFeather Standalone FPGA\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );

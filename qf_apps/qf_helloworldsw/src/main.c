@@ -17,7 +17,7 @@
 /*==========================================================
  *
  *    File   : main.c
- *    Purpose: main for QL smart remote test application 
+ *    Purpose: main for QuickFeather helloworldsw and LED/UserButton test
  *                                                          
  *=========================================================*/
 
@@ -62,7 +62,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "OP2-QuickFeather-helloworldsw-app";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldsw";
     
     qf_hardwareSetup();
     nvic_init();
@@ -76,7 +76,7 @@ int main(void)
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic Open Platform 2.0\n");
+    dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );

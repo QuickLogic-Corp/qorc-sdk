@@ -52,16 +52,16 @@ const char *SOFTWARE_VERSION_STR="QF_BL 1.0" ;
 int main(void)
 {
 #if defined(__ICCARM__)
-    SOFTWARE_VERSION_STR = "OP2-QuickFeather-bootloader (IAR)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader (IAR)";
 #elif defined(__GNUC__)
-    SOFTWARE_VERSION_STR = "OP2-QuickFeather-bootloader (GCC)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader (GCC)";
 #endif
 
     qf_hardwareSetup();
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic Open Platform 2.0\n");
+    dbg_str( "Quicklogic QuickFeather Bootloader\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
