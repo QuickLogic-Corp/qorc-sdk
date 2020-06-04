@@ -109,39 +109,40 @@ def main(cmdline):
         summary_add('   Change spec: {}'.format(hdict))
         update_header_file(hfile_path, hdict)
 
-    # IAR Project modifications
-    summary_add("IAR Project modifications : \n")
-     
-    # Remove Debug and settings folders
-    shutil.rmtree ( os.path.join(dest_folder, 'IAR_Project', 'Debug'), ignore_errors=True)
-    shutil.rmtree ( os.path.join(dest_folder, 'IAR_Project', 'settings'), ignore_errors=True )
-
-    # Rename project files
-    files  = glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.ew[dptw]') )
-    files += glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.icf') )
-    files += glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.dep') )
-    dest_basename = os.path.basename(dest_folder)
-    src_basename = os.path.basename(source_folder)
-
-    for file in files:
-      file_dirname = os.path.dirname(file)
-      file_basename = os.path.basename(file)
-      file_head, file_ext = os.path.splitext(file_basename)
-      new_filename = os.path.join(file_dirname, '{}{}'.format(dest_basename, file_ext))
-      if (file_ext.lower() == '.ewp'):
-         src_ewp = file
-         dst_ewp = new_filename
-      elif (file_ext.lower() == '.eww'):
-         src_eww = file
-         dst_eww = new_filename
-      elif (file_ext.lower() == '.dep'):
-         os.remove(file)
-         continue
-      summary_add("Moving {} --> {}".format(file, new_filename))
-      shutil.move( file, new_filename )
-    update_projfile( dst_eww, src_basename, dest_basename )
-    update_projfile( dst_ewp, src_basename, dest_basename )
-    update_projfile( os.path.join(dest_folder, 'IAR_Project', 'cmd_line_build.bat'), src_basename, dest_basename )
+    if (0):
+      # IAR Project modifications
+      summary_add("IAR Project modifications : \n")
+       
+      # Remove Debug and settings folders
+      shutil.rmtree ( os.path.join(dest_folder, 'IAR_Project', 'Debug'), ignore_errors=True)
+      shutil.rmtree ( os.path.join(dest_folder, 'IAR_Project', 'settings'), ignore_errors=True )
+  
+      # Rename project files
+      files  = glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.ew[dptw]') )
+      files += glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.icf') )
+      files += glob.glob( os.path.join(dest_folder, 'IAR_Project', '*.dep') )
+      dest_basename = os.path.basename(dest_folder)
+      src_basename = os.path.basename(source_folder)
+  
+      for file in files:
+        file_dirname = os.path.dirname(file)
+        file_basename = os.path.basename(file)
+        file_head, file_ext = os.path.splitext(file_basename)
+        new_filename = os.path.join(file_dirname, '{}{}'.format(dest_basename, file_ext))
+        if (file_ext.lower() == '.ewp'):
+           src_ewp = file
+           dst_ewp = new_filename
+        elif (file_ext.lower() == '.eww'):
+           src_eww = file
+           dst_eww = new_filename
+        elif (file_ext.lower() == '.dep'):
+           os.remove(file)
+           continue
+        summary_add("Moving {} --> {}".format(file, new_filename))
+        shutil.move( file, new_filename )
+      update_projfile( dst_eww, src_basename, dest_basename )
+      update_projfile( dst_ewp, src_basename, dest_basename )
+      update_projfile( os.path.join(dest_folder, 'IAR_Project', 'cmd_line_build.bat'), src_basename, dest_basename )
 
     # GCC Project modifications
     summary_add("GCC Project modifications : \n")
@@ -154,6 +155,8 @@ def main(cmdline):
     src_makefile = os.path.join(dest_folder, 'GCC_Project', 'config.mk')
     dest_basename = os.path.basename(dest_folder)
     src_basename = os.path.basename(source_folder)
+    print("source folder = {}, source basename= {} ".format( source_folder,  src_basename))
+    print("dest   folder = {}, dest   basename= {} ".format( dest_folder,   dest_basename))
 
     for file in files:
       file_dirname = os.path.dirname(file)
