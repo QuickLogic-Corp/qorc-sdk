@@ -40,4 +40,4 @@ clean:
 	make -f makefiles/Makefile_SysFlash clean
 	make -f makefiles/Makefile_Utils clean
 	make -f makefiles/Makefile_FPGA clean
-	make -f makefiles/Makefile_CLI clean
+	make -f makefiles/Makefile_cli clean
