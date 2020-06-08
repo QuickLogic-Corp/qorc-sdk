@@ -34,91 +34,12 @@
 #include "fpga_loader.h"
 #include "eoss3_hal_pads.h"
 #include "eoss3_hal_pad_config.h"
+#include "eoss3_hal_FPGA_usbserial.h"
 #include "dbg_uart.h"
 
 extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
 extern void read_flash(unsigned char *start_address, int length, unsigned char *destination);
 extern void toggle_downloading_led(int toggle_time_msec);
-/*
-* The USB FPGA IP directly accesses the LEDs.
-*/
-static void setup_led_fpga_pins(void)
-{
-    // Configure led pins for FPGA 
-    PadConfig padcfg;
-    
-    //output pins 
-    padcfg.ucCtrl = PAD_CTRL_SRC_FPGA;
-    padcfg.ucMode = PAD_MODE_OUTPUT_EN;
-    padcfg.ucPull = PAD_NOPULL;
-    padcfg.ucDrv = PAD_DRV_STRENGHT_4MA;
-    padcfg.ucSpeed = PAD_SLEW_RATE_SLOW;
-    padcfg.ucSmtTrg = PAD_SMT_TRIG_DIS;
-
-    // Pad 18 -- blue LED 
-    padcfg.ucPin = PAD_18;
-    padcfg.ucFunc = PAD18_FUNC_SEL_FBIO_18;
-    HAL_PAD_Reconfig(&padcfg);
-    
-    //Pad 21 -- green LED 
-    padcfg.ucPin = PAD_21;
-    padcfg.ucFunc = PAD21_FUNC_SEL_FBIO_21;
-    HAL_PAD_Reconfig(&padcfg);
-    
-    //Pad 22 -- red LED 
-    padcfg.ucPin = PAD_22;
-    padcfg.ucFunc = PAD22_FUNC_SEL_FBIO_22;
-    HAL_PAD_Reconfig(&padcfg);
-}
-
-/*
-* The USB FPGA IP directly accesses the SPI Flash.
-* For that the SPI master pins have to reconfigured to be used
-* by FPGA before loading the FPGA.
-*/
-static void setup_spim_fpga_pins(void)
-{
-    // Configure SPI master the pads
-    PadConfig padcfg;
-    
-    //output pins 
-    padcfg.ucCtrl = PAD_CTRL_SRC_FPGA;
-    padcfg.ucMode = PAD_MODE_OUTPUT_EN;
-    padcfg.ucPull = PAD_NOPULL;
-    padcfg.ucDrv = PAD_DRV_STRENGHT_4MA;
-    padcfg.ucSpeed = PAD_SLEW_RATE_SLOW;
-    padcfg.ucSmtTrg = PAD_SMT_TRIG_DIS;
-
-    // Pad 34 -- SPI Master CLK
-    padcfg.ucPin = PAD_34;
-    padcfg.ucFunc = PAD34_FUNC_SEL_FBIO_34;
-    HAL_PAD_Reconfig(&padcfg);
-    
-    //Pad 38 -- SPI Master MOSI
-    padcfg.ucPin = PAD_38;
-    padcfg.ucFunc = PAD38_FUNC_SEL_FBIO_38;
-    HAL_PAD_Reconfig(&padcfg);
-    
-    //Pad 39 -- SPI Master SSn1
-    padcfg.ucPin = PAD_39;
-    padcfg.ucFunc = PAD39_FUNC_SEL_FBIO_39;
-    HAL_PAD_Reconfig(&padcfg);
-    
-    //input pins
-    padcfg.ucMode = PAD_MODE_INPUT_EN;
-    //padcfg.ucPull = PAD_PULLUP;
-
-    padcfg.ucDrv = 0;
-    padcfg.ucSpeed = 0;
-    padcfg.ucSmtTrg = 0;
-    
-    //Pad 36 -- SPI Master MISO
-    padcfg.ucPin = PAD_36;
-    padcfg.ucFunc = PAD36_FUNC_SEL_FBIO_36;
-    HAL_PAD_Reconfig(&padcfg);
-    
-  return;
-}
 
 /*
 * This computes the CRC32 on the USB FPGA code loaded into RAM.
@@ -169,10 +90,6 @@ int load_usb_flasher(void)
   //check crc
   if(check_fpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
-  
-  //change the SPI master pins for use by FPGA
-  setup_spim_fpga_pins();
-  setup_led_fpga_pins();
 
   S3x_Clk_Disable(S3X_FB_21_CLK);
   S3x_Clk_Disable(S3X_FB_16_CLK);
@@ -182,28 +99,14 @@ int load_usb_flasher(void)
 
   //load the FPGA from RAM
   load_fpga(image_size, (uint32_t *)bufPtr);
-
-  S3x_Clk_Set_Rate(S3X_FB_21_CLK, 48*1000*1000);
-  S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12*1000*1000);
-  S3x_Clk_Enable(S3X_FB_21_CLK);
-  S3x_Clk_Enable(S3X_FB_16_CLK);
+  HAL_usbserial_init(false);              // Start USB serial not using interrupts
+  for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
 
   // remind what to do when done programming
   dbg_str("FPGA Programmed\nPresss Reset button after flashing ..\n");
   //wait for the reset button to be pressed
-  while(1)
-  {
-     vTaskDelay(5*1000);
-
-     /* Check FPGA interrupt 0 status */
-     int int0status = INTR_CTRL->FB_INTR_RAW & 1;
-     if (int0status)
-     {
-         /* "boot sent" command received from USB-to-Flash reset the CPU  */
-         dbg_str("Boot command received resetting...");
-         NVIC_SystemReset();
-     }
-  }
+  program_flash();
+  NVIC_SystemReset();
 
   //return BL_ERROR;
 }

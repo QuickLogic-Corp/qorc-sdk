@@ -43,7 +43,7 @@
 #include "cli.h"
 
 #include "fpga_loader.h"    // API for loading FPGA
-#include "fpga.h"           // FPGA bitstream to load into FPGA
+#include "usb2serial_bit.h"           // FPGA bitstream to load into FPGA
 
 extern const struct cli_cmd_entry my_main_menu[];
 
