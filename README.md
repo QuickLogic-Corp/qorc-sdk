@@ -35,6 +35,20 @@ repository using
     $ git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
     $ pip3 install tinyfpgab
     ```
+    
+    On Ubuntu the lsusb command should display something similar to the following:
+    ```
+    $ lsusb
+    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.
+    ```
+    If the OpenMoko device is not present (it could also have ID 1d50:6130) then run the following commands.
+    ```
+    $ pip3 install apio
+    $ apio drivers --serial-enable
+    Serial drivers enabled
+    Unplug and reconnect your board
+    ```
     Recommend adding an alias to simplify programming:
     ```
     $ echo 'alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga_programmer-gui.py"' >> ~/.bashrc
@@ -213,7 +227,7 @@ This section describes how to build and run the qf_helloworldsw project.
 [QORC-HDK]: https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/
 [ARM GNU GCC toolchain]: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm
 [IAR Embedded Workbench]: https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm
-[TinyFPGA programmer]: TBD
+[TinyFPGA programmer]: https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application
 [Tera Term]: https://ttssh2.osdn.jp/
 [putty]: https://putty.org/
 [GNU make 3.8.1]: https://sourceforge.net/projects/gnuwin32/files/make/3.81/
