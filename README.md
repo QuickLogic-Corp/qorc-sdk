@@ -74,7 +74,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
   1. Navigate to qf_helloworldsw build folder and run make  
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldsw/GCC_projects  
+     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
      $ make 
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
@@ -111,14 +111,14 @@ This section describes how to build and run the qf_helloworldsw project.
        Note that if you are level 0, you can access submenu elements by typing `submenuname submenu action`, which is what we did earlier when we typed `diag red`
 
 ## Example \#1b: M4 only – modify qf_helloworldsw
-  1. Using the editor of your choice, edit `qorcsdk/qf_apps/qf_helloworldsw/src/main.c`.
+  1. Using the editor of your choice, edit `qorc-sdk/qf_apps/qf_helloworldsw/src/main.c`.
      Change the line  
      ```dbg_str(“\n\nHello world !!\n\n”)```  
      to say something else. Save the changes
 
   2. Now naviagte to qf_helloworldsw build folder and run make.
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldsw/GCC_projects  
+     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
      $ make
      ```
 
@@ -135,7 +135,7 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldhw/GCC_projects
+     $ cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
      $ make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
