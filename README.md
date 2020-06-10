@@ -35,6 +35,20 @@ repository using
     $ git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
     $ pip3 install tinyfpgab
     ```
+    
+    On Ubuntu the lsusb command should display something similar to the following:
+    ```
+    $ lsusb
+    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.
+    ```
+    If the OpenMoko device is not present (it could also have ID 1d50:6130) then run the following commands.
+    ```
+    $ pip3 install apio
+    $ apio drivers --serial-enable
+    Serial drivers enabled
+    Unplug and reconnect your board
+    ```
     Recommend adding an alias to simplify programming:
     ```
     $ echo 'alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga_programmer-gui.py"' >> ~/.bashrc
@@ -60,7 +74,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
   1. Navigate to qf_helloworldsw build folder and run make  
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldsw/GCC_projects  
+     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
      $ make 
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
@@ -97,14 +111,14 @@ This section describes how to build and run the qf_helloworldsw project.
        Note that if you are level 0, you can access submenu elements by typing `submenuname submenu action`, which is what we did earlier when we typed `diag red`
 
 ## Example \#1b: M4 only – modify qf_helloworldsw
-  1. Using the editor of your choice, edit `qorcsdk/qf_apps/qf_helloworldsw/src/main.c`.
+  1. Using the editor of your choice, edit `qorc-sdk/qf_apps/qf_helloworldsw/src/main.c`.
      Change the line  
      ```dbg_str(“\n\nHello world !!\n\n”)```  
      to say something else. Save the changes
 
   2. Now naviagte to qf_helloworldsw build folder and run make.
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldsw/GCC_projects  
+     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
      $ make
      ```
 
@@ -121,7 +135,7 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     $ cd qorcsdk/qf_apps/qf_helloworldhw/GCC_projects
+     $ cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
      $ make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
@@ -213,7 +227,7 @@ This section describes how to build and run the qf_helloworldsw project.
 [QORC-HDK]: https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/
 [ARM GNU GCC toolchain]: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm
 [IAR Embedded Workbench]: https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm
-[TinyFPGA programmer]: TBD
+[TinyFPGA programmer]: https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application
 [Tera Term]: https://ttssh2.osdn.jp/
 [putty]: https://putty.org/
 [GNU make 3.8.1]: https://sourceforge.net/projects/gnuwin32/files/make/3.81/
