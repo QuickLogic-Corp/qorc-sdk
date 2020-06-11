@@ -1,4 +1,4 @@
-#OUT_SRCS:=$(wildcard $(OUTPUT_PATH)/*.o )
+#OUT_OBJS:=$(wildcard $(OUTPUT_PATH)/*.o )
 
 all: $(OUTPUT_PATH)/*.o
 	@echo Linking ...

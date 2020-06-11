@@ -125,6 +125,7 @@ export DIR_SEP=/
 #Configuration options for GNU Linux GCC Toolchain
 export MKDIR=mkdir -p
 export RM=-rm -f
+export RMDIR=-rm -rf
 export LS=ls
 export CP=cp
 export MV=mv
