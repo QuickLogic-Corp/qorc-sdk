@@ -51,7 +51,7 @@ repository using
     ```
     Recommend adding an alias to simplify programming:
     ```
-    $ echo 'alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga_programmer-gui.py"' >> ~/.bashrc
+    $ echo 'alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"' >> ~/.bashrc
     $ source ~/.bashrc
     ```
 * Terminal application program such as: [putty]

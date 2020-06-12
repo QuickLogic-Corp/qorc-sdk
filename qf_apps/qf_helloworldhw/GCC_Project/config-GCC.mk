@@ -67,7 +67,7 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
             ${DASH_G} -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
-            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).out" -lm\
+            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
     -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math 
 
 

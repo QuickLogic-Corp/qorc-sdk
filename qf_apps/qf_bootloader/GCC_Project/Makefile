@@ -12,7 +12,7 @@ all: _makedirs_ external_srcs appdir
 	-${MKDIR} $(OUTPUT_PATH)$(DIR_SEP)bin
 	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin $(OUTPUT_PATH)$(DIR_SEP)bin
 	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).map $(OUTPUT_PATH)$(DIR_SEP)bin
-	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).out $(OUTPUT_PATH)$(DIR_SEP)bin
+	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf $(OUTPUT_PATH)$(DIR_SEP)bin
 
 _makedirs_:
 	@-${MKDIR} ${DEPEND_PATH}

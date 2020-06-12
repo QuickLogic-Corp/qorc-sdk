@@ -34,7 +34,7 @@
 #include "fpga_loader.h"
 #include "eoss3_hal_pads.h"
 #include "eoss3_hal_pad_config.h"
-#include "eoss3_hal_FPGA_usbserial.h"
+#include "eoss3_hal_fpga_usbserial.h"
 #include "dbg_uart.h"
 
 extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
