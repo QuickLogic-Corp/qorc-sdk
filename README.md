@@ -29,7 +29,7 @@ repository using
       sudo apt-get update     
       sudo apt-get install gcc-arm-embedded  
       ```
-  * Gateware
+* Gateware
     - QuickLogic Symbiflow: Refer [QuickLogic Symbiflow] to install the QuickLogic Symbiflow toolchain
     
 ### Utilities
