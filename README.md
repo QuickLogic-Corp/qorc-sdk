@@ -4,7 +4,7 @@ QuickLogic Open Reconfigurable Computing (QORC) SDK provides components needed
 to get started on the QuickLogic's EOSS3 device and open source development boards
 such as Quickfeather. 
 
-Currently, following boards are supported:
+Currently, the following boards are supported:
 * [Quickfeather Development Kit][QORC-HDK]
 
 ## Getting started on Quickfeather board
@@ -15,7 +15,7 @@ development kit.
 
 Install the items listed in Pre-requisites section below. Clone this QORC SDK
 repository using  
-```$ git clone https://github.com/QuickLogic-Corp/qorc-sdk```
+```git clone https://github.com/QuickLogic-Corp/qorc-sdk```
 
 ### Pre-requisites
 
@@ -24,39 +24,44 @@ repository using
 * Toolchain
     - [ARM GNU GCC toolchain] Version 7.2.1 or later.  
       Refer [Launchpad Ubuntu] for details to install the toolchain on Ubuntu Linux system.
-      ```
-      $ sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa     
-      $ sudo apt-get update     
-      $ sudo apt-get install gcc-arm-embedded  
+      ```sh
+      sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa     
+      sudo apt-get update     
+      sudo apt-get install gcc-arm-embedded  
       ```
 * Flash programmer toolchain: [TinyFPGA programmer]
     - To install clone the repository and install the dependancy
     ```
-    $ git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
-    $ pip3 install tinyfpgab
+    git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
+    pip3 install tinyfpgab
     ```
     
     On Ubuntu the lsusb command should display something similar to the following:
     ```
-    $ lsusb
+    lsusb
     Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
     Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.
     ```
     If the OpenMoko device is not present (it could also have ID 1d50:6130) then run the following commands.
     ```
-    $ pip3 install apio
-    $ apio drivers --serial-enable
+    pip3 install apio
+    apio drivers --serial-enable
     Serial drivers enabled
     Unplug and reconnect your board
     ```
     Recommend adding an alias to simplify programming:
+    
+    Using the editor of your choice add the following line to ~/.bashrc:
     ```
-    $ echo 'alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"' >> ~/.bashrc
-    $ source ~/.bashrc
+    alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
+    ```
+    and then source that file:
+    ```sh
+    source ~/.bashrc
     ```
 * Terminal application program such as: [putty]
     ```
-    $ sudo apt-get install putty -y
+    sudo apt-get install putty -y
     ```
 * QuickLogic Symbiflow: Refer [QuickLogic Symbiflow] to install the QuickLogic Symbiflow toolchain
 * Miscellaneous: [GNU make 3.8.1] or equivalent
@@ -74,15 +79,15 @@ This section describes how to build and run the qf_helloworldsw project.
 
   1. Navigate to qf_helloworldsw build folder and run make  
      ```
-     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
-     $ make 
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
+     make 
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
      Should switch to mode where green LED is breathing.  
      If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset (while blue LED is still flashing)
   4. With green LED breathing, program qf_helloworldsw app into QuickFeather:
      ```
-     $ qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldsw.bin
+     qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldsw.bin
      ```
      replace /dev/ttyXX with the actual device path.
   5. After programming has completed, reset the QuickFeather board and do not press the user button.  
@@ -118,15 +123,15 @@ This section describes how to build and run the qf_helloworldsw project.
 
   2. Now naviagte to qf_helloworldsw build folder and run make.
      ```
-     $ cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
-     $ make
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
+     make
      ```
 
   4. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
      1. Should switch to mode where green LED is breathing
      2. If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset
   5. With green LED breathing, program the updated qf_helloworldsw app into QuickFeather:
-     ```$ qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldsw.bin```
+     ```qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldsw.bin```
   6. After programming has completed, reset the QuickFeather board and do not press the user button.
      1. Blue LED should flash for 5 sec and then load the m4app and run it
   7. Run PuTTY or some other terminal emulator and attach to the QuickFeather (NOTE: the port name will most probably be different than the port name used for programming).
@@ -135,14 +140,14 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     $ cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
-     $ make
+     cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
+     make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
      1. Should switch to mode where green LED is breathing
      2. If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset
   4. With green LED breathing, program qf_helloworldhw app into QuickFeather:
-     ```$ qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldhw.bin```
+     ```qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldhw.bin```
   5. After programming has completed, reset the QuickFeather board and do not press the user button.
      1. Blue LED should flash for 5 sec and then load the m4app which will load the FPGA and run that
   6. You should see the green LED flashing about 3 times/second.
@@ -176,14 +181,14 @@ This section describes how to build and run the qf_helloworldsw project.
      3. Save the changes
   2. Navigate to qf_helloworldsw build folder and run make  
      ```
-     $ cd qf_apps/qf_helloworldhw/GCC_projects
-     $ make
+     cd qf_apps/qf_helloworldhw/GCC_projects
+     make
      ```
   4. Reset QuickFeather board and press ‘user button’ while blue LED is flashing
      1. Should switch to mode where green LED is breathing
      2. If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset
   5. With green LED breathing, program the updated qf_helloworldhw app into QuickFeather:
-     ```$ qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldhw.bin```
+     ```qfprog --port /dev/ttyXX --m4app output/bin/qf_helloworldhw.bin```
   6. After programming has completed, reset the QuickFeather board and do not press the user button
      1. Blue LED should flash for 5 sec and then load the m4app which loads the new FPGA code and runs it
   7. You should see the red LED flashing about 6 times/second
@@ -219,7 +224,7 @@ This section describes how to build and run the qf_helloworldsw project.
    `create_newapp.py` python script may be used to quickly create a new application.
    
    Run the following command from a command shell in the qf_apps/ folder.  
-   ```$ python create_newapp.py --source qf_helloworldsw --dest MyNewApplication```  
+   ```python create_newapp.py --source qf_helloworldsw --dest MyNewApplication```  
    The above would create a folder named *MyNewApplication* with sources and project workspaces
    cloned from qf_helloworldsw.
    
