@@ -17,8 +17,7 @@ all: $(OBJS)
 %.o:%.c
 $(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
 	$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
-	$(CP) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
-	$(RM) $(DEPEND_PATH)$(DIR_SEP)$*.Td 
+	$(MV) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
 
 -include $(D_FILES))
 	
