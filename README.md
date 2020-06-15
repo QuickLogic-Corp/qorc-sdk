@@ -17,11 +17,11 @@ Install the items listed in Pre-requisites section below. Clone this QORC SDK
 repository using  
 ```git clone https://github.com/QuickLogic-Corp/qorc-sdk```
 
-### Pre-requisites
+## Pre-requisites
 
-#### Software
+### Toolchain
 
-* Toolchain
+* Firmware
     - [ARM GNU GCC toolchain] Version 7.2.1 or later.  
       Refer [Launchpad Ubuntu] for details to install the toolchain on Ubuntu Linux system.
       ```sh
@@ -29,7 +29,12 @@ repository using
       sudo apt-get update     
       sudo apt-get install gcc-arm-embedded  
       ```
-* Flash programmer toolchain: [TinyFPGA programmer]
+  * Gateware
+    - QuickLogic Symbiflow: Refer [QuickLogic Symbiflow] to install the QuickLogic Symbiflow toolchain
+    
+### Utilities
+
+* Flash programmer: [TinyFPGA programmer]
     - To install clone the repository and install the dependancy
     ```
     git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
@@ -63,10 +68,10 @@ repository using
     ```
     sudo apt-get install putty -y
     ```
-* QuickLogic Symbiflow: Refer [QuickLogic Symbiflow] to install the QuickLogic Symbiflow toolchain
+
 * Miscellaneous: [GNU make 3.8.1] or equivalent
     
-#### Hardware
+### Hardware
 
 * Quickfeather development kit
 * A micro USB cable
@@ -79,7 +84,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
   1. Navigate to qf_helloworldsw build folder and run make  
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects
      make 
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
@@ -179,10 +184,13 @@ This section describes how to build and run the qf_helloworldsw project.
      1. Change the terminal counter from 4000000 to 2000000
      2. Change the assign greenled = led to assign redled = led
      3. Save the changes
-  2. Navigate to qf_helloworldsw build folder and run make  
+  2. Navigate to qf_helloworldhw build folder and run make (note: for make use ql_symbiflow you will
+  have to activate the ql_symbiflow conda)
      ```
      cd qf_apps/qf_helloworldhw/GCC_projects
+     conda activate
      make
+     conda deactivate
      ```
   4. Reset QuickFeather board and press ‘user button’ while blue LED is flashing
      1. Should switch to mode where green LED is breathing
@@ -196,7 +204,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
 ## Lesson \#3: Advanced fpga M4 + FPGA– qf_advancedfpga
   1. Go to directory qf_apps/qf_advancedfpga/GCC_projects
-  2. Run make
+  2. Activate conda, run make and deactivate conda
   3. Connect to the QuickFeather UART
      1. Connect a serial-to-USB cable to the QuickFeather board
      2. Connect PuTTY to the serial port associated with the serial-to-USB cable
