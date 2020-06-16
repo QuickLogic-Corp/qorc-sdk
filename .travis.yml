@@ -6,4 +6,4 @@ jobs:
   include:
     -name: "build"
     script:
-      -bash ci/makeall.csh
+      bash ci/makeall.csh
