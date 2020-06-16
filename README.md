@@ -25,7 +25,7 @@ repository using
     - [ARM GNU GCC toolchain] Version 7.2.1 or later.  
       Refer [Launchpad Ubuntu] for details to install the toolchain on Ubuntu Linux system.
       ```sh
-      sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa     
+      sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa     
       sudo apt-get update     
       sudo apt-get install gcc-arm-embedded  
       ```
