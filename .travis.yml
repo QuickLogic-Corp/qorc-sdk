@@ -11,7 +11,7 @@ before_install:
   - RUNFILE=$(basename $SRC)
   - echo "retrive new file"
   - wget $SRC
-  - bash $RUNFILE
+  - echo 'y' | bash $RUNFILE
   - export PATH="$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH"
   - source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
   - conda activate
