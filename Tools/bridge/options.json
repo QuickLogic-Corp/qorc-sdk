@@ -1,0 +1,15 @@
+{
+  "BrokerPort": 9999,
+  "log_filename": "logfile.txt",
+  "GatewayIP": "127.0.0.1",
+  "GatewayPort": 1885,
+  "BLEServiceUUID": "6E400001-B5A3-F393-E0A9-E50E24DCCA9E",
+  "BLEReceiveUUID": "6E400003-B5A3-F393-E0A9-E50E24DCCA9E",
+  "BLETransmitUUID": "6E400002-B5A3-F393-E0A9-E50E24DCCA9E",
+  "SerialPortNum": 38,
+  "BaudRate": 115200,
+  "BrokerOnly": false,
+  "MqttsnDecodePackets": true,
+  "NoBroker": true,
+  "log_level": 10
+}

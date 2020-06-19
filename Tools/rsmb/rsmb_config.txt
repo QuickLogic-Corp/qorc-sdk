@@ -1,0 +1,4 @@
+trace_output protocol
+listener 1883 INADDR_ANY
+listener 1885 INADDR_ANY mqtts
+
