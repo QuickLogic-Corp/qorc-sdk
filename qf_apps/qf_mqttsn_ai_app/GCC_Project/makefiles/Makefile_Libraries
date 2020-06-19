@@ -48,15 +48,15 @@ MQTTSN_SML:
 
 .PHONY: FREERTOS_FAT
 FREERTOS_FAT:
-	make -f makefiles/Makefile_FREERTOS_FAT
+	make -f makefiles/Makefile_FreeRTOS_FAT
 
 .PHONY: FREERTOS_FAT_QL
 FREERTOS_FAT_QL:
-	make -f makefiles/Makefile_FREERTOS_FAT_QL
+	make -f makefiles/Makefile_FreeRTOS_FAT_QL
 
 .PHONY: FREERTOS_FAT_COMMON
 FREERTOS_FAT_COMMON:
-	make -f makefiles/Makefile_FREERTOS_FAT_COMMON
+	make -f makefiles/Makefile_FreeRTOS_FAT_Common
 
 .PHONY: DATABLOCKMANAGER
 DATABLOCKMANAGER:
@@ -72,7 +72,7 @@ clean:
 	make -f makefiles/Makefile_MQTTSN clean
 	make -f makefiles/Makefile_MQTTSN_SML clean
 	make -f makefiles/Makefile_qlfs clean
-	make -f makefiles/Makefile_FREERTOS_FAT clean
-	make -f makefiles/Makefile_FREERTOS_FAT_QL clean
-	make -f makefiles/Makefile_FREERTOS_FAT_COMMON clean
+	make -f makefiles/Makefile_FreeRTOS_FAT clean
+	make -f makefiles/Makefile_FreeRTOS_FAT_QL clean
+	make -f makefiles/Makefile_FreeRTOS_FAT_Common clean
 
