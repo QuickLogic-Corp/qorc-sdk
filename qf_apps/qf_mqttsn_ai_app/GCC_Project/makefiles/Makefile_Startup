@@ -1,0 +1,30 @@
+SRCS:=startup_EOSS3B_GCC.c vectors_CM4F_gcc.c
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(PROJ_ROOT)/HAL/startup
+
+D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
+O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.Td
+
+
+all: $(OBJS)
+
+%.o:%.c
+$(OUTPUT_PATH)/%.o:$(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
+	@echo Compile: $<
+	$(HIDE)$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
+	$(HIDE)$(CP) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
+	-$(HIDE)$(RM) $(DEPEND_PATH)$(DIR_SEP)$*.Td
+
+-include $(D_FILES))
+
+$(DEPEND_PATH)/%.d: ;
+.PRECIOUS: $(DEPEND_PATH)/%.d 
+
+DELETEME=${D_FILES} ${O_FILES}
+clean:
+	@echo Clean ...
+ifneq (,${DELETEME})
+	-$(HIDE)$(RM) $(DELETEME)   
+endif
