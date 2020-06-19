@@ -1,0 +1,23 @@
+dist: bionic
+language: C
+compiler: gcc
+
+before_install:
+  - sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa     
+  - sudo apt-get update     
+  - sudo apt-get install gcc-arm-embedded
+  - export  INSTALL_DIR=~/symbiflow
+  - SRC=https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.0.0/Symbiflow_v1.0.0.gz.run
+  - RUNFILE=$(basename $SRC)
+  - echo "retrive new file"
+  - wget $SRC
+  - echo 'y' | bash $RUNFILE
+  - export PATH="$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH"
+  - source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
+  - conda activate
+
+jobs:
+  include:
+    -name: "build"
+    script:
+      bash ci/makeall.csh

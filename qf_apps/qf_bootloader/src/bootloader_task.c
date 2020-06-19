@@ -87,22 +87,23 @@ void set_downloading_led(uint8_t value)
 * The state is maintained internal.
 * Uses Tickcount to change the ON-OFF states.
 */
-void toggle_downloading_led(int toggle_time_msec)
+void toggle_downloading_led(int high_time_msec, int low_time_msec)
 {
   static uint8_t led_state = 1;
   static int led_state_count = 0;
   
-  //set the led state first to last state
-  HAL_GPIO_Write(GREEN_LED_GPIO_NUM, led_state);
-  
   //if the time exceeds the toggle time, change state and note time
-  if((xTaskGetTickCount() - led_state_count) > toggle_time_msec)
+  if(led_state == 1 && (xTaskGetTickCount() - led_state_count) > high_time_msec)
   {
     led_state_count = xTaskGetTickCount();
-    if(led_state == 0)
-      led_state = 1;
-    else
-      led_state = 0;
+    led_state = 0;
+	HAL_GPIO_Write(GREEN_LED_GPIO_NUM, led_state);
+  }
+  if(led_state == 0 && (xTaskGetTickCount() - led_state_count) > low_time_msec)
+  {
+    led_state_count = xTaskGetTickCount();
+    led_state = 1;
+	HAL_GPIO_Write(GREEN_LED_GPIO_NUM, led_state);
   }
   return;
 }
@@ -114,7 +115,7 @@ void set_waiting_led(uint8_t value)
   HAL_GPIO_Write(BLUE_LED_GPIO_NUM, value);
 }
 /* 
-* This will toggle green LED with time passed. 
+* This will toggle blue LED with time passed. 
 * The state is maintained internal.
 * Uses Tickcount to change the ON-OFF states.
 */

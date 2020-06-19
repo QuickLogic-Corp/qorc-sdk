@@ -21,7 +21,7 @@
 #include "eoss3_hal_fpga_usbserial.h"
 
 //------------- Pointer to registers ---------------------//
-fpga_usbserial_regs_t* pusbserial_regs = (fpga_usbserial_regs_t*)(FPGA_PERIPH_BASE);
+volatile fpga_usbserial_regs_t* pusbserial_regs = (fpga_usbserial_regs_t*)(FPGA_PERIPH_BASE);
 
 //------------- Local functions -------------------------//
 static void HAL_usbserial_isrinit(void);
