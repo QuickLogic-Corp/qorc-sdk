@@ -58,5 +58,5 @@ Building:
      - type "make clean_target" to selectilve clean a Target (for example, "make clean_HAL")
 
    On a successfull build, output/bin will contain
-     - *.bin, *.out, *.map files
+     - *.bin, *.elf, *.map files
   

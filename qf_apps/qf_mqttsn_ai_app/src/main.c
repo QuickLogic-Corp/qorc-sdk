@@ -298,6 +298,7 @@ int main(void)
     load_fpga(sizeof(axFPGABitStream),axFPGABitStream);
     HAL_usbserial_init(false);              // Start USB serial not using interrupts
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+    HAL_Delay_Init();
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
