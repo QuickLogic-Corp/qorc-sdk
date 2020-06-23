@@ -1,0 +1,81 @@
+{
+    "name": "QuickFeather",
+    "collection_methods": [
+        {
+            "name": "live",
+            "display_name": "Live Stream Capture",
+            "storage_path": null,
+            "is_default": true
+        }
+    ],
+    "device_connections": [
+        {
+            "name": "serial_mqttsn",
+            "display_name": "MQTT-SN Over Serial Port",
+            "value": 1,
+            "is_default": true,
+            "serial_port_configuration": {
+                "com_port": null,
+                "baud": 115200,
+                "stop_bits": 1,
+                "parity": 0,
+                "handshake": 0,
+                "max_live_sample_rate": 211
+            }
+        }
+    ],
+    "capture_sources": [
+        {
+            "max_throughput": 0,
+            "name": "Motion",
+            "part": "MC3635",
+            "sample_rates": [
+                14, 28, 54, 105, 210, 400, 600, 750
+            ],
+            "is_default": true,
+            "sensors": [
+                {
+                    "column_count": 3,
+                    "is_default": true,
+                    "column_suffixes": [
+                        "X",
+                        "Y",
+                        "Z"
+                    ],
+                    "type": "Accelerometer",
+                    "parameters": [
+                        {
+                            "name": "Sensor Range",
+                            "values": [
+                                {
+                                    "actual_value": 20,
+                                    "num_bytes": 1,
+                                    "display_value": "+/- 2G"
+                                },
+                                {
+                                    "actual_value": 40,
+                                    "num_bytes": 1,
+                                    "display_value": "+/- 4G"
+                                },
+                                {
+                                    "actual_value": 80,
+                                    "num_bytes": 1,
+                                    "display_value": "+/- 8G"
+                                },
+                                {
+                                    "actual_value": 160,
+                                    "num_bytes": 1,
+                                    "display_value": "+/- 16G"
+                                }
+                            ],
+                            "units": null
+                        }
+                    ],
+                    "sensor_id": 1229804865,
+                    "can_live_stream": true
+                }
+            ]
+        }
+    ],
+    "is_little_endian": true
+}
