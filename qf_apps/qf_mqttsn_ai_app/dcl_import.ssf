@@ -30,7 +30,7 @@
             "name": "Motion",
             "part": "MC3635",
             "sample_rates": [
-                14, 28, 54, 105, 210, 400, 600, 750
+                14, 28, 54, 105, 210, 400, 600
             ],
             "is_default": true,
             "sensors": [
