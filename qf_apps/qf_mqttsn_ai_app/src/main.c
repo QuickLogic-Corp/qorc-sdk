@@ -18,7 +18,7 @@
  *
  *    File   : main.c
  *    Purpose: main for QuickFeather helloworldsw and LED/UserButton test
- *                                                          
+ *
  *=========================================================*/
 
 #include "Fw_global_config.h"   // This defines application specific charactersitics
@@ -85,7 +85,7 @@ static void nvic_init(void);
  * and setting up the datablock processor processing elements (\ref DATABLK_PE).
  * A specific IMU processing element for motion detection is provided in this
  * example.
- * 
+ *
  * @{
  */
 
@@ -98,10 +98,10 @@ static void nvic_init(void);
 /** Maximum number of imu data blocks that may be queued for chain processing */
 #define MAX_IMU_DATA_BLOCKS                  (NUM_IMU_DATA_BLOCKS)
 
-/** maximum number of vertical (parallel processing elements) that may generate datablock outputs 
+/** maximum number of vertical (parallel processing elements) that may generate datablock outputs
  *  that may add to the front of the queue.
  *
- *  Queue size of a given datablock processor must be atleast 
+ *  Queue size of a given datablock processor must be atleast
  *  summation of maximum datablocks of all sensors registered for
  *  processing with some room to handle the vertical depth
  */
@@ -135,18 +135,18 @@ outQ_processor_t imu_sensiml_ai_outq_processor =
 
 datablk_pe_descriptor_t  datablk_pe_descr_imu[] =
 { // { IN_ID, OUT_ID, ACTIVE, fSupplyOut, fReleaseIn, outQ, &pe_function_pointers, bypass_function, pe_semaphore }
-  
+
     /* processing element descriptor for SensiML AI for IMU sensor */
-    { IMU_ISR_PID, IMU_SENSIML_AI_PID, true, false, true, &imu_sensiml_ai_outq_processor, &imu_sensiml_ai_funcs, NULL, NULL},   
+    { IMU_ISR_PID, IMU_SENSIML_AI_PID, true, false, true, &imu_sensiml_ai_outq_processor, &imu_sensiml_ai_funcs, NULL, NULL},
 };
 
-datablk_processor_params_t datablk_processor_params_imu[] = { 
-    { DBP_IMU_THREAD_PRIORITY, 
-      &dbp_imu_thread_q, 
-      sizeof(datablk_pe_descr_imu)/sizeof(datablk_pe_descr_imu[0]), 
-      datablk_pe_descr_imu, 
-      256, 
-      "DBP_IMU_THREAD", 
+datablk_processor_params_t datablk_processor_params_imu[] = {
+    { DBP_IMU_THREAD_PRIORITY,
+      &dbp_imu_thread_q,
+      sizeof(datablk_pe_descr_imu)/sizeof(datablk_pe_descr_imu[0]),
+      datablk_pe_descr_imu,
+      256,
+      "DBP_IMU_THREAD",
       NULL
     }
 };
@@ -173,18 +173,18 @@ void imu_block_processor(void)
   /** IMU datablock processor thread : Create IMU Queues */
   dbp_imu_thread_q = xQueueCreate(DBP_IMU_THREAD_Q_SIZE, sizeof(QAI_DataBlock_t *));
   vQueueAddToRegistry( dbp_imu_thread_q, "IMUPipelineExampleQ" );
-  
+
   /** IMU datablock processor thread : Setup IMU Thread Handler Processing Elements */
   datablk_processor_task_setup(&datablk_processor_params_imu[0]);
-  
+
   /** Set the first data block for the ISR or callback function */
   set_first_imu_data_block();
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
   //sensor_imu_configure();
 }
 
-// temporary buffer to read sensor data from the FIFO 
-// Note: Needed because FIFO stores Gyro samples first and then Accel samples, 
+// temporary buffer to read sensor data from the FIFO
+// Note: Needed because FIFO stores Gyro samples first and then Accel samples,
 // where as the IMU processor needs Accel samples first and then Gyro samples.
 //int16_t fifo_samples[IMU_FRAME_SIZE+6];
 int imu_get_max_datablock_size(void)
@@ -194,11 +194,11 @@ int imu_get_max_datablock_size(void)
 
 TimerHandle_t sensorTimId ;
 void dataTimer_Callback(TimerHandle_t hdl)
-{ 
-  // Warning: must not call vTaskDelay(), vTaskDelayUntil(), or specify a non zero 
-  // block time when accessing a queue or a semaphore. 
+{
+  // Warning: must not call vTaskDelay(), vTaskDelayUntil(), or specify a non zero
+  // block time when accessing a queue or a semaphore.
   imu_sensordata_read_callback(); //osSemaphoreRelease(readDataSem_id);
-} 
+}
 
 void dataTimerStart(void)
 {
@@ -214,12 +214,12 @@ void dataTimerStart(void)
     sensorTimId = xTimerCreate("SensorTimer", pdMS_TO_TICKS(milli_secs), pdTRUE, (void *)0, dataTimer_Callback);
     configASSERT(sensorTimId != NULL);
   }
-  
+
   if (sensorTimId)  {
     status = xTimerStart (sensorTimId, 0);  // start timer
     if (status != pdPASS)  {
       // Timer could not be started
-    } 
+    }
   }
   //set_first_imu_data_block();
 #if (USE_IMU_FIFO_MODE)
@@ -250,7 +250,7 @@ struct st_dbm_init {
 } ;
 
 struct st_dbm_init dbm_init_table[] =
-{ 
+{
   {&imuBuffDataBlkMgr,   (void *)  imu_data_blocks, sizeof(  imu_data_blocks), IMU_FRAME_SIZE, sizeof(int16_t)},
 //  {&audioBuffDataBlkMgr, (void *)audio_data_blocks, sizeof(audio_data_blocks), DBP_AUDIO_FRAME_SIZE, sizeof(int16_t)},
 };
@@ -259,10 +259,10 @@ void init_all_datablock_managers(struct st_dbm_init *p_dbm_table, int len_dbm_ta
 {
   /** Setup the data block managers */
   for (int k = 0; k < len_dbm_table; k++) {
-      datablk_mgr_init( p_dbm_table[k].pdatablk_mgr_handle, 
-                        p_dbm_table[k].pmem, 
-                        p_dbm_table[k].mem_size, 
-                        p_dbm_table[k].item_count, 
+      datablk_mgr_init( p_dbm_table[k].pdatablk_mgr_handle,
+                        p_dbm_table[k].pmem,
+                        p_dbm_table[k].mem_size,
+                        p_dbm_table[k].item_count,
                         p_dbm_table[k].item_size_bytes
                       );
   }
@@ -273,7 +273,7 @@ void setup_sensors_data_block_processor(void)
 {
   /** Initialize all datablock managers */
   init_all_datablock_managers(dbm_init_table, sizeof(dbm_init_table)/sizeof(struct st_dbm_init));
-  
+
   //audio_block_processor();
 
   imu_block_processor();
@@ -283,12 +283,12 @@ int main(void)
 {
     //SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_mqttsn_ai_app";
 #if S3AI_FIRMWARE_IS_COLLECTION
-    SOFTWARE_VERSION_STR = "C Jan-2020";
+    SOFTWARE_VERSION_STR = "C Jun-2020";
 #endif
 #if S3AI_FIRMWARE_IS_RECOGNITION
-    SOFTWARE_VERSION_STR = "R Jan-2020";
+    SOFTWARE_VERSION_STR = "R Jun-2020";
 #endif
-    
+
     qf_hardwareSetup();
     nvic_init();
     S3x_Clk_Disable(S3X_FB_21_CLK);
@@ -299,16 +299,16 @@ int main(void)
     HAL_usbserial_init(false);              // Start USB serial not using interrupts
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     HAL_Delay_Init();
-    
+
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
+    dbg_str( "Quicklogic QuickFeather MQTT-SN/SensiML Interface Example\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
-	
+
 	dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     // Initialize mCube MC3635 Accelerometer sensor device
@@ -316,21 +316,21 @@ int main(void)
 
 
     CLI_start_task( my_main_menu );
-    
+
     setup_sensors_data_block_processor();
     sensor_set_virtual_sensor(IMU_V_SENSOR_NO);
 
     StartRtosTaskMqttsnApp();
     StartRtosTaskMqttsnMsgHandler();
 #if S3AI_FIRMWARE_IS_RECOGNITION
-    //StartRtosTaskRecognition(); 
+    //StartRtosTaskRecognition();
 #endif
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");
-      
+
     while(1);
 }
 
@@ -343,7 +343,7 @@ static void nvic_init(void)
     NVIC_SetPriority(CfgDma_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(Uart_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(FbMsg_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
- }    
+ }
 
 //needed for startup_EOSS3b.s asm file
 void SystemInit(void)

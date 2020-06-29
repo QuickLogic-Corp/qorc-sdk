@@ -78,7 +78,7 @@ export DEPEND_PATH=output\depend
 
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
-$(info using recursive seach)
+$(info using recursive search)
 FIND_TOOL_DIR := $(shell where /r c:\progra~2 arm-none-eabi-gcc)
 endif
 
@@ -90,7 +90,7 @@ endif
 #export TC_PATH=C:\Program Files (x86)\GNU Tools ARM Embedded\7 2017-q4-major\bin
 ifndef TC_PATH
 $(info ######  ERROR - TC_PATH is not defined in config.mk #########)
-exit 
+exit
 endif
 
 export NM="$(TC_PATH)\arm-none-eabi-nm"
