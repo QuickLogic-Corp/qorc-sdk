@@ -1,5 +1,6 @@
 {
     "name": "QuickFeather",
+    "uuid": "9d870c8f-bbbc-4186-a9c0-6701c08715ed"
     "collection_methods": [
         {
             "name": "live",
