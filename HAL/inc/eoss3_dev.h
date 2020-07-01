@@ -116,7 +116,7 @@ typedef enum
   Dmic_Voice_Off_IRQn		  = 52
 
 } IRQn_Type;
-#include <core_cm4.h>             /* Cortex-M4 processor and core peripherals */
+#include "core_cm4.h"             /* Cortex-M4 processor and core peripherals */
 
 /*
  * Peripheral_registers_structures
