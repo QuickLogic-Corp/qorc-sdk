@@ -1,0 +1,9 @@
+
+QLUART_SRCS:=ql_uart_pfm.c
+
+SRCS:=$(notdir $(QLUART_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(QLUART_DIR)
+
+include $(COMMON_STUB)
+

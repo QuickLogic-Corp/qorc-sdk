@@ -1,0 +1,12 @@
+
+CLI_SRCS:=$(wildcard $(CLI_DIR)/*.c )
+
+SRCS:=$(notdir $(CLI_SRCS))
+filters=cli_filesystem.c cli_fsminterface.c
+
+SRCS:=$(filter-out $(filters),$(notdir $(CLI_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(CLI_DIR)
+
+include $(COMMON_STUB)
+

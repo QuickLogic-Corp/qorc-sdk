@@ -1,0 +1,9 @@
+
+SENSOR_SRCS:=$(wildcard $(SENSOR_DIR)/*.c )
+
+SRCS:=$(notdir $(SENSOR_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(SENSOR_DIR)
+
+include $(COMMON_STUB)
+

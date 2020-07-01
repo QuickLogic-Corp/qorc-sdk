@@ -1,0 +1,10 @@
+target remote localhost:2331
+set disassemble-next-line off
+monitor reset
+load output/bin/qf_tfl_detect.elf
+monitor reset
+delete breakpoints 1-5
+break main.c:93
+c
+quit
+y

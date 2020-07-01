@@ -1,0 +1,9 @@
+
+AUDIO_SRCS:=$(wildcard $(AUDIO_DIR)/*.c)
+
+SRCS:=$(notdir $(AUDIO_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(AUDIO_DIR)
+
+include $(COMMON_STUB)
+
