@@ -29,7 +29,7 @@ external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA
 
 .PHONY: tensorflow
 tensorflow:
-	cd $(TF_DIR) && make -f tensorflow/lite/micro/tools/make/Makefile TARGET=quicklogic-eos-s3 test_person_detection_benchmark
+	cd $(TF_DIR) && make -f tensorflow/lite/micro/tools/make/Makefile TARGET=quicklogic-eos-s3 
 clean_tensorflow:
 	cd $(TF_DIR) && make -f tensorflow/lite/micro/tools/make/Makefile TARGET=quicklogic-eos-s3 clean
 	

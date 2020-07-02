@@ -43,10 +43,7 @@ extern "C" void dbg_str_hex32(const char*, int32_t);
 extern "C" uint32_t xTaskGetTickCount(void);
 
 namespace tflite {
-	extern uint32_t	g_kDepthWiseConvMac;
-	extern uint32_t	g_kConvMac;
-	extern uint32_t	g_kDepthWiseConvCycCnt;
-	extern uint32_t	g_kConvCycCnt;
+	
 }
 
 // Globals, used for compatibility with Arduino-style sketches.
@@ -152,10 +149,6 @@ extern "C" void setup() {
       TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed.");
     }
 	
-	TF_LITE_REPORT_ERROR(error_reporter, "Inference time %d clocks/ %d MHz", tStop-tStart, freq);
-	TF_LITE_REPORT_ERROR(error_reporter, "g_kDepthWiseConvCycCnt %d/%d", tflite::g_kDepthWiseConvCycCnt, tflite::g_kDepthWiseConvMac);
-	TF_LITE_REPORT_ERROR(error_reporter, "g_kConvCycCnt %d/%d", tflite::g_kConvCycCnt, tflite::g_kConvMac);
-	
 	// Get the output from the model, and make sure it's the expected size and
   // type.
   
@@ -182,9 +175,6 @@ extern "C" void loop() {
 	RunSingleIterationCustomInput(g_person_data); 
 	TF_LITE_REPORT_ERROR(error_reporter, "\n***********************\nRunning image without person");                            
 	RunSingleIterationCustomInput(g_no_person_data);	
-	
-	TF_LITE_REPORT_ERROR(error_reporter, "g_kDepthWiseConvMac = %d", tflite::g_kDepthWiseConvMac);
-	TF_LITE_REPORT_ERROR(error_reporter, "g_kConvMac = %d", tflite::g_kConvMac);
 
 	// // Increment the inference_counter, and reset it if we have reached
 	// // the total number per cycle
