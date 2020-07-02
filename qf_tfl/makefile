@@ -1,4 +1,4 @@
-BINS = qf_person_detect/GCC_Project/output/bin/qf_person_detect.bin
+BINS = qf_person_detect/GCC_Project/output/bin/qf_person_detect.bin 
 
 all:	$(BINS)
 
