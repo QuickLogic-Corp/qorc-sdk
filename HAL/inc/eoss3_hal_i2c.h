@@ -171,4 +171,13 @@ HAL_StatusTypeDef HAL_I2C_Read(UINT8_t ucDevAddress, UINT8_t ucAddress, UINT8_t 
 
 HAL_StatusTypeDef HAL_I2C_Read16(UINT8_t ucDevAddress, UINT16_t ucAddress, UINT8_t *pucDataBuf, UINT32_t uiLength);
 HAL_StatusTypeDef HAL_I2C_Write16(UINT8_t ucDevAddress, UINT16_t ucAddress, UINT8_t *pucDataBuf, UINT32_t uiLength);
+
+/** Read data from I2C device using Restart
+ *  @param[in] ucDevAddress I2C device 7-bit address
+ *  @param[in] ucAddress    register index to read data from
+ *  @param[out] pucDataBuf  address of the buffer to store register data
+ *  @param[in] uiLength     read `uiLength` bytes of data
+ */
+HAL_StatusTypeDef HAL_I2C_Read_UsingRestart(UINT8_t ucDevAddress, UINT8_t ucAddress, UINT8_t *pucDataBuf, UINT32_t uiLength);
+
 #endif /* !__EOSS3_HAL_I2C_H_ */

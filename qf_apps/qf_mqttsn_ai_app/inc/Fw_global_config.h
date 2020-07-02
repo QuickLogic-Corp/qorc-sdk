@@ -89,9 +89,9 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART  UART_ID_USBSERIAL   // Write data to USB serial port
-#define UART_ID_CONSOLE UART_ID_USBSERIAL
-#define UART_ID_MQTTSN  UART_ID_HW
+#define DEBUG_UART  UART_ID_HW   // Write data to USB serial port
+#define UART_ID_CONSOLE UART_ID_HW
+#define UART_ID_MQTTSN  UART_ID_USBSERIAL
 
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 

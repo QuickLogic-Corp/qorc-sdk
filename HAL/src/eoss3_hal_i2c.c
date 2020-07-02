@@ -709,3 +709,142 @@ HAL_StatusTypeDef HAL_I2C_Write16(UINT8_t ucDevAddress, UINT16_t ucAddress, UINT
 
   return HAL_OK;
 }
+
+HAL_StatusTypeDef HAL_I2C_Read_UsingRestart(UINT8_t ucDevAddress, UINT8_t ucAddress, UINT8_t *pucDataBuf, UINT32_t uiLength)
+{
+  UINT8_t *pucData = pucDataBuf;
+  UINT32_t uiLen = uiLength-1;
+  UINT8_t ucI2CStatus = 0;
+
+  if(eI2CState != I2C_READY)
+    return HAL_BUSY;
+
+  if(!ucDevAddress || pucDataBuf == NULL)
+    return HAL_ERROR;
+
+  if(!uiLength)
+    return HAL_OK;
+
+  eI2CState = I2C_BUSY;
+
+  /* Request for write */
+  if(HAL_WB_Transmit(I2C_TXRX_DR, ((ucDevAddress<<1) & (~1)), ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+	return HAL_ERROR;
+  }
+
+  /* Generate command with start condition and write cycle */
+  if(HAL_WB_Transmit(I2C_CMD_SR, CMD_START_BIT | CMD_WRITE_SLAVE_BIT, ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+	return HAL_ERROR;
+  }
+
+  /* Check if Transfer completed */
+  do
+  {
+     HAL_WB_Receive(I2C_CMD_SR, &ucI2CStatus, ucI2CSlaveID);
+  }while(ucI2CStatus & (1<<SR_TIP_BIT));
+
+  /* Read acknowledge from slave */
+  if((ucI2CStatus & (1<<SR_RXACK_BIT)))
+  {
+        eI2CState = I2C_READY;
+    	return HAL_ERROR;
+  }
+
+  /* Write address */
+  if(HAL_WB_Transmit(I2C_TXRX_DR, ucAddress, ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+	return HAL_ERROR;
+  }
+
+  /* Generate command with stop condition and write cycle */
+  if(HAL_WB_Transmit(I2C_CMD_SR, /* CMD_STOP_BIT | */ CMD_WRITE_SLAVE_BIT, ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+  	return HAL_ERROR;
+  }
+
+  /* Check if Transfer completed */
+  do
+  {
+     HAL_WB_Receive(I2C_CMD_SR, &ucI2CStatus, ucI2CSlaveID);
+  }while(ucI2CStatus & (1<<SR_TIP_BIT));
+
+  /* Request for Read */
+  if(HAL_WB_Transmit(I2C_TXRX_DR, ((ucDevAddress<<1) | 1), ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+	return HAL_ERROR;
+  }
+
+  /* Generate command with start condition and write cycle */
+  if(HAL_WB_Transmit(I2C_CMD_SR, CMD_START_BIT | CMD_WRITE_SLAVE_BIT, ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+	return HAL_ERROR;
+  }
+
+  /* Check if Transfer completed */
+  do
+  {
+     HAL_WB_Receive(I2C_CMD_SR, &ucI2CStatus, ucI2CSlaveID);
+  }while(ucI2CStatus & (1<<SR_TIP_BIT));
+
+  /* Read acknowledge from slave */
+  if((ucI2CStatus & (1<<SR_RXACK_BIT)))
+  {
+      	eI2CState = I2C_READY;
+    	return HAL_ERROR;
+  }
+
+  while(uiLen--)
+  {
+    /* Generate command with ACK and READ cycle */
+    if(HAL_WB_Transmit(I2C_CMD_SR, CMD_READ_SLAVE_BIT, ucI2CSlaveID) != HAL_OK)
+    {
+      	eI2CState = I2C_READY;
+    	return HAL_ERROR;
+    }
+
+    /* Check if Transfer completed */
+
+    do
+    {
+       HAL_WB_Receive(I2C_CMD_SR, &ucI2CStatus, ucI2CSlaveID);
+    }while(ucI2CStatus & (1<<SR_TIP_BIT));
+
+    /* Read acknowledge from slave */
+    if((ucI2CStatus & (1<<SR_RXACK_BIT)))
+    {
+        eI2CState = I2C_READY;
+    	return HAL_ERROR;
+    }
+
+  /* Read data */
+    HAL_WB_Receive(I2C_TXRX_DR, pucData++, ucI2CSlaveID);
+  }
+
+  /* Generate command with ACK and READ cycle */
+  if(HAL_WB_Transmit(I2C_CMD_SR, CMD_STOP_BIT | CMD_NACK_BIT | CMD_READ_SLAVE_BIT, ucI2CSlaveID) != HAL_OK)
+  {
+    	eI2CState = I2C_READY;
+    	return HAL_ERROR;
+  }
+
+  /* Check if Transfer completed */
+  do
+  {
+     HAL_WB_Receive(I2C_CMD_SR, &ucI2CStatus, ucI2CSlaveID);
+  }while(ucI2CStatus & (1<<SR_TIP_BIT));
+
+  /* Read data */
+  HAL_WB_Receive(I2C_TXRX_DR, pucData, ucI2CSlaveID);
+
+  eI2CState = I2C_READY;
+
+  return HAL_OK;
+}

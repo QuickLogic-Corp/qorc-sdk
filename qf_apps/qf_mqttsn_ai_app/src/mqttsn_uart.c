@@ -88,11 +88,6 @@ int mqttsn_uart_rx(uint8_t *pBuf, int n)
 {
   int count = uart_rx_raw_buf(UART_ID_MQTTSN, pBuf, n);
   return count;
-  dbg_str("< ");
-  for (int k = 0; k < n; k++)
-    dbg_hex8(pBuf[k]);
-  //uart_tx_buf(DEBUG_UART, pBuf, n);
-  dbg_str(" >");
 }
 #endif
 
