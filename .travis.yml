@@ -1,6 +1,8 @@
 dist: bionic
 language: C
 compiler: gcc
+git:
+  depth: 1
 
 before_install:
   - sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa     
