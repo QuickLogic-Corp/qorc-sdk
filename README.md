@@ -145,7 +145,7 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects
      make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
