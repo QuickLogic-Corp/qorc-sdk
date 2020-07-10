@@ -382,6 +382,7 @@
                     <state>$PROJ_DIR$\..\..\..\Libraries\MQTTSN\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\MQTTSN_SML\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\mc3635</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\cli\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\riff_file\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\riff_file\riff_file\inc</state>
@@ -1200,9 +1201,6 @@
                     <name>$PROJ_DIR$\..\inc\DataCollection.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\firmware_raw_image.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\inc\FreeRTOSConfig.h</name>
                 </file>
                 <file>
@@ -1215,22 +1213,13 @@
                     <name>$PROJ_DIR$\..\inc\Fw_task.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\h2d_protocol.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\src\mqttsn_uart.h</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\ql_fs.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\ql_hostTask.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\inc\RtosTask.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\inc\s3_host_proto_defs.h</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\s3x_pwrcfg.h</name>
@@ -1243,9 +1232,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\sml_output.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\inc\ww_metadata.h</name>
                 </file>
             </group>
             <group>
@@ -1263,16 +1249,10 @@
                     <name>$PROJ_DIR$\..\src\exceptions.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\src\h2d_protocol.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\src\main.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\main_dbg_cli_menu.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\src\mc3635.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\mqttsn_comm.c</name>
@@ -1285,9 +1265,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\process_imu.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\src\ql_hostTask.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\Recognition.c</name>
@@ -2814,11 +2791,11 @@
             <name>SensorFramework</name>
             <group>
                 <name>drivers</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
                 <group>
                     <name>FFE</name>
+                    <excluded>
+                        <configuration>Debug</configuration>
+                    </excluded>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Accel2_FFE_Drv.c</name>
                     </file>
@@ -2854,12 +2831,18 @@
                     <name>M4</name>
                     <group>
                         <name>BMI160</name>
+                        <excluded>
+                            <configuration>Debug</configuration>
+                        </excluded>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\BMI160\Accel_BMI160.c</name>
                         </file>
                     </group>
                     <group>
                         <name>LSM6DSL</name>
+                        <excluded>
+                            <configuration>Debug</configuration>
+                        </excluded>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\LSM6DSL\Accel_LSM6DSL.c</name>
                         </file>
@@ -2874,6 +2857,15 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\LSM6DSL\LSM6DSL_Gyro.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>mc3635</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\mc3635\mc3635.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\mc3635\mc3635.h</name>
                         </file>
                     </group>
                 </group>

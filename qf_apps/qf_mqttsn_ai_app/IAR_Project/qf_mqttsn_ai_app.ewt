@@ -1306,9 +1306,6 @@
                     <name>$PROJ_DIR$\..\inc\DataCollection.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\firmware_raw_image.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\inc\FreeRTOSConfig.h</name>
                 </file>
                 <file>
@@ -1321,22 +1318,13 @@
                     <name>$PROJ_DIR$\..\inc\Fw_task.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\h2d_protocol.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\src\mqttsn_uart.h</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\ql_fs.h</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\inc\ql_hostTask.h</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\inc\RtosTask.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\inc\s3_host_proto_defs.h</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\s3x_pwrcfg.h</name>
@@ -1349,9 +1337,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\inc\sml_output.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\inc\ww_metadata.h</name>
                 </file>
             </group>
             <group>
@@ -1369,16 +1354,10 @@
                     <name>$PROJ_DIR$\..\src\exceptions.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\src\h2d_protocol.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\src\main.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\main_dbg_cli_menu.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\src\mc3635.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\mqttsn_comm.c</name>
@@ -1391,9 +1370,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\process_imu.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\src\ql_hostTask.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\Recognition.c</name>
@@ -2403,6 +2379,15 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\LSM6DSL\LSM6DSL_Gyro.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>mc3635</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\mc3635\mc3635.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\mc3635\mc3635.h</name>
                         </file>
                     </group>
                 </group>

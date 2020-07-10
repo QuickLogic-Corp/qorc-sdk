@@ -52,6 +52,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/Power/inc" \
                  -I"$(PROJ_ROOT)/Libraries/riff_file/inc" \
                  -I"$(PROJ_ROOT)/Libraries/SensorFramework/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
                  -I"$(PROJ_ROOT)/Libraries/SysFlash/inc" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
@@ -105,3 +106,8 @@ export FREERTOS_FAT_QL_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable
 export RIFF_FILE_DIR  = $(LIB_DIR)$(DIR_SEP)riff_file$(DIR_SEP)src
 export DBP_DIR         = $(PROJ_ROOT)$(DIR_SEP)Tasks/DatablockProcessor$(DIR_SEP)src
 export DBM_DIR        = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
+export SENSOR_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)src
+export FRAMEWORKLIB_DIR = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)lib
+export FFE_DIR          = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)FFE
+export HYBRID_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)Hybrid
+export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635

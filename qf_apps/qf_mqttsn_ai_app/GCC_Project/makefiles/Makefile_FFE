@@ -1,0 +1,9 @@
+
+FFE_SRCS:=$(wildcard $(FFE_DIR)/*.c )
+
+SRCS:=$(notdir $(FFE_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FFE_DIR)
+
+include $(COMMON_STUB)
+
