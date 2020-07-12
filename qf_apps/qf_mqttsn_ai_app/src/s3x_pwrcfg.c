@@ -61,7 +61,7 @@ S3x_ClkD S3clk [] = {
         .sync_clk = SYNC_CLKD (1, CLK_C08X1, 0),
         .cru_ctrl = CRU_CTRL (0x10, 0x1fe, 9, 0x134, 0x48, 0x1, 2),
         .def_max_rate = (F_40MHZ),
-        .init_state = INIT_STATE(F_12MHZ, 0x1, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_24MHZ, 0x1, INIT_GATE_OFF),
     },
     [CLK_C11] = {
         .name = "C11",
