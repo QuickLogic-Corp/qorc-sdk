@@ -127,7 +127,7 @@ void sensor_accel_configure(void)
         /* RULE #2: A,G of the same rate is enforced here. Remove this enforcemnet if needed! */
         /* RULE #3: This also guarantees that rate from later "add" will overwite earlier one. */
         // RULE #2,#3 are related, #3 is removed automatically if RULE #2 is removed.
-        imu_config.gyro.rate_hz = imu_config.accel.rate_hz = sensor_config_msg.sensor_common.rate_hz;
+        imu_config.gyro.rate_hz = imu_config.accel.rate_hz ; // = sensor_config_msg.sensor_common.rate_hz;
     }
 #if 0 //for MQTTSN, BLE is used only for recognition
     

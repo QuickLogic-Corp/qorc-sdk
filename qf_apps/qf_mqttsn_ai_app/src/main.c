@@ -323,7 +323,7 @@ int main(void)
     StartRtosTaskMqttsnApp();
     StartRtosTaskMqttsnMsgHandler();
 #if S3AI_FIRMWARE_IS_RECOGNITION
-    //StartRtosTaskRecognition();
+    StartRtosTaskRecognition();
 #endif
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
