@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get update     
   - sudo apt-get install gcc-arm-embedded
   - export  INSTALL_DIR=~/symbiflow
-  - SRC=https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.1.0/Symbiflow_v1.1.0.gz.run
+  - SRC=https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.1.0_Beta/Symbiflow_v1.1.0.gz.run
   - RUNFILE=$(basename $SRC)
   - echo "retrive new file"
   - wget $SRC
