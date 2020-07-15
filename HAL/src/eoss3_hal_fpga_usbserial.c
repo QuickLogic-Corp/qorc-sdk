@@ -133,3 +133,13 @@ int HAL_usbserial_rxwait(int msecs) {
         }
     }
 }
+
+/* Return 1 if FIFO is more than 3/4 full
+ */
+int HAL_usbserial_tx_is_fifo_full(void)
+{
+  if (pusbserial_regs->m2u_fifo_flags == 4)
+    return 1;
+  else 
+    return 0;
+}

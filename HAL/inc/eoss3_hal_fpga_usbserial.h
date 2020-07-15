@@ -59,5 +59,6 @@ int         HAL_usbserial_getc(void);
 void        HAL_usbserial_putc(char c);
 void        HAL_usbserial_txbuf(const uint8_t *buf, size_t len);
 int         HAL_usbserial_rxwait(int msecs);
+int         HAL_usbserial_tx_is_fifo_full(void);
 
 #endif // EOSS3_HAL_USBSERIAL_H_

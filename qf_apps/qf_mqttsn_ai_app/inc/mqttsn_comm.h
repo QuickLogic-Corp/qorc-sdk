@@ -18,3 +18,4 @@ extern void mqttsn_comm_setup(void);
 extern void mqttsn_comm_tx(const uint8_t *buf, int len);
 extern int mqttsn_comm_rx_available(void);
 extern int mqttsn_comm_rx(uint8_t *pBuf, int n);
+extern int mqttsn_comm_tx_is_fifo_full(void);

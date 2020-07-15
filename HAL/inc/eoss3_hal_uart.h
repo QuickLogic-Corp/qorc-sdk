@@ -252,6 +252,8 @@ int uart_rx(int uartid);
  */
 void uart_set_lpm_state(int uart_id, int lpm_en);
 
+int uart_tx_is_fifo_full(int uart_id);
+
 /*
  * @}
  */

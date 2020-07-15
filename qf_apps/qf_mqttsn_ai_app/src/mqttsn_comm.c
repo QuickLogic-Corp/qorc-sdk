@@ -43,6 +43,11 @@ int mqttsn_comm_rx(uint8_t *pBuf, int n)
   return mqttsn_uart_rx(pBuf, n);
 }
 
+int mqttsn_comm_tx_is_fifo_full(void)
+{
+  return mqttsn_uart_tx_is_fifo_full();
+}
+
 #endif
 
 #if (MQTTSN_OVER_BLE == 1)

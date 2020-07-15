@@ -89,5 +89,14 @@ int mqttsn_uart_rx(uint8_t *pBuf, int n)
   int count = uart_rx_raw_buf(UART_ID_MQTTSN, pBuf, n);
   return count;
 }
+
+/* Return 1 if FIFO is almost full
+ * Return 0 otherwise
+ */
+int mqttsn_uart_tx_is_fifo_full()
+{
+  return uart_tx_is_fifo_full(UART_ID_MQTTSN);
+}
+
 #endif
 

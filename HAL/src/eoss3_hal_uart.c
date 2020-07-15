@@ -676,3 +676,20 @@ void uart_set_lpm_state(int uart_id, int lpm_en)
     }
     return;
 }
+
+/* return 1 if FIFO is almost full 
+ * return 0 otherwise
+ * For USB-serial almost full means FIFO is more than 3/4 filled up,
+ *     that is only 1/4 space is available in FIFO
+ * For other UART types (UART_ID_HW) always return 0
+ */
+int uart_tx_is_fifo_full(int uartid)
+{
+#if FEATURE_USBSERIAL == 1
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_is_fifo_full(  );
+        ;
+    }
+#endif
+    return 0;
+}
