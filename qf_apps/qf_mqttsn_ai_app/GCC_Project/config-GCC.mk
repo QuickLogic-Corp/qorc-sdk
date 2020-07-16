@@ -29,6 +29,7 @@ export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
         -DGCC_MAKE
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
+export LIBSENSIML_DIR=$(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS$(DIR_SEP)lib$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
@@ -45,6 +46,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT/portable/QL" \
                  -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT" \
                  -I"$(PROJ_ROOT)/Libraries/Power/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/MQTTSN/inc" \
                  -I"$(PROJ_ROOT)/Libraries/MQTTSN_SML/inc" \
                  -I"$(PROJ_ROOT)/Libraries/QLFS/inc" \
@@ -71,12 +73,12 @@ export CFLAGS= $(MACROS) \
 
 
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
-            ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
-            ${DASH_G} -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
+	$(DASH_O) $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections \
+	$(DASH_G) -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
-            --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
-            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
-    -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math 
+    --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
+    -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
+	-L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR) -lsensiml -lm -larm_cortexM4lf_math
 
 
 export ELF2BIN_OPTIONS=-O binary
