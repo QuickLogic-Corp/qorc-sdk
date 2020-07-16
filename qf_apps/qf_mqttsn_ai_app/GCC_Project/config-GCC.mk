@@ -38,6 +38,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/fpga" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/CMSIS/Core/Include" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
                  -I"$(PROJ_ROOT)/Libraries/cli/inc" \
                  -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT/include" \
