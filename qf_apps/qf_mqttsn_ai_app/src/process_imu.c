@@ -329,6 +329,11 @@ static QL_Status Set_Sensor_BatchSize(int size, int num_pkts)
     return QL_STATUS_OK;
 }
 
+void imu_batch_size_set(int batch_size)
+{
+  Set_Sensor_BatchSize(batch_size, 2); // use 2 packets for accel/gyro
+}
+
 int imu_batch_size_get(void)
 {
   return g_imu_batch_size;
@@ -605,12 +610,13 @@ void imu_ai_data_processor(
 #if 0 // for sampling rate validation
     imu_sample_count += (nSamples / nChannels);
     if ( imu_sample_count >= 1000 ) {
-      imu_time_prev = pIn->dbHeader.Tend - imu_time_prev;
+      uint32_t tick_time = xTaskGetTickCount(); // pIn->dbHeader.Tend
+      imu_time_prev = tick_time - imu_time_prev;
       printf("imu_sample_count: %ld, time: %ld, diff = %ld, sample_rate: %ld\n", 
-             imu_sample_count, pIn->dbHeader.Tend, imu_time_prev,
+             imu_sample_count, tick_time, imu_time_prev,
              (imu_sample_count * 1000 ) / (imu_time_prev) );
       imu_sample_count = 0;
-      imu_time_prev = pIn->dbHeader.Tend;
+      imu_time_prev = tick_time;
     }
 #endif
     for (int k = 0; k < nSamples; k += nChannels)

@@ -200,11 +200,24 @@ void dataTimer_Callback(TimerHandle_t hdl)
   imu_sensordata_read_callback(); //osSemaphoreRelease(readDataSem_id);
 }
 
+static int mc3635_threshold_count = 1;
+void mc3635_set_threshold_count(int count)
+{
+  mc3635_threshold_count = count;
+}
+
+int mc3635_get_threshold_count(void)
+{
+  return mc3635_threshold_count;
+}
+
+extern void imu_batch_size_set(int batch_size);
+
 void dataTimerStart(void)
 {
   BaseType_t status;
 #if (USE_IMU_FIFO_MODE)
-    int milli_secs = 9; // reads fifo @10milli-secs intervals
+    int milli_secs = 19; // reads fifo @10milli-secs intervals
 #else
     int milli_secs = 2; // reads when a sample is available (upto 416Hz)
 #endif
@@ -223,6 +236,18 @@ void dataTimerStart(void)
   }
   //set_first_imu_data_block();
 #if (USE_IMU_FIFO_MODE)
+  int num_samples;
+  int srate = imu_get_accel_odr();
+  if (srate > 29) {
+    num_samples = srate / 50;
+  } else {
+    num_samples = 1;
+  }
+  mc3635_fifo_reset();
+  mc3635_fifo_enable_threshold(num_samples);
+  mc3635_set_threshold_count(num_samples);
+  imu_batch_size_set(num_samples);
+  vTaskDelay(2); // delay for 2ms to accumulate atleast 1 threshold
   //enable_lsm6dsm_stream();
 #endif
   //mc3635_interrupt_enable();

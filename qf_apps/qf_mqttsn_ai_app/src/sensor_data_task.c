@@ -155,7 +155,7 @@ uint32_t imu_fifo_samples_to_ticks(int num_fifo_samples)
    return (configTICK_RATE_HZ * num_fifo_samples) / (6 * fifo_odr);
 }
 
-int  imu_sensordata_buffer_ready()
+int  imu_sensordata_buffer_ready_single_sample()
 {
     int16_t *p_dest = (int16_t *) &pimu_data_block_prev->p_data[sizeof(int16_t)*imu_samples_collected];
     int batch_size;
@@ -203,6 +203,84 @@ int  imu_sensordata_buffer_ready()
     }
     return 0;
 }
+
+int16_t temp_fifo_buff[MC3635_FIFO_SIZE*6];
+int16_t temp_fifo_remaining_count = 0;
+
+int  imu_sensordata_buffer_ready()
+{
+    int16_t *p_dest = (int16_t *) &pimu_data_block_prev->p_data[sizeof(int16_t)*imu_samples_collected];
+    int16_t *p_temp = &temp_fifo_buff[temp_fifo_remaining_count];
+    int batch_size;
+    int32_t err;
+    
+    int threshold_count = mc3635_get_threshold_count();
+    imu_batch_size_set(threshold_count);
+
+    batch_size = imu_batch_size_get() * 6;
+  
+    uint32_t t_end = xTaskGetTickCount();
+    uint32_t t_start;
+
+    int num_samples = temp_fifo_remaining_count;
+    for (int k = 0; k < (MC3635_FIFO_SIZE); k += threshold_count) {
+       /* Attempt reading 1 sample data from the device.
+        */
+       err = mc3635_read_fifo_burst((xyz_t *)p_temp, threshold_count);
+       if (err == 0)
+       {
+         // No new data available, stop reading
+         break;
+       }
+       p_temp += 3*threshold_count;
+       num_samples += 3*threshold_count;
+    }
+    if (num_samples == 0)
+      return 0;
+    p_temp = temp_fifo_buff;
+    for (int k = 0; k < num_samples; k+=3) {
+       /* Copy Accelermoter samples to IMU datablock */
+       p_dest[0] = *p_temp++; // Accelerometer X co-ordinate
+       p_dest[1] = *p_temp++; // Accelerometer Y co-ordinate
+       p_dest[2] = *p_temp++; // Accelerometer Z co-ordinate
+
+       /* Copy Gyroscope samples to IMU datablock */
+       p_dest[3] = 0; // Gyroscope X co-ordinate
+       p_dest[4] = 0; // Gyroscope Y co-ordinate
+       p_dest[5] = 0; // Gyroscope Z co-ordinate
+     
+       // Apply scaling to the raw accel data samples
+       adjust_accel((xyz_t *)(p_dest+0));
+
+       // Apply scaling to the raw gyro data samples
+       adjust_gyro((xyz_t *)(p_dest+3));
+
+       p_dest += 6;
+       imu_samples_collected += 6;
+
+      if (imu_samples_collected >= batch_size) //  pimu_data_block_prev->dbHeader.numDataElements
+      {
+        k = k+3;
+        temp_fifo_remaining_count = num_samples - k ;
+        if (temp_fifo_remaining_count > 0)
+        {
+          int l, j;
+          for (l = 0, j = k; j < num_samples; j++)
+            temp_fifo_buff[l++] = *p_temp++;
+        }
+        pimu_data_block_prev->dbHeader.numDataElements = imu_samples_collected;
+        pimu_data_block_prev->dbHeader.numDataChannels = 6;
+        pimu_data_block_prev->dbHeader.Tend = t_end;
+        t_start = t_end - imu_fifo_samples_to_ticks(imu_samples_collected);
+        pimu_data_block_prev->dbHeader.Tstart = t_start;
+        imu_samples_collected = 0;
+        return 1;
+      } 
+
+    }
+    return 0;
+}
+
 #else
 int  imu_sensordata_buffer_ready()
 {

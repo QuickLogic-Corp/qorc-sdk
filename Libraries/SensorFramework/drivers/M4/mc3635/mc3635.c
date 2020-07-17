@@ -94,6 +94,10 @@ void mc3635_init(void)
      val = 0x00; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_INIT_2, &val, 1); // Write 0x00 --> Reg 0x28 
      val = 0x00; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_INIT_3, &val, 1); // Write 0x00 --> Reg 0x1A 
      
+     val = 0x00; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FREG_2, &val, 1); // Write 0x00 --> Reg 0x0E 
+     // set WRAPA to include registers in range 2-9
+     //val = 0x01; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FREG_2, &val, 1); // Write 0x01 --> Reg 0x0D 
+
      // Read scratch register
      val = 0xA5;      HAL_I2C_Write(MC3635_I2C_ADDR, 0x1B, &val, 1);
      rval[0]=0x00; rval[1]=0x00;
@@ -338,6 +342,25 @@ int mc3635_read_fifo_data(xyz_t *pdata)
   HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_XOUT_LSB, (uint8_t *)pdata, 6);
   return 1;
 }
+
+// num_samples should be equal to FIFO threshold 
+int mc3635_read_fifo_burst(xyz_t *pdata, int num_samples)
+{
+  uint8_t val[2] = {0, 0};
+  HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_STATUS_1, val, 2);
+  
+  // chech FIFO status
+  if ((val[0]&0x40) == 0x00)
+  {
+    // available sample count less than FIFO threshold 
+    return 0;
+  }
+
+  // data is available, Read x,y,z values
+  HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_XOUT_LSB, (uint8_t *)pdata, 6*num_samples);
+  return 1;
+}
+
 void mc3635_fifo_enable(void)
 {
     uint8_t fifo_c_val;
@@ -353,6 +376,46 @@ void mc3635_fifo_enable(void)
    // ---------------------------------------------------
  
    fifo_c_val = 0x40 | MC3635_FIFO_THRESH_VAL; // Reset the FIFO, Enable FIFO
+   // Now write to the interrupt control register
+   HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FIFO_C, &fifo_c_val, 1);
+}
+
+void mc3635_fifo_enable_threshold(int threshold_count)
+{
+    uint8_t fifo_c_val;
+
+    if (threshold_count > 31)
+      threshold_count = 31;
+    mc3635_set_mode(MC3635_MODE_STANDBY);
+
+   // FIFO Control Register
+   // ---------------------------------------------------
+   // FIFO_RESET | FIFO_EN | FIFO_MODE | FIFO_TH[4] | FIFO_TH[3] | FIFO_TH[2] | FIFO_TH[1] | FIFO_TH[0]
+   // ---------------------------------------------------
+ 
+   fifo_c_val = 0x40 | (threshold_count&0x1f); // Reset the FIFO, Enable FIFO, and Set threshold
+   // Now write to the interrupt control register
+   HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FIFO_C, &fifo_c_val, 1);
+   
+   uint8_t val = 0x22; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FREG_2, &val, 1); // Write 0x22 --> Reg 0x0E 
+
+}
+
+void mc3635_fifo_reset(void)
+{
+    uint8_t fifo_c_val;
+
+    mc3635_set_mode(MC3635_MODE_STANDBY);
+
+   // Read current interrupt control register content
+   HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_FIFO_C, &fifo_c_val, 1);
+
+   // FIFO Control Register
+   // ---------------------------------------------------
+   // FIFO_RESET | FIFO_EN | FIFO_MODE | FIFO_TH[4] | FIFO_TH[3] | FIFO_TH[2] | FIFO_TH[1] | FIFO_TH[0]
+   // ---------------------------------------------------
+ 
+   fifo_c_val = 0x80 | fifo_c_val; // Reset the FIFO, Enable FIFO
    // Now write to the interrupt control register
    HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FIFO_C, &fifo_c_val, 1);
 }
