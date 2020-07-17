@@ -99,6 +99,13 @@ void ble_send( const struct sensor_data *pInfo )
         }
         return;
     }
+    // set samples-per-packet based on the live data rate
+    // if (rate > 50Hz)
+    //     samples-per-packet-per-sensor-id = rate / 50
+    // else
+    //     samples-per-packet-per-sensor-id = 1
+    int spp = (pInfo->rate_hz > 50) ? (pInfo->rate_hz / 50) : 1;
+    SENSOR_LIVE_SET_MIN(sensor, spp);
 
     // Check if there is ongoing sending
     if( send_data_start() < 0 ) {
@@ -142,7 +149,7 @@ void ble_send( const struct sensor_data *pInfo )
            {
               uint8_t *pPayld;
 
-              result = Mqttsn_AllocPublishPayload( MQTTSN_BUFFER_SMALL, &(pMsg->pMsgPayldBuf),
+              result = Mqttsn_AllocPublishPayload( MQTTSN_BUFFER_LARGE, &(pMsg->pMsgPayldBuf),
                                     &(pMsg->allocLen) );
               if (result)
               {
