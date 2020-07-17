@@ -78,7 +78,11 @@ def main(cmdline):
     
     if ( (input_args.source_app_folder) and
          (input_args.dest_app_folder) ):
-        js = { "source_app_folder": input_args.source_app_folder,
+        src_folder = input_args.source_app_folder
+        length = len(src_folder)
+        if src_folder[length-1] == '/':
+            src_folder = src_folder[0:length-1]
+        js = { "source_app_folder": src_folder,
                "dest_app_folder": input_args.dest_app_folder,
                "hfile": {}
              }
