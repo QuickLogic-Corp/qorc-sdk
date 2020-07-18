@@ -1116,6 +1116,7 @@ typedef struct
 #define AUD				((AUD_TypeDef *) AUD_BASE)
 #define CRU				((CRU_TypeDef *) CRU_BASE)
 #define PMU				((PMU_TypeDef *) PMU_BASE)
+#define MISC			((MISC_CTRL_BASE_TypeDef *)MISC_CTRL_BASE)
 #define MISC_CTRL		((MISC_CTRL_BASE_TypeDef *)MISC_CTRL_BASE)
 #define WDT				((WDT_TypeDef *) WDT1_BASE)
 #define DMA_SPI_MS		((DMA_SPI_MS_TypeDef *) DMA_SPI_MS_BASE)

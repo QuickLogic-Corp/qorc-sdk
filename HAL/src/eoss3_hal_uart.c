@@ -223,7 +223,7 @@ static void uart_baud_rate (void)
 }
 
 
-static void uart_conrol_registers(void)
+static void uart_control_registers(void)
 {
     uint32_t lcr_h_value = 0;
     uint32_t cr_value = 0;
@@ -382,9 +382,9 @@ void uart_init( int uartid, PadConfig* ppadConfigTx, PadConfig* ppadConfigRx, co
     }
     uart_vars.hw_config = *pConfig;
 
-    S3x_Clk_Enable(S3X_M4_PRPHRL_CLK);
+    if (!pConfig->fBaremetal) S3x_Clk_Enable(S3X_M4_PRPHRL_CLK);		// In baremetal case, assume clock already set up
     uart_baud_rate();
-    uart_conrol_registers();
+    uart_control_registers();
     uart_disable();
     uart_disable_irqs();
     
@@ -393,11 +393,12 @@ void uart_init( int uartid, PadConfig* ppadConfigTx, PadConfig* ppadConfigRx, co
         uart_config_pad(ppadConfigTx, ppadConfigRx);
 
     imsc_value = 0;
-    if(uart_vars.hw_config.intrMode == UART_INTR_ENABLE ){
+    if(!pConfig->fBaremetal && (uart_vars.hw_config.intrMode == UART_INTR_ENABLE) ){
         uart_isr_init();
             imsc_value |= UART_IMSC_RX | UART_IMSC_RX_TIMEOUT;
     } else {
         /* we don't use the isrs */
+		uart_vars.hw_config.intrMode = UART_INTR_DISABLE;
         }
     UART->UART_IBRD = uart_vars.hw_config.ibrd_value;
     UART->UART_FBRD = uart_vars.hw_config.fbrd_value;
@@ -407,7 +408,7 @@ void uart_init( int uartid, PadConfig* ppadConfigTx, PadConfig* ppadConfigRx, co
     UART->UART_CR = uart_vars.hw_config.cr_value | UART_CR_UART_ENABLE;
     /* only regiser with low power mode once */
     
-    if( !uart_vars.lpm_registered){
+    if( !pConfig->fBaremetal && !uart_vars.lpm_registered){
         uart_vars.lpm_registered = 1;
         S3x_Register_Lpm_Cb( uart_lpm_callback, "UART");
     }
