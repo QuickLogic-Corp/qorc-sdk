@@ -31,6 +31,7 @@
 #include "RtosTask.h"
 
 /*    Include the generic headers required for QORC */
+#include <eoss3_dev.h>
 #include "dbg_uart.h"
 
 
@@ -49,7 +50,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_baremetal";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf_testapps/qf_baremetal";
     
     qf_baremetalSetup();
     nvic_init();
