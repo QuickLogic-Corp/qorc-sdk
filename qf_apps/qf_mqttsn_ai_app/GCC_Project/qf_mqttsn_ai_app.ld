@@ -3,11 +3,11 @@ OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 ENTRY(Reset_Handler)
 MEMORY
 {
-	rom (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00036C00
-	ram (rwx) : ORIGIN = 0x2002EC00, LENGTH = 0x00034800
-	spiram (rw) : ORIGIN = 0x20063800, LENGTH = 0x0000800
-	HWA (rw)  : ORIGIN = 0x20064000, LENGTH = 0x00018000
-	shm       : ORIGIN = 0x2007C000, LENGTH = 0x00004000
+    rom (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00036C00
+    ram (rwx) : ORIGIN = 0x20036C00, LENGTH = 0x00034800
+    spiram (rw) : ORIGIN = 0x2006B400, LENGTH = 0x0000800
+    HWA (rw)  : ORIGIN = 0x20078000, LENGTH = 0x0000CC00
+    shm       : ORIGIN = 0x2007C000, LENGTH = 0x00004000
 }
 
 SECTIONS
@@ -56,7 +56,7 @@ SECTIONS
 	_sidata = __etext;
 
 
-	.data : 
+	.data :
 	{
 		__data_start__ = .;
 
