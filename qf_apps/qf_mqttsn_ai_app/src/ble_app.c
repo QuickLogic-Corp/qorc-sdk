@@ -99,6 +99,9 @@ void ble_send( const struct sensor_data *pInfo )
         }
         return;
     }
+#define USE_VARIABLE_SAMPLES_PER_PACKET (1)
+#if (USE_VARIABLE_SAMPLES_PER_PACKET == 1)
+#define MQTTSN_LIVE_BUFFER_SIZE      (MQTTSN_BUFFER_LARGE)
     // set samples-per-packet based on the live data rate
     // if (rate > 50Hz)
     //     samples-per-packet-per-sensor-id = rate / 50
@@ -106,7 +109,11 @@ void ble_send( const struct sensor_data *pInfo )
     //     samples-per-packet-per-sensor-id = 1
     int spp = (pInfo->rate_hz > 50) ? (pInfo->rate_hz / 50) : 1;
     SENSOR_LIVE_SET_MIN(sensor, spp);
-
+    if (pInfo->rate_hz < 450)
+       SENSOR_LIVE_SET_RELOAD(sensor, 0); // Force sending every sample
+#else
+#define MQTTSN_LIVE_BUFFER_SIZE      (MQTTSN_BUFFER_SMALL)
+#endif
     // Check if there is ongoing sending
     if( send_data_start() < 0 ) {
         ble_motion_drop += 1;
