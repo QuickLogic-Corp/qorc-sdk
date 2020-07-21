@@ -217,7 +217,7 @@ void dataTimerStart(void)
 {
   BaseType_t status;
 #if (USE_IMU_FIFO_MODE)
-    int milli_secs = 19; // reads fifo @10milli-secs intervals
+    int milli_secs = 17; // reads fifo @17milli-secs intervals
 #else
     int milli_secs = 2; // reads when a sample is available (upto 416Hz)
 #endif
