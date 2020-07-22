@@ -21,4 +21,14 @@ and appropriate ARM GCC toolchain to build the project
 For data collection, building an AI model, and recognition 
 please refer to https://sensiml.com/ and https://sensiml.com/documentation/guides/getting-started/index.html
 
+MQTT-SN over USB-serial Notes
+------------
+
+The MQTT-SN SensiML AI application uses FPGA USB-serial IP to send and receive message over
+USB-serial cable. The USB transmit FIFO will hold the outgoing data bytes until a host terminal 
+application starts draining this data. According as the MQTT-SN protocol, the application attempts
+to send CONNECT messages at regular intervals until it receives a response for these messages. 
+To avoid queueing up multiple CONNECT messages in the transmit FIFO which may cause the USB 
+transmit function to enter busy-wait state when the FIFO fills-up, this application sends CONNECT
+messages only if the FIFO is empty.
 
