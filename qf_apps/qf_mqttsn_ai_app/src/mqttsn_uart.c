@@ -98,5 +98,13 @@ int mqttsn_uart_tx_is_fifo_full()
   return uart_tx_is_fifo_full(UART_ID_MQTTSN);
 }
 
+/* Return 1 if FIFO is empty
+ * Return 0 otherwise
+ */
+int mqttsn_uart_tx_is_fifo_empty()
+{
+  return uart_tx_is_fifo_empty(UART_ID_MQTTSN);
+}
+
 #endif
 

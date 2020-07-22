@@ -26,3 +26,4 @@ extern void mqttsn_uart_tx(const uint8_t *buf, int len);
 extern int mqttsn_uart_rx_available(void);
 extern int mqttsn_uart_rx(uint8_t *pBuf, int n);
 extern int mqttsn_uart_tx_is_fifo_full(void);
+extern int mqttsn_uart_tx_is_fifo_empty(void);

@@ -48,6 +48,11 @@ int mqttsn_comm_tx_is_fifo_full(void)
   return mqttsn_uart_tx_is_fifo_full();
 }
 
+int mqttsn_comm_tx_is_fifo_empty(void)
+{
+  return mqttsn_uart_tx_is_fifo_empty();
+}
+
 #endif
 
 #if (MQTTSN_OVER_BLE == 1)

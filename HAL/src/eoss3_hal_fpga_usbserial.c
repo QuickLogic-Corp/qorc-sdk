@@ -134,11 +134,22 @@ int HAL_usbserial_rxwait(int msecs) {
     }
 }
 
-/* Return 1 if FIFO is more than 3/4 full
+/* Return 1 if FIFO available space is less than 1/4
+ * (FIFO is more than 3/4 full)
  */
 int HAL_usbserial_tx_is_fifo_full(void)
 {
-  if (pusbserial_regs->m2u_fifo_flags == 4)
+  if (pusbserial_regs->m2u_fifo_flags == FPGA_USBSERIAL_TX_FIFO_LT_QUARTER)
+    return 1;
+  else 
+    return 0;
+}
+
+/* Return 1 if FIFO is empty
+ */
+int HAL_usbserial_tx_is_fifo_empty(void)
+{
+  if (pusbserial_regs->m2u_fifo_flags == FPGA_USBSERIAL_TX_FIFO_EMPTY)
     return 1;
   else 
     return 0;

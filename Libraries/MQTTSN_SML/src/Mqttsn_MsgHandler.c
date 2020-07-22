@@ -1675,8 +1675,8 @@ uint32_t Mqttsn_SendConnectionRequest(void)
     uint32_t retCode = 0;
 #if (USB_UART_CHECK_FIFO_CONNECT == 1)
     // Check if there is space in COMM tx buffer
-    if (mqttsn_comm_tx_is_fifo_full()) {
-      // FIFO is almost full, do not send CONNECT request
+    if (!mqttsn_comm_tx_is_fifo_empty()) {
+      // FIFO is not empty, do not send CONNECT request
       return retCode;
     }
 #endif
