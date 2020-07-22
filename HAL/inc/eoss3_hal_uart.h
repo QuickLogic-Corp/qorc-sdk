@@ -162,6 +162,7 @@ typedef struct
     uint32_t               ibrd_value;
     uint32_t               fbrd_value;
     int                    lpm_enabled;
+	bool					fBaremetal;
 }UartHandler;
 
 
