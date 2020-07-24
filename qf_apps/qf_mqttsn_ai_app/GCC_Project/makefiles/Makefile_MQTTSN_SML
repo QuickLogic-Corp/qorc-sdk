@@ -1,0 +1,10 @@
+
+MQTTSN_SML_SRCS:=$(wildcard $(MQTTSN_SML_DIR)/*.c )
+
+SRCS:=$(notdir $(MQTTSN_SML_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(MQTTSN_SML_DIR)
+
+
+include $(COMMON_STUB)
+

@@ -34,6 +34,7 @@
 
 #define SPI_FLASH_ERASE_SIZE	         (4096)
 #define SPISD_DISK_SECTOR_SIZE	         (512)
+#define SPISD_DISK_SECTOR_FACTOR	     (SPISD_DISK_SECTOR_SIZE/512) // = 1 for 512, ==8 for 4096
 #define SPISD_DISK_NAME			        "/SPISD"  /* Where the SPIFLASH disk is mounted. */
 #define SPI_SD_IO_MANAGER_CACHE_SIZE	 (4096)   /* @TBD this may need fine tuning */
  
@@ -66,5 +67,7 @@ typedef struct xSD_Handle
 extern FF_Disk_t* FF_SPISDMount(const char* pathName);
 extern int8_t FF_IsSPISDMounted(void);
 extern int32_t FF_SPISDDiskShowPartition(FF_Disk_t *pxDisk);
+extern uint32_t FF_SPISDGetFreeDiskSize( void );
+uint32_t FF_SPISDGetDiskSpaceInfo(uint32_t *pTotalKbs, uint32_t *pTotalUsedKbs);
 
 #endif  // MEDIA_DRV_SPI_SD_H

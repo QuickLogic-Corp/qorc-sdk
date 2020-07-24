@@ -1,0 +1,14 @@
+
+GENERATED_DIR=$(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)knowledgepack$(DIR_SEP)src
+GENERATED_SRCS:=$(GENERATED_DIR)$(DIR_SEP)sml_recognition_run.c
+
+$(info GEN=${GENERATED_DIR})
+$(info S=${GENERATED_SRCS})
+
+SRCS:=$(notdir $(GENERATED_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(GENERATED_DIR)
+
+include $(COMMON_STUB)
+
+

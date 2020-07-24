@@ -298,6 +298,48 @@ INT32_t FF_SPISDDiskShowPartition( FF_Disk_t *pxDisk )
     return FF_ERR_NONE;
 }
 
+uint32_t FF_SPISDGetFreeDiskSize( void )
+{
+    FF_Error_t xError;
+    FF_Disk_t *pxDisk =&spi_sd_disk_info;
+    configASSERT(pxDisk != NULL);
+    return FF_GetFreeSize( pxDisk->pxIOManager, &xError );
+}
+
+uint32_t FF_SPISDGetDiskSpaceInfo(uint32_t *pTotalKbs, uint32_t *pTotalUsedKbs)
+{
+    uint64_t ullFreeSectors;
+	uint64_t ulTotalSizeB, ulFreeSizeB;
+    FF_Disk_t *pxDisk = &spi_sd_disk_info;
+	FF_IOManager_t *pxIOManager;
+    FF_Error_t xError = FF_ERR_NONE;
+    
+	if( pxDisk == NULL )
+	{
+        *pTotalKbs = 0;
+        *pTotalUsedKbs = 0;
+        
+        return 1;
+	}
+	else
+	{
+        pxIOManager = pxDisk->pxIOManager;
+        
+      	FF_GetFreeSize( pxIOManager, &xError );
+        
+        ullFreeSectors = (uint64_t)pxIOManager->xPartition.ulFreeClusterCount * (uint64_t)pxIOManager->xPartition.ulSectorsPerCluster;
+        
+        ulTotalSizeB = (uint64_t)(pxIOManager->xPartition.ulDataSectors) * (uint64_t)hsd.CardBlockSize;
+        ulFreeSizeB =  ( ullFreeSectors * hsd.CardBlockSize );
+        
+        //get space in kBs
+        *pTotalKbs = ulTotalSizeB >> 10;
+        *pTotalUsedKbs = (ulTotalSizeB - ulFreeSizeB)>>10; 
+        
+        return 0;
+    }
+}
+
 /*
  * @fn      FF_SPISDMount
  *
@@ -399,8 +441,8 @@ static int32_t spi_sdDiskRead (
         status = disk_read(
                            0,		/* Physical drive nmuber (0) */
                            (UINT8_t *)buff,		/* Pointer to the data buffer to store read data */
-                           (UINT32_t )sectorNo,	/* Start sector number (LBA) */
-                           1);		/* Sector count (1..128) */
+                           (UINT32_t )sectorNo*SPISD_DISK_SECTOR_FACTOR,	/* Start sector number (LBA) */
+                           SPISD_DISK_SECTOR_FACTOR);		/* Sector count (1..128) */
         buff += SPISD_DISK_SECTOR_SIZE;
         sectorNo++;
         sectorCount--;
@@ -426,8 +468,8 @@ int32_t spi_sdDiskWrite(uint8_t *pucSource,
     disk_write (
 	0,				/* Physical drive nmuber (0) */
 	(const BYTE*)pucSource,		/* Pointer to the data to be written */
-	ulSectorNumber,			/* Start sector number (LBA) */
-	ulSectorCount);			/* Sector count (1..128) */
+	ulSectorNumber*SPISD_DISK_SECTOR_FACTOR,			/* Start sector number (LBA) */
+	ulSectorCount*SPISD_DISK_SECTOR_FACTOR);			/* Sector count (1..128) */
 
     return FF_ERR_NONE;
 }

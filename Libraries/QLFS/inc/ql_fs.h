@@ -234,8 +234,17 @@ extern size_t QLFS_fread(const QLFS_Handle *handle, QLFILE_Handle *file, void *p
 extern int32_t  QLFS_RmFile(const QLFS_Handle *handle, const char *pcPath);
 extern int QLFS_isFilePresent(const QLFS_Handle *handle,const char * file_path);
 extern BaseType_t QLFS_DIRCommand(const char *pcPath);
+extern uint32_t QLFS_getFreeDiskSpace(const QLFS_Handle *pHandle);
+extern int QLFS_formatFlashDisk(void);
 
 extern QLFS_Handle *QLFS_DEFAULT_FILESYTEM;
+
+extern const char QLFS_sdcard_prefix[];
+extern const char QLFS_spiflash_prefix[];
+
+extern QLFS_Handle qlfsHandle_sdcard;
+extern QLFS_Handle qlfsHandle_spiflash;
+
 extern QLFS_Handle *QLFS_mount_as_default( QL_FSStorageMedia fsType );
 /* what text appears at the front of files on the SDCard? */
 extern const char QLFS_sdcard_prefix[];
@@ -283,10 +292,10 @@ struct QLFS_file_find_info {
 extern void QLFS_FindFirst_Init( QLFS_FILEFINDINFO *pInitMe, QLFS_Handle *handle );
 
 /* find the first item */
-extern void QLFS_FindFirst( QLFS_FILEFINDINFO *pInitMe, const char *path );
+extern int QLFS_FindFirst( QLFS_FILEFINDINFO *pInitMe, const char *path );
 
 /* find the next item */
-extern void QLFS_FindNext( QLFS_FILEFINDINFO *pInitMe );
+extern int QLFS_FindNext( QLFS_FILEFINDINFO *pInitMe );
 
 /* done finding... release resources */
 extern void QLFS_FindEnd( QLFS_FILEFINDINFO *pInitMe );
@@ -297,4 +306,20 @@ extern int QLFS_isMounted( QLFS_Handle *pHandleToTest );
 /* return details about specified file, see: "man 2 stat" for the concept */
 extern int QLFS_stat( const char *filename, QLFS_FILEFINDINFO *pInfo, QLFS_Handle *handle );
 	
+/* checks for presence of specified file */
+extern int QLFS_IsFilePresent( const QLFS_Handle *pHandle, const char *pFileName );
+
+extern int QLFS_Ffseek( const QLFS_Handle *pHandle, void *pFilePtr, long lOffset, int iWhence );
+
+extern BaseType_t QLFS_DIRFindFirst(const QLFS_Handle *pHandle, uint32_t *pFileSz, uint32_t *pDateTime, uint8_t *pFileName);
+
+extern BaseType_t QLFS_DIRFindNext(const QLFS_Handle *pHandle, uint32_t *pFileSz, uint32_t *pDateTime, uint8_t *pFileName);
+
+BaseType_t QLFS_RemoveUserFiles(const char *dirPath);
+
+uint32_t QLFS_getDiskSpaceInfo(const QLFS_Handle *pHandle, uint32_t *pTotalSz, uint32_t *pInuseSz);
+
+#if (USE_FATFS)
+extern int GetFatFsFileSize(QLFILE_Handle *pFileHandle);
+#endif
 #endif

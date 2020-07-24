@@ -1,0 +1,82 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x00000000;
+/*-Memory Regions-*/
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__ = 0x00000000;
+define symbol __IFCEDIT_region_ROM_size__  = 0x00040000;
+define symbol __ICFEDIT_region_ROM_end__   = __ICFEDIT_region_ROM_start__ + __IFCEDIT_region_ROM_size__ - 1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       // 0x00040fff;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /* 128K */
+
+define symbol __ICFEDIT_region_MEM1_start__ = (0x20000000 + __ICFEDIT_region_ROM_end__) + 1;
+define symbol __ICFEDIT_region_MEM1_size__  = 0x00000010;
+define symbol __ICFEDIT_region_MEM1_end__   = __ICFEDIT_region_MEM1_start__ + __ICFEDIT_region_MEM1_size__ - 1;
+
+define symbol __ICFEDIT_region_RAM2_start__ = (__ICFEDIT_region_MEM1_end__ + 1);
+define symbol __ICFEDIT_region_RAM2_size__  = 0x00038000;
+define symbol __ICFEDIT_region_RAM2_end__   = __ICFEDIT_region_RAM2_start__ + __ICFEDIT_region_RAM2_size__ - 1;
+
+define symbol __ICFEDIT_region_HWA_start__ = (__ICFEDIT_region_RAM2_end__ + 1);
+define symbol __ICFEDIT_region_HWA_size__  = 0x10;
+define symbol __ICFEDIT_region_HWA_end__   = __ICFEDIT_region_HWA_start__ + __ICFEDIT_region_HWA_size__ - 1;
+
+define symbol __IFCEDIT_region_BLE_tx_start__ = 0x2007C400;
+define symbol __IFCEDIT_region_BLE_tx_end__   = 0x2007C7FF;
+define symbol __IFCEDIT_region_BLE_tx_size__  = (__IFCEDIT_region_BLE_tx_end__ + 1 - __IFCEDIT_region_BLE_tx_start__);
+
+define symbol __IFCEDIT_region_BLE_rx_start__ = 0x2007C800;
+define symbol __IFCEDIT_region_BLE_rx_end__   = 0x2007CBFF;
+define symbol __IFCEDIT_region_BLE_rx_size__  = (__IFCEDIT_region_BLE_rx_end__ + 1 - __IFCEDIT_region_BLE_rx_start__);
+
+/* define symbol __ICFEDIT_region_SHM_start__ = 0x0007C000; */
+/* define symbol __ICFEDIT_region_SHM_end__   = 0x0007C3FF; */
+
+define symbol __ICFEDIT_size_cstack__ = 0x0400;
+define symbol __ICFEDIT_size_heap__   = 0x08000;
+
+/**** End of ICF editor section. ###ICF###*/
+
+
+define memory mem with size = 4G;
+define region ROM_region   = mem:[from __ICFEDIT_region_ROM_start__   to __ICFEDIT_region_ROM_end__];
+define region MEM1_region   = mem:[from __ICFEDIT_region_MEM1_start__   to __ICFEDIT_region_MEM1_end__];
+define region RAM2_region   = mem:[from __ICFEDIT_region_RAM2_start__   to __ICFEDIT_region_RAM2_end__];
+define region HWA_region   = mem:[from __ICFEDIT_region_HWA_start__   to __ICFEDIT_region_HWA_end__]; 
+define region BLE_tx_region   = mem:[from __IFCEDIT_region_BLE_tx_start__   to __IFCEDIT_region_BLE_tx_end__]; 
+define region BLE_rx_region   = mem:[from __IFCEDIT_region_BLE_rx_start__   to __IFCEDIT_region_BLE_rx_end__]; 
+/* define region SHM_region   = mem:[from __ICFEDIT_region_SHM_start__   to __ICFEDIT_region_SHM_end__]; */
+
+
+define block CSTACK   with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP     with alignment = 8, size = __ICFEDIT_size_heap__     { };
+/* comment this section for audio application additional memory */
+define block MEM1      with alignment = 8, size = __ICFEDIT_region_MEM1_size__    {}; 
+define block HWA      with alignment = 8, size = __ICFEDIT_region_HWA_size__    {}; 
+define block BLE_tx   with alignment = 8, size = __IFCEDIT_region_BLE_tx_size__ {};
+define block BLE_rx   with alignment = 8, size = __IFCEDIT_region_BLE_rx_size__ {};
+/* comment this section for audio application additional memory */
+initialize by copy with packing = none { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+
+place in ROM_region   { readonly };
+place in RAM2_region   { readwrite,
+                        block CSTACK, block HEAP };
+						/*block CSTACK };*/
+place in MEM1_region   { block MEM1 };
+place at address mem:__ICFEDIT_region_MEM1_start__ { readwrite section AUD_DMA_BUFF_LOCATION };
+
+						/*block CSTACK };*/
+/* comment this section for audio application additional memory */
+place in HWA_region   { block HWA };
+place at address mem:__ICFEDIT_region_HWA_start__ { readwrite section HWA };
+
+place in BLE_tx_region { block BLE_tx };
+place at address mem:__IFCEDIT_region_BLE_tx_start__ { readwrite section BLE_SPI_TX_LOCATION };
+
+place in BLE_rx_region { block BLE_rx };
+place at address mem:__IFCEDIT_region_BLE_rx_start__ { readwrite section BLE_SPI_RX_LOCATION };
+/* comment this section for audio application additional memory */

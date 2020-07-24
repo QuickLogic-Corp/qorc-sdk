@@ -95,7 +95,7 @@ export DEPEND_PATH=output\depend
 
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
-$(info using recursive seach)
+$(info using recursive search)
 FIND_TOOL_DIR := $(shell where /r c:\progra~2 arm-none-eabi-gcc)
 endif
 
