@@ -48,6 +48,30 @@ void    HAL_usbserial_init(bool fUseInterrupt) {
     fUsingInterrupts = fUseInterrupt;
 }
 
+void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz) {
+    // Setup FPGA clocks
+    if (fUse72MHz) {
+       S3x_Clk_Set_Rate(S3X_FB_21_CLK, 72000*1000);
+    } else {
+       S3x_Clk_Set_Rate(S3X_FB_21_CLK, 48000*1000);
+    }
+    S3x_Clk_Enable(S3X_FB_21_CLK);
+    
+    // Confirm expected IP is loaded
+    configASSERT(HAL_usbserial_ipid() == 0xA5BD);
+    
+    if (fUse72MHz) {
+       pusbserial_regs->reserved2[0] = 1;   // Write 1 to Offset 0x0C to enable 1.5 divider (72/1.5 = 48MHz)
+    } else {
+       pusbserial_regs->reserved2[0] = 0;   // Write 0 to Offset 0x0C to use input clock as is
+    }
+    // Set to use interrupts if desired
+    if (fUseInterrupt) {
+        HAL_usbserial_isrinit();
+    }
+    fUsingInterrupts = fUseInterrupt;
+}
+
 int     HAL_usbserial_getc(void) {
     if (pusbserial_regs->u2m_fifo_flags == 0) {
         return EOF;

@@ -27,7 +27,7 @@
 #define OSC_MINIMUM_FREQ                            (HSOSC_1MHZ)
 #define OSC_MAXIMMUM_FREQ                           (HSOSC_1MHZ * 80)
 
-#define HSOSC_DEF_RATE F_48MHZ
+#define HSOSC_DEF_RATE F_72MHZ
 #define HSOSC_QOS_VAL F_9MHZ
 
 #define FFE_MHZ (F_12MHZ)     // (F_1MHZ * 80)
