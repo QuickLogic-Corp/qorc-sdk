@@ -17,7 +17,7 @@ before_install:
   - export PATH="$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH"
   - source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
   - conda activate
-  - more $INSTALL_DIR/install/bin/python/qlfasm
+  - head $INSTALL_DIR/install/bin/python/qlfasm
 
 jobs:
   include:
