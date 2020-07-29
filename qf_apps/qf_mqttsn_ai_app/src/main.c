@@ -321,7 +321,8 @@ int main(void)
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(sizeof(axFPGABitStream),axFPGABitStream);
-    HAL_usbserial_init2(false, true);      // Start USB serial not using interrupts, Use 72MHz clock
+    // Use 0x6141 as the USB serial product ID (USB PID)
+    HAL_usbserial_init2(false, true, 0x6141);   // Start USB serial not using interrupts, Use 72MHz clock
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     HAL_Delay_Init();
 

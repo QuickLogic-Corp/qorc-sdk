@@ -105,12 +105,18 @@ int main(void)
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     
     load_fpga(sizeof(axFPGABitStream),axFPGABitStream);
-    
+    // Use 0x6140 as the USB serial product ID (USB PID)
+    HAL_usbserial_init2(false, false, 0x6140);          // Start USB serial not using interrupts
+    for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+    LoadFlash_Task_Init();
+    /* Start the tasks and timer running */
+    vTaskStartScheduler();
+#if 0 
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 48000*1000);
     S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
     S3x_Clk_Enable(S3X_FB_21_CLK);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
-      
+#endif  
     while(1);
 }
 

@@ -99,7 +99,8 @@ int load_usb_flasher(void)
 
   //load the FPGA from RAM
   load_fpga(image_size, (uint32_t *)bufPtr);
-  HAL_usbserial_init(false);              // Start USB serial not using interrupts
+  // Use 0x6140 as USB serial product ID (USB PID)
+  HAL_usbserial_init2(false, false, 0x6140);         // Start USB serial not using interrupts
   for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
 
   // remind what to do when done programming
