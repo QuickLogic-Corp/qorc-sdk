@@ -49,7 +49,9 @@ typedef struct fpga_usbserial_regs {
     uint32_t    rev_num;
     uint16_t    scratch_reg;
     uint16_t    reserved1;
-    uint32_t    reserved2[13];
+    uint32_t    clock_select;
+    uint32_t    usbpid;
+    uint32_t    reserved2[11];
     unsigned    u2m_fifo_flags : 4;
     unsigned    reserved3 :28;
     unsigned    rdata : 8;
@@ -73,5 +75,6 @@ void        HAL_usbserial_txbuf(const uint8_t *buf, size_t len);
 int         HAL_usbserial_rxwait(int msecs);
 int         HAL_usbserial_tx_is_fifo_full(void);
 int         HAL_usbserial_tx_is_fifo_empty(void);
+void        HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid);
 
 #endif // EOSS3_HAL_USBSERIAL_H_

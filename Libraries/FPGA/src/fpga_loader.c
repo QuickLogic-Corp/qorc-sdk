@@ -134,7 +134,7 @@ int load_fpga(uint32_t img_size,uint32_t* image_ptr)
 	PMU->FB_ISOLATION = 0x0;
 	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
 
-	printf("FPGA is programmed\r\n");
+	//printf("FPGA is programmed\r\n");
 
 	return 1;
 

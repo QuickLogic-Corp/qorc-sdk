@@ -1,6 +1,6 @@
 BSP_SRCS:=$(wildcard $(BSP_DIR)/*.c )
 
-filters=
+filters=qf_hardwaresetup.c
 
 SRCS:=$(filter-out $(filters),$(notdir $(BSP_SRCS)))
 

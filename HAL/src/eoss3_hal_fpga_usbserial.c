@@ -32,24 +32,26 @@ static QueueHandle_t    qhUSBserialRx = {NULL};
 static bool             fUsingInterrupts;
 
 void    HAL_usbserial_init(bool fUseInterrupt) {
-    // Setup FPGA clocks
-    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 48000*1000);
-    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
-    S3x_Clk_Enable(S3X_FB_21_CLK);
-	S3x_Clk_Enable(S3X_FB_16_CLK);
-    
-    // Confirm expected IP is loaded
-    configASSERT(HAL_usbserial_ipid() == 0xA5BD);
-    
-    // Set to use interrupts if desired
-    if (fUseInterrupt) {
-        HAL_usbserial_isrinit();
-    }
-    fUsingInterrupts = fUseInterrupt;
+	return HAL_usbserial_init2(fUseInterrupt, false, 0x6141);
 }
 
-void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz) {
+void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid) {
     // Setup FPGA clocks
+
+    // Enable 12MHz clock on C16
+    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
+    S3x_Clk_Enable(S3X_FB_16_CLK);
+
+    // Setup the clock select register
+    if (fUse72MHz) {
+       pusbserial_regs->clock_select = 1;   // Write 1 to Offset 0x0C to enable 1.5 divider (72/1.5 = 48MHz)
+    } else {
+       pusbserial_regs->clock_select = 0;   // Write 0 to Offset 0x0C to use input clock as is
+    }
+    // Set the USB product ID
+    pusbserial_regs->usbpid = usbpid;
+
+    // Enable 48MHz/72MHz clock on C21
     if (fUse72MHz) {
        S3x_Clk_Set_Rate(S3X_FB_21_CLK, 72000*1000);
     } else {
@@ -59,12 +61,8 @@ void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz) {
     
     // Confirm expected IP is loaded
     configASSERT(HAL_usbserial_ipid() == 0xA5BD);
+    configASSERT(pusbserial_regs->rev_num == 0x0200);
     
-    if (fUse72MHz) {
-       pusbserial_regs->reserved2[0] = 1;   // Write 1 to Offset 0x0C to enable 1.5 divider (72/1.5 = 48MHz)
-    } else {
-       pusbserial_regs->reserved2[0] = 0;   // Write 0 to Offset 0x0C to use input clock as is
-    }
     // Set to use interrupts if desired
     if (fUseInterrupt) {
         HAL_usbserial_isrinit();
