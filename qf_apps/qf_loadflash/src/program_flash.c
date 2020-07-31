@@ -70,9 +70,8 @@ void program_flash( void *pParameter )
         }
         // Get pkt (first 5 bytes)
         while (ipkt != 5) {
-            vTaskDelay(1);
+            vTaskDelay(0);
             if( uart_rx_available( UART_ID_USBSERIAL ) ){
-	dbg_str(";");
                 c = uart_rx( UART_ID_USBSERIAL  );
                 //First 5 bytes are pkt
                 atflPkt[ipkt++] = c;
@@ -82,7 +81,7 @@ void program_flash( void *pParameter )
 					return;
                 }
             } 
-			toggle_downloading_led(750,50);
+			toggle_downloading_led(50,750);
         }
         // Use pkt info to determine write and read data lengths
         kbWrite = (atflPkt[2] << 8) | atflPkt[1];
@@ -150,11 +149,9 @@ void program_flash( void *pParameter )
             }
             break;
         case 0x0B:
-	    dbg_str("sending 0x0b command");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, READ_CMD);
             uart_tx_raw_buf(UART_ID_USBSERIAL, atflResponse, kbRead);
-	    dbg_str("sent 0x0b command");
             break;
         default:
             dbg_str_hex8("Unknown OpCode", (int)atflCmd[0]);

@@ -97,7 +97,10 @@ int main(void)
     dbg_str( "##########################\n\n");
 
     nvic_init();
-    
+
+    /* Enable FPGA to M4 Interrupt 0, Edge triggered Rising edge polarity */
+    FB_ConfigureInterrupt ( 0 /* int 0 */, FB_INTERRUPT_TYPE_EDGE, FB_INTERRUPT_POL_EDGE_RISE, FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE );
+
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
     

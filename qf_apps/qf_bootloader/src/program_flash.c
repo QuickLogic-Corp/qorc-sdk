@@ -81,7 +81,7 @@ void program_flash( void *pParameter )
 					return;
                 }
             } 
-			toggle_downloading_led(750,50);
+			toggle_downloading_led(50,750);
         }
         // Use pkt info to determine write and read data lengths
         kbWrite = (atflPkt[2] << 8) | atflPkt[1];

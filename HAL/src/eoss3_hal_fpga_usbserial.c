@@ -61,9 +61,8 @@ void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid)
     
     // Confirm expected IP is loaded
     configASSERT(HAL_usbserial_ipid() == 0xA5BD);
+    configASSERT(pusbserial_regs->rev_num == 0x0200);
     
-    dbg_str_hex32("USBPID Actual  ", pusbserial_regs->usbpid);
-    dbg_str_hex32("USBPID Expected", usbpid);
     // Set to use interrupts if desired
     if (fUseInterrupt) {
         HAL_usbserial_isrinit();
