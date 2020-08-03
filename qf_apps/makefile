@@ -19,8 +19,7 @@ clean:
 
 
 qf_mfgpkg:	$(MFGBINS)
-	mkdir -p ../../qf_mfgpkg
-	cp $(MFGBINS) ../../qf_mfgpkg
+	cp $(MFGBINS) quickfeather-initial-binaries
 
 
 qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin:

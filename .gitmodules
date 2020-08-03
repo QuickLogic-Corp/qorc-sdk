@@ -1,3 +1,6 @@
 [submodule "tensorflow"]
 	path = tensorflow
 	url = https://github.com/QuickLogic-Corp/tensorflow.git
+[submodule "qf_apps/quickfeather-initial-binaries"]
+	path = qf_apps/quickfeather-initial-binaries
+	url = https://github.com/QuickLogic-Corp/qf-initial-bins.git
