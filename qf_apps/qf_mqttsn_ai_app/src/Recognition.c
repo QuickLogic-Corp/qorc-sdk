@@ -784,7 +784,7 @@ void RecognitionTaskHandler(void *pParameter)
                 sensor_id = SENSOR_ENG_VALUE_ACCEL;
                 /* no M present here */
                 batch_size = 1;
-                n_sensors = 6;
+                n_sensors = 3;
 
                 assert_ptr_within(  (const void *)(&motion_buffer[0]),
                                   sizeof( motion_buffer),
@@ -802,7 +802,7 @@ void RecognitionTaskHandler(void *pParameter)
                 sensor_id = SENSOR_ENG_VALUE_ACCEL;
                 /* no M present here */
                 batch_size = recog_task_vars.imu_batchSize;
-                n_sensors = 6;
+                n_sensors = 3;
 				/* Note number of sensor are 6 accel-x-y-z and gyro x-y-z data */
 
                 assert_ptr_within(  (const void *)(&motion_buffer[0]),

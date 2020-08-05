@@ -28,7 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #ifndef _KB_TYPEDEFS_H_
 #define _KB_TYPEDEFS_H_
 
@@ -41,42 +40,48 @@ typedef float FVCOMP_T;
 typedef unsigned short NORMTYPE;
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-struct compx
-{
-	float real;
-	float imag;
-};
+    struct compx
+    {
+        float real;
+        float imag;
+    };
 
-struct compx_int16_t
-{
+    struct compx_int16_t
+    {
         int16_t real;
         int16_t imag;
-};
+    };
 
-
-typedef struct{
-    uint16_t influence; //influence of a pattern
-    uint16_t category; //category of pattern
-    uint8_t * vector; // vector containing the features of a pattern
+    typedef struct
+    {
+        uint16_t influence; //influence of a pattern
+        uint16_t category;  //category of pattern
+        uint8_t *vector;    // vector containing the features of a pattern
     } pme_pattern_t;
 
-typedef struct{
-    uint16_t number_patterns; //influence of a pattern
-    uint16_t pattern_length; //category of pattern
+    typedef struct
+    {
+        uint16_t number_patterns; //influence of a pattern
+        uint16_t pattern_length;  //category of pattern
     } pme_model_header_t;
 
-
-
-/** KB Log levels. */
-enum kb_log_levels {
-    KB_LOG_LEVEL_1 = 1, /*!< Default log level, classifier output */
-    KB_LOG_LEVEL_2,     /*!< A little verbose log level, feature output */
-    KB_LOG_LEVEL_3,     /*!< Very Verbose log level, segmenter output */
-    KB_LOG_LEVEL_NUM
-};
+    /** KB Log levels. */
+    enum kb_log_levels
+    {
+        KB_LOG_LEVEL_1 = 1, /*!< Default log level, classifier output */
+        KB_LOG_CLASSIFIER_OUTPUT = KB_LOG_LEVEL_1,
+        KB_LOG_LEVEL_2, /*!< A little verbose log level, feature output */
+        KB_LOG_FEATURE_OUTPUT = KB_LOG_LEVEL_2,
+        KB_LOG_LEVEL_3, /*!< Very Verbose log level, segmenter output */
+        KB_LOG_SEGMENTER_OUTPUT = KB_LOG_LEVEL_3,
+        KB_LOG_LEVEL_4, /*!< Very Very Verbose log level, kitchen sink included */
+        KB_LOG_LEVEL_EVERYTHING = KB_LOG_LEVEL_4,
+        KB_LOG_LEVEL_NUM = KB_LOG_LEVEL_4
+    };
 
 #ifdef __cplusplus
 }
