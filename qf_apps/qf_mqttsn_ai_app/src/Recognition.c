@@ -451,9 +451,6 @@ static void processMotionData(ble_accel_gyro_t *motionData )
 {
     int tmp;
     // Fill motion data buffer
-    motion_buffer[recog_task_vars.motionData_indx].gyro.x = motionData->gyro.x;
-    motion_buffer[recog_task_vars.motionData_indx].gyro.y = motionData->gyro.y;
-    motion_buffer[recog_task_vars.motionData_indx].gyro.z = motionData->gyro.z;
     motion_buffer[recog_task_vars.motionData_indx].accel.x = motionData->accel.x;
     motion_buffer[recog_task_vars.motionData_indx].accel.y = motionData->accel.y;
     motion_buffer[recog_task_vars.motionData_indx].accel.z = motionData->accel.z;
@@ -693,7 +690,7 @@ void recog_data( struct sensor_data *pSensorData )
                 /* bufering code assumes 1 sample per per, and both ACCEL & GYRO */
                 dbg_fatal_error("recog-imu-bad-size\n");
             }
-            processMotionData( (ble_xyz16_t *)(pSensorData->vpData));
+            processMotionData( (ble_accel_gyro_t *)(pSensorData->vpData));
         }
         break;
 
