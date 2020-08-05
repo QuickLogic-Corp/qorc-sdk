@@ -1,6 +1,6 @@
 # Example PC host application for SensiML AI App
-# usage scenerios 
-# Scenerio 1 Live stream sensor data for the given 
+# usage scenerios
+# Scenerio 1 Live stream sensor data for the given
 #      Sensor ID, sensor sample rate, sensor sample range
 #      count down (if any to throttle streaming speed),
 #      samples per packet
@@ -89,7 +89,7 @@ def on_log(client, userdata, level, buf):
     print("log: ", buf)
 
 def on_publish(client, userdata, mid):
-    pass 
+    pass
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -103,7 +103,7 @@ def on_message(client, userdata, msg):
 # sensiml/sys/#
 # sensiml/sensor/#
 # sensiml/live/+/+/rsp
-# 
+#
 def cb_dev_response(client, userdata, msg):
     global dev_response
     dev_response = 1
@@ -129,7 +129,7 @@ def cb_live_raw_data(client, userdata, msg):
 # Process recognition data
 # the following topics are expected to be registered for this callback
 # sensiml/result/class/data
-# 
+#
 def cb_result_class_data(client, userdata, msg):
     print(msg.topic+" "+msg.payload.hex())
     return
@@ -162,7 +162,7 @@ def send_message(client, topic, payload, qos, wait=False):
         wait_response()
 
 def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
-    global total_bytes 
+    global total_bytes
     global total_packets
     total_bytes = 0
     empty = b''
@@ -216,15 +216,27 @@ def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
         send_message(mqttc, "sensiml/live/start", msg, qos=1, wait=False)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
 
+        def live_disconnect(mqttc):
+            send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
+            mqttc.message_callback_remove("sensiml/live/raw/data")
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
+            mqttc.disconnect()
+
         total_bytes = 0
         total_packets = 0
-        time.sleep(streaming_time)
-        send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
-        mqttc.message_callback_remove("sensiml/live/raw/data")
-        mqttc.message_callback_remove("sensiml/sys/#")
-        mqttc.message_callback_remove("sensiml/sensor/#")
-        mqttc.message_callback_remove("sensiml/live/+/+/rsp")
-        mqttc.disconnect()
+
+        if streaming_time != 0:
+            time.sleep(streaming_time)
+            live_disconnect(mqttc)
+        else:
+            while(True):
+                try:
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    live_disconnect(mqttc)
+                    break
 
 def test_disconnect():
     mqttc = mqtt.Client(client_id="SensiML-Host")
@@ -243,7 +255,7 @@ def test_disconnect():
     mqttc.disconnect()
 
 def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
-    global total_bytes 
+    global total_bytes
     total_bytes = 0
     empty = b''
     with open(filename,'wb') as outfile:
@@ -289,12 +301,29 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
            msg = b'\x02'
         send_message(mqttc, "sensiml/result/class/start", msg, qos=1, wait=False)
 
-        time.sleep(streaming_time)
-        send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
+        def recog_disconnect(mqttc):
+            send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
 
-        mqttc.message_callback_remove("sensiml/sys/#")
-        mqttc.message_callback_remove("sensiml/sensor/#")
-        mqttc.disconnect()
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.disconnect()
+
+        if streaming_time != 0:
+            time.sleep(streaming_time)
+            recog_disconnect(mqttc)
+        else:
+            while(True):
+                try:
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    recog_disconnect(mqttc)
+                    break;
+        # time.sleep(streaming_time)
+        # send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
+
+        # mqttc.message_callback_remove("sensiml/sys/#")
+        # mqttc.message_callback_remove("sensiml/sensor/#")
+        # mqttc.disconnect()
 
 
 args = parser.parse_args()
