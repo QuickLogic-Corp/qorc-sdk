@@ -100,45 +100,45 @@ struct recog_task_vars {
     QueueHandle_t cmd_q;
     recognition_state_t currentState;
     SensorEnableStatus sensor_status;   // Keep the current status of the sensor which are configured currently for classification
-    
+
     /* where next motion data will be placed */
-    int motionData_indx;         // Index pointer to motion data    
-    
+    int motionData_indx;         // Index pointer to motion data
+
     /* how large is each "batch of audio samples" (in sample counts) */
     int audio_batchSize;
     int audio_batchCount;
-    
+
     /* when batching the IMU - how big should the batch be? */
     int imu_batchSize;
-    
+
     /* The IMU buffer size is fixed (via a #define)
      * The IMU batch size is based on time not samples.
      *
      * Thus the batch may not evenly divide the buffer size.
      * But - we must still "wrap" the imu buffer based on the
-     * batch size, not the buffer size 
+     * batch size, not the buffer size
      *
      * Thus we calculate the wrap point dynamically
      * and store that wrap point here for later use.
      */
     int imu_batchCount_wrap;
-    
+
     /* how many adc samples are in a batch */
     int adc_batchSize;
-    
+
     /* when writing data, the ADC should wrap when pointer goes past here */
     uint8_t *adc_wrapPointer;
-    
-  
+
+
     /* how many channels are enabled for the ADC? */
     int adc_channel_count;
-    
+
     /* used to determine if the recognition task is running or waiting */
     int task_ready;
     /* this keeps track of how many data packets where dropped */
     /* IF a drop occurs, then the recogntion task is taking too much time */
-    
-    /* These two member variables represent the "recogntion work load" 
+
+    /* These two member variables represent the "recogntion work load"
      *
      * Each new message is a "unit of work" that must be calculated.
      * As new data arrives, a new entry is placed in the work queue.
@@ -146,16 +146,16 @@ struct recog_task_vars {
      * First question/concern:
      * IF the recogntion task is "too busy" and it overflows
      *    Then - DATA LOSS will appear (see: data_loss_count)
-     * 
+     *
      * Second question/concern:
      * How to determine if the recogntion task is "keeping up" with the data?
-     * 
+     *
      * We can measure that by looking at the depth of the work queue.
      * This is very simplistic - "what is the maximum" backlog.
      */
     int data_loss_count;
     int max_queue_backlog;
-    // Pointer to the buffer used for storing lasted sensor sample data 
+    // Pointer to the buffer used for storing lasted sensor sample data
     uint8_t *currBuffPtr;
 };
 
@@ -186,7 +186,7 @@ SensorEnableStatus GetRecogSensorStatus(void)
 
 /*
 * @fn      GetRecognitionCurrentState
-* @brief   Return the current state of recognition task status such as 
+* @brief   Return the current state of recognition task status such as
 *          recognition state
 * @param   None
 * @return  recognition_state_t
@@ -231,7 +231,7 @@ void setBuffIndex(struct xQ_Packet *msg, intptr_t valuetopass)
 * @fn      sendRecognitionDataReadyMsg
 * @brief   Sends the RecognitionDataReady message to the recongnition task
 * @param   command - Command ID
-* @param   valuetopass - a parameter for the message 
+* @param   valuetopass - a parameter for the message
 * @return  None
 */
 static void sendRecognitionMsg(reco_cmd_t command, intptr_t valuetopass)
@@ -241,16 +241,16 @@ static void sendRecognitionMsg(reco_cmd_t command, intptr_t valuetopass)
 	{
 		return;
 	}
-    
+
 	Msg.ucCommand = command;
-    
+
     setBuffIndex(&Msg, valuetopass);
     //printf("\n --- put =%x", bufferIndx);
     if(getBuffIndex(&Msg) != valuetopass)
     {
         dbg_fatal_error("recogntion task internal error\n");
     }
-	
+
 	if (xQueueSend(recog_task_vars.cmd_q, &Msg, 0) != pdPASS)
 	{
 		printf("Error- Sending Accel Msg to Reco Task \n");
@@ -258,7 +258,7 @@ static void sendRecognitionMsg(reco_cmd_t command, intptr_t valuetopass)
 	return;
 }
 
-/* 
+/*
  * Send a "NEW DATA" message to the Recognition task.
  *
  * Also track the amount of work, and backlog
@@ -268,18 +268,18 @@ static void sendNewDataMessage( reco_cmd_t command, intptr_t valuetopass )
 {
     UBaseType_t space;
     UBaseType_t used;
-    
+
     /* how much space is in the queue */
     space = uxQueueSpacesAvailable( recog_task_vars.cmd_q );
-    
+
     /* how much back log do we have */
     used = SENSIML_RECO_QUEUE_LENGTH - space;
-    
+
     /* Track max level */
     if( used > recog_task_vars.max_queue_backlog ){
         recog_task_vars.max_queue_backlog = used;
     }
-       
+
     /* did we overflow (too much work?) */
     if( space  == 0 ){
         /* recognition cannot keep up */
@@ -289,7 +289,7 @@ static void sendNewDataMessage( reco_cmd_t command, intptr_t valuetopass )
     }
 }
 
-/* 
+/*
  * calculate the size of the IMU wrap in the IMU buffer.
  */
 static void calculate_imu_wrap_point(void)
@@ -301,14 +301,14 @@ static void calculate_imu_wrap_point(void)
 
     /* not enabled ?? */
     if( recog_task_vars.sensor_status.isIMUEnabled || recog_task_vars.sensor_status.isAccelEnabled || recog_task_vars.sensor_status.isGyroEnabled ){
-            /* at least one is enabled */   
+            /* at least one is enabled */
     } else {
         /* not enabled, bye */
         return;
     }
 
     /* calculate the IMU batch size */
-    
+
     /* we need the sample rate */
     tmp = 0;
     if( !imu_config.accel.enabled ){
@@ -322,7 +322,7 @@ static void calculate_imu_wrap_point(void)
             dbg_fatal_error("recog-gyro-accel-different-rates");
         }
     }
-    
+
     /* we don't do this sensor yet */
     if( imu_config.mag.enabled ){
         dbg_fatal_error("recog-no-mag-yet\n");
@@ -332,12 +332,12 @@ static void calculate_imu_wrap_point(void)
         /* we should have a rate in hz? */
         dbg_fatal_error("recog-imu-no-rate\n");
     }
-    
+
     /* we want to feed recognition IMU data every 100 milliseconds */
     tmp = tmp / 10;
     /* thus that is our batch size */
     recog_task_vars.imu_batchSize = tmp;
-    
+
     /*
      * Next, calculate when do we 'wrap' the motion buffer.
      */
@@ -348,20 +348,20 @@ static void calculate_imu_wrap_point(void)
         /* we should have at least 4 batches in the buffer */
         dbg_fatal_error("recog-imu-buff-too-small\n");
     }
-    
+
     /* convert BATCHES to SAMPLES */
     tmp = tmp * recog_task_vars.imu_batchSize;
 
     /* thus we have from 0 to "tmp" samples in our motion buffer, then we wrap */
     recog_task_vars.imu_batchCount_wrap = tmp;
-    
+
 }
 
 
 static void calculate_adc_wrap_point( const struct sensor_data *pSensorData )
 {
     int tmp;
-    
+
     /* Sadly, we cannot calculate the adc wrap point
      * until we *KNOW* how many bytes per transfer
      * the ADC is going to give us.
@@ -376,7 +376,7 @@ static void calculate_adc_wrap_point( const struct sensor_data *pSensorData )
     recog_task_vars.adc_batchSize = 0;
     recog_task_vars.adc_wrapPointer = NULL;
     recog_task_vars.adc_channel_count = 0;
-    
+
     /* is this the startup? */
     if( pSensorData == NULL ){
         return;
@@ -386,16 +386,16 @@ static void calculate_adc_wrap_point( const struct sensor_data *pSensorData )
 
     recog_task_vars.adc_channel_count = pSensorData->bytes_per_reading / sizeof(int16_t);
 
-    
+
     /* start with the size of the class buffer */
     tmp = sizeof( classBuffer );
-    
+
     /* Determine the number of frames that fit */
     tmp = tmp / pSensorData->n_bytes;
-    
+
     /* turn this back into bytes */
     tmp = tmp * pSensorData->n_bytes;
-    
+
     recog_task_vars.adc_wrapPointer = &(classBuffer[ tmp ]);
 }
 
@@ -412,21 +412,21 @@ static void init_recognition_state(recognition_state_t new_state)
         sensor_clear( &recog_task_vars.sensor_status );
         return;
     }
-    
+
     //Initialize Model
 	kb_model_init();
-    
-    // FIXME with this configuration, regonition will add default sensor based on 
+
+    // FIXME with this configuration, regonition will add default sensor based on
     // recognition_config which is generated by sml tool. This preconofiged sensor
     // could be conflict with cli sensor add (A,G,G+A etc.). To solve this conflict
     // we could clear sensor (cli or host) first, add sensor late as needed.
     sensor_config_apply_sequence(recognition_config, &recog_task_vars.sensor_status);
     recog_task_vars.currBuffPtr  = classBuffer;
-    
+
     calculate_imu_wrap_point();
 
     calculate_adc_wrap_point( NULL );
-    
+
     /* AUDIO batch size is currently hard coded and fixed */
     /* Make sure the class buffer size of multiple of audio frame size */
 #if ((MAX_CLASS_BUFF_SIZE*SENSOR_DATA_BASE_SIZE)%(FRAME_SIZE*2)) != 0
@@ -434,7 +434,7 @@ static void init_recognition_state(recognition_state_t new_state)
 #endif
     /* do this *LAST */
     recog_task_vars.currentState = new_state;
-    
+
     /* tell sensors to RUN */
     sensors_all_startstop( 1 );
 }
@@ -442,7 +442,7 @@ static void init_recognition_state(recognition_state_t new_state)
 /*
 * @fn      processMotionData
 * @brief   Proesses the new motion/IMU data received for from sensor and copies
-*          on the internal queue and send message for classifcation on 
+*          on the internal queue and send message for classifcation on
 *          recongnition task.
 * @param   None.
 * @return  None
@@ -451,23 +451,20 @@ static void processMotionData(ble_accel_gyro_t *motionData )
 {
     int tmp;
     // Fill motion data buffer
-    motion_buffer[recog_task_vars.motionData_indx].gyro.x = motionData->gyro.x;
-    motion_buffer[recog_task_vars.motionData_indx].gyro.y = motionData->gyro.y;
-    motion_buffer[recog_task_vars.motionData_indx].gyro.z = motionData->gyro.z;
     motion_buffer[recog_task_vars.motionData_indx].accel.x = motionData->accel.x;
     motion_buffer[recog_task_vars.motionData_indx].accel.y = motionData->accel.y;
     motion_buffer[recog_task_vars.motionData_indx].accel.z = motionData->accel.z;
-    
+
     /* Note use batching if the sample rate is higher than 416Hz,
     otherwise there would be dansger of Recognition task queue overflow */
-    
+
     // send message to the recognition task queue for claissification
 #if !defined(MOTION_DATA_BATCH_PROCESSING)
 #error Must be 0 or 1
 #endif
-    
+
     // increment motion data buffer pointer
-    
+
 #if (MOTION_DATA_BATCH_PROCESSING == 0)
     sendNewDataMessage(RECOG_CMD_NEW_MOTION_DATA, recog_task_vars.motionData_indx);
     recog_task_vars.motionData_indx = (recog_task_vars.motionData_indx+1) % recog_task_vars.imu_batchCount_wrap;
@@ -482,8 +479,8 @@ static void processMotionData(ble_accel_gyro_t *motionData )
         sendNewDataMessage(RECOG_CMD_NEW_MOTION_DATA_BATCH, tmp);
     }
 #endif
-    
-    
+
+
 }
 
 /*
@@ -495,10 +492,10 @@ static void assert_ptr_within( const void *pBuf, size_t buf_size,
 {
     const void *pEndData;
     const void *pEndBuf;
-    
+
     pEndBuf  = (const void *)(((const char *)(pBuf ))+buf_size);
     pEndData = (const void *)(((const char *)(pData))+nDataBytes);
-    
+
     if( (pData >= pBuf) && (pEndData <= pEndBuf) ){
         /* ALL IS WELL */
         return;
@@ -515,7 +512,7 @@ static void assert_ptr_within( const void *pBuf, size_t buf_size,
 /*
 * @fn      processAudioData
 * @brief   Proesses the new audio data received for from sensor and copies
-*          on the internal queue and send message for classifcation on 
+*          on the internal queue and send message for classifcation on
 *          recongnition task.
 * @param   None.
 * @return  None
@@ -527,25 +524,25 @@ static void processAudioData(const struct sensor_data *audioData )
     int tmp;
 
     /* audio frames must exactly this size for buffering reasons */
-    if( (audioData->n_bytes != (FRAME_SIZE*2)) || 
+    if( (audioData->n_bytes != (FRAME_SIZE*2)) ||
         (audioData->bytes_per_reading != 2) ){
         dbg_fatal_error("invalid audio size\n");
     }
-    
+
     // copy the audio data samples
     pDataBytes = recog_task_vars.currBuffPtr;
-    assert_ptr_within(  (const void *)(&classBuffer[0]), 
-                         sizeof( classBuffer), 
+    assert_ptr_within(  (const void *)(&classBuffer[0]),
+                         sizeof( classBuffer),
                          (const void *)(pDataBytes),
                          audioData->n_bytes );
-    
+
     memcpy(  pDataBytes, audioData->vpData, audioData->n_bytes);
     //printf("\n --%x", currBuffPtr);
     tmp = audioData->n_bytes;
     tmp = tmp / audioData->bytes_per_reading;
     recog_task_vars.audio_batchSize = tmp;
     recog_task_vars.audio_batchCount++;
-    
+
     /* get next location for buffer */
     pNext = pDataBytes + audioData->n_bytes;
     /* next data will go here */
@@ -559,10 +556,10 @@ static void processAudioData(const struct sensor_data *audioData )
 #else
     if(recog_task_vars.audio_batchCount >= AUDIO_BATCH_FRAME_COUNT/2) // Half buffer is full send for classification
     {
-        
+
         //printf("\n ***%x", currBuffPtr);
         /* Note use batching if the sample rate is higher than 416Hz,
-        otherwise there would be dansger of Recognition task queue overflow */      
+        otherwise there would be dansger of Recognition task queue overflow */
         tmp = ((recog_task_vars.audio_batchCount -1)*(audioData->n_bytes));
         /* point at start */
         pDataBytes -= tmp;
@@ -575,7 +572,7 @@ static void processAudioData(const struct sensor_data *audioData )
 /*
 * @fn      processADCData
 * @brief   Proesses the new ADC data received for from sensor and copies
-*          on the internal queue and send message for classifcation on 
+*          on the internal queue and send message for classifcation on
 *          recongnition task.
 * @param   None.
 * @return  None
@@ -585,26 +582,26 @@ static void processADCData(const struct sensor_data *pData )
     uint8_t *pDataBytes;
     int tmp;
 
-    
+
     if( recog_task_vars.adc_wrapPointer == 0 ){
         /* We have not yet calculated our wrap point */
         /* we need to calculate it now */
         calculate_adc_wrap_point( pData );
-    }        
-    
-    
-    assert_ptr_within(  (const void *)(&classBuffer[0]), 
-                         sizeof( classBuffer), 
+    }
+
+
+    assert_ptr_within(  (const void *)(&classBuffer[0]),
+                         sizeof( classBuffer),
                          (const void *)(recog_task_vars.currBuffPtr),
                          pData->n_bytes );
-    
+
     // copy the adc data samples
     // If the recognition task is not keeping up (too slow)
     // then data is lost and overwritten
     pDataBytes = recog_task_vars.currBuffPtr;
     memcpy( pDataBytes, pData->vpData, pData->n_bytes);
 
-    /* 
+    /*
      * ADC task tries to make data appear every 100mSec
      * or when it's DMA buffer is full which ever comes first.
      */
@@ -613,12 +610,12 @@ static void processADCData(const struct sensor_data *pData )
     tmp = tmp / pData->bytes_per_reading;
     recog_task_vars.adc_batchSize = tmp;
     sendNewDataMessage(RECOG_CMD_NEW_ADC_DATA, (intptr_t)(recog_task_vars.currBuffPtr) );
-        
+
 #else
     recog_task_vars.adc_batchCount++;
     if(recog_task_vars.adc_batchCount >= recog_task_vars.adc_batchCount_wrap) // Half buffer is full send for classification
     {
-        
+
         //printf("\n ***%x", currBuffPtr);
         /* Note use batching if the sample rate is higher than 416Hz,
         otherwise there would be dansger of Recognition task queue overflow */
@@ -626,12 +623,12 @@ static void processADCData(const struct sensor_data *pData )
         tmp = ((recog_task_vars.adc_batchCount -1)*(pData->n_bytes));
         /* go back to the start of this chunk */
         pDataBytes -= tmp;
-        
+
         recog_task_vars.adc_batchSize = tmp / pData->bytes_per_reading;
         sendNewDataMessage( RECOG_CMD_NEW_ADC_DATA, pDataBytes );
         recog_task_vars.adc_batchCount = 0;
     }
-#endif    
+#endif
     recog_task_vars.currBuffPtr += pData->n_bytes;
     if( recog_task_vars.currBuffPtr >= recog_task_vars.adc_wrapPointer ){
         recog_task_vars.currBuffPtr = &classBuffer[0];
@@ -647,7 +644,7 @@ static void processADCData(const struct sensor_data *pData )
 void recog_data( struct sensor_data *pSensorData )
 {
     int ignore;
-    
+
     /* if we are not recognizing .. then ignore */
     ignore = 1;
     switch( recog_task_vars.currentState ){
@@ -659,7 +656,7 @@ void recog_data( struct sensor_data *pSensorData )
         ignore = 0;
         break;
     }
-    
+
     // Check if there is imu sensor (A,G,A_G_SEP,A_G_COM) added
     if ( !is_sensor_active(pSensorData->sensor_id, IMU_RECOGNITION) )
     {
@@ -669,7 +666,7 @@ void recog_data( struct sensor_data *pSensorData )
     if( ignore ){
         return;
     }
-    
+
     switch( pSensorData->sensor_id )
     {
     case SENSOR_ENG_VALUE_ACCEL_GYRO:
@@ -682,29 +679,35 @@ void recog_data( struct sensor_data *pSensorData )
             processMotionData( (ble_accel_gyro_t *)(pSensorData->vpData));
         }
         break;
-        
+
     case SENSOR_ENG_VALUE_GYRO:
         /* model with only GYRO */
         break;
-        
+
     case SENSOR_ENG_VALUE_ACCEL:
-        /* model with only ACCEL */
+        if(recog_task_vars.sensor_status.isIMUEnabled){
+            if( pSensorData->n_bytes != (3 * sizeof(int16_t)) ){
+                /* bufering code assumes 1 sample per per, and both ACCEL & GYRO */
+                dbg_fatal_error("recog-imu-bad-size\n");
+            }
+            processMotionData( (ble_accel_gyro_t *)(pSensorData->vpData));
+        }
         break;
-        
+
     case SENSOR_ENG_VALUE_MAGNETOMETER:
         /* future... */
         break;
-        
+
     case SENSOR_AUDIO:
         if( recog_task_vars.sensor_status.isAudioEnabled)
             processAudioData(pSensorData);
         break;
-        
+
     case SENSOR_ADC_LTC_1859_MAYHEW:
         if( recog_task_vars.sensor_status.isADCEnabled)
             processADCData(pSensorData);
         break;
-        
+
     default:
         dbg_str_int("rec-unknown-sensor", pSensorData->sensor_id );
         break;
@@ -726,94 +729,94 @@ void RecognitionTaskHandler(void *pParameter)
     uint32_t sensor_id;
     int batch_size;
     int n_sensors;
-    
+
 	//init training variables
     wait_ffe_fpga_load();
-    
+
     /* We *DO*NOT* wait for the sensors to configure
     * because this is the task that will configure sensors.
     */
 	//clear the Msg Q buffer
 	memset(&Msg, 0, sizeof(Msg));
-    
+
     vTaskDelay(10);
-    
+
     /* send ourself a start message */
 	recog_task_vars.task_ready = 1;
     // TODO Recognition should be started when "RECOG_START" is received from host.
     recognition_startstop( RECOG_CMD_RECOGNIZE_START );
 	recog_task_vars.task_ready = 0;
-    
-    
+
+
 	printf("**************************************\n");
 	printf("****** QuickAI Recognition Init ******\n");
 	printf("**************************************\n");
-    
+
 	while (!TaskStop)
 	{
-        
+
 		recog_task_vars.task_ready = 1;
 		qret = xQueueReceive( recog_task_vars.cmd_q, &Msg, SENSIML_RECO_MSGQ_WAIT_TIME);
 		configASSERT(qret == pdTRUE);
-		recog_task_vars.task_ready = 0; 
-        
+		recog_task_vars.task_ready = 0;
+
         pSensorData16 = NULL;
-        
+
 		switch (Msg.ucCommand)
 		{
 		case RECOG_CMD_RECOGNIZE_START:
             init_recognition_state(RECOG_STATE_RUN);
 			break;
-            
+
 		case RECOG_CMD_RECOGNIZE_STOP:
             init_recognition_state(RECOG_STATE_AWAITING_CMD);
 			break;
-            
+
 		case RECOG_CMD_RECOGNIZE_START_W_FV:
             init_recognition_state(RECOG_STATE_RUN_W_FV);
 			break;
-            
+
 		case RECOG_CMD_NEW_MOTION_DATA:
             {
                 // Get the index of the message buffer
                 idx = (int)getBuffIndex(&Msg);
                 pSensorData16 = (int16_t *)(&motion_buffer[idx]);
-                sensor_id = SENSOR_ENG_VALUE_ACCEL_GYRO;
+                sensor_id = SENSOR_ENG_VALUE_ACCEL;
                 /* no M present here */
                 batch_size = 1;
-                n_sensors = 6;
-                
-                assert_ptr_within(  (const void *)(&motion_buffer[0]), 
-                                  sizeof( motion_buffer), 
+                n_sensors = 3;
+
+                assert_ptr_within(  (const void *)(&motion_buffer[0]),
+                                  sizeof( motion_buffer),
                                   (const void *)pSensorData16,
                                   (batch_size * n_sensors) * sizeof(int16_t) );
                 sml_recognition_run_single( pSensorData16, sensor_id );
             }
 		    break;
-            
+
 		case RECOG_CMD_NEW_MOTION_DATA_BATCH:
             {
 			    idx = (int)getBuffIndex(&Msg);
                 pSensorData16 = (int16_t *)(&motion_buffer[idx]);
 
-                sensor_id = SENSOR_ENG_VALUE_ACCEL_GYRO;
+                sensor_id = SENSOR_ENG_VALUE_ACCEL;
                 /* no M present here */
                 batch_size = recog_task_vars.imu_batchSize;
-                n_sensors = 6;
+                n_sensors = 3;
 				/* Note number of sensor are 6 accel-x-y-z and gyro x-y-z data */
-                
-                assert_ptr_within(  (const void *)(&motion_buffer[0]), 
-                                  sizeof( motion_buffer), 
+
+                assert_ptr_within(  (const void *)(&motion_buffer[0]),
+                                  sizeof( motion_buffer),
                                   (const void *)pSensorData16,
                                   (batch_size * n_sensors) * sizeof(int16_t) );
-                
-                sml_recognition_run_batch( pSensorData16, 
-                                          batch_size, 
-                                          n_sensors, 
-                                          sensor_id); 
+
+                sml_recognition_run_batch( pSensorData16,
+                                          batch_size,
+                                          n_sensors,
+                                          sensor_id);
             }
 		    break;
-            
+
         case RECOG_CMD_NEW_AUDIO_DATA:
             {
                 pSensorData16 = (int16_t *)getBuffIndex(&Msg);
@@ -821,19 +824,19 @@ void RecognitionTaskHandler(void *pParameter)
                 sensor_id = SENSOR_AUDIO;
                 n_sensors = 1;
                 batch_size = recog_task_vars.audio_batchSize;
-                
-                assert_ptr_within(  (const void *)(&classBuffer[0]), 
-                                  sizeof( classBuffer), 
+
+                assert_ptr_within(  (const void *)(&classBuffer[0]),
+                                  sizeof( classBuffer),
                                   (const void *)pSensorData16,
                                   (batch_size * n_sensors) * sizeof(int16_t) );
-                
-                sml_recognition_run_batch(pSensorData16, 
-                                          batch_size, 
-                                          n_sensors, 
+
+                sml_recognition_run_batch(pSensorData16,
+                                          batch_size,
+                                          n_sensors,
                                           sensor_id); /* only one audio channel is enabled */
             }
             break;
-            
+
         case RECOG_CMD_NEW_ADC_DATA:
             {
                 pSensorData16 = (int16_t *)getBuffIndex(&Msg);
@@ -841,38 +844,38 @@ void RecognitionTaskHandler(void *pParameter)
                 sensor_id = SENSOR_ADC_LTC_1859_MAYHEW;
                 n_sensors = recog_task_vars.adc_channel_count;
                 batch_size = recog_task_vars.adc_batchSize;
-                
-                assert_ptr_within(  (const void *)(&classBuffer[0]), 
-                                  sizeof( classBuffer), 
+
+                assert_ptr_within(  (const void *)(&classBuffer[0]),
+                                  sizeof( classBuffer),
                                   (const void *)pSensorData16,
                                   (batch_size * n_sensors) * sizeof(int16_t) );
-                sml_recognition_run_batch(pSensorData16, 
-                                          batch_size, 
-                                          n_sensors, 
+                sml_recognition_run_batch(pSensorData16,
+                                          batch_size,
+                                          n_sensors,
                                           sensor_id);
             }
             break;
-            
+
 		default:
 			printf("Recognition: Unknown message %d\n", Msg.ucCommand);
 			break;
 		} /* switch  end */
 	}	 /* while loop */
-    
+
 	return;
-    
+
 } /* RecognitionTaskHandler() */
 
 /* Setup msg queue and Task Handler for Recognition Task */
 portBASE_TYPE StartRtosTaskRecognition(void)
 {
 	static UINT8_t ucParameterToPass;
-	
+
     memset( (void *)&(recog_task_vars), 0, sizeof(recog_task_vars) );
     recog_task_vars.currentState = RECOG_STATE_IDLE;
     recog_task_vars.currBuffPtr = classBuffer;
     kb_model_init();
-    
+
 	/* Create queue for Recognition Task */
 	recog_task_vars.cmd_q = xQueueCreate(SENSIML_RECO_QUEUE_LENGTH, sizeof(struct xQ_Packet));
     configASSERT(recog_task_vars.cmd_q);
@@ -882,7 +885,7 @@ portBASE_TYPE StartRtosTaskRecognition(void)
 	xTaskCreate(RecognitionTaskHandler,	"RecognitionTaskHandler",STACK_SIZE_ALLOC(STACK_SIZE_TASK_SENSIML_RECO),
 				&ucParameterToPass, PRIORITY_TASK_SENSIML_RECO, &recog_task_vars.task_handle);
 	configASSERT(recog_task_vars.task_handle);
-    
+
 	return pdPASS;
 }
 
