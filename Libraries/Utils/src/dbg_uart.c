@@ -24,7 +24,9 @@
 #include <stddef.h>
 
 #include "eoss3_hal_uart.h"
+#if (FEATURE_USBSERIAL == 1)
 #include "eoss3_hal_fpga_usbserial.h"
+#endif
 #include "dbg_uart.h"
 #include "FreeRTOS.h"
 #include "portmacro.h"

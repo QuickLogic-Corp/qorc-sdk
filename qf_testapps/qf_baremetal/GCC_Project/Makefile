@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs appdir
+all: _makedirs_ external_srcs appdir s3gw_drivers
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
@@ -81,6 +81,14 @@ clean_Libraries:
 	make -f makefiles/Makefile_Libraries clean
 
 CLEAN_TARGET += Libraries
+
+.PHONY:s3gw_drivers
+s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers
+clean_s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers clean
+
+CLEAN_TARGET += s3gw_drivers
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)
