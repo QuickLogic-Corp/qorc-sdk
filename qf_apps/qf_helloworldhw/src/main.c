@@ -34,7 +34,7 @@
 /*    Include the generic headers required for sensorHub */
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_rtc.h"
-#include "eoss3_hal_fpga_usbserial.h"
+
 #include "ql_time.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"

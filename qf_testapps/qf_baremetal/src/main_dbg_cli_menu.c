@@ -29,7 +29,7 @@
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
-#include <eoss3_hal_fpga_usbserial.h>
+#include "eoss3_hal_fpga_usbserial.h"
 
 //------------- Pointer to registers ---------------------//
 extern fpga_usbserial_regs_t* pusbserial_regs;
