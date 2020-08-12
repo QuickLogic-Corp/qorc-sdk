@@ -48,6 +48,7 @@
 #include "eoss3_hal_sdma.h"
 #include "eoss3_hal_gpio.h"
 #include "s3x_clock.h"
+#include "eoss3_hal_fpga_adc_api.h"
 #include "dbg_uart.h"
 
 /* Max SDMA channels supported by FPGA. */
@@ -131,7 +132,7 @@ __STATIC_INLINE int get_fsdma_channel_data_register(int ch)
         return -1;
   }
 }
-#if 0
+
 static uint32_t set_channel_rpower(uint32_t transfer_length)
 {
     int length_words = transfer_length/4;
@@ -148,25 +149,32 @@ static uint32_t set_channel_rpower(uint32_t transfer_length)
     else rpowerCode = 2;
     return rpowerCode;
 }
-#endif
+
 /***********************************
 FPGA SDMA driver Interrupt Handler
 *************************************/
+
+int adc_dma_count;
+
 static void HAL_FSDMA_ISR_Handler()
 {
 
    //HAL_GPIO_Write(GPIO_0, 0);
+    
+    if( adc_dma_count < MAX_ADC_STAMPS  ){
+        adc_timestamps[ adc_dma_count ].fsdma_enter = DWT->CYCCNT;
+        adc_dma_count += 1;
+    }
+    
   int i = 0;
   for(i = 0; i < 4; i++)
   {
         if(is_fsdma_ch_intr_set(i))  //Check which channel interrupt is set/
         {
-#if (CONST_FREQ == 0)
+#ifndef CONST_FREQ
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ);
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ);
 #endif
-          S3x_Clk_Set_Rate(S3X_SDMA_CLK, C01_N4_CLK);
-
 
           fsdma_ch_handle_t* ch = &(handle.chanInfo[i]);
            fsdma_channel_intr_clear(i);
@@ -190,7 +198,7 @@ HAL_StatusTypeDef HAL_FSDMA_Init(void)
 {
     HAL_StatusTypeDef status = HAL_OK;
 
-#if (CONST_FREQ == 0)
+#ifndef CONST_FREQ
     /* Clocks initialization */
     S3x_Register_Qos_Node(S3X_SDMA_CLK);
 #endif
@@ -296,7 +304,7 @@ HAL_StatusTypeDef HAL_FSDMA_Send(void* handle, void *srcptr, uint32_t length)
      //S3x_Clk_Enable (S3X_SDMA_CLK);
      //S3x_Clk_Enable(S3X_FB_16_CLK);
 
-#if (CONST_FREQ == 0)
+#ifndef CONST_FREQ
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ, HSOSC_72MHZ);
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ, HSOSC_72MHZ);
 #endif
@@ -358,7 +366,7 @@ HAL_StatusTypeDef HAL_FSDMA_Receive(void* handle, void *dstptr, uint32_t length)
       //S3x_Clk_Enable(S3X_SDMA_CLK);
       //S3x_Clk_Enable(S3X_FB_16_CLK);
 
-#if (CONST_FREQ == 0)
+#ifndef CONST_FREQ
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ, HSOSC_72MHZ);
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ, HSOSC_72MHZ);
 #endif

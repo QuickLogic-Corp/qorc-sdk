@@ -28,6 +28,13 @@ accel_group.add_argument('--accel_range', dest='accel_range', default=2, type=in
 accel_group.add_argument('--accel_count_down', dest='accel_count_down', default=0, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 accel_group.add_argument('--accel_spp', dest='accel_spp', default=8, type=int, help='samples per packet for live-streaming')
 
+ad7476_group = parser.add_argument_group('ad7476', 'AD7476 group')
+ad7476_group.add_argument('--ad7476', dest='ad7476', action='store_true', help='add AD7476 ADC sensor for tests')
+ad7476_group.add_argument('--ad7476_rate', dest='ad7476_rate', default=1000000, type=int, help='Sampling rate in Hz')
+ad7476_group.add_argument('--ad7476_range', dest='ad7476_range', default=2, type=int, help='sample range multiple of gravity constant g')
+ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=5000, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
+ad7476_group.add_argument('--ad7476_spp', dest='ad7476_spp', default=8, type=int, help='samples per packet for live-streaming')
+
 recog_group = parser.add_argument_group('recog', 'Recognition group')
 recog_group.add_argument('--features', dest='features', default=False, action='store_true', help='publish feature vector in recognition results')
 
@@ -83,6 +90,14 @@ class IMU(SENSOR):
         super().generate_fields()
         for i in self.chan:
              self.sensor_add +=struct.pack('>B',i)
+
+class ADC_AD7476(SENSOR):
+    def __init__(self, sensor_id, rate, bit, cd, spp, *chan):
+        super().__init__(sensor_id, rate, bit, cd,spp,*chan)
+
+    def generate_fields(self):
+        super().generate_fields()
+        self.sensor_add +=struct.pack('>B',0)
 
 # Process log messages
 def on_log(client, userdata, level, buf):
@@ -161,7 +176,7 @@ def send_message(client, topic, payload, qos, wait=False):
     if (wait):
         wait_response()
 
-def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
+def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
     global total_bytes
     global total_packets
     total_bytes = 0
@@ -203,16 +218,19 @@ def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
         send_message(mqttc,"sensiml/sensor/list/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sensor/clr", empty, qos=1, wait=False)
 
-        msg = b'IMUA' + struct.pack('>I', sensor_rate) + b'\x14'
+        #msg = b'IMUA' + struct.pack('>I', sensor_rate) + b'\x14'
+        msg = sensorobj.sensor_add
         send_message(mqttc, "sensiml/sensor/add", msg, qos=1, wait=False)
         send_message(mqttc, "sensiml/sensor/done", empty, qos=1, wait=False)
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/live/sensor/list/req", empty, qos=1, wait=True)
 
-        msg = b'\x01' + b'IMUA' + struct.pack('>I', sensor_count_down)
+        #msg = b'\x01' + b'IMUA' + struct.pack('>I', sensor_count_down)
+        msg = sensorobj.live_set_rate
         send_message(mqttc, "sensiml/live/set/rate/req", msg, qos=1, wait=False)
 
-        msg = b'\x01' + b'IMUA' + struct.pack('>B', sensor_samples_per_packet)
+        #msg = b'\x01' + b'IMUA' + struct.pack('>B', sensor_samples_per_packet)
+        msg = sensorobj.live_start
         send_message(mqttc, "sensiml/live/start", msg, qos=1, wait=False)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
 
@@ -335,11 +353,16 @@ sensor_samples_per_packet = args.accel_spp # 10 samples per packet
 
 if (args.accel):
    print('Configuring Accelerometer @{} Hz, {}G, {} count-down, {} samples-per-packet'.format( args.accel_rate, args.accel_range, args.accel_count_down, args.accel_spp))
-   IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
+   sensorobj = IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
+
+if (args.ad7476):
+   print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_range, args.ad7476_count_down, args.ad7476_spp))
+   #ADC_AD7476(b'AD\x1d4',1000000,16, 5000, 4)
+   sensorobj = ADC_AD7476(b'AD\x1d\x34',args.ad7476_rate,16, args.ad7476_count_down, args.ad7476_spp)
 
 if (args.live == True):
    print("Testing live-streaming ... ")
-   test_live_streaming(SENSOR, filename=args.filename, streaming_time=args.timeout, log=args.log)
+   test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
    live_stream_time = live_stream_end_time - live_stream_start_time
    print('{} bytes received in {} secs ({} packets)'.format(total_bytes, live_stream_time, total_packets))
    spp = (total_bytes - 5*total_packets) / 6 / total_packets

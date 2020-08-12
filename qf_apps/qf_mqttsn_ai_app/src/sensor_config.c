@@ -27,7 +27,7 @@
 //#include "FFE_AccelGyro.h"
 #include "DataCollection.h"
 #include "ql_fs.h"
-//#include "ql_adcTask.h"
+#include "ql_adcTask.h"
 #include "ql_time.h"
 //#include "eoss3_hal_rtc.h"
 #include "dbg_uart.h"
@@ -83,8 +83,9 @@ void configure_all_sensors(Mqttsn_IOMsgData_t *pIoMsgData)
     sensor_gyro_configure();
     sensor_mag_configure();
 #endif
-#if LTC1859_DRIVER
-    sensor_ltc1859_configure();
+#if ADC_FPGA_DRIVER
+    sensor_adc_fpga_configure();
+    sensor_adc_fpga_startstop(1);
 #endif
 #if AUDIO_DRIVER
     sensor_audio_configure();
@@ -105,8 +106,8 @@ void sensors_all_startstop( int is_start )
 #if IMU_M4_DRIVERS
     sensor_imu_startstop( is_start );
 #endif
-#if LTC1859_DRIVER
-    sensor_ltc1859_startstop( is_start );
+#if ADC_FPGA_DRIVER
+    sensor_adc_fpga_startstop( is_start );
 #endif
 }
 
@@ -123,34 +124,58 @@ void sensor_clear(SensorEnableStatus *pSensorStatus)
 #if AUDIO_DRIVER
     sensor_audio_clear();
 #endif
-#if LTC1859_DRIVER
-    sensor_ltc1859_clear();
+#if ADC_FPGA_DRIVER
+    sensor_adc_fpga_clear();
 #endif
 }
 
-#if LTC1859_DRIVER
+#if ADC_FPGA_DRIVER
+/* these must be the same, cross check */
+#if (HAL_SENSOR_ID_LTC1859 != SENSOR_ADC_LTC_1859_MAYHEW)
+#error LTC1859 sensor id is not consistent with HAL layer
+#endif
+#if HAL_SENSOR_ID_AD7476  != SENSOR_ADC_AD7476
+#error AD7476 sensor id is not consistent with HAL layer
+#endif
+
+void sensor_ad7476_add(void)
+{
+    memset( (void *)(&adc_fpga_task_config), 0,sizeof(adc_fpga_task_config));
+    if( sensor_config_msg.sensor_common.sensor_id != HAL_SENSOR_ID_AD7476 ){
+        dbg_fatal_error("INVALID sensor id for adc");
+    }
+    adc_fpga_task_config.sensor_id = HAL_SENSOR_ID_AD7476;
+    dbg_str_hex32("add-adc-ad7476", adc_fpga_task_config.sensor_id );
+    adc_fpga_task_config.frequency = 
+        sensor_config_msg.sensor_common.rate_hz;
+    adc_fpga_task_config.ad7476.param0 = 
+        sensor_config_msg.unpacked.ad7476.param0;
+    adc_fpga_task_config.ad7476.param1 =
+        sensor_config_msg.unpacked.ad7476.param1;
+}
+
 void sensor_ltc1859a_add(void)
 {
     int x;
     int enable_bits;
 
-    memset( (void *)(&ltc1859_task_config), 0,sizeof(ltc1859_task_config));
+    memset( (void *)(&adc_fpga_task_config), 0,sizeof(adc_fpga_task_config));
     
-    ltc1859_task_config.frequency = 
+    adc_fpga_task_config.frequency = 
         sensor_config_msg.sensor_common.rate_hz;
 
     /* FIXME future support 8 channels */
     enable_bits = 0;
    
     for( x = 0 ; x < LTC1859_N_CHANNNELS  ; x++ ){
-        ltc1859_task_config.chnl_commands[x] = 1; /* disable */
+        adc_fpga_task_config.ltc1859.chnl_commands[x] = 1; /* disable */
     }
     /* ble only supports channels 0 to 3 */
     for( x = 0 ; x < 4 ; x++ ){
         if( sensor_config_msg.unpacked.ltc1859_a.chnl_config[x] & 1 ){
             /* disabled */
         } else {
-            ltc1859_task_config.chnl_commands[x] = 
+            adc_fpga_task_config.ltc1859.chnl_commands[x] = 
                 sensor_config_msg.unpacked.ltc1859_a.chnl_config[x];
             enable_bits |= (1 << x);
         }
@@ -162,9 +187,9 @@ void sensor_ltc1859a_add(void)
         enable_bits = 0;
     }
 
-    ltc1859_task_config.channel_enable_bits = enable_bits;
+    adc_fpga_task_config.ltc1859.channel_enable_bits = enable_bits;
     if( enable_bits ){
-        sensor_ltc1859_configure();
+        sensor_adc_fpga_configure();
     }
 }
 #endif
@@ -274,7 +299,11 @@ void sensor_add(SensorEnableStatus *pSensorStatus)
         sensor_audio_add();
         break;
 #endif
-#if LTC1859_DRIVER
+#if ADC_FPGA_DRIVER
+    case SENSOR_ADC_AD7476:
+        pSensorStatus->isADCEnabled = TRUE;
+        sensor_ad7476_add();
+        break;
     case SENSOR_ADC_LTC_1859_MAYHEW:
         pSensorStatus->isADCEnabled = TRUE;
         sensor_ltc1859a_add();
@@ -405,6 +434,7 @@ bool is_sensor_active(uint32_t sensor_id, IMU_SENSOR_MODE_t mode)
         break;
         
         case SENSOR_ADC_LTC_1859_MAYHEW:
+        case SENSOR_ADC_AD7476:
         yes = status.isADCEnabled;
         break;
 

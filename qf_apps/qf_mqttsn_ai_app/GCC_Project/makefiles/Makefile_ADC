@@ -1,0 +1,9 @@
+
+ADC_SRCS:=$(wildcard $(ADC_DIR)/*.c)
+
+SRCS:=$(notdir $(ADC_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(ADC_DIR)
+
+include $(COMMON_STUB)
+

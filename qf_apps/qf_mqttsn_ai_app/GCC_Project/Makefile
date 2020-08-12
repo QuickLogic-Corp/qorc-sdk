@@ -24,7 +24,8 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED
+external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED \
+               ADC
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -97,6 +98,14 @@ clean_DatablockProcessor:
 	make -f makefiles/Makefile_DatablockProcessor clean
 
 CLEAN_TARGET += DatablockProcessor
+
+.PHONY:ADC
+ADC:
+	make -f makefiles/Makefile_ADC
+clean_ADC:
+	make -f makefiles/Makefile_ADC clean
+
+CLEAN_TARGET += ADC
 
 .PHONY:gateware
 gateware:

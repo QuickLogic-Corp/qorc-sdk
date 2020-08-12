@@ -597,6 +597,9 @@ int uart_rx_wait( int uartid, int msecs )
         return HAL_usbserial_rxwait( msecs );
 }
 #endif
+    if( uartid == UART_ID_DISABLED ){
+        return EOF;
+    }
 
     if( !is_hw_uart_enabled(uartid) ){
         return EOF;
@@ -643,6 +646,9 @@ int uart_rx_available( int uartid )
         return HAL_usbserial_dataavailable();
     }
 #endif
+    if( uartid == UART_ID_DISABLED ){
+        return 0;
+    }
     if( !is_hw_uart_enabled(uartid) ){
         return 0;
     }
@@ -698,7 +704,7 @@ int uart_tx_is_fifo_full(int uartid)
 /* return 1 if FIFO is emtpy 
  * return 0 otherwise
  * For USB-serial return whether FIFO is empty
- * For other UART types (UART_ID_HW) always return 0
+ * For other UART types (UART_ID_HW) always return 1
  */
 int uart_tx_is_fifo_empty(int uartid)
 {
@@ -707,5 +713,5 @@ int uart_tx_is_fifo_empty(int uartid)
         return HAL_usbserial_tx_is_fifo_empty(  );
     }
 #endif
-    return 0;
+    return 1;
 }

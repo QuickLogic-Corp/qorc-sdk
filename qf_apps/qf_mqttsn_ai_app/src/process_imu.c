@@ -571,7 +571,7 @@ static uint8_t imu_setup_data(struct sensor_data *sdi, ble_accel_gyro_t *pImu, I
 }
 
 extern void send_message_to_datalog(int16_t *pbuffer);
-#if 0 // for sampling rate validation
+#if 1 // for sampling rate validation
 static uint32_t imu_sample_count = 0;
 static uint32_t imu_time_prev = 0;
 #endif
@@ -607,7 +607,7 @@ void imu_ai_data_processor(
     time_incr  = ((uint64_t)(pIn->dbHeader.Tend - pIn->dbHeader.Tstart) * 1000) / (nSamples / nChannels);
     time_curr  = time_start;
    
-#if 0 // for sampling rate validation
+#if 1 // for sampling rate validation
     imu_sample_count += (nSamples / nChannels);
     if ( imu_sample_count >= 1000 ) {
       uint32_t tick_time = xTaskGetTickCount(); // pIn->dbHeader.Tend

@@ -47,8 +47,8 @@
 #if !defined(S3AI_FIRMWARE_MODE)
      /* allow for commandline define for automated builds on Linux */
 /* There is not enough RAM to do both - collection & recognition, choose 1 */
-//#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
+#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
 // #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
 #endif
 
@@ -79,7 +79,7 @@
 #define uartHandlerUpdate(id,x)
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
-#define FEATURE_USBSERIAL   1       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   0       // USBSERIAL port is present
 #define USB_UART_CHECK_FIFO_CONNECT  1    // 1 for USB-serial
 
 // Options for debug output -- use to set DEBUG_UART below
@@ -90,9 +90,9 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART  UART_ID_HW   // Write data to USB serial port
-#define UART_ID_CONSOLE UART_ID_HW
-#define UART_ID_MQTTSN  UART_ID_USBSERIAL
+#define DEBUG_UART  UART_ID_BUFFER   // Write data to USB serial port
+#define UART_ID_CONSOLE UART_ID_DISABLED
+#define UART_ID_MQTTSN  UART_ID_HW
 
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
@@ -171,7 +171,10 @@ extern int FPGA_FFE_LOADED;
 //
 ///* do or do not perform dynamic frequency scaling */
 #define CONST_FREQ (1)
-//
+
+// Enable ADC FPGA Driver
+#define ADC_FPGA_DRIVER   1
+
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1
 //
@@ -185,6 +188,13 @@ extern int FPGA_FFE_LOADED;
 //#define LOAD_FROM_SD    1
 
 #define EOSS3_ASSERT( x )
+
+/* FIXME: Future, make this configurable based on filesystem?
+ * OR - maybe 4K is a really good number and we should stick with 4K
+ */
+#define RIFF_BLOCK_SIZE (4*1024) /* we save data in 4K blocks */
+// The first 0x30 bytes of a data block is the data block header.
+#define RIFF_DATA_BLOCK_PAYLOAD_SIZE  (RIFF_BLOCK_SIZE - 0x30)
 
 /* Define this flag to Enable Internal LDO. If undefined, internal LDO will be disabled.*/
 //#define ENABLE_INTERNAL_LDO   1  // set to 0 for power measurement
