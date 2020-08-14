@@ -161,6 +161,7 @@ extern int FPGA_FFE_LOADED;
 #define IMU_DRIVERS        (IMU_M4_DRIVERS || IMU_FFE_DRIVERS)
 
 #define USE_IMU_FIFO_MODE   (1)    ///< Use FIFO mode to read from Accelerometer device
+#define USE_IMU_INTR_READS  (1)    ///< Use accelerometer interrupts to read acceleromoter data
 
 /* enable via sw the FFE or disable it, TODO: Make this real instead of a hack */
 #define SW_ENABLE_FFE   1

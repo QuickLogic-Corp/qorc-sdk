@@ -287,7 +287,7 @@ void mc3635_interrupt_enable(void)
    // Read current interrupt control register content
    HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_INTR_C, &intr_c_val, 1);
 
-   intr_c_val = 0x08;
+   intr_c_val = 0x40; // 0x08;
    // Now write to the interrupt control register
    HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_INTR_C, &intr_c_val, 1);
    
@@ -358,7 +358,17 @@ int mc3635_read_fifo_burst(xyz_t *pdata, int num_samples)
 
   // data is available, Read x,y,z values
   HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_XOUT_LSB, (uint8_t *)pdata, 6*num_samples);
+#if (USE_IMU_INTR_READS == 1)
+  HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_STATUS_2, val+1, 1);
+#endif
   return 1;
+}
+
+void mc3635_status_clear(void)
+{
+  uint8_t val[2];
+  HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_STATUS_2, val, 1);
+  HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_STATUS_2, val, 1);
 }
 
 void mc3635_fifo_enable(void)
@@ -397,7 +407,7 @@ void mc3635_fifo_enable_threshold(int threshold_count)
    // Now write to the interrupt control register
    HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FIFO_C, &fifo_c_val, 1);
    
-   uint8_t val = 0x22; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FREG_2, &val, 1); // Write 0x22 --> Reg 0x0E 
+   uint8_t val = 0x32; HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_FREG_2, &val, 1); // Write 0x22 --> Reg 0x0E 
 
 }
 

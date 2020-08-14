@@ -574,6 +574,19 @@ extern void send_message_to_datalog(int16_t *pbuffer);
 #if 0 // for sampling rate validation
 static uint32_t imu_sample_count = 0;
 static uint32_t imu_time_prev = 0;
+void reset_imu_sample_count(void)
+{
+  imu_sample_count = 0;
+  imu_time_prev = xTaskGetTickCount(); // pIn->dbHeader.Tend
+}
+void compute_imu_sample_rate(void)
+{
+    uint32_t tick_time = xTaskGetTickCount(); // pIn->dbHeader.Tend
+    uint32_t imu_time_diff = tick_time - imu_time_prev;
+    printf("imu_sample_count: %ld, time: %ld, diff = %ld, sample_rate: %ld\n", 
+           imu_sample_count, tick_time, imu_time_diff,
+          (imu_sample_count * 1000 ) / (imu_time_diff) );
+}
 #endif
 void imu_ai_data_processor(
        QAI_DataBlock_t *pIn,
@@ -609,12 +622,13 @@ void imu_ai_data_processor(
    
 #if 0 // for sampling rate validation
     imu_sample_count += (nSamples / nChannels);
-    if ( imu_sample_count >= 1000 ) {
+    uint32_t tick_time = xTaskGetTickCount(); // pIn->dbHeader.Tend
+    if (tick_time - imu_time_prev >= 10*1000 ) {
       uint32_t tick_time = xTaskGetTickCount(); // pIn->dbHeader.Tend
-      imu_time_prev = tick_time - imu_time_prev;
+      uint32_t imu_time_diff = tick_time - imu_time_prev;
       printf("imu_sample_count: %ld, time: %ld, diff = %ld, sample_rate: %ld\n", 
-             imu_sample_count, tick_time, imu_time_prev,
-             (imu_sample_count * 1000 ) / (imu_time_prev) );
+             imu_sample_count, tick_time, imu_time_diff,
+             (imu_sample_count * 1000 ) / (imu_time_diff) );
       imu_sample_count = 0;
       imu_time_prev = tick_time;
     }

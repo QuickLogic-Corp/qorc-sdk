@@ -74,5 +74,6 @@ void mc3635_fifo_enable(void);
 int mc3635_read_fifo_data(xyz_t *pdata);
 int mc3635_read_fifo_burst(xyz_t *pdata, int num_samples);
 void mc3635_fifo_reset(void);
+void mc3635_status_clear(void);
 
 #endif /* __MC3635_H__ */

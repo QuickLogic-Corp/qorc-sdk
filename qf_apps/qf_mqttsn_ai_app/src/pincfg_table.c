@@ -221,7 +221,7 @@ PadConfig pincfg_table[] =
     .ucDrv = PAD_DRV_STRENGHT_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
+  }
 
 };
 
@@ -232,7 +232,7 @@ GPIOCfgTypeDef  gpiocfg_table[] =
     .usPadNum = PAD_3,
     .ucGpioNum = GPIO_0,
     .ucFunc = PAD3_FUNC_SEL_SENS_INT_0,
-    .intr_type = LEVEL_TRIGGERED,
+    .intr_type = EDGE_TRIGGERED, // LEVEL_TRIGGERED,
     .pol_type = FALL_LOW,
     .ucPull = PAD_NOPULL,
   },

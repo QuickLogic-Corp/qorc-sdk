@@ -429,8 +429,8 @@ void SensorGpio_Handler(void)
     int intrCtrl;
     //spurious_interrupt(__LINE__);
     NVIC_DisableIRQ(Gpio_IRQn);
-    intrCtrl = INTR_CTRL->GPIO_INTR;
-    if(intrCtrl & (1<<GPIO_0))
+    intrCtrl = INTR_CTRL->GPIO_INTR_RAW;
+    if ( (intrCtrl & (1<<GPIO_0)) == 0 )
     {
         accel_reader_wakeup_handler();
         INTR_CTRL->GPIO_INTR |= (1<<GPIO_0);

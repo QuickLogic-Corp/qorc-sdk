@@ -51,7 +51,7 @@ void qf_hardwareSetup(void) {
     S3x_pwrcfg_init();
     system_init();
     ldo_init();
-    //configure_s3_gpio_interrupts(gpiocfg_table, sizeof_gpiocfg_table);
+    configure_s3_gpio_interrupts(gpiocfg_table, sizeof_gpiocfg_table);
     configure_s3_pads(pincfg_table, sizeof_pincfg_table);
     uart_setup();
 }

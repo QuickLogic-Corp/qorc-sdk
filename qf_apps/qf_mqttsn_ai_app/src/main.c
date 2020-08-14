@@ -195,9 +195,11 @@ int imu_get_max_datablock_size(void)
 TimerHandle_t sensorTimId ;
 void dataTimer_Callback(TimerHandle_t hdl)
 {
+#if (USE_IMU_INTR_READS == 0)
   // Warning: must not call vTaskDelay(), vTaskDelayUntil(), or specify a non zero
   // block time when accessing a queue or a semaphore.
   imu_sensordata_read_callback(); //osSemaphoreRelease(readDataSem_id);
+#endif
 }
 
 static int mc3635_threshold_count = 1;
@@ -234,6 +236,9 @@ void dataTimerStart(void)
       // Timer could not be started
     }
   }
+#if (USE_IMU_INTR_READS == 1)
+  mc3635_interrupt_disable();
+#endif
   //set_first_imu_data_block();
 #if (USE_IMU_FIFO_MODE)
   int num_samples;
@@ -250,8 +255,15 @@ void dataTimerStart(void)
   vTaskDelay(2); // delay for 2ms to accumulate atleast 1 threshold
   //enable_lsm6dsm_stream();
 #endif
-  //mc3635_interrupt_enable();
+#if (USE_IMU_INTR_READS == 1)
+  mc3635_status_clear();
+  mc3635_interrupt_enable();
+#endif
   mc3635_set_mode(MC3635_MODE_CWAKE);
+#if 0 // code snippet for sample rate computation
+  extern void reset_imu_sample_count(void);
+  reset_imu_sample_count();
+#endif
 }
 
 void dataTimerStop(void)
@@ -262,7 +274,9 @@ void dataTimerStop(void)
 #if (USE_IMU_FIFO_MODE)
   //disable_lsm6dsm_stream();
 #endif
+#if (USE_IMU_INTR_READS == 1)
   mc3635_interrupt_disable();
+#endif
 }
 #endif /* IMU_BLOCK_PROCESSOR */
 
@@ -352,7 +366,9 @@ int main(void)
     StartRtosTaskRecognition();
 #endif
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
-
+#if (USE_IMU_INTR_READS == 1)
+    StartRtosTaskAccelReader();
+#endif
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");

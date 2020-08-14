@@ -1543,6 +1543,21 @@
         </file>
     </group>
     <group>
+        <name>freertos-gateware</name>
+        <group>
+            <name>inc</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_usbserial.h</name>
+            </file>
+        </group>
+        <group>
+            <name>src</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</name>
+            </file>
+        </group>
+    </group>
+    <group>
         <name>HAL</name>
         <group>
             <name>inc</name>
@@ -1590,9 +1605,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_uart.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_usbserial.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_gpio.h</name>
@@ -1677,9 +1689,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_uart.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_usbserial.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_gpio.c</name>
@@ -2507,6 +2516,18 @@
                 </file>
             </group>
         </group>
+    </group>
+    <group>
+        <name>s3-gateware</name>
+        <group>
+            <name>usb2serial</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
+            </file>
+        </group>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\s3-gateware\gateware.h</name>
+        </file>
     </group>
     <group>
         <name>Tasks</name>
