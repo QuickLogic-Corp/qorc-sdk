@@ -24,7 +24,7 @@
 #define SENSOR_AD7476_NAME             ad7476
 #define SENSOR_AD7476_NAME_UPPERCASE   AD7476
 #define SENSOR_AD7476_RATE_HZ_MAX     (1000000)  ///< Maximum sample rate (in Hz) for this sensor
-#define SENSOR_AD7476_MEMSIZE_MAX     (4096*10)
+#define SENSOR_AD7476_MEMSIZE_MAX     (4096*4)
 #define SENSOR_AD7476_CHANNELS        (1)
 
 /* Default settings for the sensor processing configurations.

@@ -9,9 +9,9 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.Td
 all: $(OBJS)
 
 
-#$(info QLFS SOURCE: ${SRCS})
-#$(info QLFS OBJS: ${OBJS})
-#$(info SRC_PATH: ${SRC_PATH})
+$(info QLFS SOURCE: ${SRCS})
+$(info QLFS OBJS: ${OBJS})
+$(info SRC_PATH: ${SRC_PATH})
 
 
 %.o:%.c

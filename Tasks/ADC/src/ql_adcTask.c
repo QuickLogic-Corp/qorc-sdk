@@ -46,7 +46,7 @@
 #include "DataCollection.h"
 
 #define MY_MSG_SRC  (('A'+'D'+'C') & 0x0ff)
-
+#define USE_FSDMA_DRIVER_V2     (1)
 // Commands to configure/start/stop ADC
 // These are *NOT* public, so they are in header file
 // The public api is via function calls.
@@ -103,11 +103,15 @@ struct adc_fpga_task_vars adc_fpga_task_vars;
  * 
  */
 
+#if (USE_FSDMA_DRIVER_V2==0)
 #define DMA_BUF_SIZE (RIFF_DATA_BLOCK_PAYLOAD_SIZE / sizeof(uint16_t))
+#else
+#define DMA_BUF_SIZE (16)
+#endif
 // #define DMA_BUF_SIZE (2048)
-
 uint16_t adc_fpga_buffer0[ DMA_BUF_SIZE ];
 uint16_t adc_fpga_buffer1[ DMA_BUF_SIZE ];
+
 int DUMP_DATA = 0;
 
 static void dump_data(void)
@@ -433,7 +437,7 @@ static void do_start(void)
     
     /* pick a buffer to start with */
     adc_fpga_task_vars.buf_id = 0;
-#define USE_FSDMA_DRIVER_V2     (1)
+
 #if (USE_FSDMA_DRIVER_V2 == 1)
     extern void ad7476_isr_DmacDone(void);
     extern void ad7476_start_dma(void);

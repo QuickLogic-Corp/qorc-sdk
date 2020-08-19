@@ -9,7 +9,7 @@ SRCS:=$(filter-out $(filters),$(notdir $(HAL_SRCS)))
 #SRCS:=$(notdir $(HAL_SRCS))
 OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
 SRC_PATH:= $(HAL_DIR)
-
+$(info HAL source $(SRC_PATH) $(OBJS))
 include $(COMMON_STUB)
 
 
