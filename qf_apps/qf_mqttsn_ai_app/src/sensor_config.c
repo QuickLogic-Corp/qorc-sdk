@@ -108,6 +108,7 @@ void sensors_all_startstop( int is_start )
 #endif
 #if ADC_FPGA_DRIVER
     sensor_adc_fpga_startstop( is_start );
+    sensor_ad7476_startstop( is_start );
 #endif
 }
 
@@ -126,6 +127,7 @@ void sensor_clear(SensorEnableStatus *pSensorStatus)
 #endif
 #if ADC_FPGA_DRIVER
     sensor_adc_fpga_clear();
+    sensor_ad7476_clear();
 #endif
 }
 
@@ -152,6 +154,7 @@ void sensor_ad7476_add(void)
         sensor_config_msg.unpacked.ad7476.param0;
     adc_fpga_task_config.ad7476.param1 =
         sensor_config_msg.unpacked.ad7476.param1;
+    _sensor_ad7476_add();
 }
 
 void sensor_ltc1859a_add(void)
@@ -434,7 +437,7 @@ bool is_sensor_active(uint32_t sensor_id, IMU_SENSOR_MODE_t mode)
         break;
         
         case SENSOR_ADC_LTC_1859_MAYHEW:
-        case SENSOR_ADC_AD7476:
+        case SENSOR_ADC_AD7476: 
         yes = status.isADCEnabled;
         break;
 

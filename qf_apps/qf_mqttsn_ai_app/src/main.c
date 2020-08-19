@@ -302,6 +302,8 @@ void setup_sensors_data_block_processor(void)
   //audio_block_processor();
 
   imu_block_processor();
+  
+  ad7476_block_processor();
 }
 
 int main(void)

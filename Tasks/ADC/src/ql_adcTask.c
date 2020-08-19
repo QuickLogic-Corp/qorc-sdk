@@ -433,10 +433,17 @@ static void do_start(void)
     
     /* pick a buffer to start with */
     adc_fpga_task_vars.buf_id = 0;
-    
+#define USE_FSDMA_DRIVER_V2     (1)
+#if (USE_FSDMA_DRIVER_V2 == 1)
+    extern void ad7476_isr_DmacDone(void);
+    extern void ad7476_start_dma(void);
+    status = HAL_ADC_FPGA_Init( &adc_fpga_task_config, &ad7476_isr_DmacDone);
+    configASSERT( status == HAL_OK );
+    ad7476_start_dma();
+    dbg_str_int("ADC DMA Start", xTaskGetTickCount());
+#else
     status = HAL_ADC_FPGA_Init( &adc_fpga_task_config, &adc_fpga_read_callback);
     configASSERT( status == HAL_OK );
-    
     /* start reading */
     adc_fpga_task_vars.sdi.time_start = tnow;
     if( adc_fpga_task_vars.buf_id == 0 ){
@@ -456,6 +463,7 @@ static void do_start(void)
     t_dma_start = DWT->CYCCNT;;
     status = HAL_ADC_FPGA_Read( vp, adc_fpga_task_vars.dma_size );
     configASSERT( status == HAL_OK );
+#endif
     adc_fpga_task_vars.is_running = 1;
 }
 

@@ -310,6 +310,56 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
   return HAL_OK;
 }
 
+#include "datablk_mgr.h"
+#include "sensor_ad7476_acquisition.h"
+int isr_count = 0;
+void ad7476_isr_DmacDone(void)
+{
+    QAI_DataBlock_t  *pdata_block = NULL;
+    QAI_DataBlock_t  *pdata_block_prev = pad7476_data_block_prev;
+    int  gotNewBlock = 0; isr_count++;
+    /* Acquire an audio buffer */
+    datablk_mgr_acquireFromISR(ad7476_isr_outq_processor.p_dbm, &pdata_block);
+    if (pdata_block)
+    {
+        gotNewBlock = 1;
+    }
+    else
+    {
+        // send error message 
+        // xQueueSendFromISR( error_queue, ... )
+        if (ad7476_isr_outq_processor.p_event_notifier)
+          (*ad7476_isr_outq_processor.p_event_notifier)(ad7476_isr_outq_processor.in_pid, AD7476_ISR_EVENT_NO_BUFFER, NULL, 0);
+        pdata_block = pdata_block_prev;
+        pdata_block->dbHeader.Tstart = xTaskGetTickCountFromISR();
+        pdata_block->dbHeader.numDropCount++;
+    }
+    uint8_t *p_dest = (uint8_t *)pdata_block->p_data;  // (uint8_t *)pdata_block + offsetof(QAI_DataBlock_t, p_data);
+    uint32_t length = pdata_block->dbHeader.numDataElements * pdata_block->dbHeader.dataElementSize;
+    /* setup the DMA start address for next buffer */
+    // todo , write code here to setup dma for next transfer
+    HAL_StatusTypeDef err;
+    err = HAL_FSDMA_Receive(adc_info_state.sdma_handle, p_dest, length);
+
+    if (gotNewBlock)
+    {
+        /* send the previously filled audio data to specified output Queues */     
+        pdata_block_prev->dbHeader.Tend = pdata_block->dbHeader.Tstart;
+        datablk_mgr_WriteDataBufferToQueuesFromISR(&ad7476_isr_outq_processor, pdata_block_prev);
+        pdata_block_prev = pdata_block;
+    }
+}
+
+void ad7476_start_dma(void)
+{
+    uint8_t *p_dest = (uint8_t *)pad7476_data_block_prev->p_data;  // (uint8_t *)pdata_block + offsetof(QAI_DataBlock_t, p_data);
+    uint32_t length = pad7476_data_block_prev->dbHeader.numDataElements * pad7476_data_block_prev->dbHeader.dataElementSize;
+    /* setup the DMA start address for next buffer */
+    // todo , write code here to setup dma for next transfer
+    HAL_StatusTypeDef err;
+    err = HAL_FSDMA_Receive(adc_info_state.sdma_handle, p_dest, length);
+    return;
+}
 
 HAL_StatusTypeDef HAL_ADC_FPGA_Read(void *buffer, size_t n_bytes)
 {
