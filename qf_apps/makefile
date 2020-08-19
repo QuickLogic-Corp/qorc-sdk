@@ -5,7 +5,6 @@ BINS = qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin\
 	qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin
 
 MFGBINS = qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin\
-		qf_bootloader/fpga/qf_bootfpga.bin\
 		qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin\
 		qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin
 all:	$(BINS)
@@ -20,6 +19,7 @@ clean:
 
 qf_mfgpkg:	$(MFGBINS)
 	cp $(MFGBINS) quickfeather-initial-binaries
+	cp ../s3-gateware/usb2serial/usb2serial.bin quickfeather-initial-binaries/qf_bootfpga.bin
 
 
 qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin:
