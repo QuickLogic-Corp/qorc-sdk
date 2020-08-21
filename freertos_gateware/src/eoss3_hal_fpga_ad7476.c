@@ -23,14 +23,13 @@
 #include <stdio.h>
 
 #include "eoss3_hal_fpga_sdma_api.h"
-#include "eoss3_hal_fpga_adc_reg.h"
+#include "eoss3_hal_fpga_ad7476_reg.h"
 //#include "eoss3_hal_gpio.h"
 #include "eoss3_hal_fpga_adc_api.h"
 
 #include "s3x_clock.h"
 #include "eoss3_hal_def.h"
 #include "dbg_uart.h"
-
 
 typedef struct
 {
@@ -43,117 +42,6 @@ typedef struct
 uint32_t t_dma_start;
 struct adc_timestamp_s adc_timestamps[ MAX_ADC_STAMPS ];
 static  adc_info_t adc_info_state;  //To store state info
-
-static const struct LTC1859_ymx_plus_b convert_table[] = {
-
-    /* there are really only 4 combinations we care about, bits [3:2] */
-    /* the mask value for those 2 bits are 0x0c */
-    { .masked_config_value = 0x00, 
-      .slopeM = 5000000, /* +/-5v range */
-      .slopeD = 32767, 
-      .intercept = 0, 
-      .python_format_char = 'h',
-      .is_signed = 1,
-      .dummy_pad = 0,
-    },
-    
-    { .masked_config_value = 0x04, 
-      .slopeM = 10000000, /* +/-10v range */
-      .slopeD = 32767,
-      .intercept = 0, 
-      .python_format_char = 'h',
-      .is_signed = 1,
-      .dummy_pad = 0,
-    },
-   
-    { .masked_config_value = 0x08, 
-      .slopeM = 5000000,
-      .slopeD = 65535, /* 0-5v range */
-      .intercept = 0, 
-      .python_format_char = 'H',
-      .is_signed = 0,
-      .dummy_pad = 0,
-    },
-    
-    { .masked_config_value = 0x0c, 
-      .slopeM = 10000000,
-      .slopeD = 65535,  /* 0-10v range */
-      .intercept = 0, 
-      .python_format_char = 'H',
-      .is_signed = 0,
-      .dummy_pad = 0,
-    },
-    
-    /* this is the LAST element
-     * it is also the termination element
-     * it is used when something is wrong
-     * or the channel is disabled.
-     */
-    { .masked_config_value = 1, 
-      .slopeM = 0,
-      .slopeD = 1,
-      .intercept = 0, 
-      .python_format_char = 'H',
-      .is_signed = 0,
-      .dummy_pad = 0,
-    }
-};
-
-const struct LTC1859_ymx_plus_b *HAL_LTC1859_CfgToYmxB( int config )
-{
-    const struct LTC1859_ymx_plus_b *p;
-    
-    
-    /* if channel is disabled */
-    if( config & 1 ){
-        /* use 1 entry in table */;
-        config = 1;
-    } else {
-        /* keep only the bits we care about */
-        config = config & 0x0c;
-    }
-    
-
-    p = convert_table;
-    while(p->slopeM){
-        if( p->masked_config_value == config ){
-            return p;
-        }
-        p++;
-    }
-    dbg_fatal_error_hex32("ltc1859-unknown-conversion", config );
-    /* make compiler happy, return something */
-    return NULL;
-}
-
-
-/* given a config byte value - convert ADC counts to micro-volts */
-int LTC1859_to_uVolts( uint8_t cfg, uint16_t value )
-{
-    const struct LTC1859_ymx_plus_b *pMXPB;
-    int64_t ivalue;
-    int64_t ovalue;
-
-    /* see data sheet for magic number explination */
-    if( (cfg&1)==1 ){
-        return 0;
-    }
-    
-    pMXPB = HAL_LTC1859_CfgToYmxB( cfg );
-    
-    /* sign extend? */
-    if(pMXPB->is_signed){
-        ivalue = (int16_t)(value);
-    } else {
-        ivalue = (uint16_t)(value);
-    }
-    
-    ovalue = (ivalue * pMXPB->slopeM);
-    ovalue = ovalue / pMXPB->slopeD;
-    ovalue = ovalue + pMXPB->intercept;
-    
-    return ovalue;
-}
 
 int AD7476_to_mVolts( uint32_t vdd_mvolts, uint16_t value )
 {
@@ -171,7 +59,7 @@ void sdma_callback(void *handle)
     if( adc_info_state.calback_debug_count < MAX_ADC_STAMPS ){
         adc_timestamps[ adc_info_state.calback_debug_count ].time_dma_callback = DWT->CYCCNT;
         if( adc_info_state.adc_sensor_id == HAL_SENSOR_ID_AD7476 ){
-            adc_timestamps[ adc_info_state.calback_debug_count ].overflow_value = FPGA_ADC->SEN1_SETTING;
+            //adc_timestamps[ adc_info_state.calback_debug_count ].overflow_value = FPGA_ADC->SEN1_SETTING;
         }
         adc_info_state.calback_debug_count++;
     }
@@ -196,11 +84,6 @@ uint32_t HAL_ADC_FPGA_get_sensor_id(void)
     //dbg_str_hex32("adc-fpga-id", a );
     //dbg_str_hex32("adc-fpga-rev",b);
     
-    if( (a == FPGA_CHIP_ID_LT1859) && (b == FPGA_CHIP_ID_LTC1859_REV) ){
-        adc_info_state.adc_sensor_id = HAL_SENSOR_ID_LTC1859;
-        return HAL_SENSOR_ID_LTC1859;
-    }
-    
     if( (a == FPGA_CHIP_ID_AD7476) && (b == FPGA_CHIP_ID_AD7476_REV) ){
         adc_info_state.adc_sensor_id = HAL_SENSOR_ID_AD7476;
         return HAL_SENSOR_ID_AD7476;
@@ -223,7 +106,6 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
   }
   
   switch(adc_cfg->sensor_id){
-  case HAL_SENSOR_ID_LTC1859:
   case HAL_SENSOR_ID_AD7476:
       break;
   default:
@@ -261,49 +143,19 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
   adc_info_state.sdma_handle = HAL_FSDMA_GetChannel(&sdma_callback, &cfg);
   if (NULL == adc_info_state.sdma_handle)
   {
-        dbg_fatal_error("ltc1859-dma-null\n");
+        dbg_fatal_error("ad7476-dma-null\n");
     return HAL_ERROR;
   }
     if( DBG_flags & DBG_FLAG_adc_task ){
-        dbg_str_ptr("ltc1859-dma", adc_info_state.sdma_handle );
+        dbg_str_ptr("ad7476-dma", adc_info_state.sdma_handle );
     }
 
 
   switch(adc_cfg->sensor_id){
-  case HAL_SENSOR_ID_LTC1859:
-    if ((adc_cfg->ltc1859.channel_enable_bits > 0xF) || (adc_cfg->ltc1859.channel_enable_bits == 0x0))
-  {
-        dbg_fatal_error("bad-ltc1859-emable\n");
-    return HAL_ERROR;
-  }
-    if (adc_cfg->ltc1859.channel_enable_bits & CHANNEL0_ENABLE_MASK)
-  {
-        FPGA_ADC->SEN1_SETTING = adc_cfg->ltc1859.chnl_commands[0];
-  }
-    if (adc_cfg->ltc1859.channel_enable_bits & CHANNEL1_ENABLE_MASK)
-  {
-        FPGA_ADC->SEN2_SETTING = adc_cfg->ltc1859.chnl_commands[1];
-  }
-    if (adc_cfg->ltc1859.channel_enable_bits & CHANNEL2_ENABLE_MASK)
-  {
-        FPGA_ADC->SEN3_SETTING = adc_cfg->ltc1859.chnl_commands[2];
-  }
-    if (adc_cfg->ltc1859.channel_enable_bits & CHANNEL3_ENABLE_MASK)
-  {
-        FPGA_ADC->SEN4_SETTING = adc_cfg->ltc1859.chnl_commands[3];
-  }
-    FPGA_ADC->SEN_ENR = adc_cfg->ltc1859.channel_enable_bits;
-    uint32_t tmp;
-    tmp = (FOUR_MEGA_HZ + (adc_cfg->frequency/2)) / adc_cfg->frequency;
-    FPGA_ADC->TIMER_COUNT = tmp;
-    break;
   case HAL_SENSOR_ID_AD7476:
     FPGA_ADC->SEN_ENR  = 1;
     break;
   }
-
-  //Enable Timer postpone after dma settings.
-  //FPGA_ADC->TIMER_ENABLE = ADC_TIMER_ENABLE_BIT;
 
   /* flush the fifo at init time */
   FPGA_ADC->FIFO_RESET = 1;
@@ -312,12 +164,21 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
 
 #include "datablk_mgr.h"
 #include "sensor_ad7476_acquisition.h"
-int isr_count = 0;
+volatile int ad7476_dma_stop_request = 1;
 void ad7476_isr_DmacDone(void)
 {
     QAI_DataBlock_t  *pdata_block = NULL;
     QAI_DataBlock_t  *pdata_block_prev = pad7476_data_block_prev;
-    int  gotNewBlock = 0; isr_count++;
+    int  gotNewBlock = 0;
+    if (ad7476_dma_stop_request == 1)
+    {
+      ad7476_dma_stop_request = 2;
+      return;
+    }
+    if (ad7476_dma_stop_request > 0)
+    {
+      return;
+    }
     /* Acquire an audio buffer */
     datablk_mgr_acquireFromISR(ad7476_isr_outq_processor.p_dbm, &pdata_block);
     if (pdata_block)
@@ -358,7 +219,19 @@ void ad7476_start_dma(void)
     // todo , write code here to setup dma for next transfer
     HAL_StatusTypeDef err;
     err = HAL_FSDMA_Receive(adc_info_state.sdma_handle, p_dest, length);
+    ad7476_dma_stop_request = 0;
     return;
+}
+
+void ad7476_stop_dma(void)
+{
+  ad7476_dma_stop_request = 1;
+  return;
+}
+int HAL_FSDMA_IsTransferInProgress(void *handle);
+int ad7476_IsDmaTransferInProgress()
+{
+  return HAL_FSDMA_IsTransferInProgress(&adc_info_state.sdma_handle);
 }
 
 HAL_StatusTypeDef HAL_ADC_FPGA_Read(void *buffer, size_t n_bytes)
@@ -374,7 +247,7 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Read(void *buffer, size_t n_bytes)
         return HAL_ERROR;
     }
     if( adc_info_state.sdma_handle == NULL ){
-        dbg_fatal_error("ltc1859-rd-no-dma\n");
+        dbg_fatal_error("ad7476-rd-no-dma\n");
     }
 
   dmaStatus = HAL_FSDMA_Receive(adc_info_state.sdma_handle, (void *)buffer, n_bytes);
@@ -383,10 +256,6 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Read(void *buffer, size_t n_bytes)
         //printf("dma read failed");
         return dmaStatus;
   }
-
-  //Enable Timer
-  FPGA_ADC->TIMER_ENABLE = ADC_TIMER_ENABLE_BIT;
-
 
   return HAL_OK;
 }
@@ -401,13 +270,16 @@ void HAL_ADC_FPGA_De_Init(void)
     if( DBG_flags & DBG_FLAG_adc_task ){
         dbg_str_ptr("adc-fpga-dma-close", adc_info_state.sdma_handle );
     }
+    while (ad7476_dma_stop_request != 2)
+    {
+      vTaskDelay(1);
+    }
   dmaStatus = HAL_FSDMA_ReleaseChannel(adc_info_state.sdma_handle);
     if (HAL_OK != dmaStatus){
         dbg_fatal_error("Error in Releasing SDMA channel");
     }
     adc_info_state.sdma_handle = NULL;
-  FPGA_ADC->TIMER_ENABLE = 0;  //Disable TIMER to stop sensor data capture.
-
+  FPGA_ADC->SEN_ENR = 0;
 #ifndef CONST_FREQ
      S3x_Clear_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ);
 #endif

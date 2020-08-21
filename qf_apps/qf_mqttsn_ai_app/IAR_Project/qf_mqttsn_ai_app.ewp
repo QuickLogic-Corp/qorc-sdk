@@ -1481,16 +1481,67 @@
         <group>
             <name>inc</name>
             <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_ad7476_reg.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_adc_api.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_adc_reg.h</name>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_clk_sync.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_gpio.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_ltc1859_reg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_sdma_api.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_sdma_reg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_uart.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_usbserial.h</name>
             </file>
         </group>
         <group>
             <name>src</name>
             <file>
-                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_adc.c</name>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_ad7476.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_clk_sync.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_gpio.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_ltc1859.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_sdma.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_uart.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
             </file>
         </group>
     </group>
@@ -1521,21 +1572,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_ffe.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_clk_sync.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_gpio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_sdma_api.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_sdma_reg.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_uart.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_gpio.h</name>
@@ -1605,18 +1641,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_ffe.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_clk_sync.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_gpio.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_sdma.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_uart.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_gpio.c</name>
@@ -3053,6 +3077,9 @@
         <name>Tasks</name>
         <group>
             <name>ADC</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
             <group>
                 <name>inc</name>
                 <file>

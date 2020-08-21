@@ -219,8 +219,8 @@ void ad7476_block_processor(void)
   ad7476_set_first_data_block();
 
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
-  sensor_ad7476_configure(); 
-  sensor_ad7476_startstop(1);
+  //sensor_ad7476_configure(); 
+  //sensor_ad7476_startstop(1);
 }
 /*========== END: AD7476 SENSOR Datablock processor definitions =============*/
 

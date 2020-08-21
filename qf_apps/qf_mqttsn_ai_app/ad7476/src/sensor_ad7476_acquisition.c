@@ -21,6 +21,8 @@
 #include "datablk_mgr.h"
 #include "process_ids.h"
 
+#include "eoss3_hal_fpga_adc_api.h"  /* ADC FPGA Driver API */
+
 #define AD7476_ISR_OUTQS_NUM        (1)
 QueueHandle_t   *ad7476_isr_outQs[AD7476_ISR_OUTQS_NUM] = { &ad7476_dbp_thread_q };
 QAI_DataBlock_t *pad7476_data_block_prev = NULL;

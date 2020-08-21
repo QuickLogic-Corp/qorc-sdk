@@ -43,12 +43,13 @@
 #define SENSOR_AD7476_LIVESTREAM_ENABLED 1 /* Enable data-collection for */
 #endif /* SENSOR_AD7476_LIVESTREAM_ENABLED */
 
-struct ad7476_config {
-    int      is_running; 
-    int      enabled;
+typedef struct st_ad7476_config {
+    int      is_running; /* non-zero if the task is collecting data */
+    int      enabled;    /* */
     uint32_t rate_hz;
-};
-extern struct ad7476_config ad7476_config;
+} ad7476_config_t;
+
+extern ad7476_config_t ad7476_config;
 extern char sensor_json_add_ad7476[] ;
 
 extern void sensor_ad7476_startstop( int is_start );

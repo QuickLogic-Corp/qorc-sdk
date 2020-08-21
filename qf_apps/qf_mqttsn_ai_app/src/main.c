@@ -355,7 +355,7 @@ int main(void)
 #if S3AI_FIRMWARE_IS_RECOGNITION
     StartRtosTaskRecognition();
 #endif
-    StartRtosTaskADC();
+    //StartRtosTaskADC();
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
     /* Start the tasks and timer running. */

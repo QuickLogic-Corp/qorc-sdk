@@ -34,6 +34,8 @@
 #include "Mqttsn_Topics.h"
 #include "sensor_config.h"
 
+#include "sensor_ad7476_config.h"
+
 extern void sensor_imu_startstop( int is_start );
 
 SensorEnableStatus datacollection_sensor_status;
@@ -84,8 +86,8 @@ void configure_all_sensors(Mqttsn_IOMsgData_t *pIoMsgData)
     sensor_mag_configure();
 #endif
 #if ADC_FPGA_DRIVER
-    sensor_adc_fpga_configure();
-    sensor_adc_fpga_startstop(1);
+    sensor_ad7476_configure();  // sensor_adc_fpga_configure();
+    sensor_ad7476_startstop(1); // sensor_adc_fpga_startstop(1);
 #endif
 #if AUDIO_DRIVER
     sensor_audio_configure();
@@ -107,7 +109,7 @@ void sensors_all_startstop( int is_start )
     sensor_imu_startstop( is_start );
 #endif
 #if ADC_FPGA_DRIVER
-    sensor_adc_fpga_startstop( is_start );
+    //sensor_adc_fpga_startstop( is_start );
     sensor_ad7476_startstop( is_start );
 #endif
 }
@@ -126,12 +128,12 @@ void sensor_clear(SensorEnableStatus *pSensorStatus)
     sensor_audio_clear();
 #endif
 #if ADC_FPGA_DRIVER
-    sensor_adc_fpga_clear();
+    //sensor_adc_fpga_clear();
     sensor_ad7476_clear();
 #endif
 }
 
-#if ADC_FPGA_DRIVER
+#if 0 // ADC_FPGA_DRIVER
 /* these must be the same, cross check */
 #if (HAL_SENSOR_ID_LTC1859 != SENSOR_ADC_LTC_1859_MAYHEW)
 #error LTC1859 sensor id is not consistent with HAL layer
@@ -309,7 +311,7 @@ void sensor_add(SensorEnableStatus *pSensorStatus)
         break;
     case SENSOR_ADC_LTC_1859_MAYHEW:
         pSensorStatus->isADCEnabled = TRUE;
-        sensor_ltc1859a_add();
+        //sensor_ltc1859a_add();
         break;
 #endif
     default:

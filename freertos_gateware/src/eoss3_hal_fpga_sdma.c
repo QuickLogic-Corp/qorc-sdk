@@ -385,3 +385,14 @@ HAL_StatusTypeDef HAL_FSDMA_Receive(void* handle, void *dstptr, uint32_t length)
      }
      return status;
 }
+
+int HAL_FSDMA_IsTransferInProgress(void *handle)
+{
+    fsdma_ch_handle_t *ch = (fsdma_ch_handle_t*)handle;
+    if(ch)
+    {
+      return ch->ch_transfer_in_process;
+    }
+    else
+      return 0;
+}

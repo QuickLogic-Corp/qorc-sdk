@@ -32,7 +32,7 @@ extern void ad7476_set_first_data_block();
 extern void ad7476_acquisition_read_callback(void);
 extern int ad7476_sensordata_buffer_ready(void);
 
-#define SENSORS_AD7476_ACQUISITION_READ_FROM_FILE (1)
+#define SENSORS_AD7476_ACQUISITION_READ_FROM_FILE (0)
 #if (SENSORS_AD7476_ACQUISITION_READ_FROM_FILE)
 extern void ad7476_dataTimerStart(void);
 extern void ad7476_dataTimerStop(void);
