@@ -154,7 +154,7 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects
+     cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
      make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
@@ -222,7 +222,7 @@ This section describes how to build and run the qf_helloworldsw project.
      1. Should switch to mode where green LED is breathing
      2. If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset
   5. With green LED breathing, program m4 app into QuickFeather
-     1. python tinyfpgaprogrammer - -port /dev/ttyXX - -m4app output/bin/qf_helloworldhw.bin
+     1. python tinyfpgaprogrammer - -port /dev/ttyXX - -m4app output/bin/qf_advancedfpga.bin
   6. After programming has completed, reset the QuickFeather board and do not press the user button
      1. Blue LED should flash for 5 sec and then load the m4app and run it
   7. The banner should be printed on PuTTY and then the CLI prompt
