@@ -1,0 +1,2 @@
+set_io arnold_clk_o	23
+set_io arnold_rst_o	57

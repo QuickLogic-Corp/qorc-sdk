@@ -1,0 +1,4 @@
+#Block Name       x   y   z    pcf_line
+#---------------- --  --  -    ----
+$iopadmap$AL4S3B_FPGA_top.arnold_clk_o   4  32  0  # set_io arnold_clk_o	23
+$iopadmap$AL4S3B_FPGA_top.arnold_rst_o  26   3  0  # set_io arnold_rst_o	57
