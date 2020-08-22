@@ -1,4 +1,9 @@
 #
+# Symbiflow options for QORK SDK
+#
+export RTL_TOP_MODULE=top
+
+#
 # GCC Configuration options for Quick-AI SDK
 #
 
@@ -39,6 +44,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/ad7476/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
+                 -I"$(PROJ_ROOT)/s3-gateware/adc_ad7476_if/rtl" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/Core/Include" \

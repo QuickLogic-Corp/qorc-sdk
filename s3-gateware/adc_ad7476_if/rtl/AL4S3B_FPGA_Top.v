@@ -1,11 +1,13 @@
 `timescale 1ns / 10ps
-`define ENAB_UART_16550_inst
+//`define ENAB_UART_16550_inst
 //`define USE_DEBUG_PORT
 //`define ENAB_GPIO_INT
 module top ( 
 			CSn_o,
             SCLK_o,
-			SDATA_i
+			SDATA_i,
+
+            gnd_o               // needed for PMOD connector on the QuickFeather board
 `ifdef USE_DEBUG_PORT	
 			,
 			dbg_spi_ss_i,  
@@ -99,6 +101,7 @@ output 					CSn_o;
 output 					SCLK_o;
 //output 					SDI_o;
 input 					SDATA_i;
+output                  gnd_o;
 
 `ifdef USE_DEBUG_PORT
 input            		dbg_spi_ss_i   ;
@@ -136,6 +139,7 @@ wire   [3:0]   GPIO_PIN       ;
 wire 					CSn_o;
 wire 					SCLK_o;
 wire 					SDATA_i;
+wire                    gnd_o;
 
 wire     				CLK_IP;
 wire     				RST_IP;
@@ -198,6 +202,9 @@ assign dbg_sdma_req    = SDMA0_Req;
 assign dbg_sdma_active = SDMA0_Active;
 assign dbg_sdma_done   = SDMA0_Done;
 `endif
+
+assign gnd_o = 1'b0;
+
 // Determine the FPGA reset
 //
 // Note: Reset the FPGA IP on either the AHB or clock domain reset signals.

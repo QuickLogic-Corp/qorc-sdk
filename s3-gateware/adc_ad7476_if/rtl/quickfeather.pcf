@@ -1,0 +1,4 @@
+set_io CSn_o  23
+set_io SCLK_o 63
+set_io SDATA_i 64
+set_io gnd_o 59
