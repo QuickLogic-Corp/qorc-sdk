@@ -4,3 +4,6 @@
 [submodule "qf_apps/quickfeather-initial-binaries"]
 	path = qf_apps/quickfeather-initial-binaries
 	url = https://github.com/QuickLogic-Corp/qf-initial-bins.git
+[submodule "s3-gateware"]
+	path = s3-gateware
+	url = https://github.com/QuickLogic-Corp/s3-gateware

@@ -2,7 +2,8 @@ BINS = qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin\
 	qf_helloworldhw/GCC_Project/output/bin/qf_helloworldhw.bin\
 	qf_advancedfpga/GCC_Project/output/bin/qf_advancedfpga.bin\
 	qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin\
-	qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin
+	qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin\
+	qf_mqttsn_ai_app/GCC_Project/output/bin/qf_mqttsn_ai_app.bin
 
 MFGBINS = qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin\
 		qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin\
@@ -36,3 +37,6 @@ qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin:
 	
 qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin:
 	cd qf_loadflash/GCC_Project/ && make
+	
+qf_mqttsn_ai_app/GCC_Project/output/bin/qf_mqttsn_ai_app.bin:
+	cd qf_mqttsn_ai_app/GCC_Project/ && make
