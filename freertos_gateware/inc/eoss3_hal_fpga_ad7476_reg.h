@@ -35,8 +35,8 @@ typedef struct
 #define FPGA_ADC         ((FPGA_ADC_AD7476_TypeDef *) FPGA_ADC_BASE)
 
 
-#define FPGA_CHIP_ID_AD7476     (0xADC1F)  // (0x55ADC)
-#define FPGA_CHIP_ID_AD7476_REV  (0x0100)  // 0x0208
+#define FPGA_CHIP_ID_AD7476     (0xADC0001)
+#define FPGA_CHIP_ID_AD7476_REV  (0x0100)
 
 #define FOUR_MEGA_HZ  (4096000)
 

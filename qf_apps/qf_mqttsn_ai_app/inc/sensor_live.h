@@ -79,17 +79,17 @@
 
 #define SENSOR_LIVE_SET_COUNT(SENSOR, COUNT) \
 ( \
-    SENSOR->rate_count =(uint8_t)COUNT \
+    SENSOR->rate_count =(uint32_t)COUNT \
 )
 
 #define SENSOR_LIVE_DEC_COUNT(SENSOR) \
 ( \
-    SENSOR->rate_count -= (uint8_t)1 \
+    SENSOR->rate_count -= (uint32_t)1 \
 )
 
 #define SENSOR_LIVE_SET_RELOAD(SENSOR, RELOAD) \
 ( \
-    SENSOR->rate_reload =(uint8_t)RELOAD \
+    SENSOR->rate_reload =(uint32_t)RELOAD \
 )
 
 #define SENSOR_LIVE_SET_ALLOC(SENSOR, ALLOC) \

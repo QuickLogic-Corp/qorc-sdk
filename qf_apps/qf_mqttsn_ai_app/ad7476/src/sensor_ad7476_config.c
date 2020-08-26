@@ -26,7 +26,11 @@
 #include "eoss3_hal_fpga_adc_api.h" /* ADC FPGA Driver API */
 
 ad7476_config_t ad7476_config;
-HAL_ADC_FPGA_cfg_t adc_fpga_task_config;
+HAL_ADC_FPGA_cfg_t adc_fpga_task_config =
+{
+  .sensor_id = SENSOR_AD7476_ID,
+  .frequency = 1000000
+};
 
 void sensor_ad7476_startstop( int is_start )
 {
@@ -84,7 +88,7 @@ void sensor_ad7476_clear( void )
 {
   ad7476_config.enabled = false;
   /** @todo Replace contents of this function */
-  adc_fpga_task_config.sensor_id = 0;
+  //adc_fpga_task_config.sensor_id = 0;
   adc_fpga_task_config.ltc1859.channel_enable_bits = 0;
   //ltc1859_watch_data = NULL;
   //ad7476_watch_data = NULL;
