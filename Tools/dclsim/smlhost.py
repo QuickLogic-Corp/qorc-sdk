@@ -32,7 +32,7 @@ ad7476_group = parser.add_argument_group('ad7476', 'AD7476 group')
 ad7476_group.add_argument('--ad7476', dest='ad7476', action='store_true', help='add AD7476 ADC sensor for tests')
 ad7476_group.add_argument('--ad7476_rate', dest='ad7476_rate', default=1000000, type=int, help='Sampling rate in Hz')
 ad7476_group.add_argument('--ad7476_range', dest='ad7476_range', default=2, type=int, help='sample range multiple of gravity constant g')
-ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=5000, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
+ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=999, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 ad7476_group.add_argument('--ad7476_spp', dest='ad7476_spp', default=8, type=int, help='samples per packet for live-streaming')
 
 recog_group = parser.add_argument_group('recog', 'Recognition group')
@@ -347,17 +347,23 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
 args = parser.parse_args()
 print(args)
 
-sensor_rate = args.accel_rate        # sensor sample rate in Hz
-sensor_count_down = args.accel_count_down  # sub-sampling, if any for the sensor
-sensor_samples_per_packet = args.accel_spp # 10 samples per packet
-
 if (args.accel):
    print('Configuring Accelerometer @{} Hz, {}G, {} count-down, {} samples-per-packet'.format( args.accel_rate, args.accel_range, args.accel_count_down, args.accel_spp))
+   sensor_rate = args.accel_rate        # sensor sample rate in Hz
+   sensor_count_down = args.accel_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.accel_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 6
    sensorobj = IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
 
 if (args.ad7476):
    print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_range, args.ad7476_count_down, args.ad7476_spp))
-   #ADC_AD7476(b'AD\x1d4',1000000,16, 5000, 4)
+   sensor_rate = args.ad7476_rate        # sensor sample rate in Hz
+   sensor_count_down = args.ad7476_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.ad7476_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 2
+   #ADC_AD7476(b'AD\x1d4',1000000,16, 2499, 4)
    sensorobj = ADC_AD7476(b'AD\x1d\x34',args.ad7476_rate,16, args.ad7476_count_down, args.ad7476_spp)
 
 if (args.live == True):
@@ -365,13 +371,13 @@ if (args.live == True):
    test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
    live_stream_time = live_stream_end_time - live_stream_start_time
    print('{} bytes received in {} secs ({} packets)'.format(total_bytes, live_stream_time, total_packets))
-   spp = (total_bytes - 5*total_packets) / 6 / total_packets
+   spp = (total_bytes - 5*total_packets) / sample_size / total_packets
    sample_rate_estimate = total_packets * spp / live_stream_time
-   print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, args.accel_rate))
+   print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, sensor_live_rate))
 
 if (args.recog == True):
    print("Testing recognition mode ...")
-   test_recog(SENSOR, filename=args.filename, streaming_time=args.timeout, features=args.features, log=args.log)
+   test_recog(sensorobj, filename=args.filename, streaming_time=args.timeout, features=args.features, log=args.log)
 
 if (args.clear == True):
    print("Disconnecting ...")

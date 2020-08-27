@@ -21,7 +21,7 @@
 #include "Fw_global_config.h"
 
 #include <stdio.h>
-
+#include <assert.h>
 #include "eoss3_hal_fpga_sdma_api.h"
 #include "eoss3_hal_fpga_ad7476_reg.h"
 //#include "eoss3_hal_gpio.h"
@@ -126,10 +126,12 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
   adc_info_state.callback_rxptr = pcb_read;
 
   //Enable FB clocks.
-  S3x_Clk_Set_Rate(S3X_FB_16_CLK, HSOSC_18MHZ);
+  S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_18MHZ);
+  assert( S3x_Clk_Get_Rate(S3X_FB_16_CLK) == F_18MHZ );
   S3x_Clk_Enable(S3X_FB_16_CLK);
 
-  S3x_Clk_Set_Rate(S3X_FB_21_CLK, HSOSC_4MHZ);
+  S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_4MHZ);
+  assert( S3x_Clk_Get_Rate(S3X_FB_21_CLK) == F_4MHZ );
   S3x_Clk_Enable(S3X_FB_21_CLK);
 
 #ifndef CONST_FREQ
@@ -231,7 +233,7 @@ void ad7476_stop_dma(void)
 int HAL_FSDMA_IsTransferInProgress(void *handle);
 int ad7476_IsDmaTransferInProgress()
 {
-  return HAL_FSDMA_IsTransferInProgress(&adc_info_state.sdma_handle);
+  return HAL_FSDMA_IsTransferInProgress(adc_info_state.sdma_handle);
 }
 
 HAL_StatusTypeDef HAL_ADC_FPGA_Read(void *buffer, size_t n_bytes)

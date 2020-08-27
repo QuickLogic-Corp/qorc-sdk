@@ -42,17 +42,6 @@
  * 
  * @{
  */
-#if 0
-#define AD7476_MAX_SAMPLE_RATE_HZ           (1666)  ///< Maximum sample rate (in Hz) for this sensor
-#define AD7476_FRAME_SIZE_PER_CHANNEL       (18)    ///< 10ms of data @ 1666Hz sample rate
-#define AD7476_NUM_CHANNELS                 (6)     ///< (X,Y,Z) for Accel and (X,Y,Z) for Gryo
-#define AD7476_FRAME_SIZE                   ( (AD7476_FRAME_SIZE_PER_CHANNEL) * (AD7476_NUM_CHANNELS) )
-#define AD7476_NUM_DATA_BLOCKS              (60)    ///< 125 data blocks approximately 1 sec of data
-#endif
-
-#define _STR(x)   #x
-#define STR(x)    _STR(x)
-#pragma message("frame size per channel" STR(AD7476_FRAME_SIZE_PER_CHANNEL))
 
 /** Maximum number of ad7476 data blocks that may be queued for chain processing */
 #define AD7476_MAX_DATA_BLOCKS              (AD7476_NUM_DATA_BLOCKS)
@@ -139,43 +128,16 @@ outQ_processor_t ad7476_livestream_outq_processor =
   .p_event_notifier = NULL
 };
 
-/* AD7476 datasave processing element functions */
-extern void ad7476_datasave_data_processor(
-       QAI_DataBlock_t *pIn,
-       QAI_DataBlock_t *pOut,
-       QAI_DataBlock_t **pRet,
-       datablk_pe_event_notifier_t *pevent_notifier
-     );
-extern void ad7476_datasave_config(void *pDatablockManagerPtr);
-
-datablk_pe_funcs_t ad7476_datasave_funcs = 
-{
-  .pconfig     = ad7476_datasave_config, 
-  .pprocess    = ad7476_datasave_data_processor, 
-  .pstart      = NULL, 
-  .pstop       = NULL, 
-  .p_pe_object = (void *)&ad7476BuffDataBlkMgr 
-} ;
-
 datablk_pe_descriptor_t  ad7476_datablk_pe_descr[] =
 { // { IN_ID, OUT_ID, ACTIVE, fSupplyOut, fReleaseIn, outQ, &pe_function_pointers, bypass_function, pe_semaphore }
-#if (SENSOR_AD7476_RECOG_ENABLED)
+#if (SENSOR_AD7476_RECOG_ENABLED) && (S3AI_FIRMWARE_IS_RECOGNITION)
     /* processing element descriptor for SensiML AI for AD7476 sensor */
     { AD7476_ISR_PID, AD7476_AI_PID, true, false, true, &ad7476_sensiml_ai_outq_processor, &ad7476_sensiml_ai_funcs, NULL, NULL},   
 #endif
 
-#if (SENSOR_AD7476_DATASAVE_ENABLED) // && (S3AI_FIRMWARE_IS_COLLECTION)
-    /* processing element descriptor for AD7476 sesnsor datasave */
-    { AD7476_ISR_PID, AD7476_DATASAVE_PID, true, false, false, NULL, &ad7476_datasave_funcs, NULL, NULL},   
-#endif
-
-#if (SENSOR_AD7476_LIVESTREAM_ENABLED) // && (S3AI_FIRMWARE_IS_COLLECTION)
-    /* processing element descriptor for AD7476 sesnsor datasave */
+#if (SENSOR_AD7476_LIVESTREAM_ENABLED) && (S3AI_FIRMWARE_IS_COLLECTION)
+    /* processing element descriptor for AD7476 sesnsor live-streaming */
     { AD7476_ISR_PID, AD7476_LIVESTREAM_PID, true, false, true, &ad7476_livestream_outq_processor, &ad7476_livestream_funcs, NULL, NULL},   
-#endif
-
-#if (0) // (SENSOR_AD7476_ENABLED == 0)
-    { (process_id_t)0, (process_id_t)0, false, false, false, NULL, NULL, NULL, NULL}
 #endif
 };
 
@@ -317,102 +279,3 @@ int  ad7476_livestream_stop(void)
   return 0;
 }
 
-#if (0)
-#include "save_datablocks.h"
-static sensor_blocks_info_t ad7476_blocks_info; /* ad7476 sensor */
-
-/*
-* Count the total number of available bytes in all the block held in the array.
-* If there enrough for 1 RIFF block save them.
-* But first check if there a free RIFF block available.
-*/
-static void ad7476_save_blocks(void)
-{
-    sensor_blocks_info_t *ad7476 = &ad7476_blocks_info;
-    
-    int avail_bytes;
-
-    /* need 1 free RIFF blocks for saving ad7476 */
-    if(!check_free_riff_blocks(1))
-      return;
-    
-    /* should have enough bytes to fill a RIFF block */
-    avail_bytes = get_available_bytes(ad7476);
-    if(avail_bytes < get_riff_block_size())
-      return;
-
-    /* store data, starting from first stored index block */
-    store_one_sensor(ad7476, ad7476_config.rate_hz, SENSOR_AD7476_ID);
-    
-    return;
-}
-/* 
- * Check if enough data for 1 RIFF and block and then Save and Release the 
- *  data blocks held.
- */
-void ad7476_block_save(QAI_DataBlock_t *pIn)
-{
-    sensor_blocks_info_t *ad7476 = &ad7476_blocks_info;
-
-    /* first put the block in the array */
-    ad7476->sensor_data_blocks[ad7476->array_hold_index++] = pIn;
-
-    /* no point holding blocks if not saving */
-    /* if not enabled... then throw data away */
-    if(!datablock_save_status(SENSOR_AD7476_ID) || (ad7476_config.enabled == 0))
-    {
-      release_save_blocks(ad7476, ad7476->array_hold_index);
-      ad7476->block_rd_index = 0;
-      return;
-    }
-    
-    /* if enough data for 1 RIFF block, store */
-    ad7476_save_blocks();
-    
-    /* if the count exceeds, then release half (?) of them */
-    if(ad7476->array_hold_index >= ad7476->array_hold_max)
-    {
-      int release_count = ad7476->array_hold_index/2;
-      
-      release_save_blocks(ad7476, release_count);
-      ad7476->block_rd_index = 0;
-    } 
-    
-    return;
-}
-
-/* 
- * Only data block instantiating function in main knows the maximum blocks.
- */
-void ad7476_set_hold_count(int total_count)
-{
-    /* Generally approximately 3/4 of the blocks could be held until stored */
-    total_count = (3*total_count)/4;
-    if(total_count > MAX_SAVE_BLOCKS_ARRAY_SIZE)
-      total_count = MAX_SAVE_BLOCKS_ARRAY_SIZE;
-    
-    reset_sensor_array_counts(&ad7476_blocks_info, total_count);
-    
-    return;
-}
-
-void ad7476_datasave_data_processor(
-       QAI_DataBlock_t *pIn,
-       QAI_DataBlock_t *pOut,
-       QAI_DataBlock_t **pRet,
-       datablk_pe_event_notifier_t *pevent_notifier
-     )
-{
-   ad7476_block_save(pIn);
-   *pRet = NULL;
-   return;
-}
-
-void ad7476_datasave_config(void *pDatablockManagerPtr)
-{
-  QAI_DataBlockMgr_t *pdbm = (QAI_DataBlockMgr_t *)pDatablockManagerPtr;
-  int max_blocks = pdbm->max_data_blocks ;
-  ad7476_set_hold_count(max_blocks);
-}
-
-#endif
