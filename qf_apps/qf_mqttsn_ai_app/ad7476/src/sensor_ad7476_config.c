@@ -50,6 +50,8 @@ void sensor_ad7476_startstop( int is_start )
   {
     extern void ad7476_isr_DmacDone(void);
     extern void ad7476_start_dma(void);
+    if (ad7476_config.is_running)
+      return;
     int status = HAL_ADC_FPGA_Init( &adc_fpga_task_config, &ad7476_isr_DmacDone);
     configASSERT( status == HAL_OK );
     ad7476_start_dma();

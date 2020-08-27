@@ -227,7 +227,8 @@ void ad7476_start_dma(void)
 
 void ad7476_stop_dma(void)
 {
-  ad7476_dma_stop_request = 1;
+  if (ad7476_dma_stop_request == 0)
+     ad7476_dma_stop_request = 1;
   return;
 }
 int HAL_FSDMA_IsTransferInProgress(void *handle);
