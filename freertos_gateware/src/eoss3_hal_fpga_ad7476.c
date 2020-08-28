@@ -134,7 +134,7 @@ HAL_StatusTypeDef HAL_ADC_FPGA_Init( HAL_ADC_FPGA_cfg_t *adc_cfg, void (*pcb_rea
   assert( S3x_Clk_Get_Rate(S3X_FB_21_CLK) == F_4MHZ );
   S3x_Clk_Enable(S3X_FB_21_CLK);
 
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
   S3x_Register_Qos_Node(S3X_FB_16_CLK);
   S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
 #endif
@@ -283,7 +283,7 @@ void HAL_ADC_FPGA_De_Init(void)
     }
     adc_info_state.sdma_handle = NULL;
   FPGA_ADC->SEN_ENR = 0;
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
      S3x_Clear_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ);
 #endif
 
