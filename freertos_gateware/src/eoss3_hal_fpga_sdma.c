@@ -171,7 +171,7 @@ static void HAL_FSDMA_ISR_Handler()
   {
         if(is_fsdma_ch_intr_set(i))  //Check which channel interrupt is set/
         {
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ);
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ);
 #endif
@@ -198,7 +198,7 @@ HAL_StatusTypeDef HAL_FSDMA_Init(void)
 {
     HAL_StatusTypeDef status = HAL_OK;
 
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
     /* Clocks initialization */
     S3x_Register_Qos_Node(S3X_SDMA_CLK);
 #endif
@@ -304,7 +304,7 @@ HAL_StatusTypeDef HAL_FSDMA_Send(void* handle, void *srcptr, uint32_t length)
      //S3x_Clk_Enable (S3X_SDMA_CLK);
      //S3x_Clk_Enable(S3X_FB_16_CLK);
 
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ, HSOSC_72MHZ);
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ, HSOSC_72MHZ);
 #endif
@@ -366,7 +366,7 @@ HAL_StatusTypeDef HAL_FSDMA_Receive(void* handle, void *dstptr, uint32_t length)
       //S3x_Clk_Enable(S3X_SDMA_CLK);
       //S3x_Clk_Enable(S3X_FB_16_CLK);
 
-#ifndef CONST_FREQ
+#if (CONST_FREQ == 0)
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ, HSOSC_72MHZ);
      S3x_Set_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ, HSOSC_72MHZ);
 #endif

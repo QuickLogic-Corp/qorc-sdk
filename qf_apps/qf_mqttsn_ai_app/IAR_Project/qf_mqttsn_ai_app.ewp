@@ -1178,12 +1178,6 @@
                 </group>
             </group>
             <group>
-                <name>fpga</name>
-                <file>
-                    <name>$PROJ_DIR$\..\fpga\fpga.h</name>
-                </file>
-            </group>
-            <group>
                 <name>fsm</name>
                 <file>
                     <name>$PROJ_DIR$\..\fsm\fsm.h</name>
@@ -1477,7 +1471,7 @@
         </file>
     </group>
     <group>
-        <name>freertos-gateware</name>
+        <name>freertos_gateware</name>
         <group>
             <name>inc</name>
             <file>

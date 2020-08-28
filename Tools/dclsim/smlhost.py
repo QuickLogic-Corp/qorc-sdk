@@ -31,7 +31,6 @@ accel_group.add_argument('--accel_spp', dest='accel_spp', default=8, type=int, h
 ad7476_group = parser.add_argument_group('ad7476', 'AD7476 group')
 ad7476_group.add_argument('--ad7476', dest='ad7476', action='store_true', help='add AD7476 ADC sensor for tests')
 ad7476_group.add_argument('--ad7476_rate', dest='ad7476_rate', default=1000000, type=int, help='Sampling rate in Hz')
-ad7476_group.add_argument('--ad7476_range', dest='ad7476_range', default=2, type=int, help='sample range multiple of gravity constant g')
 ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=999, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 ad7476_group.add_argument('--ad7476_spp', dest='ad7476_spp', default=8, type=int, help='samples per packet for live-streaming')
 
@@ -357,7 +356,7 @@ if (args.accel):
    sensorobj = IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
 
 if (args.ad7476):
-   print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_range, args.ad7476_count_down, args.ad7476_spp))
+   print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_count_down, args.ad7476_spp))
    sensor_rate = args.ad7476_rate        # sensor sample rate in Hz
    sensor_count_down = args.ad7476_count_down  # sub-sampling, if any for the sensor
    sensor_samples_per_packet = args.ad7476_spp # 10 samples per packet
