@@ -52,6 +52,7 @@ topics = [ ("sensiml/sys/device/uuids/rsp", 1),
            ("sensiml/result/class/data", 1),
            ("sensiml/sys/will/status", 1)]
 
+sysver = 'Unknown'
 dev_response = 0     # indicates if device responded to the request
 total_bytes = 0      # indicates bytes received during live stream
 total_packets = 0    # indicates packets received durign live stream
@@ -122,6 +123,17 @@ def cb_dev_response(client, userdata, msg):
     global dev_response
     dev_response = 1
 
+def cb_sysver_response(client, userdata, msg):
+    global dev_response
+    global sysver
+    if ('C ' in str(msg.payload[:2])):
+       sysver = 'Collection'
+    elif ('R ' in str(msg.payload[:2])):
+       sysver = 'Recognition'
+    else:
+       sysver = 'Unknown'
+    dev_response = 1
+
 # Process live streaming data
 # the following topics are expected to be registered for this callback
 # sensiml/live/raw/data
@@ -188,7 +200,16 @@ def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
         if (log):
            mqttc.on_log  = on_log
 
+        def live_disconnect(mqttc):
+            send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
+            mqttc.message_callback_remove("sensiml/live/raw/data")
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
+            mqttc.disconnect()
+
         mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sys/version/rsp", cb_sysver_response)
         mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
@@ -208,6 +229,13 @@ def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
         send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/version/req", empty, qos=1, wait=True)
+        if (sysver == 'Collection'):
+            pass
+        else:
+            print("Current device mode: ", sysver, "does not perform Collection/Live-streaming")
+            print("Load data collection enabled image and retry")
+            live_disconnect(mqttc)
+            return
         send_message(mqttc, "sensiml/sys/compdatetime/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/device/uuids/req", empty, qos=1, wait=True)
 
@@ -232,14 +260,6 @@ def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
         msg = sensorobj.live_start
         send_message(mqttc, "sensiml/live/start", msg, qos=1, wait=False)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
-
-        def live_disconnect(mqttc):
-            send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
-            mqttc.message_callback_remove("sensiml/live/raw/data")
-            mqttc.message_callback_remove("sensiml/sys/#")
-            mqttc.message_callback_remove("sensiml/sensor/#")
-            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
-            mqttc.disconnect()
 
         total_bytes = 0
         total_packets = 0
@@ -283,6 +303,13 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
         if (log):
            mqttc.on_log     = on_log
 
+        def recog_disconnect(mqttc):
+            send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
+
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.disconnect()
+
         mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
@@ -301,6 +328,13 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
 
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/version/req", empty, qos=1, wait=True)
+        if (sysver == 'Recognition'):
+            pass
+        else:
+            print("Current device mode: ", sysver, "does not perform Recognition")
+            print("Load recognition enabled image and retry")
+            recog_disconnect(mqttc)
+            return
         send_message(mqttc, "sensiml/sys/compdatetime/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/device/uuids/req", empty, qos=1, wait=True)
 
@@ -317,13 +351,6 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
         if (features):
            msg = b'\x02'
         send_message(mqttc, "sensiml/result/class/start", msg, qos=1, wait=False)
-
-        def recog_disconnect(mqttc):
-            send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
-
-            mqttc.message_callback_remove("sensiml/sys/#")
-            mqttc.message_callback_remove("sensiml/sensor/#")
-            mqttc.disconnect()
 
         if streaming_time != 0:
             time.sleep(streaming_time)

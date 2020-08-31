@@ -80,7 +80,7 @@
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
 #define FEATURE_USBSERIAL   0       // USBSERIAL port is present
-#define USB_UART_CHECK_FIFO_CONNECT  1    // 1 for USB-serial
+#define USB_UART_CHECK_FIFO_CONNECT  FEATURE_USBSERIAL    // 1 for USB-serial
 
 // Options for debug output -- use to set DEBUG_UART below
 // #define UART_ID_DISABLED     0   // /dev/null */
@@ -90,9 +90,16 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
+
+#if (FEATURE_USBSERIAL == 1)
+#define DEBUG_UART  UART_ID_HW  // Write data to USB serial port
+#define UART_ID_CONSOLE UART_ID_HW
+#define UART_ID_MQTTSN  UART_ID_USBSERIAL   
+#else
 #define DEBUG_UART  UART_ID_BUFFER  // Write data to USB serial port
 #define UART_ID_CONSOLE UART_ID_DISABLED
 #define UART_ID_MQTTSN  UART_ID_HW
+#endif
 
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
@@ -174,6 +181,10 @@ extern int FPGA_FFE_LOADED;
 
 // Enable ADC FPGA Driver
 #define ADC_FPGA_DRIVER   1
+
+#if (FEATURE_USBSERIAL == 1) && (ADC_FPGA_DRIVER == 1)
+#error "FEATURE_USBSERIAL and ADC_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
+#endif
 
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1
