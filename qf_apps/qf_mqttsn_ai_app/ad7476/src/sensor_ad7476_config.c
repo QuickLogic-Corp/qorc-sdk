@@ -48,7 +48,7 @@ void sensor_ad7476_startstop( int is_start )
   }
 #endif
 
-  if (is_start == 1)
+  if ( (is_start == 1) && (ad7476_config.enabled) )
   {
     extern void ad7476_isr_DmacDone(void);
     extern void ad7476_start_dma(void);
@@ -63,10 +63,8 @@ void sensor_ad7476_startstop( int is_start )
   else
   { /* stop ADC FPGA Driver */
     extern void ad7476_stop_dma(void);
-    extern int  ad7476_IsDmaTransferInProgress(void);
     if (ad7476_config.is_running)
     {
-      int timeout = 10000; // wait for 10 secs to stop request
       ad7476_stop_dma();
         HAL_ADC_FPGA_De_Init();
         ad7476_config.is_running = 0;

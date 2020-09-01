@@ -375,7 +375,7 @@ void do_livestream_sensor_list_req(Mqttsn_IOMsgData_t *pIoMsgData)
             pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, sensor_ltc1859_get_rate());
         }
 #endif
-#if ADC_FPGA_DRIVER
+#if AD7476_FPGA_DRIVER
         if ( is_sensor_active(SENSOR_ADC_AD7476, IMU_DATA_COLLECT) )
         {
             pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, SENSOR_ADC_AD7476);

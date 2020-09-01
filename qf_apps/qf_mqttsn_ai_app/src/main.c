@@ -303,7 +303,7 @@ void setup_sensors_data_block_processor(void)
 
   imu_block_processor();
 
-#if (ADC_FPGA_DRIVER == 1)  
+#if (AD7476_FPGA_DRIVER == 1)  
   ad7476_block_processor();
 #endif
 }

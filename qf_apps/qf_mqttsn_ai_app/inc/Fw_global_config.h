@@ -180,10 +180,10 @@ extern int FPGA_FFE_LOADED;
 #define CONST_FREQ (1)
 
 // Enable ADC FPGA Driver
-#define ADC_FPGA_DRIVER   1
+#define AD7476_FPGA_DRIVER   1
 
-#if (FEATURE_USBSERIAL == 1) && (ADC_FPGA_DRIVER == 1)
-#error "FEATURE_USBSERIAL and ADC_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
+#if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
+#error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
 #endif
 
 ///* enable the LTC1859 driver */

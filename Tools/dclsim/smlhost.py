@@ -202,6 +202,7 @@ def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
 
         def live_disconnect(mqttc):
             send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
+            send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
             mqttc.message_callback_remove("sensiml/live/raw/data")
             mqttc.message_callback_remove("sensiml/sys/#")
             mqttc.message_callback_remove("sensiml/sensor/#")
@@ -311,6 +312,7 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
             mqttc.disconnect()
 
         mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sys/version/rsp", cb_sysver_response)
         mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)

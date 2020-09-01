@@ -85,7 +85,7 @@ void configure_all_sensors(Mqttsn_IOMsgData_t *pIoMsgData)
     sensor_gyro_configure();
     sensor_mag_configure();
 #endif
-#if ADC_FPGA_DRIVER
+#if AD7476_FPGA_DRIVER
     sensor_ad7476_configure();  // sensor_adc_fpga_configure();
     sensor_ad7476_startstop(1); // sensor_adc_fpga_startstop(1);
 #endif
@@ -108,7 +108,7 @@ void sensors_all_startstop( int is_start )
 #if IMU_M4_DRIVERS
     sensor_imu_startstop( is_start );
 #endif
-#if ADC_FPGA_DRIVER
+#if AD7476_FPGA_DRIVER
     //sensor_adc_fpga_startstop( is_start );
     sensor_ad7476_startstop( is_start );
 #endif
@@ -127,7 +127,7 @@ void sensor_clear(SensorEnableStatus *pSensorStatus)
 #if AUDIO_DRIVER
     sensor_audio_clear();
 #endif
-#if ADC_FPGA_DRIVER
+#if AD7476_FPGA_DRIVER
     //sensor_adc_fpga_clear();
     sensor_ad7476_clear();
 #endif
@@ -304,11 +304,13 @@ void sensor_add(SensorEnableStatus *pSensorStatus)
         sensor_audio_add();
         break;
 #endif
-#if ADC_FPGA_DRIVER
+#if AD7476_FPGA_DRIVER
     case SENSOR_ADC_AD7476:
         pSensorStatus->isADCEnabled = TRUE;
         sensor_ad7476_add();
         break;
+#endif
+#if LTC1859_DRIVER
     case SENSOR_ADC_LTC_1859_MAYHEW:
         pSensorStatus->isADCEnabled = TRUE;
         //sensor_ltc1859a_add();
