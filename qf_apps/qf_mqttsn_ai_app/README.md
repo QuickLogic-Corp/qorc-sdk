@@ -5,7 +5,7 @@ This demo project performs SensiML data collection and recognition tasks
 for the Quickfeather platform using QORC-SDK.
 (Refer: https://github.com/QuickLogic-Corp/qorc-sdk)
 
-An AD7476 Analog-to-digital (ADC) sensor is added to this project. The project
+An AD7476 Analog-to-digital converter (ADC) is added to this project. The project
 uses ADC FPGA IP design from [s3-gateware]. Communication interface for MQTT-SN
 messages uses the ASSP UART interface.
 
@@ -25,6 +25,24 @@ and appropriate ARM GCC toolchain to build the project
 For data collection, building an AI model, and recognition 
 please refer to https://sensiml.com/ and https://sensiml.com/documentation/guides/getting-started/index.html
 
+Using with an AD7476 ADC module
+------------
+
+Connect a [PmodAD1] module to the quickfeather using the following pinout
+
+| PmodAD1 module  | Quickfeather |
+| --------------- | ------------ |
+| CS              | J8.5         |
+| D0              | J8.9         |
+| CLK             | J8.11        |
+| GND             | J8.13        |
+| Vcc             | J8.15        |
+
+Connect desired sensor to the A0 pin on the PmodAD1 module.
+
+Reset the Quickfeather board to start running the AI application.
+Refer [SensiML Getting Started] to collect data or get inferences from this connected sensor.
+
 MQTT-SN over USB-serial Notes
 ------------
 
@@ -39,3 +57,4 @@ messages only if the FIFO is empty.
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
 [SensiML]: https://sensiml.com/
 [SensiML Getting Started]: https://sensiml.com/documentation/guides/getting-started/index.html
+[PmodAD1]: https://reference.digilentinc.com/reference/pmod/pmodad1/start
