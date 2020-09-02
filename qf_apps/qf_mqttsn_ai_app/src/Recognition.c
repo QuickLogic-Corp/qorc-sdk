@@ -23,6 +23,16 @@
 */
 #include "Fw_global_config.h"
 
+/* define the following macro to 1, to indicate that datablock processor 
+ * functions are directly invoking the SensiML recognition APIs
+ * (sml_recognition_run_batch and/or sml_recognition_run_single)
+ *
+ * define the following macro to 0, to use the recog_data() APIs
+ * for recognition
+ *
+ */
+#define USE_DBP_FOR_SENSIML_RECOG (1) // indicate whether to use datablock processor
+
 #if S3AI_FIRMWARE_IS_RECOGNITION
 
 #include <stdio.h>
@@ -714,7 +724,12 @@ void recog_data( struct sensor_data *pSensorData )
     }
 }
 
-
+void recog_data_using_dbp(signed short *data_batch, int batch_sz, uint8_t num_sensors, uint32_t sensor_id)
+{
+#if (USE_DBP_FOR_SENSIML_RECOG)
+  sml_recognition_run_batch(data_batch, batch_sz, num_sensors, sensor_id);
+#endif /* USE_DBP_FOR_SENSIML_RECOG */
+}
 
 /*
 * Main Recognition task for detecting characters

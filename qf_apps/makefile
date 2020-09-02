@@ -37,6 +37,6 @@ qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin:
 	
 qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin:
 	cd qf_loadflash/GCC_Project/ && make
-	
+
 qf_mqttsn_ai_app/GCC_Project/output/bin/qf_mqttsn_ai_app.bin:
 	cd qf_mqttsn_ai_app/GCC_Project/ && make

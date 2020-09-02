@@ -128,7 +128,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  
+#if 0
    {
     // Pad6 is the user button
     .ucPin = PAD_6,
@@ -139,7 +139,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
-
+#endif
   
    { // Pad 33 -- Test clock
     .ucPin = PAD_33,
@@ -222,6 +222,93 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
+
+  // setup FPGA ADC pins
+#if 0
+  { // Pad 4 -- FPGA MOSI
+    .ucPin = PAD_4,
+    .ucFunc = PAD4_FUNC_SEL_FBIO_4,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+#endif
+  { // Pad 7 -- FPGA SPI CLK
+    .ucPin = PAD_7,
+    .ucFunc = PAD7_FUNC_SEL_FBIO_7,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+  { // Pad 31 -- FPGA READ/SS
+    .ucPin = PAD_31,
+    .ucFunc = PAD31_FUNC_SEL_FBIO_31,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+  { // Pad 5 -- FPGA SPI MISO
+    .ucPin = PAD_5,
+    .ucFunc = PAD5_FUNC_SEL_FBIO_5,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+  { // Pad 10 -- FPGA READ/SS
+    .ucPin = PAD_10,
+    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+#if 0
+  { // Pad 10 -- FPGA CONVERSION START ACTIVE HIGH
+    .ucPin = PAD_10,
+    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+  { // Pad 11 -- FPGA BUSY SIGNAL ACTIVE LOW
+    .ucPin = PAD_11,
+    .ucFunc = PAD11_FUNC_SEL_FBIO_11,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+#endif
+  { // Pad 12 -- FPGA MOSI
+    .ucPin = PAD_12,
+    .ucFunc = PAD12_FUNC_SEL_FBIO_12,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+
 
 };
 

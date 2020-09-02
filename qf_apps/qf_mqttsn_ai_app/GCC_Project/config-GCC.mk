@@ -1,4 +1,9 @@
 #
+# Symbiflow options for QORK SDK
+#
+export RTL_TOP_MODULE=top
+
+#
 # GCC Configuration options for Quick-AI SDK
 #
 
@@ -37,7 +42,9 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/IOP_MQTTSN/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/sensiml/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/inc" \
+                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/ad7476/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
+                 -I"$(PROJ_ROOT)/s3-gateware/adc_ad7476_if/rtl" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/Core/Include" \
@@ -63,7 +70,8 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
                  -I"$(PROJ_ROOT)/Libraries/FPGA/inc"\
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" \
-                 -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" 
+                 -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
+                 -I"$(PROJ_ROOT)/Tasks/ADC/inc" 
     
 
 # C compiler flags
@@ -108,13 +116,15 @@ export FREERTOS_FAT_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT
 export FREERTOS_FAT_COMMON_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)common
 export FREERTOS_FAT_QL_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)QL
 export RIFF_FILE_DIR  = $(LIB_DIR)$(DIR_SEP)riff_file$(DIR_SEP)src
-export DBP_DIR         = $(PROJ_ROOT)$(DIR_SEP)Tasks/DatablockProcessor$(DIR_SEP)src
+export DBP_DIR         = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor$(DIR_SEP)src
 export DBM_DIR        = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
 export SENSOR_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)src
 export FRAMEWORKLIB_DIR = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)lib
 export FFE_DIR          = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)FFE
 export HYBRID_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)Hybrid
 export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
-export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
-export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+export ADC_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)ADC$(DIR_SEP)src
+export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
+export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
+export SENSOR_AD7476_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)ad7476$(DIR_SEP)src

@@ -47,6 +47,7 @@ Sensor_live_t sensor_live_list[] = {
     SENSOR_LIVE_INIT(SENSOR_AUDIO,0,1,2,0,0,0,0,0),
     SENSOR_LIVE_INIT(SENSOR_ADC_LTC_1859_MAYHEW,0,1,2,0,0,0,0,0),
     SENSOR_LIVE_INIT(SENSOR_ADC_LTC_1859_B,0,1,2,0,0,0,0,0),
+    SENSOR_LIVE_INIT(SENSOR_ADC_AD7476,0,1,2,0,0,0,0,0),
     /* reserved for new sensor */
     // If new sensor needs to be added, add it before this line.
     // Modify SENSOR_NUM_MAX to include new sensor.
@@ -145,6 +146,7 @@ void sensor_live_set_default(void)
             case SENSOR_ENG_VALUE_MAGNETOMETER:
             case SENSOR_AUDIO:
             case SENSOR_ADC_LTC_1859_MAYHEW:
+            case SENSOR_ADC_AD7476:
             case SENSOR_ADC_LTC_1859_B:
                 SENSOR_LIVE_SET_SIZE(s,2);
                 break;
@@ -371,6 +373,13 @@ void do_livestream_sensor_list_req(Mqttsn_IOMsgData_t *pIoMsgData)
         {
             pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, SENSOR_ADC_LTC_1859_MAYHEW);
             pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, sensor_ltc1859_get_rate());
+        }
+#endif
+#if AD7476_FPGA_DRIVER
+        if ( is_sensor_active(SENSOR_ADC_AD7476, IMU_DATA_COLLECT) )
+        {
+            pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, SENSOR_ADC_AD7476);
+            pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, 1000000);
         }
 #endif
     }

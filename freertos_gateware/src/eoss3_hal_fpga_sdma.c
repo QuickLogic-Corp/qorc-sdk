@@ -48,6 +48,7 @@
 #include "eoss3_hal_sdma.h"
 #include "eoss3_hal_gpio.h"
 #include "s3x_clock.h"
+#include "eoss3_hal_fpga_adc_api.h"
 #include "dbg_uart.h"
 
 /* Max SDMA channels supported by FPGA. */
@@ -131,7 +132,7 @@ __STATIC_INLINE int get_fsdma_channel_data_register(int ch)
         return -1;
   }
 }
-#if 0
+
 static uint32_t set_channel_rpower(uint32_t transfer_length)
 {
     int length_words = transfer_length/4;
@@ -148,14 +149,23 @@ static uint32_t set_channel_rpower(uint32_t transfer_length)
     else rpowerCode = 2;
     return rpowerCode;
 }
-#endif
+
 /***********************************
 FPGA SDMA driver Interrupt Handler
 *************************************/
+
+int adc_dma_count;
+
 static void HAL_FSDMA_ISR_Handler()
 {
 
    //HAL_GPIO_Write(GPIO_0, 0);
+    
+    if( adc_dma_count < MAX_ADC_STAMPS  ){
+        adc_timestamps[ adc_dma_count ].fsdma_enter = DWT->CYCCNT;
+        adc_dma_count += 1;
+    }
+    
   int i = 0;
   for(i = 0; i < 4; i++)
   {
@@ -165,8 +175,6 @@ static void HAL_FSDMA_ISR_Handler()
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_CPU_FREQ);
           S3x_Clear_Qos_Req(S3X_SDMA_CLK, MIN_OP_FREQ);
 #endif
-          S3x_Clk_Set_Rate(S3X_SDMA_CLK, C01_N4_CLK);
-
 
           fsdma_ch_handle_t* ch = &(handle.chanInfo[i]);
            fsdma_channel_intr_clear(i);
@@ -376,4 +384,15 @@ HAL_StatusTypeDef HAL_FSDMA_Receive(void* handle, void *dstptr, uint32_t length)
          ch->ch_transfer_in_process = 0;
      }
      return status;
+}
+
+int HAL_FSDMA_IsTransferInProgress(void *handle)
+{
+    fsdma_ch_handle_t *ch = (fsdma_ch_handle_t*)handle;
+    if(ch)
+    {
+      return ch->ch_transfer_in_process;
+    }
+    else
+      return 0;
 }

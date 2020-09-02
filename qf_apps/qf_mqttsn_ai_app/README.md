@@ -5,6 +5,10 @@ This demo project performs SensiML data collection and recognition tasks
 for the Quickfeather platform using QORC-SDK.
 (Refer: https://github.com/QuickLogic-Corp/qorc-sdk)
 
+An AD7476 Analog-to-digital converter (ADC) is added to this project. The project
+uses ADC FPGA IP design from [s3-gateware]. Communication interface for MQTT-SN
+messages uses the ASSP UART interface.
+
 Building and running the project:
 ---------------------
 The project supports either collection or recognition modes.
@@ -21,14 +25,36 @@ and appropriate ARM GCC toolchain to build the project
 For data collection, building an AI model, and recognition 
 please refer to https://sensiml.com/ and https://sensiml.com/documentation/guides/getting-started/index.html
 
+Using with an AD7476 ADC module
+------------
+
+Connect a [PmodAD1] module to the quickfeather using the following pinout
+
+| PmodAD1 module  | Quickfeather |
+| --------------- | ------------ |
+| CS              | J8.5         |
+| D0              | J8.9         |
+| CLK             | J8.11        |
+| GND             | J8.13        |
+| Vcc             | J8.15        |
+
+Connect desired sensor to the A0 pin on the PmodAD1 module.
+
+Reset the Quickfeather board to start running the AI application.
+Refer [SensiML Getting Started] to collect data or get inferences from this connected sensor.
+
 MQTT-SN over USB-serial Notes
 ------------
 
-The MQTT-SN SensiML AI application uses FPGA USB-serial IP to send and receive message over
-USB-serial cable. The USB transmit FIFO will hold the outgoing data bytes until a host terminal 
-application starts draining this data. According as the MQTT-SN protocol, the application attempts
+The MQTT-SN SensiML AI application may be configured to use FPGA USB-serial IP to send and receive message over
+USB-serial cable provided this FPGA IP is not used for other purposes such as ADC AD7476 IP used for ADC sensor. 
+The USB transmit FIFO will hold the outgoing data bytes until a host terminal application starts draining this data. According as the MQTT-SN protocol, the application attempts
 to send CONNECT messages at regular intervals until it receives a response for these messages. 
 To avoid queueing up multiple CONNECT messages in the transmit FIFO which may cause the USB 
 transmit function to enter busy-wait state when the FIFO fills-up, this application sends CONNECT
 messages only if the FIFO is empty.
 
+[s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
+[SensiML]: https://sensiml.com/
+[SensiML Getting Started]: https://sensiml.com/documentation/guides/getting-started/index.html
+[PmodAD1]: https://reference.digilentinc.com/reference/pmod/pmodad1/start

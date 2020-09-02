@@ -28,6 +28,12 @@ accel_group.add_argument('--accel_range', dest='accel_range', default=2, type=in
 accel_group.add_argument('--accel_count_down', dest='accel_count_down', default=0, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 accel_group.add_argument('--accel_spp', dest='accel_spp', default=8, type=int, help='samples per packet for live-streaming')
 
+ad7476_group = parser.add_argument_group('ad7476', 'AD7476 group')
+ad7476_group.add_argument('--ad7476', dest='ad7476', action='store_true', help='add AD7476 ADC sensor for tests')
+ad7476_group.add_argument('--ad7476_rate', dest='ad7476_rate', default=1000000, type=int, help='Sampling rate in Hz')
+ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=999, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
+ad7476_group.add_argument('--ad7476_spp', dest='ad7476_spp', default=8, type=int, help='samples per packet for live-streaming')
+
 recog_group = parser.add_argument_group('recog', 'Recognition group')
 recog_group.add_argument('--features', dest='features', default=False, action='store_true', help='publish feature vector in recognition results')
 
@@ -46,6 +52,7 @@ topics = [ ("sensiml/sys/device/uuids/rsp", 1),
            ("sensiml/result/class/data", 1),
            ("sensiml/sys/will/status", 1)]
 
+sysver = 'Unknown'
 dev_response = 0     # indicates if device responded to the request
 total_bytes = 0      # indicates bytes received during live stream
 total_packets = 0    # indicates packets received durign live stream
@@ -84,6 +91,14 @@ class IMU(SENSOR):
         for i in self.chan:
              self.sensor_add +=struct.pack('>B',i)
 
+class ADC_AD7476(SENSOR):
+    def __init__(self, sensor_id, rate, bit, cd, spp, *chan):
+        super().__init__(sensor_id, rate, bit, cd,spp,*chan)
+
+    def generate_fields(self):
+        super().generate_fields()
+        self.sensor_add +=struct.pack('>B',0)
+
 # Process log messages
 def on_log(client, userdata, level, buf):
     print("log: ", buf)
@@ -106,6 +121,17 @@ def on_message(client, userdata, msg):
 #
 def cb_dev_response(client, userdata, msg):
     global dev_response
+    dev_response = 1
+
+def cb_sysver_response(client, userdata, msg):
+    global dev_response
+    global sysver
+    if ('C ' in str(msg.payload[:2])):
+       sysver = 'Collection'
+    elif ('R ' in str(msg.payload[:2])):
+       sysver = 'Recognition'
+    else:
+       sysver = 'Unknown'
     dev_response = 1
 
 # Process live streaming data
@@ -161,7 +187,7 @@ def send_message(client, topic, payload, qos, wait=False):
     if (wait):
         wait_response()
 
-def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
+def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
     global total_bytes
     global total_packets
     total_bytes = 0
@@ -174,7 +200,17 @@ def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
         if (log):
            mqttc.on_log  = on_log
 
+        def live_disconnect(mqttc):
+            send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
+            send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
+            mqttc.message_callback_remove("sensiml/live/raw/data")
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
+            mqttc.disconnect()
+
         mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sys/version/rsp", cb_sysver_response)
         mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
@@ -194,6 +230,13 @@ def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
         send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/version/req", empty, qos=1, wait=True)
+        if (sysver == 'Collection'):
+            pass
+        else:
+            print("Current device mode: ", sysver, "does not perform Collection/Live-streaming")
+            print("Load data collection enabled image and retry")
+            live_disconnect(mqttc)
+            return
         send_message(mqttc, "sensiml/sys/compdatetime/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/device/uuids/req", empty, qos=1, wait=True)
 
@@ -203,26 +246,21 @@ def test_live_streaming(SENSOR, filename, streaming_time=30, log=False):
         send_message(mqttc,"sensiml/sensor/list/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sensor/clr", empty, qos=1, wait=False)
 
-        msg = b'IMUA' + struct.pack('>I', sensor_rate) + b'\x14'
+        #msg = b'IMUA' + struct.pack('>I', sensor_rate) + b'\x14'
+        msg = sensorobj.sensor_add
         send_message(mqttc, "sensiml/sensor/add", msg, qos=1, wait=False)
         send_message(mqttc, "sensiml/sensor/done", empty, qos=1, wait=False)
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/live/sensor/list/req", empty, qos=1, wait=True)
 
-        msg = b'\x01' + b'IMUA' + struct.pack('>I', sensor_count_down)
+        #msg = b'\x01' + b'IMUA' + struct.pack('>I', sensor_count_down)
+        msg = sensorobj.live_set_rate
         send_message(mqttc, "sensiml/live/set/rate/req", msg, qos=1, wait=False)
 
-        msg = b'\x01' + b'IMUA' + struct.pack('>B', sensor_samples_per_packet)
+        #msg = b'\x01' + b'IMUA' + struct.pack('>B', sensor_samples_per_packet)
+        msg = sensorobj.live_start
         send_message(mqttc, "sensiml/live/start", msg, qos=1, wait=False)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
-
-        def live_disconnect(mqttc):
-            send_message(mqttc, "sensiml/live/stop", empty, qos=1, wait=False)
-            mqttc.message_callback_remove("sensiml/live/raw/data")
-            mqttc.message_callback_remove("sensiml/sys/#")
-            mqttc.message_callback_remove("sensiml/sensor/#")
-            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
-            mqttc.disconnect()
 
         total_bytes = 0
         total_packets = 0
@@ -266,7 +304,15 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
         if (log):
            mqttc.on_log     = on_log
 
+        def recog_disconnect(mqttc):
+            send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
+
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.disconnect()
+
         mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sys/version/rsp", cb_sysver_response)
         mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
@@ -284,6 +330,13 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
 
         send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/version/req", empty, qos=1, wait=True)
+        if (sysver == 'Recognition'):
+            pass
+        else:
+            print("Current device mode: ", sysver, "does not perform Recognition")
+            print("Load recognition enabled image and retry")
+            recog_disconnect(mqttc)
+            return
         send_message(mqttc, "sensiml/sys/compdatetime/req", empty, qos=1, wait=True)
         send_message(mqttc, "sensiml/sys/device/uuids/req", empty, qos=1, wait=True)
 
@@ -300,13 +353,6 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
         if (features):
            msg = b'\x02'
         send_message(mqttc, "sensiml/result/class/start", msg, qos=1, wait=False)
-
-        def recog_disconnect(mqttc):
-            send_message(mqttc, "sensiml/result/class/stop", "", qos=1, wait=False)
-
-            mqttc.message_callback_remove("sensiml/sys/#")
-            mqttc.message_callback_remove("sensiml/sensor/#")
-            mqttc.disconnect()
 
         if streaming_time != 0:
             time.sleep(streaming_time)
@@ -329,26 +375,37 @@ def test_recog(SENSOR, filename, streaming_time=30, features=False, log=False):
 args = parser.parse_args()
 print(args)
 
-sensor_rate = args.accel_rate        # sensor sample rate in Hz
-sensor_count_down = args.accel_count_down  # sub-sampling, if any for the sensor
-sensor_samples_per_packet = args.accel_spp # 10 samples per packet
-
 if (args.accel):
    print('Configuring Accelerometer @{} Hz, {}G, {} count-down, {} samples-per-packet'.format( args.accel_rate, args.accel_range, args.accel_count_down, args.accel_spp))
-   IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
+   sensor_rate = args.accel_rate        # sensor sample rate in Hz
+   sensor_count_down = args.accel_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.accel_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 6
+   sensorobj = IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
+
+if (args.ad7476):
+   print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_count_down, args.ad7476_spp))
+   sensor_rate = args.ad7476_rate        # sensor sample rate in Hz
+   sensor_count_down = args.ad7476_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.ad7476_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 2
+   #ADC_AD7476(b'AD\x1d4',1000000,16, 2499, 4)
+   sensorobj = ADC_AD7476(b'AD\x1d\x34',args.ad7476_rate,16, args.ad7476_count_down, args.ad7476_spp)
 
 if (args.live == True):
    print("Testing live-streaming ... ")
-   test_live_streaming(SENSOR, filename=args.filename, streaming_time=args.timeout, log=args.log)
+   test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
    live_stream_time = live_stream_end_time - live_stream_start_time
    print('{} bytes received in {} secs ({} packets)'.format(total_bytes, live_stream_time, total_packets))
-   spp = (total_bytes - 5*total_packets) / 6 / total_packets
+   spp = (total_bytes - 5*total_packets) / sample_size / total_packets
    sample_rate_estimate = total_packets * spp / live_stream_time
-   print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, args.accel_rate))
+   print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, sensor_live_rate))
 
 if (args.recog == True):
    print("Testing recognition mode ...")
-   test_recog(SENSOR, filename=args.filename, streaming_time=args.timeout, features=args.features, log=args.log)
+   test_recog(sensorobj, filename=args.filename, streaming_time=args.timeout, features=args.features, log=args.log)
 
 if (args.clear == True):
    print("Disconnecting ...")

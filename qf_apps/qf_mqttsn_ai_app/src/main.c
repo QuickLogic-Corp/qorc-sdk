@@ -302,6 +302,10 @@ void setup_sensors_data_block_processor(void)
   //audio_block_processor();
 
   imu_block_processor();
+
+#if (AD7476_FPGA_DRIVER == 1)  
+  ad7476_block_processor();
+#endif
 }
 
 int main(void)
@@ -321,8 +325,10 @@ int main(void)
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(axFPGABitStream_length,axFPGABitStream);
+#if (FEATURE_USBSERIAL == 1)
     // Use 0x6141 as the USB serial product ID (USB PID)
     HAL_usbserial_init2(false, true, 0x6141);   // Start USB serial not using interrupts, Use 72MHz clock
+#endif
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     HAL_Delay_Init();
 
@@ -351,6 +357,7 @@ int main(void)
 #if S3AI_FIRMWARE_IS_RECOGNITION
     StartRtosTaskRecognition();
 #endif
+    //StartRtosTaskADC();
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
     /* Start the tasks and timer running. */

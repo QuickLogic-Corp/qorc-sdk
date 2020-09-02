@@ -6,7 +6,6 @@ MAIN_SRCS:= $(MAIN_DIR)/ble_app.c \
             $(MAIN_DIR)/exceptions.c \
             $(MAIN_DIR)/main.c \
             $(MAIN_DIR)/main_dbg_cli_menu.c \
-            $(MAIN_DIR)/mc3635.c \
             $(MAIN_DIR)/mqttsn_comm.c \
             $(MAIN_DIR)/mqttsn_uart.c \
             $(MAIN_DIR)/pincfg_table.c \

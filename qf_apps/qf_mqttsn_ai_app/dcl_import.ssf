@@ -76,6 +76,28 @@
                     "can_live_stream": true
                 }
             ]
+        },
+        {
+            "max_throughput": 0,
+            "name": "ADC",
+            "part": "AD7476",
+            "sample_rates": [
+                1000000
+            ],
+            "is_default": true,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [
+                        "X"
+                    ],
+                    "type": "Analog Channel",
+                    ],
+                    "sensor_id": 1094982964,
+                    "can_live_stream": true
+                }
+            ]
         }
     ],
     "is_little_endian": true

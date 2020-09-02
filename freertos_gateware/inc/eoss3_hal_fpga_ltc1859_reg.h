@@ -42,7 +42,8 @@ typedef struct
 #define FPGA_ADC         ((FPGA_ADC_TypeDef *) FPGA_ADC_BASE)
 
 
-#define ADC_CHIP_ID_VAL (0x55ADC)
+#define FPGA_CHIP_ID_LT1859 (0x55ADC)
+#define FPGA_CHIP_ID_LTC1859_REV 0x0100
 #define SENSOR_SAMPLE_RATE_100KHZ  (100000)
 #define SENSOR_SAMPLE_RATE_16KHZ   (16000)
 

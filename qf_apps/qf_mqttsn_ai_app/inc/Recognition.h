@@ -65,5 +65,7 @@ void recog_data( struct sensor_data *pDSI );
 void RecognitionMotion_Batch_DataReadyMsg(void);
 void RecognitionMotion_MoreData( const ble_accel_gyro_t *pData);
 void recognition_startstop( reco_cmd_t command );
+void *get_sensor_recog_status(void);
+extern void recog_data_using_dbp(signed short *data_batch, int batch_sz, uint8_t num_sensors, uint32_t sensor_id);
 
 #endif //#define __RECOGNITION_TASK_H__

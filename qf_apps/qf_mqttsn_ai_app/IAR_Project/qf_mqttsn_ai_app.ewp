@@ -361,6 +361,7 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\inc</state>
+                    <state>$PROJ_DIR$\..\ad7476\inc</state>
                     <state>$PROJ_DIR$\..\knowledgepack\inc</state>
                     <state>$PROJ_DIR$\..\knowledgepack\sensiml\inc</state>
                     <state>$PROJ_DIR$\..\..\..\HAL\inc</state>
@@ -377,6 +378,7 @@
                     <state>$PROJ_DIR$\..\..\..\Libraries\CMSIS\DSP\Include</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\DatablockManager\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Tasks\DatablockProcessor\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\Tasks\ADC\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\include</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\portable\QL</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\MQTTSN\inc</state>
@@ -387,8 +389,9 @@
                     <state>$PROJ_DIR$\..\..\..\Libraries\riff_file\inc</state>
                     <state>$PROJ_DIR$\..\..\..\Libraries\riff_file\riff_file\inc</state>
                     <state>$PROJ_DIR$\..\..\..\BSP\quickfeather\inc</state>
-                    <state>$PROJ_DIR$\..\fpga</state>
+                    <state>$PROJ_DIR$\..\..\..\s3-gateware</state>
                     <state>$PROJ_DIR$\..\fsm</state>
+                    <state>$PROJ_DIR$\..\..\..\freertos_gateware\inc</state>
                     <state>$PROJ_DIR$\..\IOP_MQTTSN\inc</state>
                 </option>
                 <option>
@@ -1142,10 +1145,37 @@
         <group>
             <name>qf_mqttsn_ai_app</name>
             <group>
-                <name>fpga</name>
-                <file>
-                    <name>$PROJ_DIR$\..\fpga\fpga.h</name>
-                </file>
+                <name>ad7476</name>
+                <group>
+                    <name>inc</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\inc\sensor_ad7476_acquisition.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\inc\sensor_ad7476_config.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\inc\sensor_ad7476_config_user.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\inc\sensor_ad7476_process.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>src</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\src\sensor_ad7476_acquisition.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\src\sensor_ad7476_acquisition_test.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\src\sensor_ad7476_config.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\ad7476\src\sensor_ad7476_process.c</name>
+                    </file>
+                </group>
             </group>
             <group>
                 <name>fsm</name>
@@ -1441,6 +1471,75 @@
         </file>
     </group>
     <group>
+        <name>freertos_gateware</name>
+        <group>
+            <name>inc</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_ad7476_reg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_adc_api.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_clk_sync.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_gpio.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_ltc1859_reg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_sdma_api.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_sdma_reg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_uart.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_usbserial.h</name>
+            </file>
+        </group>
+        <group>
+            <name>src</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_ad7476.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_clk_sync.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_gpio.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_ltc1859.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_sdma.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_uart.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+        </group>
+    </group>
+    <group>
         <name>HAL</name>
         <group>
             <name>inc</name>
@@ -1467,30 +1566,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_ffe.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_adc_api.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_adc_reg.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_clk_sync.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_gpio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_sdma_api.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_sdma_reg.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_uart.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_fpga_usbserial.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_gpio.h</name>
@@ -1560,27 +1635,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_ffe.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_adc.c</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_clk_sync.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_gpio.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_sdma.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_uart.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_usbserial.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_gpio.c</name>
@@ -2993,7 +3047,46 @@
         </group>
     </group>
     <group>
+        <name>s3-gateware</name>
+        <group>
+            <name>ad7476</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\src\fpga.c</name>
+            </file>
+        </group>
+        <group>
+            <name>usb2serial</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
+            </file>
+        </group>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\s3-gateware\gateware.h</name>
+        </file>
+    </group>
+    <group>
         <name>Tasks</name>
+        <group>
+            <name>ADC</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
+            <group>
+                <name>inc</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Tasks\ADC\inc\ql_adcTask.h</name>
+                </file>
+            </group>
+            <group>
+                <name>src</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Tasks\ADC\src\ql_adcTask.c</name>
+                </file>
+            </group>
+        </group>
         <group>
             <name>BLE</name>
             <excluded>

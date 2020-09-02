@@ -1,6 +1,6 @@
 HAL_SRCS:=$(wildcard $(HAL_DIR)/*.c )
 
-filters=eoss3_hal_audio.c eoss3_hal_ffe.c eoss3_hal_fpga_adc.c eoss3_hal_i2s_master_assp.c 
+filters=eoss3_hal_audio.c eoss3_hal_ffe.c eoss3_hal_i2s_master_assp.c 
 #  eoss3_hal_fpga_clk_sync.c \
 #        eoss3_hal_fpga_gpio.c  eoss3_hal_fpga_sdma.c eoss3_hal_fpga_uart.c \
 #        eoss3_hal_i2s.c eoss3_hal_i2s_slave_assp.c
@@ -9,7 +9,7 @@ SRCS:=$(filter-out $(filters),$(notdir $(HAL_SRCS)))
 #SRCS:=$(notdir $(HAL_SRCS))
 OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
 SRC_PATH:= $(HAL_DIR)
-
+$(info HAL source $(SRC_PATH) $(OBJS))
 include $(COMMON_STUB)
 
 

@@ -32,7 +32,7 @@ static QueueHandle_t    qhUSBserialRx = {NULL};
 static bool             fUsingInterrupts;
 
 void    HAL_usbserial_init(bool fUseInterrupt) {
-	return HAL_usbserial_init2(fUseInterrupt, false, 0x6141);
+	HAL_usbserial_init2(fUseInterrupt, false, 0x6141);
 }
 
 void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid) {

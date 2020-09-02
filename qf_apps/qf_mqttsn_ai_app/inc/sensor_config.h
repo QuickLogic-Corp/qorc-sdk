@@ -54,9 +54,8 @@
 #define SENSOR_CONFIG_ADC_MSG(ID, RATE, CHANNEL_CFG) \
 { \
     .msg_type=(uint8_t)GET_TOPIC_MINOR(TOPIC_SENSOR_ADD), \
-    .unpacked.ltc1859_a.common.sensor_id=(uint32_t)ID,\
-    .unpacked.ltc1859_a.common.rate_hz=(uint32_t)RATE, \
-    .unpacked.ltc1859_a.chnl_config = CHANNEL_CFG \
+    .sensor_common.sensor_id=(uint32_t)ID,\
+    .sensor_common.rate_hz=(uint32_t)RATE, \
 }
 
 #define SENSOR_CONFIG_ADD_MSG(ID, RATE, CFG)    \

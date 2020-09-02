@@ -151,9 +151,11 @@ typedef enum iop_sensor_config_minor_cmds {
 #define SENSOR_ADC_LTC_1859_MAYHEW              SENSOR_MAKE_ID_32BIT( 'L', 'T', 0, (1859*10)+0 )
 /* some future same chip, different config */
 #define SENSOR_ADC_LTC_1859_B                   SENSOR_MAKE_ID_32BIT( 'L', 'T', 0, (1859*10)+1 )
+/* Analog Devices AD7476 */
+#define SENSOR_ADC_AD7476                       SENSOR_MAKE_ID_32BIT( 'A','D', 0, (7476))
 
 // This needs to be updated when new sensor is added.
-#define SENSOR_NUM_MAX  8
+#define SENSOR_NUM_MAX  9
 #define SENSOR_RESERVED 0xFFFF
 
   /* SET TIME command */
@@ -223,6 +225,12 @@ typedef struct {
     uint8_t chnl_config[8]; /* 8bytes */
 } sensor_adc_ltc1859_a_t;
 
+typedef struct {
+    //sensor_common_t common; /* 8bytes */
+    uint32_t param0;
+    uint32_t param1;
+} sensor_adc_ad7476_t;
+
 /**
 * @brief - Get supported Sensors Response.
 */
@@ -266,6 +274,7 @@ struct sensor_config_msg {
         sensor_imu_t           imu_config;
         //TODO will define types for accel,gyro,mag separately.
         sensor_adc_ltc1859_a_t ltc1859_a;
+        sensor_adc_ad7476_t    ad7476;
         sensor_audio_t         audio;
     } unpacked;
     

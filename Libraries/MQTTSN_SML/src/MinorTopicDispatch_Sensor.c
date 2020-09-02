@@ -75,6 +75,9 @@ static void get_list(Mqttsn_IOMsgData_t *pIoMsgData)
 #if LTC1859_DRIVER
         pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, SENSOR_ADC_LTC_1859_MAYHEW);
 #endif
+#if AD7476_FPGA_DRIVER
+        pOutMsgData->payldLen += Mqttsn_BuffWr_u32(&pPayld, SENSOR_ADC_AD7476);
+#endif
     }
 }
 
