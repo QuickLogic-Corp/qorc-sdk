@@ -308,8 +308,28 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
-
-
+#if (AUDIO_DRIVER)
+  { // Pad 28 -- PDM DATA
+    .ucPin = PAD_28,
+    .ucFunc = PAD28_FUNC_SEL_PDM_DIN,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_INPUT_EN,
+    //.ucPull = PAD_NOPULL,
+    //.ucDrv = PAD_DRV_STRENGHT_4MA,
+    //.ucSpeed = PAD_SLEW_RATE_SLOW,
+    //.ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+  { // Pad 29 -- PDM CLK
+    .ucPin = PAD_29,
+    .ucFunc = PAD29_FUNC_SEL_PDM_CKO,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+#endif
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =

@@ -298,9 +298,9 @@ void setup_sensors_data_block_processor(void)
 {
   /** Initialize all datablock managers */
   init_all_datablock_managers(dbm_init_table, sizeof(dbm_init_table)/sizeof(struct st_dbm_init));
-
-  //audio_block_processor();
-
+#if (AUDIO_DRIVER == 1)
+  audio_block_processor();
+#endif
   imu_block_processor();
 
 #if (AD7476_FPGA_DRIVER == 1)  

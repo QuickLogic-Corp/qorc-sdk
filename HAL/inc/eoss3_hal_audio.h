@@ -131,6 +131,8 @@ typedef enum event_type {
   HAL_Audio_Event_End
 } HAL_Audio_Event_type_t;
 
+extern struct connector gPdmConnector;
+
 /*
 * Get a handle for audio core by passing digital mic type.
 * Use this handle in all future calls.

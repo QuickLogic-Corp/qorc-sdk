@@ -362,6 +362,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\inc</state>
                     <state>$PROJ_DIR$\..\ad7476\inc</state>
+                    <state>$PROJ_DIR$\..\sensor_audio\inc</state>
                     <state>$PROJ_DIR$\..\knowledgepack\inc</state>
                     <state>$PROJ_DIR$\..\knowledgepack\sensiml\inc</state>
                     <state>$PROJ_DIR$\..\..\..\HAL\inc</state>
@@ -1083,27 +1084,6 @@
     <group>
         <name>App</name>
         <group>
-            <name>IOP_MQTTSN</name>
-            <group>
-                <name>inc</name>
-                <file>
-                    <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\ble_collection_defs.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\ble_pme_defs.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\dcl_commands.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\iop_messages.h</name>
-                </file>
-            </group>
-            <group>
-                <name>src</name>
-            </group>
-        </group>
-        <group>
             <name>knowledgepack</name>
             <group>
                 <name>inc</name>
@@ -1178,6 +1158,39 @@
                 </group>
             </group>
             <group>
+                <name>sensor_audio</name>
+                <group>
+                    <name>inc</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_acquisition.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config_user.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_process.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>src</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition_test.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_config.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_process.c</name>
+                    </file>
+                </group>
+            </group>
+            <group>
                 <name>fsm</name>
                 <file>
                     <name>$PROJ_DIR$\..\fsm\fsm.h</name>
@@ -1243,6 +1256,9 @@
                     <name>$PROJ_DIR$\..\inc\Fw_task.h</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\inc\mqttsn_comm.h</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\src\mqttsn_uart.h</name>
                 </file>
                 <file>
@@ -1263,6 +1279,27 @@
                 <file>
                     <name>$PROJ_DIR$\..\inc\sml_output.h</name>
                 </file>
+            </group>
+            <group>
+                <name>IOP_MQTTSN</name>
+                <group>
+                    <name>inc</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\ble_collection_defs.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\ble_pme_defs.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\dcl_commands.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\IOP_MQTTSN\inc\iop_messages.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>src</name>
+                </group>
             </group>
             <group>
                 <name>src</name>
@@ -1329,9 +1366,6 @@
             <name>quickfeather</name>
             <group>
                 <name>inc</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\inc\leds.h</name>
-                </file>
             </group>
             <group>
                 <name>src</name>
@@ -1347,6 +1381,9 @@
             <name>quickfeather</name>
             <group>
                 <name>inc</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\inc\leds.h</name>
+                </file>
             </group>
             <group>
                 <name>src</name>
