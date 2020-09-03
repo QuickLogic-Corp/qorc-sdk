@@ -71,7 +71,7 @@ S3x_ClkD S3clk [] = {
         .cru_ctrl = CRU_CTRL (0x14, 0x1fe, 9, 0x138, 0x54, 0x1, 3),
         .flags = LOCK_KEY,
         .def_max_rate = (F_12MHZ),
-        .init_state = INIT_STATE(F_2MHZ, 0, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_12MHZ, 0, INIT_GATE_OFF),
     },
     [CLK_C16] = {
         .name = "C16",

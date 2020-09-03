@@ -224,18 +224,7 @@ PadConfig pincfg_table[] =
   },
 
   // setup FPGA ADC pins
-#if 0
-  { // Pad 4 -- FPGA MOSI
-    .ucPin = PAD_4,
-    .ucFunc = PAD4_FUNC_SEL_FBIO_4,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-#endif
+#if (AD7476_FPGA_DRIVER == 1)
   { // Pad 7 -- FPGA SPI CLK
     .ucPin = PAD_7,
     .ucFunc = PAD7_FUNC_SEL_FBIO_7,
@@ -276,27 +265,6 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
-#if 0
-  { // Pad 10 -- FPGA CONVERSION START ACTIVE HIGH
-    .ucPin = PAD_10,
-    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-  { // Pad 11 -- FPGA BUSY SIGNAL ACTIVE LOW
-    .ucPin = PAD_11,
-    .ucFunc = PAD11_FUNC_SEL_FBIO_11,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
 #endif
   { // Pad 12 -- FPGA MOSI
     .ucPin = PAD_12,
@@ -308,16 +276,12 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
-#if (AUDIO_DRIVER)
+#if (AUDIO_DRIVER == 1)
   { // Pad 28 -- PDM DATA
     .ucPin = PAD_28,
     .ucFunc = PAD28_FUNC_SEL_PDM_DIN,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_INPUT_EN,
-    //.ucPull = PAD_NOPULL,
-    //.ucDrv = PAD_DRV_STRENGHT_4MA,
-    //.ucSpeed = PAD_SLEW_RATE_SLOW,
-    //.ucSmtTrg = PAD_SMT_TRIG_EN,
   },
   { // Pad 29 -- PDM CLK
     .ucPin = PAD_29,

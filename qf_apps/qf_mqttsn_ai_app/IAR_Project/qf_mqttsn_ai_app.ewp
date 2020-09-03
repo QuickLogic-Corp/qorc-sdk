@@ -1158,39 +1158,6 @@
                 </group>
             </group>
             <group>
-                <name>sensor_audio</name>
-                <group>
-                    <name>inc</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_acquisition.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config_user.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_process.h</name>
-                    </file>
-                </group>
-                <group>
-                    <name>src</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition_test.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_config.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_process.c</name>
-                    </file>
-                </group>
-            </group>
-            <group>
                 <name>fsm</name>
                 <file>
                     <name>$PROJ_DIR$\..\fsm\fsm.h</name>
@@ -1299,6 +1266,39 @@
                 </group>
                 <group>
                     <name>src</name>
+                </group>
+            </group>
+            <group>
+                <name>sensor_audio</name>
+                <group>
+                    <name>inc</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_acquisition.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_config_user.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\inc\sensor_audio_process.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>src</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_acquisition_test.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_config.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_process.c</name>
+                    </file>
                 </group>
             </group>
             <group>
@@ -1570,9 +1570,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
             </file>
         </group>
     </group>
@@ -3089,15 +3086,15 @@
             <name>ad7476</name>
             <file>
                 <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\src\fpga.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                </excluded>
             </file>
         </group>
         <group>
             <name>usb2serial</name>
             <file>
                 <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
             </file>
         </group>
         <file>

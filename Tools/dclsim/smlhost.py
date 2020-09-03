@@ -406,7 +406,7 @@ if (args.audio):
    sensor_count_down = args.audio_count_down  # sub-sampling, if any for the sensor
    sensor_samples_per_packet = args.audio_spp # 10 samples per packet
    sensor_live_rate = sensor_rate / (sensor_count_down + 1)
-   sample_size = 6
+   sample_size = 2
    sensorobj = AUDO(b'AUDO',  args.audio_rate, 16, args.audio_count_down, args.audio_spp, 1)
 
 if (args.ad7476):
