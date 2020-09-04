@@ -26,6 +26,14 @@
 
 #include <stdint.h>
 
+#if   (__IAR_SYSTEMS_ICC__)
+#define PLACE_IN_SECTION(x) @x
+#elif (__GNUC__)
+#define PLACE_IN_SECTION(x) __attribute__((section(x)))
+#else
+#error "Unknown compiler"
+#endif
+
 #define ENABLE_VOICE_SOLUTION   1
 
 #define FEATURE_CLI_DEBUG_INTERFACE  1
@@ -47,8 +55,8 @@
 #if !defined(S3AI_FIRMWARE_MODE)
      /* allow for commandline define for automated builds on Linux */
 /* There is not enough RAM to do both - collection & recognition, choose 1 */
-//#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
+#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
 // #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
 #endif
 
@@ -79,7 +87,7 @@
 #define uartHandlerUpdate(id,x)
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
-#define FEATURE_USBSERIAL   0       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   1       // USBSERIAL port is present
 #define USB_UART_CHECK_FIFO_CONNECT  FEATURE_USBSERIAL    // 1 for USB-serial
 
 // Options for debug output -- use to set DEBUG_UART below
@@ -180,7 +188,7 @@ extern int FPGA_FFE_LOADED;
 #define CONST_FREQ (1)
 
 // Enable ADC FPGA Driver
-#define AD7476_FPGA_DRIVER   1
+#define AD7476_FPGA_DRIVER   0
 
 #if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
 #error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"

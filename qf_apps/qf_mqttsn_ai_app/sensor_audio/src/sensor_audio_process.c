@@ -53,7 +53,7 @@
 #define AUDIO_DBP_THREAD_Q_SIZE   (AUDIO_MAX_DATA_BLOCKS+MAX_THREAD_VERTICAL_DEPTH_DATA_BLOCKS)
 #define AUDIO_DBP_THREAD_PRIORITY (10)
 
-uint8_t               audio_data_blocks[SENSOR_AUDIO_MEMSIZE_MAX] @ "HWA" ;
+uint8_t               audio_data_blocks[SENSOR_AUDIO_MEMSIZE_MAX] PLACE_IN_SECTION("HWA");
 QAI_DataBlockMgr_t    audioBuffDataBlkMgr;
 QueueHandle_t         audio_dbp_thread_q;
 
