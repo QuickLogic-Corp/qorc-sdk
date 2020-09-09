@@ -112,8 +112,10 @@ void ble_send( const struct sensor_data *pInfo )
     int live_rate_hz = (pInfo->rate_hz) / (SENSOR_LIVE_GET_RELOAD(sensor) + 1);
     int spp = (live_rate_hz > 50) ? (live_rate_hz / 50) : 1;
     // Limit samples-per-packet to maximum 8-bit integer
-    if (spp > 255)
-       spp = 255;
+    // For Audio limit to 15-ms or 240 samples @16kHz
+    if (spp > 240)
+       spp = 240;
+
     SENSOR_LIVE_SET_MIN(sensor, spp);
 #else
 #define MQTTSN_LIVE_BUFFER_SIZE      (MQTTSN_BUFFER_SMALL)

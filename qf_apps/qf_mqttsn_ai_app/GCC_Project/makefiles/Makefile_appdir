@@ -10,6 +10,7 @@ MAIN_SRCS:= $(MAIN_DIR)/ble_app.c \
             $(MAIN_DIR)/mqttsn_uart.c \
             $(MAIN_DIR)/pincfg_table.c \
             $(MAIN_DIR)/process_imu.c \
+            $(MAIN_DIR)/qf_hardwaresetup.c \
             $(MAIN_DIR)/Recognition.c \
             $(MAIN_DIR)/s3x_pwrcfg.c \
             $(MAIN_DIR)/sec_debug.c \

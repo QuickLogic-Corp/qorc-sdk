@@ -25,7 +25,7 @@ _makedirs_:
 
 .PHONY: external_srcs
 external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED \
-               ADC SENSOR_AD7476
+               ADC SENSOR_AD7476 SENSOR_AUDIO
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -130,6 +130,14 @@ clean_SENSOR_AD7476:
 	make -f makefiles/Makefile_sensor_ad7476 clean
 
 CLEAN_TARGET += SENSOR_AD7476
+
+.PHONY:SENSOR_AUDIO
+SENSOR_AUDIO:
+	make -f makefiles/Makefile_sensor_audio
+clean_SENSOR_AUDIO:
+	make -f makefiles/Makefile_sensor_audio clean
+
+CLEAN_TARGET += SENSOR_AUDIO
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

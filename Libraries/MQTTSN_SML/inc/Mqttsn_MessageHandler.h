@@ -30,10 +30,10 @@
 #define MQTTSN_RETRY_PERIOD         15000      /*in seconds*/
 #define PENDING_Q_CHECK_INTERVAL    50
 #define NUM_BUFFERS_SMALL           20
-#define NUM_BUFFERS_LARGE           4
+#define NUM_BUFFERS_LARGE           10
 #define RADIUS_OF_MSG               ((uint8_t)3)
 #define KEEP_ALIVE_TIMER            60  //in secs
-#define MQTTSN_QUEUE_LENGTH         10  //msg queue size for mqttsnTaskHandler
+#define MQTTSN_QUEUE_LENGTH         30  //msg queue size for mqttsnTaskHandler
 #define MQTTSN_MSGQ_WAIT_TIME       portMAX_DELAY
 #define MQTTSN_MSGQ_SEND_WAIT_TICKS 100
 #define MQTTSN_MESSAGE_TYPES_MAX    30

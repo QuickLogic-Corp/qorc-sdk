@@ -34,6 +34,12 @@ ad7476_group.add_argument('--ad7476_rate', dest='ad7476_rate', default=1000000, 
 ad7476_group.add_argument('--ad7476_count_down', dest='ad7476_count_down', default=999, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 ad7476_group.add_argument('--ad7476_spp', dest='ad7476_spp', default=8, type=int, help='samples per packet for live-streaming')
 
+audio_group = parser.add_argument_group('audio', 'Audio group')
+audio_group.add_argument('--audio', dest='audio', action='store_true', help='add audio sensor for tests')
+accel_group.add_argument('--audio_rate', dest='audio_rate', default=16000, type=int, help='Sampling rate in Hz')
+audio_group.add_argument('--audio_count_down', dest='audio_count_down', default=3, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
+audio_group.add_argument('--audio_spp', dest='audio_spp', default=8, type=int, help='samples per packet for live-streaming')
+
 recog_group = parser.add_argument_group('recog', 'Recognition group')
 recog_group.add_argument('--features', dest='features', default=False, action='store_true', help='publish feature vector in recognition results')
 
@@ -99,6 +105,16 @@ class ADC_AD7476(SENSOR):
         super().generate_fields()
         self.sensor_add +=struct.pack('>B',0)
 
+class AUDO(SENSOR):
+    def __init__(self,sensor_id, rate, bit, cd,spp,*chan):
+        super().__init__(sensor_id, rate, bit, cd,spp,*chan)
+
+    def generate_fields(self):
+        super().generate_fields()
+        self.sensor_add +=struct.pack('>B',self.bit)
+        for i in self.chan:
+             self.sensor_add +=struct.pack('>B',i)
+        
 # Process log messages
 def on_log(client, userdata, level, buf):
     print("log: ", buf)
@@ -383,6 +399,15 @@ if (args.accel):
    sensor_live_rate = sensor_rate / (sensor_count_down + 1)
    sample_size = 6
    sensorobj = IMU(b'IMUA',  args.accel_rate, 16, args.accel_count_down, args.accel_spp, args.accel_range)
+
+if (args.audio):
+   print('Configuring audio @{} Hz, {} count-down, {} samples-per-packet'.format( args.audio_rate, args.audio_count_down, args.audio_spp))
+   sensor_rate = args.audio_rate        # sensor sample rate in Hz
+   sensor_count_down = args.audio_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.audio_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 2
+   sensorobj = AUDO(b'AUDO',  args.audio_rate, 16, args.audio_count_down, args.audio_spp, 1)
 
 if (args.ad7476):
    print('Configuring AD7476 ADC @{} Hz, {} count-down, {} samples-per-packet'.format( args.ad7476_rate, args.ad7476_count_down, args.ad7476_spp))

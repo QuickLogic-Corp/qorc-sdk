@@ -26,6 +26,14 @@
 
 #include <stdint.h>
 
+#if   (__IAR_SYSTEMS_ICC__)
+#define PLACE_IN_SECTION(x) @x
+#elif (__GNUC__)
+#define PLACE_IN_SECTION(x) __attribute__((section(x)))
+#else
+#error "Unknown compiler"
+#endif
+
 #define ENABLE_VOICE_SOLUTION   1
 
 #define FEATURE_CLI_DEBUG_INTERFACE  1
@@ -180,7 +188,7 @@ extern int FPGA_FFE_LOADED;
 #define CONST_FREQ (1)
 
 // Enable ADC FPGA Driver
-#define AD7476_FPGA_DRIVER   1
+#define AD7476_FPGA_DRIVER   0
 
 #if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
 #error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
@@ -190,7 +198,7 @@ extern int FPGA_FFE_LOADED;
 //#define LTC1859_DRIVER  0 // 1
 //
 ///* enable the AUDIO driver */
-//#define AUDIO_DRIVER    0    // Set 1 to enable audio sampling
+#define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
 //
 ///* enable LPSD mode of AUDIO IP*/
 //#define ENABLE_LPSD    0 //Set to 1 enable, 0 to disable LPSD
@@ -224,13 +232,11 @@ extern int FPGA_FFE_LOADED;
 
 #define SET_LPSD_THRESH 0
 
-/* define one of these */
-#define PDM_MIC_MONO 1
-#define PDM_MIC_STEREO 0
 #define VOICE_CONF_ENABLE_I2S_MIC 0
 
 /* if mono define one of these */
-#define PDM_MIC_LEFT_CH 1
+#define PDM_MIC_CHANNELS 1
+#define PDM_MIC_LEFT_CH  1
 #define PDM_MIC_RIGHT_CH 0
 
 #define EN_STEREO_DUAL_BUF 0

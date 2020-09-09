@@ -43,6 +43,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/sensiml/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/inc" \
                  -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/ad7476/inc" \
+                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/sensor_audio/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
                  -I"$(PROJ_ROOT)/s3-gateware/adc_ad7476_if/rtl" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
@@ -124,7 +125,13 @@ export FFE_DIR          = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(
 export HYBRID_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)Hybrid
 export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
 export ADC_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)ADC$(DIR_SEP)src
+ifeq ($(RTL_TOP_MODULE),usb2serial)
+#export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
+export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+else ($(RTL_TOP_MODULE),top)
 export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
 export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
+endif
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 export SENSOR_AD7476_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)ad7476$(DIR_SEP)src
+export SENSOR_AUDIO_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)sensor_audio$(DIR_SEP)src

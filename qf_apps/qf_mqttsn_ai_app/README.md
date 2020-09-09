@@ -9,6 +9,10 @@ An AD7476 Analog-to-digital converter (ADC) is added to this project. The projec
 uses ADC FPGA IP design from [s3-gateware]. Communication interface for MQTT-SN
 messages uses the ASSP UART interface.
 
+Audio data capture and inference feature added to this project. To enable live-streaming
+1-channel audio data captured at @16kHz sampling rate, 921600bps baudrate is used 
+for the ASSP UART interface.
+
 Building and running the project:
 ---------------------
 The project supports either collection or recognition modes.
