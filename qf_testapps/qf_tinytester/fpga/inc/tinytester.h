@@ -31,20 +31,21 @@
 #define TINYTESTER_REV_NUM          0x0100
 
 typedef struct tinytester_regs {
-    volatile uint32_t   signature;          // 0x00
-    volatile uint32_t   revnumber;          // 0x04
-    volatile uint16_t   scratch_reg;        // 0x08
-    volatile uint16_t   reserved1;          // 0x0A
-    volatile uint32_t   reserved2;          // 0x0C
-    volatile uint32_t   control;            // 0x10
-    volatile uint32_t   status;             // 0x14
-    volatile uint32_t   dataout;            // 0x18
-    volatile uint32_t   datain;             // 0x1C
-    volatile uint32_t   oe;                 // 0x20
-	volatile uint32_t   active_on_p0;       // 0x24
-	volatile uint32_t   active_on_p1;       // 0x28
-	volatile uint32_t   active_on_p2;       // 0x2C
-	volatile uint32_t   active_on_p3;       // 0x30
+  volatile uint32_t   signature;          // 0x00
+  volatile uint32_t   revnumber;          // 0x04
+  volatile uint16_t   scratch_reg;        // 0x08
+  volatile uint16_t   reserved1;          // 0x0A
+  volatile uint32_t   reserved2;          // 0x0C
+  volatile uint32_t   control;            // 0x10
+  volatile uint32_t   status;             // 0x14
+  volatile uint32_t   dataout;            // 0x18
+  volatile uint32_t   datain;             // 0x1C
+  volatile uint32_t   oe;                 // 0x20
+  volatile uint32_t   active_on_p0;       // 0x24
+  volatile uint32_t   active_on_p1;       // 0x28
+  volatile uint32_t   active_on_p2;       // 0x2C
+  volatile uint32_t   active_on_p3;       // 0x30
+  volatile uint32_t   databus;            // 0x34
 } tinytester_regs_t;
 
 enum tinytester_mode {output, input, compare};
@@ -56,6 +57,7 @@ typedef struct tinytester_channelconfig {
 // Main routine
 void tinytester_run(uint32_t kchannel, tinytester_channelconfig_t* atinytester_channelconfig, uint32_t kvectorOutput, uint32_t* auxOutputvector, uint32_t kvectorInput, uint32_t* auxInputvector); 
 void tinytester_init(void);
+void tinytester_executevector(uint32_t uxOutputs, uint32_t* puxInputs);
 
 // Misc routines
 uint32_t    tinytester_signatureis(void);
@@ -79,6 +81,7 @@ uint32_t    tinytester_active_on_p3is(void);
 void        tinytester_dataout(uint32_t uxdataout);
 uint32_t    tinytester_dataoutis(void);
 uint32_t    tinytester_datainis(void);
+uint32_t    tinytester_databusis(void);
 
 
 

@@ -58,11 +58,7 @@ void tinytester_run(uint32_t kchannel, tinytester_channelconfig_t* atinytester_c
     // Loop thru writing and reading
     uint32_t ux;
     for (int ivector = 0; ivector != kvectorOutput; ivector++) {
-        tinytester_dataout(auxOutputvector[ivector]);   // Load data
-        tinytester_control(0x1);                        // Trigger cycle
-        while (tinytester_statusis() != 0x10);          // Wait for state machine to go to wait state
-        auxInputvector[ivector] = tinytester_datainis();// Retrieve data
-        tinytester_control(0x0);                        // End cycle
+      tinytester_executevector(auxOutputvector[ivector], &auxInputvector[ivector]);
     }
     // Print captures
     for (int ivector = 0; ivector != kvectorOutput; ivector++) {
@@ -70,17 +66,25 @@ void tinytester_run(uint32_t kchannel, tinytester_channelconfig_t* atinytester_c
     }
 }
 
+void tinytester_executevector(uint32_t uxOutputs, uint32_t* puxInputs) {
+  tinytester_dataout(uxOutputs);   // Load data
+  tinytester_control(0x1);                        // Trigger cycle
+  while (tinytester_statusis() != 0x10);          // Wait for state machine to go to wait state
+  *puxInputs = tinytester_datainis();               // Retrieve data
+  tinytester_control(0x0);                        // End cycle
+}
+
 void    tinytester_init(void) {
-    // Setup FPGA clocks
-    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 12000*1000);
-    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
-    S3x_Clk_Enable(S3X_FB_21_CLK);
-	S3x_Clk_Enable(S3X_FB_16_CLK);
-    
-    // Confirm expected gateware is loaded
-    configASSERT(ptinytester_regs->signature == 0xDEEB);
-    
-    CRU->FB_SW_RESET = 0x00;    // Disable resets
+  // Setup FPGA clocks
+  S3x_Clk_Set_Rate(S3X_FB_21_CLK, 2000*1000);
+  S3x_Clk_Set_Rate(S3X_FB_16_CLK, 2000*1000);
+  S3x_Clk_Enable(S3X_FB_21_CLK);
+  S3x_Clk_Enable(S3X_FB_16_CLK);
+
+  // Confirm expected gateware is loaded
+  configASSERT(ptinytester_regs->signature == 0xDEEB);
+
+  CRU->FB_SW_RESET = 0x00;    // Disable resets
 }
 
 // Misc routines
@@ -145,4 +149,8 @@ uint32_t    tinytester_dataoutis(void) {
 
 uint32_t    tinytester_datainis(void) {
     return (ptinytester_regs->datain);
+}
+
+uint32_t    tinytester_databusis(void) {
+    return (ptinytester_regs->databus);
 }

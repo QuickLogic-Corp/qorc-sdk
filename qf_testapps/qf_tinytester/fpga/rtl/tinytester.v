@@ -79,6 +79,7 @@ always @(posedge rst or posedge clk)
                         end else begin
                             padout_reg <= dataout_i & active_on_p0_i;
                             padoe_reg  <= oe_i;
+                            datain_reg <= padin_i;
                             sequencer_state <= SEQ_PHASE0;          // Go to phase 0
                         end
 
@@ -102,7 +103,7 @@ always @(posedge rst or posedge clk)
 
             SEQ_PHASE3 :
                         begin
-                            datain_reg <= padin_i;
+                            //datain_reg <= padin_i;
                             sequencer_state <= SEQ_WAIT;              // Go to wait
                         end
                         

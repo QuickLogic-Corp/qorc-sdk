@@ -9,10 +9,10 @@ set_io IO_29_b	26
 set_io IO_24_b	32
 set_io IO_11_b	57
 set_io IO_4_b	3
-set_io IO_6_b	62
+set_io IO_30_b	25
 set_io IO_8_b	61
-set_io IO_20_b	37
-set_io IO_19_b	36
+set_io IO_25_b	31
+set_io IO_13_b	55
 set_io IO_17_b	42
 set_io IO_16_b	40
 set_io IO_3_b	2

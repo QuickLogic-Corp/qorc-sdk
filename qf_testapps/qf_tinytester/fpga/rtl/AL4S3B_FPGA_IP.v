@@ -58,10 +58,10 @@ module AL4S3B_FPGA_IP (
                 IO_24_b,
                 IO_11_b,
                 IO_4_b,
-                IO_6_b,
+                IO_30_b,
                 IO_8_b,
-                IO_20_b,
-                IO_19_b,
+                IO_25_b,
+                IO_13_b,
                 IO_17_b,
                 IO_16_b,
                 IO_3_b,
@@ -144,10 +144,10 @@ inout 			IO_29_b;
 inout 			IO_24_b;
 inout 			IO_11_b;
 inout 			IO_4_b;
-inout 			IO_6_b;
+inout 			IO_30_b;
 inout 			IO_8_b;
-inout 			IO_20_b;
-inout 			IO_19_b;
+inout 			IO_25_b;
+inout 			IO_13_b;
 inout 			IO_17_b;
 inout 			IO_16_b;
 inout 			IO_3_b;
@@ -267,17 +267,17 @@ assign IO_29_b = (padoe[6]) ? padout[6] : 1'bZ; assign padin[6] = IO_29_b;
 assign IO_24_b = (padoe[7]) ? padout[7] : 1'bZ; assign padin[7] = IO_24_b;
 assign IO_11_b = (padoe[8]) ? padout[8] : 1'bZ; assign padin[8] = IO_11_b;
 assign IO_4_b  = (padoe[9]) ? padout[9] : 1'bZ; assign padin[9] = IO_4_b;
-assign IO_6_b  = (padoe[10]) ? padout[10] : 1'bZ; assign padin[10] = IO_6_b;
+assign IO_30_b = (padoe[10]) ? padout[10] : 1'bZ; assign padin[10] = IO_30_b;
 assign IO_8_b  = (padoe[11]) ? padout[11] : 1'bZ; assign padin[11] = IO_8_b;
-assign IO_20_b = (padoe[12]) ? padout[12] : 1'bZ; assign padin[12] = IO_20_b;
-assign IO_19_b = (padoe[13]) ? padout[13] : 1'bZ; assign padin[13] = IO_19_b;
+assign IO_25_b = (padoe[12]) ? padout[12] : 1'bZ; assign padin[12] = IO_25_b;
+assign IO_13_b = (padoe[13]) ? padout[13] : 1'bZ; assign padin[13] = IO_13_b;
 assign IO_17_b = (padoe[14]) ? padout[14] : 1'bZ; assign padin[14] = IO_17_b;
 assign IO_16_b = (padoe[15]) ? padout[15] : 1'bZ; assign padin[15] = IO_16_b;
 assign IO_3_b  = (padoe[16]) ? padout[16] : 1'bZ; assign padin[16] = IO_3_b;
 assign IO_0_b  = (padoe[17]) ? padout[17] : 1'bZ; assign padin[17] = IO_0_b;
 assign IO_1_b  = (padoe[18]) ? padout[18] : 1'bZ; assign padin[18] = IO_1_b;
 
-assign IO_2_b  = sequencer_state[5];    // Monitor output (SEQ_WAIT state)
+assign IO_2_b  = sequencer_state[0];    // Monitor Phase 0
 
 
 //------Instantiate Modules------------
@@ -351,6 +351,7 @@ AL4S3B_FPGA_Registers #(
     .active_on_p1_o            ( active_on_p1                   ),
     .active_on_p2_o            ( active_on_p2                   ),
     .active_on_p3_o            ( active_on_p3                   ),
+    .databus_i                 ( padin                          ),
 
     //
     // Misc

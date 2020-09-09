@@ -41,6 +41,7 @@
 #include "s3x_pi.h"
 #include "dbg_uart.h"
 #include "eoss3_hal_spi.h"
+#include "eoss3_hal_uart.h"
 #include "cli.h"
 #include "tinytester.h"
 
@@ -81,14 +82,15 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc-sdk/qf_testapps/qf_tinytester";
     
-    qf_hardwareSetup();                                     // Note: pincfg_table.c has been updated to give FPGA control of LEDs
+    qf_hardwareSetuptinytester();                                     // Note: pincfg_table.c has been updated to give FPGA control of LEDs
+    
     nvic_init();
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(sizeof(axFPGABitStream),axFPGABitStream);     // Load bitstrem into FPGA
-    tinytester_init();		                                // Start FPGA clock
+    tinytester_init();		                                  // Start FPGA clock
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");

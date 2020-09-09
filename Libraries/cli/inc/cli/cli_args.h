@@ -132,9 +132,10 @@ void CLI_string_ptr_get_subcmd( char **puthere );
 * If the width is negative, the value is signed
 * If the width is positive, the value is unsigned.
 */
-#define CLI_NUMX_GETSHOW_FLAG_none     0
-#define CLI_NUMX_GETSHOW_FLAG_hex      1
-#define CLI_NUMX_GETSHOW_FLAG_required 2
+#define CLI_NUMX_GETSHOW_FLAG_none      0
+#define CLI_NUMX_GETSHOW_FLAG_hex       1
+#define CLI_NUMX_GETSHOW_FLAG_required  2
+#define CLI_NUMX_GETSHOW_FLAG_noprint   4
 
 int CLI_numX_getshow_X( const char *name, void *puthere, int width, int flags );
 
@@ -181,6 +182,8 @@ int CLI_uint8_getshow( const char *name, uint8_t *puthere );
 int CLI_uint16_getshow( const char *name, uint16_t *puthere );
 int CLI_uint32_getshow( const char *name, uint32_t *puthere );
 int CLI_uint64_getshow( const char *name, uint64_t *puthere );
+
+int CLI_uint32_get( const char *name, uint32_t *puthere );
 
 void CLI_int_required( const char *name, int *puthere );
 void CLI_unsigned_required( const char *name, unsigned *puthere );

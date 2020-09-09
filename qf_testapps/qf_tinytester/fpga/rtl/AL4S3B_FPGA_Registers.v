@@ -53,6 +53,7 @@ module AL4S3B_FPGA_Registers (
                         active_on_p1_o,
                         active_on_p2_o,
                         active_on_p3_o,
+                        databus_i,
 
                         interrupt_o,
 
@@ -76,13 +77,15 @@ parameter                FPGA_SCRATCH_REG_ADR       =  9'h08;
 parameter                CONTROL_ADR                =  9'h10;   // Control register
 parameter                STATUS_ADR                 =  9'h14;   // Status register
 parameter                DATAOUT_ADR                =  9'h18;   // Data going to DUT
-parameter                DATAIN_ADR                 =  9'h1C;   // Data from DUT
+parameter                DATAIN_ADR                 =  9'h1C;   // Data from DUT (captured)
 
 parameter                OE_ADR                     =  9'h20;   // Output enables 1 => output, 0 => input
 parameter                ACTIVE_ON_P0_ADR           =  9'h24;   // Output is driven to dataout during phase 0
 parameter                ACTIVE_ON_P1_ADR           =  9'h28;   // Output is driven to dataout during phase 1
 parameter                ACTIVE_ON_P2_ADR           =  9'h2C;   // Output is driven to dataout during phase 2
 parameter                ACTIVE_ON_P3_ADR           =  9'h30;   // Output is driven to dataout during phase 3
+
+parameter                DATABUS_ADR                =  9'h34;   // Data from I/O (un-latched)
 
 parameter                AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC;
 
@@ -113,6 +116,7 @@ output      [31:0]  active_on_p0_o;
 output      [31:0]  active_on_p1_o;
 output      [31:0]  active_on_p2_o;
 output      [31:0]  active_on_p3_o;
+input       [31:0]  databus_i;
 
 
 
@@ -196,6 +200,7 @@ assign ACTIVE_ON_P0_REG_Wr_Dcd  = ({WBs_ADR_i,2'h0} == ACTIVE_ON_P0_ADR)        
 assign ACTIVE_ON_P1_REG_Wr_Dcd  = ({WBs_ADR_i,2'h0} == ACTIVE_ON_P1_ADR)        & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
 assign ACTIVE_ON_P2_REG_Wr_Dcd  = ({WBs_ADR_i,2'h0} == ACTIVE_ON_P2_ADR)        & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
 assign ACTIVE_ON_P3_REG_Wr_Dcd  = ({WBs_ADR_i,2'h0} == ACTIVE_ON_P3_ADR)        & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+assign DATABUS_REG_Wr_Dcd       = ({WBs_ADR_i,2'h0} == DATABUS_ADR)             & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
 
 
 
@@ -306,6 +311,7 @@ always @(
     ACTIVE_ON_P1_ADR        : WBs_DAT_o <= active_on_p1_reg;
     ACTIVE_ON_P2_ADR        : WBs_DAT_o <= active_on_p2_reg;
     ACTIVE_ON_P3_ADR        : WBs_DAT_o <= active_on_p3_reg;
+    DATABUS_ADR             : WBs_DAT_o <= databus_i;
 	default                 : WBs_DAT_o <= AL4S3B_DEF_REG_VALUE;
 	endcase
 end

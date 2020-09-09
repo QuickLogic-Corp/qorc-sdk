@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <eoss3_hal_gpio.h>
+#include <eoss3_hal_uart.h>
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
@@ -60,26 +61,9 @@ static void     set_active_on_p2(const struct cli_cmd_entry *pEntry);
 static void     set_active_on_p3(const struct cli_cmd_entry *pEntry);
 
 static void     set_dataout(const struct cli_cmd_entry *pEntry);
+static void     execute_vector(const struct cli_cmd_entry *pEntry);
+static void     execute_binary_vector(const struct cli_cmd_entry *pEntry);
 static void     get_datain(const struct cli_cmd_entry *pEntry);
-
-const struct    cli_cmd_entry qf_tinytester[] =
-{
-    CLI_CMD_SIMPLE( "run", runtest, "run test" ),
-    CLI_CMD_SIMPLE( "sig", get_signature, "get signature" ),
-    CLI_CMD_SIMPLE( "ctl", set_control, "set control register" ),
-    CLI_CMD_SIMPLE( "status", get_status, "get status" ),
-    CLI_CMD_SIMPLE( "go", toggle_control, "toggle control register" ),
-	CLI_CMD_SIMPLE( "oe", set_oe, "set oe register" ),
-	CLI_CMD_SIMPLE( "p0", set_active_on_p0, "set set_active_on_p0" ),
-	CLI_CMD_SIMPLE( "p1", set_active_on_p1, "set set_active_on_p1" ),
-    CLI_CMD_SIMPLE( "p2", set_active_on_p2, "set set_active_on_p2" ),
-    CLI_CMD_SIMPLE( "p3", set_active_on_p3, "set set_active_on_p3" ),
-	
-	CLI_CMD_SIMPLE( "w", set_dataout, "write dataout" ),
-	CLI_CMD_SIMPLE( "r", get_datain, "read datain" ),
-
-    CLI_CMD_TERMINATE()
-};
 
 
 // Run test vectors //
@@ -139,7 +123,7 @@ static void set_oe(const struct cli_cmd_entry *pEntry)
     
     (void)pEntry;
         // Add functionality here
-	uxOe = tinytester_oeis();
+    uxOe = tinytester_oeis();
     dbg_str_hex32("oe", uxOe);
     CLI_uint32_getshow( "oe_reg", &uxOe );
     tinytester_oe(uxOe);
@@ -198,9 +182,41 @@ static void set_dataout(const struct cli_cmd_entry *pEntry)
     
     (void)pEntry;
         // Add functionality here
-	uxDataout = tinytester_dataoutis();
+    uxDataout = tinytester_dataoutis();
     CLI_uint32_getshow( "dataout", &uxDataout );
     tinytester_dataout(uxDataout);
+    dbg_str_hex32("dataout", uxDataout);
+    return;
+}
+
+static void execute_vector(const struct cli_cmd_entry *pEntry)
+{
+    static uint32_t uxDataout = 0;
+    uint32_t        uxDatain;
+    
+    (void)pEntry;
+        // Add functionality here
+    CLI_uint32_get( "dataout", &uxDataout );
+    dbg_str_hex32("do", uxDataout);
+    tinytester_executevector(uxDataout, &uxDatain);
+    dbg_str_hex32("di", uxDatain);
+    return;
+}
+
+static void execute_binary_vector(const struct cli_cmd_entry *pEntry)
+{
+    static uint32_t uxDataout;
+    uint32_t        uxDatain;
+    
+    (void)pEntry;
+        // Add functionality here
+    while (uart_rx(UART_ID_HW) != '\r') {
+      uart_rx_raw_buf( UART_ID_HW, (uint8_t*)&uxDataout, sizeof(uxDataout) );
+      //dbg_str_hex32("do", uxDataout);
+      tinytester_executevector(uxDataout, &uxDatain);
+      uart_tx_raw_buf( UART_ID_HW, (uint8_t *)&uxDatain, sizeof(uxDatain) );
+      //dbg_str_hex32("di", uxDatain);
+    }
     return;
 }
 
@@ -212,6 +228,17 @@ static void get_datain(const struct cli_cmd_entry *pEntry)
         // Add functionality here
     uxDatain = tinytester_datainis();
     dbg_str_hex32("datain", uxDatain);
+    return;
+}
+
+static void get_databus(const struct cli_cmd_entry *pEntry)
+{
+    uint32_t uxDatabus = 0;
+    
+    (void)pEntry;
+        // Add functionality here
+    uxDatabus = tinytester_databusis();
+    dbg_str_hex32("datain", uxDatabus);
     return;
 }
 
@@ -273,9 +300,26 @@ const struct cli_cmd_entry qf_diagnostic[] =
 };
 
 const struct cli_cmd_entry my_main_menu[] = {
-	CLI_CMD_SUBMENU( "tinytester", qf_tinytester, "FPGA led controller" ),
-    CLI_CMD_SUBMENU( "diag", qf_diagnostic, "QuickFeather diagnostic commands" ),
-    CLI_CMD_TERMINATE()
+  CLI_CMD_SUBMENU( "diag", qf_diagnostic, "QuickFeather diagnostic commands" ),
+  
+  CLI_CMD_SIMPLE( "run", runtest, "run test" ),
+  CLI_CMD_SIMPLE( "sig", get_signature, "get signature" ),
+  CLI_CMD_SIMPLE( "ctl", set_control, "set control register" ),
+  CLI_CMD_SIMPLE( "status", get_status, "get status" ),
+  CLI_CMD_SIMPLE( "go", toggle_control, "toggle control register" ),
+  CLI_CMD_SIMPLE( "oe", set_oe, "set oe register" ),
+  CLI_CMD_SIMPLE( "p0", set_active_on_p0, "set set_active_on_p0" ),
+  CLI_CMD_SIMPLE( "p1", set_active_on_p1, "set set_active_on_p1" ),
+  CLI_CMD_SIMPLE( "p2", set_active_on_p2, "set set_active_on_p2" ),
+  CLI_CMD_SIMPLE( "p3", set_active_on_p3, "set set_active_on_p3" ),
+
+  CLI_CMD_SIMPLE( "w", set_dataout, "write dataout" ),
+  CLI_CMD_SIMPLE( "x", execute_vector, "execute vector" ),
+  CLI_CMD_SIMPLE( "b", execute_binary_vector, "execute binary vector" ),
+  CLI_CMD_SIMPLE( "r", get_datain, "read datain" ),
+  CLI_CMD_SIMPLE( "v", get_databus, "read databus" ),
+  
+  CLI_CMD_TERMINATE()
 };
 
 #endif

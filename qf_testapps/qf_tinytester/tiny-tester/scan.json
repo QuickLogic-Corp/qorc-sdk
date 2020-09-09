@@ -1,0 +1,94 @@
+{
+  "channels" : [
+    {
+      "signal"    : "STM",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "scan_clk",
+      "direction" : "in",
+      "drive"     : "ZDZZ"
+    },
+    {
+      "signal"    : "mlatch",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "m0",
+      "direction" : "in",
+      "drive"     : "ZDZZ"
+    },
+    {
+      "signal"    : "m1",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "m2",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "m3",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "m4",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sin0",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sin1",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sin2",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sin3",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sin4",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    },
+    {
+      "signal"    : "sout0",
+      "direction" : "out"
+    },
+    {
+      "signal"    : "sout1",
+      "direction" : "out"
+    },
+    {
+      "signal"    : "sout2",
+      "direction" : "out"
+    },
+    {
+      "signal"    : "sout3",
+      "direction" : "out"
+    },
+    {
+      "signal"    : "sout4",
+      "direction" : "out"
+    },
+    {
+      "signal"    : "SYS_RSTn",
+      "direction" : "in",
+      "drive"     : "DDDD"
+    }
+  ]
+}

@@ -39,10 +39,10 @@ module AL4S3B_FPGA_top (
             IO_24_b,
             IO_11_b,
             IO_4_b,
-            IO_6_b,
+            IO_30_b,
             IO_8_b,
-            IO_20_b,
-            IO_19_b,
+            IO_25_b,
+            IO_13_b,
             IO_17_b,
             IO_16_b,
             IO_3_b,
@@ -101,10 +101,10 @@ inout 			IO_29_b;
 inout 			IO_24_b;
 inout 			IO_11_b;
 inout 			IO_4_b;
-inout 			IO_6_b;
+inout 			IO_30_b;
 inout 			IO_8_b;
-inout 			IO_20_b;
-inout 			IO_19_b;
+inout 			IO_25_b;
+inout 			IO_13_b;
 inout 			IO_17_b;
 inout 			IO_16_b;
 inout 			IO_3_b;
@@ -112,7 +112,7 @@ inout 			IO_0_b;
 inout 			IO_1_b;     // Channel[18]
 
 
-inout 			IO_2_b;     // SEQ_WAIT
+inout 			IO_2_b;     // oe[17]
 
 //
 // None at this time
@@ -242,10 +242,10 @@ AL4S3B_FPGA_IP              #(
     .IO_24_b                    ( IO_24_b                   ),
     .IO_11_b                    ( IO_11_b                   ),
     .IO_4_b                     ( IO_4_b                    ),
-    .IO_6_b                     ( IO_6_b                    ),
+    .IO_30_b                    ( IO_30_b                   ),
     .IO_8_b                     ( IO_8_b                    ),
-    .IO_20_b                    ( IO_20_b                   ),
-    .IO_19_b                    ( IO_19_b                   ),
+    .IO_25_b                    ( IO_25_b                   ),
+    .IO_13_b                    ( IO_13_b                   ),
     .IO_17_b                    ( IO_17_b                   ),
     .IO_16_b                    ( IO_16_b                   ),
     .IO_3_b                     ( IO_3_b                    ),

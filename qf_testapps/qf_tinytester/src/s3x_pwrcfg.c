@@ -261,14 +261,14 @@ S3x_Policy_Node dfs_node[]  = {
 
     [1] = { // Minimum performance
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-        .rate = {F_3MHZ, F_3MHZ, F_48MHZ, F_256KHZ},
+        .rate = {F_3MHZ, F_6MHZ, F_48MHZ, F_256KHZ},
         .step_width = 100,/* msec */
         .cpuload_downthreshold = 0,             // Lowest active state, never go lower
         .cpuload_upthreshold = 110,
         .policySleep = 0,                       // When idle, go to deep sleep (node 0)
         .minHSOSC = F_48MHZ,
     },
-#if 1
+#if 0
     [2] = {
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
         .rate = {C01_N2_CLK, C09_N2_CLK, C10_N2_CLK, C8X4_N2_CLK},

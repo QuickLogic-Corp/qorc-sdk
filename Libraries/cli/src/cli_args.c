@@ -372,24 +372,26 @@ int CLI_numX_getshow_X( const char *name, void *puthere, int width, int flags )
         i_store( &u.u64, puthere, width );
     }
     
-    /* fetch value so we can print current value */
-    i_fetch( &u.u64, puthere, width );
-    if( flags & CLI_NUMX_GETSHOW_FLAG_hex ){
-        if( width < 0 ){
-            width = -width;
-        }
-        width = width / 4;
-        CLI_printf("%s = 0x%0*llx\n", name, width, u.u64 );
-    } else {
-        /* we print as decimal, signed */
-        if( (width < 0) || (width=='I') ){
-            //CLI_printf("%s = %lld\n", name, u.i64 );
-			CLI_printf("%s = %ld\n", name, (int)u.i64 );
-        } else {
-            /* unsigned */
-            //CLI_printf("%s = %llu\n", name, u.u64 );
-			CLI_printf("%s = %lu\n", name, (int)u.u64 );
-        }
+    if (!(flags & CLI_NUMX_GETSHOW_FLAG_noprint)) {
+      /* fetch value so we can print current value */
+      i_fetch( &u.u64, puthere, width );
+      if( flags & CLI_NUMX_GETSHOW_FLAG_hex ){
+          if( width < 0 ){
+              width = -width;
+          }
+          width = width / 4;
+          CLI_printf("%s = 0x%0*llx\n", name, width, u.u64 );
+      } else {
+          /* we print as decimal, signed */
+          if( (width < 0) || (width=='I') ){
+              //CLI_printf("%s = %lld\n", name, u.i64 );
+        CLI_printf("%s = %ld\n", name, (int)u.i64 );
+          } else {
+              /* unsigned */
+              //CLI_printf("%s = %llu\n", name, u.u64 );
+        CLI_printf("%s = %lu\n", name, (int)u.u64 );
+          }
+      }
     }
     return r;
 } 
@@ -455,6 +457,12 @@ int CLI_uint32_getshow( const char *name, uint32_t *puthere )
 int CLI_uint64_getshow( const char *name, uint64_t *puthere )
 {
     return CLI_numX_getshow_X( name, (void *)puthere, 64, CLI_NUMX_GETSHOW_FLAG_hex );
+}
+
+/* see cli_args.h */
+int CLI_uint32_get( const char *name, uint32_t *puthere )
+{
+    return CLI_numX_getshow_X( name, (void *)puthere, 32, CLI_NUMX_GETSHOW_FLAG_none | CLI_NUMX_GETSHOW_FLAG_noprint );
 }
 
 /* see cli_args.h */
