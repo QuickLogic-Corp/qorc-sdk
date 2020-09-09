@@ -90,9 +90,9 @@ static inline void hangForever(const char *message)
  */
 void enableAudioClocks(bool fUsingLeftChannel, bool fUsingRightChannel)
 {
-    if ((fUsingLeftChannel) && (S3x_Clk_Get_Usecnt(S3X_PDM_LEFT) == 0))
+    if (fUsingLeftChannel)
          S3x_Clk_Enable(S3X_PDM_LEFT);
-    if ((fUsingRightChannel) && (S3x_Clk_Get_Usecnt(S3X_PDM_RIGHT) == 0))
+    if (fUsingRightChannel)
          S3x_Clk_Enable(S3X_PDM_RIGHT);
   return;
 }

@@ -20,6 +20,7 @@
 #include "sensor_audio_config.h"
 #include "sensor_audio_acquisition.h"
 #include "eoss3_hal_audio.h"
+#include "s3x_clock_hal.h"
 sensor_audio_config_t sensor_audio_config;
 
 struct HAL_Audio_Config  Audio_Config_Local = {
@@ -44,13 +45,15 @@ void sensor_audio_startstop( int is_start )
 #endif
   if ((is_start) && (sensor_audio_config.enabled) && (sensor_audio_config.is_running == 0) )
   {
-     //HAL_Audio_Start(&gPdmConnector, 0, true, &Audio_Config_Local);
-     //HAL_Audio_StartDMA();   // Starting DMA immedately ships data
+     HAL_Audio_Start(&gPdmConnector, 0, true, &Audio_Config_Local);
+     S3x_Clk_Enable(S3X_LPSD);
+     HAL_Audio_StartDMA();   // Starting DMA immedately ships data
      sensor_audio_config.is_running = 1;
   }
   else if ( (is_start == 0) && (sensor_audio_config.is_running == 1) )
   {
-    //HAL_Audio_Stop(&gPdmConnector, &Audio_Config_Local); // Stops the DMA, among other things
+    HAL_Audio_Stop(&gPdmConnector, &Audio_Config_Local); // Stops the DMA, among other things
+    S3x_Clk_Disable(S3X_LPSD);
     sensor_audio_config.is_running = 0;
   }
 }
@@ -67,8 +70,6 @@ void sensor_audio_configure(void)
     HAL_Audio_StopDMA(Audio_Config_Local.fUsingLeftChannel, Audio_Config_Local.fUsingRightChannel);
     /*Ask EOSS3 to stop and go in power save mode*/
     HAL_Audio_Stop(&gPdmConnector, &Audio_Config_Local);
-    HAL_Audio_Start(&gPdmConnector, 0, true, &Audio_Config_Local);
-    HAL_Audio_StartDMA();   // Starting DMA immedately ships data
     sensor_audio_configured = true;
   }
   sensor_audio_startstop(1);

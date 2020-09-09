@@ -87,7 +87,7 @@
 #define uartHandlerUpdate(id,x)
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
-#define FEATURE_USBSERIAL   1       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   0       // USBSERIAL port is present
 #define USB_UART_CHECK_FIFO_CONNECT  FEATURE_USBSERIAL    // 1 for USB-serial
 
 // Options for debug output -- use to set DEBUG_UART below
