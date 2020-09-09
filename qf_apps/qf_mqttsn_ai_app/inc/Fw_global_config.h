@@ -55,8 +55,8 @@
 #if !defined(S3AI_FIRMWARE_MODE)
      /* allow for commandline define for automated builds on Linux */
 /* There is not enough RAM to do both - collection & recognition, choose 1 */
-#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
+//#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
 // #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
 #endif
 
