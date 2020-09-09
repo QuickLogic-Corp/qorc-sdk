@@ -1435,6 +1435,9 @@
                     <name>$PROJ_DIR$\..\src\process_imu.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\src\qf_hardwaresetup.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\src\Recognition.c</name>
                 </file>
                 <file>
@@ -1463,18 +1466,6 @@
     </group>
     <group>
         <name>BSP</name>
-        <group>
-            <name>quickfeather</name>
-            <group>
-                <name>inc</name>
-            </group>
-            <group>
-                <name>src</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\hardwaresetup_quickfeather.c</name>
-                </file>
-            </group>
-        </group>
         <group>
             <name>quickfeather</name>
             <group>
