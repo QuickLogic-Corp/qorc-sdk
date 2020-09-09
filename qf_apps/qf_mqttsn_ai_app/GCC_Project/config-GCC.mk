@@ -1,7 +1,7 @@
 #
 # Symbiflow options for QORK SDK
 #
-export RTL_TOP_MODULE=usb2serial
+export RTL_TOP_MODULE=top
 
 #
 # GCC Configuration options for Quick-AI SDK
@@ -130,7 +130,7 @@ ifeq ($(RTL_TOP_MODULE),usb2serial)
 export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
 else ($(RTL_TOP_MODULE),top)
 export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
-export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)src
+export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
 endif
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 export SENSOR_AD7476_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)ad7476$(DIR_SEP)src
