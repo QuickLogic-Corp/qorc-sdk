@@ -116,7 +116,11 @@ typedef enum
   Dmic_Voice_Off_IRQn		  = 52
 
 } IRQn_Type;
-#include "core_cm4.h"             /* Cortex-M4 processor and core peripherals */
+#ifdef __FPU_USED
+#undef __FPU_USED
+#endif
+//new core_cm4 from CMSIS_5 has it defined
+#include <core_cm4.h>             /* Cortex-M4 processor and core peripherals */
 
 /*
  * Peripheral_registers_structures
@@ -2454,6 +2458,11 @@ typedef struct
 #define REBOOT_CAUSE_SOFTFAULT	(0x3)
 #define REBOOT_CAUSE		(0xF)
 #define REBOOT_STATUS_REG	(PMU->MISC_POR_3)
+
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __EOSS3_DEV_H */
 

@@ -14,41 +14,19 @@
  * limitations under the License.
  *==========================================================*/
 
-/*
- * s3x_cpuload.c
- *
- * (C) Copyrighted 2015 Quicklogic Inc.
- */
-
-#include <stdio.h>
+#ifndef AUDIO_STEREO2STEREO_H
+#define AUDIO_STEREO2STEREO_H
+ 
 #include "Fw_global_config.h"
-#include "FreeRTOS.h"
-#include "eoss3_dev.h"
-#include "s3x_cpuload.h"
-#include "s3x_dfs.h"
-#include "timers.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include "datablk_mgr.h"
 
-static volatile uint32_t ticksSleeptime;
+extern outQ_processor_t audio_stereo2stereo_outq_processor;
+  
+void datablk_pe_config_stereo2stereo(void *p_pe_object);
+void datablk_pe_process_stereo2stereo(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_DataBlock_t **pRet,
+                                 void (*p_event_notifier)(int pid, int event_type, void *p_event_data, int num_data_bytes));
 
-uint16_t DFS_cpuload(void)
-{  
-    uint16_t    xcpuload;
-    uint16_t    index = DFS_Get_Curr_Policy();
-    uint32_t    ticksWaketime = dfs_node[index].step_width - ticksSleeptime; 
-
-    xcpuload = (uint16_t)(100.0f*((float)ticksWaketime)/((float)dfs_node[index].step_width));
-    ticksSleeptime = 0;
-    return xcpuload;
-}
-
-void DFS_updatesleepticks(uint32_t ticks)
-{
-    ticksSleeptime += ticks;
-    return;
-}
-
-void DFS_resetsleepticks(void)
-{
-    ticksSleeptime = 0;
-    return;
-}
+#endif /* AUDIO_STEREO2STEREO_H */
