@@ -26,9 +26,10 @@
 #include "string.h"
 #include "vr_engine_api.h"
 
-static int ww_size = 0;
-static int ww_confidence = 0;
-static char ww_keyword[20] = { 0 };
+int ww_detected = 0;
+int ww_size = 0;
+int ww_confidence = 0;
+char ww_keyword[20] = { 0 };
 static int vr_engine_samples_per_frame = 240;
 //********************************
 // QuickLogic wrapper code

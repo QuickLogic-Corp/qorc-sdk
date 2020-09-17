@@ -163,14 +163,7 @@ void banner(void)
 
 int main(void)
 {
- 
     SOFTWARE_VERSION_STR = "OP2-AWWE-App";
-
-    // Initialize FSM ConfigData variables
-    // this variable specifies the amount of audio data in milli-secs
-    // to be pre-processed to minimize the voiceSpot engine detection
-    // latency
-    VR_FSMConfigData = 375;
 
     hardwareSetup_Chandalar();
     uart_set_lpm_state(UART_ID_HW,1);

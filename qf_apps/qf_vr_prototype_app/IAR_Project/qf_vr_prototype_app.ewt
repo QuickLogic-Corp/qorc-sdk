@@ -1509,48 +1509,6 @@
     <group>
         <name>Libraries</name>
         <group>
-            <name>Amazon</name>
-            <group>
-                <name>inc</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\inc\pryon_lite_error.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\inc\pryon_lite_metadata.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\inc\pryon_lite_PRL1000.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\inc\pryon_lite_vad.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\inc\pryon_lite_ww.h</name>
-                </file>
-            </group>
-            <group>
-                <name>lib</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\lib\libpryon_lite-PRL1000.a</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\lib\libpryon_lite-U.a</name>
-                </file>
-            </group>
-            <group>
-                <name>src</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\ql_vr_amazon.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\W_50k.en-US.alexa.c</name>
-                </file>
-            </group>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\Readme.txt</name>
-            </file>
-        </group>
-        <group>
             <name>Audio</name>
             <group>
                 <name>inc</name>
@@ -2371,6 +2329,57 @@
                     <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_time.c</name>
                 </file>
             </group>
+        </group>
+    </group>
+    <group>
+        <name>Licensed3rdParty</name>
+        <group>
+            <name>amazon</name>
+            <group>
+                <name>inc</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_error.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_metadata.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_PRL1000.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_vad.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_ww.h</name>
+                </file>
+            </group>
+            <group>
+                <name>lib</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\lib\libpryon_lite-PRL1000.a</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\lib\libpryon_lite-U.a</name>
+                </file>
+            </group>
+            <group>
+                <name>src</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_amazon.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_engine_api.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\W_50k.en-US.alexa.c</name>
+                </file>
+            </group>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\Readme.txt</name>
+            </file>
         </group>
     </group>
     <group>

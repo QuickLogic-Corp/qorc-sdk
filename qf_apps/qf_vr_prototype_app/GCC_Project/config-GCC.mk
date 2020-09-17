@@ -30,7 +30,7 @@ export MACROS=-D__FPU_USED=1 \
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)DSP$(DIR_SEP)Lib$(DIR_SEP)GCC
-export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)Amazon$(DIR_SEP)lib
+export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)lib
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/qf_apps/$(APP_NAME)/inc" \
@@ -39,7 +39,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
-                 -I"$(PROJ_ROOT)/Libraries/Amazon/inc" \
+                 -I"$(PROJ_ROOT)/Licensed3rdParty/amazon/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/Core/Include" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/DSP/Include" \
@@ -88,7 +88,7 @@ export HAL_DIR          = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
 export FREERTOS_DIR     = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 
 export LIB_DIR          = $(PROJ_ROOT)$(DIR_SEP)Libraries
-export AMAZON_DIR       = $(LIB_DIR)$(DIR_SEP)Amazon$(DIR_SEP)src
+export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
 export AUDIO_DIR        = $(LIB_DIR)$(DIR_SEP)Audio$(DIR_SEP)src
 export CLI_DIR          = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
 export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src

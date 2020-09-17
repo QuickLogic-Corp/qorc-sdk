@@ -17,17 +17,20 @@
 #include "vr_engine_api.h"
 
 // These 3 APIs need to be provided by every VR engine
-void vr_engine_init(void)
+__attribute__((weak)) void vr_engine_init(void)
 {
-  init_amazon_wwe();
+  // initialize the VR engine
+  return;
 }
 
-int vr_engine_get_samples_per_frame(void)
+__attribute__((weak)) int vr_engine_get_samples_per_frame(void)
 {
-  return amazon_get_samples_per_frame();
+  // return samples per frame size used by the VR engine
+  return 240; // default samples per frame size
 }
 
-int vr_engine_process(short *samples)
+__attribute__((weak)) int vr_engine_process(short *samples)
 {
-  return amazon_vr_process(samples);
+  // process input samples and return if wakeword is detected
+  return 0; // 0 = no wakeword detected, 1 = wakeword detected
 }
