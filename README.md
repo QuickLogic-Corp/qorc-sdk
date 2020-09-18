@@ -93,7 +93,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
   1. Navigate to qf_helloworldsw build folder and run make  
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_Project
      make 
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.  
@@ -137,7 +137,7 @@ This section describes how to build and run the qf_helloworldsw project.
 
   2. Now naviagte to qf_helloworldsw build folder and run make.
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_projects  
+     cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_Project  
      make
      ```
 
@@ -154,7 +154,7 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Example #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
-     cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_projects
+     cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_Project
      make
      ```
   3. Reset QuickFeather board and press ‘user button’ while blue LED is flashing.
@@ -193,8 +193,16 @@ This section describes how to build and run the qf_helloworldsw project.
      1. Change the terminal counter from 4000000 to 2000000
      2. Change the assign greenled = led to assign redled = led
      3. Save the changes
+  2. Activate the conda script from `quicklogic-fpga-toolchain` and add it's binaries to PATH.
+    (This step can be skipped if you have installed the toolchain in the current terminal window and session).
+     ```
+     export INSTALL_DIR="specify the installpath of fpga-toolchain"
+     export PATH="$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH"
+     source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
+     ```
   2. Navigate to qf_helloworldhw build folder and run make (note: for make use ql_symbiflow you will
   have to activate the ql_symbiflow conda)
+    
      ```
      cd qf_apps/qf_helloworldhw/GCC_projects
      conda activate
