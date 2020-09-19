@@ -30,7 +30,7 @@
 #include <queue.h>
 #include "portable.h"
 
-#define STACK_BAISC_UNIT        4
+#define STACK_BAISC_UNIT        1
 #define STACK_SIZE_ALLOC(size)  (size * STACK_BAISC_UNIT)
 
 /*====================================================*/
@@ -65,7 +65,7 @@ extern QueueHandle_t xHandleQueueAPComm;
 extern signed portBASE_TYPE StartRtosTaskApComm(void);  // to remove warnings		uxPriority not used in the function
 
 #define PRIORITY_TASK_CONTROL               ((unsigned)(PRIORITY_HIGH))
-#define STACK_SIZE_TASK_CONTROL        (4*256)
+#define STACK_SIZE_TASK_CONTROL        (2*256)
 extern xTaskHandle xHandleTaskControl;
 extern QueueHandle_t xHandleQueueControl;
 extern signed portBASE_TYPE StartControlTask( void);  // to remove warnings

@@ -92,7 +92,7 @@ extern void set_VR_status(uint8_t enable_flag);
 
 #define THREAD_1_Q_SIZE   (120)
 #define THREAD_1_PRIORITY ((unsigned)(PRIORITY_NORMAL))
-#define THREAD_1_STACK_DEPTH (8*1024)
+#define THREAD_1_STACK_DEPTH (3*256) // 3K bytes
 
 typedef struct {
   QAI_DataBlockHeader_t dbHeader;

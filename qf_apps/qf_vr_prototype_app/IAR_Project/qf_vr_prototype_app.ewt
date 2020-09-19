@@ -2293,6 +2293,9 @@
                     <name>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\dbgtrace.h</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\ql_stackwatermark.h</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\ql_time.h</name>
                 </file>
                 <file>
@@ -2321,6 +2324,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbgtrace.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_stackwatermark.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_test_signals.c</name>

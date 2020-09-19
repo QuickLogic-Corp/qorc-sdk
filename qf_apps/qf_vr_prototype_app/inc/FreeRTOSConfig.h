@@ -110,7 +110,7 @@
 #ifdef BOOT_LOADER
 #define configTOTAL_HEAP_SIZE ( ( size_t ) ( 60 * 1024 ) )
 #else
-#define configTOTAL_HEAP_SIZE ( ( size_t ) ( 88 * 1024 ) )
+#define configTOTAL_HEAP_SIZE ( ( size_t ) ( 24 * 1024 ) )
 #endif
 
 #define configMAX_TASK_NAME_LEN			( 16 )
