@@ -1,0 +1,1 @@
+ql_symbiflow -compile -d ql-eos-s3 -P pu64 -v ../*.v *.v -t top -p quickfeather.pcf
