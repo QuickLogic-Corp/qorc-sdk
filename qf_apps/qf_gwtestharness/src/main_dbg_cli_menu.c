@@ -29,7 +29,6 @@
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
-#include "fpga_ledctlr.h"
 
 #if FEATURE_CLI_DEBUG_INTERFACE
 
