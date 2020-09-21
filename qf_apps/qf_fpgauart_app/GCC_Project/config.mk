@@ -2,7 +2,7 @@
 # Environment Configuration options for Quick-AI SDK
 #
 
-PROJ_NAME=qf_fpgauart
+PROJ_NAME=qf_fpgauart_app
 export PROJ_NAME
 
 # By default, many commands are hidden
