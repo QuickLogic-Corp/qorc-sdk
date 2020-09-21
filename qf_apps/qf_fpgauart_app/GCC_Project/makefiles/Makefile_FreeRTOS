@@ -1,0 +1,54 @@
+FREERTOS_SRCS:=$(wildcard $(FREERTOS_DIR)/*.c )
+
+SRCS:=$(notdir $(FREERTOS_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FREERTOS_DIR)
+
+D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
+O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
+
+D_FILES += $(DEPEND_PATH)$(DIR_SEP)port.d $(DEPEND_PATH)$(DIR_SEP)heap_4.d
+O_FILES += $(OUTPUT_PATH)$(DIR_SEP)port.o $(OUTPUT_PATH)$(DIR_SEP)heap_4.o
+
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.Td
+DEPFLAGS_2 = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/port.Td
+DEPFLAGS_3 = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/heap_4.Td
+
+POSTCOMPILE = @$(CP) $(DEPEND_PATH)/$*.Td $(DEPEND_PATH)/$*.d
+POSTCOMPILE_4 = del $(DEPEND_PATH)/$*.Td 
+
+
+all:$(OBJS) $(OUTPUT_PATH)/port.o $(OUTPUT_PATH)/heap_4.o
+
+%.o:%.c
+$(OUTPUT_PATH)/%.o:$(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
+	@echo Compile: $<
+	$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
+	$(MV) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
+
+	
+$(OUTPUT_PATH)/port.o: $(SRC_PATH)/portable/GCC/ARM_CM4F_quicklogic_s3XX/port.c  $(DEPEND_PATH)/port.d
+	@echo Compile: $<
+	$(CC) $(SRC_PATH)/portable/GCC/ARM_CM4F_quicklogic_s3XX/port.c $(CFLAGS) $(DEPFLAGS_2) $(INCLUDE_DIRS) -o $@
+	$(MV) $(DEPEND_PATH)$(DIR_SEP)port.Td $(DEPEND_PATH)$(DIR_SEP)port.d
+
+	
+$(OUTPUT_PATH)/heap_4.o: $(SRC_PATH)/portable/MemMang/heap_4.c $(DEPEND_PATH)/heap_4.d
+	@echo Compile: $<
+	$(CC) $(SRC_PATH)/portable/MemMang/heap_4.c $(CFLAGS) $(DEPFLAGS_3) $(INCLUDE_DIRS) -o $@
+	$(MV) $(DEPEND_PATH)$(DIR_SEP)heap_4.Td $(DEPEND_PATH)$(DIR_SEP)heap_4.d
+
+
+-include $(D_FILES)
+
+$(DEPEND_PATH)/%.d: ;
+.PRECIOUS: $(DEPEND_PATH)/%.d 
+
+DELETE_ME=$(D_FILES) $(O_FILES)
+clean:
+	@echo Cleaning ...
+ifneq (,${DELETE_ME})
+	-$(HIDE)$(RM) $(DELETE_ME)   
+endif
+    

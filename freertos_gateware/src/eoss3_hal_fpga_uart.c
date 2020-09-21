@@ -37,7 +37,9 @@
 //#include "Periph_setup.h"
 #include "Fw_global_config.h"
 
-#ifdef USE_FPGA_UART
+#define USE_FPGA_UART (FEATURE_FPGA_UART)
+
+#if  (USE_FPGA_UART == 1)
 
 #ifdef __RTOS
 #include <FreeRTOS.h>
@@ -427,4 +429,4 @@ void FB_uart_register_lpm(void)
 {
     S3x_Register_Lpm_Cb(FB_uart_lpm_callback, "FB_UART");
 }
-#endif
+#endif /* USE_FPGA_UART */

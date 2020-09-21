@@ -482,7 +482,9 @@ int uart_rx( int uartid )
 
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        return HAL_FB_UART_Rx( );
+        uint8_t rdValue;
+        FB_getRxBuf(&rdValue, 1);
+	return rdValue;
     }
 #endif
 #if FEATURE_USBSERIAL == 1
