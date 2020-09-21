@@ -126,7 +126,7 @@
  *  \return status
  */
 //HAL_StatusTypeDef HAL_FB_UART_Init(UartHandler *pxObj);
-void HAL_FB_UART_Init(UartHandler *pxObj);
+void HAL_FB_UART_Init(const UartHandler *pxObj);
 
 /*! \fn void HAL_FB_UART_Stop(void)
  *  \brief Stop pending RX/TX.
@@ -151,4 +151,6 @@ int HAL_FB_UART_Rx(void);
 
 int fb_uart_read(int uartid, ptrdiff_t buf, size_t len);
 
+int FB_getRxBufSize(void);
+int FB_getRxBuf(uint8_t *b, const int l);
 #endif /* !__EOSS3_HAL_FB_UART_H_ */

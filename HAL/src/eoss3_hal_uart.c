@@ -367,7 +367,7 @@ void uart_init( int uartid, PadConfig* ppadConfigTx, PadConfig* ppadConfigRx, co
     
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        fgpa_uart_init( pConfig );
+        HAL_FB_UART_Init( pConfig );
         return;
     }
 #endif
@@ -482,7 +482,7 @@ int uart_rx( int uartid )
 
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        return fpga_uart_rx( c );
+        return HAL_FB_UART_Rx( );
     }
 #endif
 #if FEATURE_USBSERIAL == 1
@@ -526,7 +526,7 @@ void uart_tx_raw(int uartid, int c)
 	{
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        fpga_uart_tx_raw( c );
+        HAL_FB_UART_Tx( c );
         return;
 	}
 #endif
@@ -588,7 +588,7 @@ int uart_rx_wait( int uartid, int msecs )
 {
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        return fgpa_uart_rx_wait( msecs );
+      return EOF; // fgpa_uart_rx_wait( msecs );
 }
 #endif
 
@@ -638,7 +638,7 @@ int uart_rx_available( int uartid )
     int r;
 #if FEATURE_FPGA_UART == 1
     if( uartid == UART_ID_FPGA ){
-        return fgpa_uart_rx_available();
+        return FB_getRxBufSize(); // fgpa_uart_rx_available();
     }
 #endif
 #if FEATURE_USBSERIAL == 1

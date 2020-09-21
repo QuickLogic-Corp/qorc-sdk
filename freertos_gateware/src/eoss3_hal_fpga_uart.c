@@ -43,7 +43,7 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 #endif
-#ifndef USE_FPGA_UART
+#if (!USE_FPGA_UART)
 #define FB_UART_LPM_EN /* Enable LPM for FPGA UART saves power */
 #endif
 #define RXBUF_LEN       (256)
@@ -119,7 +119,7 @@ static void FB_UART_ISR_Func(void)
         if (iir & IIR_RXRDY) {
             while (FB_UART->UART_LSR & LSR_RXRDY) {    //TBD : Enable fifo
                 tmp = FB_UART->UART_DR_DLLSB & 0xFF;
-                fillRxBuf(&tmp, 1, &pxHigherPriorityTaskWoken);
+                FB_fillRxBuf(&tmp, 1, &pxHigherPriorityTaskWoken);
                 tmp = FB_UART->UART_LSR;
             }
         }
@@ -136,6 +136,7 @@ void fb_uart_set_clk(uint8_t en)
 {
     if (en)
     {
+        S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_18MHZ);
         S3x_Clk_Enable(S3X_FB_16_CLK);
         S3x_Clk_Enable(S3X_FB_02_CLK);
         S3x_Clk_Enable(S3X_FFE_X1_CLK);
@@ -152,7 +153,7 @@ void fb_uart_set_clk(uint8_t en)
     }
 }
 
-void HAL_FB_UART_Init(UartHandler *pxObj)
+void HAL_FB_UART_Init(const UartHandler *pxObj)
 {
     UINT32_t lcr_h_value = 0;
     UINT32_t cr_value = 0;
@@ -254,7 +255,7 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
 
     FB_UART->UART_DR_DLLSB = dlatch_value & 0xFF;
 
-
+#if (0) // pad configuration setup moved to pincfg_table.c
     // Set up IO pin for TX
     if ((pxObj->mode == TX_MODE) || (pxObj->mode == TX_RX_MODE))
     {
@@ -269,8 +270,8 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
         xPadConf.ucSmtTrg =0;
         //memset((uint8_t *)&xPadConf, 0, sizeof(PadConfig));
 
-        xPadConf.ucPin = PAD_10;
-        xPadConf.ucFunc = PAD10_FUNC_SEL_FBIO_10;
+        xPadConf.ucPin = FPGA_UART_TX_GPIO;
+        xPadConf.ucFunc = FPGA_UART_TX_FUNC;
         xPadConf.ucCtrl = PAD_CTRL_SRC_FPGA;
         xPadConf.ucMode = PAD_MODE_OUTPUT_EN;
         xPadConf.ucPull = PAD_NOPULL;
@@ -286,8 +287,8 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
     {
         PadConfig xPadConf;
 
-        xPadConf.ucPin = PAD_6;
-        xPadConf.ucFunc = PAD6_FUNC_SEL_FBIO_6;
+        xPadConf.ucPin = FPGA_UART_RX_GPIO;
+        xPadConf.ucFunc = FPGA_UART_RX_FUNC;
         xPadConf.ucCtrl = PAD_CTRL_SRC_FPGA;
         xPadConf.ucMode = PAD_MODE_INPUT_EN;
         xPadConf.ucPull = PAD_NOPULL;
@@ -298,6 +299,7 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
         HAL_PAD_Config(&xPadConf);
 
     }
+#endif
 
 
     //setup interrupt here
@@ -311,7 +313,7 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
     NVIC_ClearPendingIRQ(FbMsg_IRQn);
     NVIC_EnableIRQ(FbMsg_IRQn);
     FB_UART->UART_LCR &= ~LCR_DLAB;
-    FB_UART->UART_IER_DLMSB = IER_ERXRDY;
+    FB_UART->UART_IER_DLMSB = IER_ERXRDY ;
     }
 
     // Set up UART LCR and MCR
@@ -319,7 +321,7 @@ void HAL_FB_UART_Init(UartHandler *pxObj)
     FB_UART->UART_MCR = ptrObj->cr_value = cr_value;
 
     /* Program FIFO Enable */
-    FB_UART->UART_IIR_FCR = FCR_ENABLE;
+    FB_UART->UART_IIR_FCR = FCR_ENABLE|FCR_TRIGGER_14;
 
     /* flag to indicate the UART init is completed.
     This is to make sure before any UART prints called the init is completed */
@@ -359,7 +361,7 @@ static void uart_putc(int c)
     //while ((FB_UART->UART_LSR & LSR_TXRDY));
     while (!(FB_UART->UART_LSR & LSR_THRE /*LSR_TXRDY*/));
 
-    FB_UART->UART_DR_DLLSB = c /* & 0xFF */;
+    FB_UART->UART_DR_DLLSB = c  & 0xFF ;
 }
 
 /*! \fn void HAL_FB_UART_Tx(int c)
