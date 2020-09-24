@@ -43,7 +43,7 @@ static void Audio_pad_setup(void);
 #if ENABLE_I2S_TX_SLAVE
 static void I2STx_slave_pad_setup(void);
 #endif
-void hardwareSetup_Chandalar(void) {
+void qf_hardwareSetup(void) {
 
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
     

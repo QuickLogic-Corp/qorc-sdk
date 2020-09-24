@@ -165,7 +165,7 @@ int main(void)
 {
     SOFTWARE_VERSION_STR = "OP2-AWWE-App";
 
-    hardwareSetup_Chandalar();
+    qf_hardwareSetup();
     uart_set_lpm_state(UART_ID_HW,1);
     HAL_RTC_Init(0);
     banner(); 

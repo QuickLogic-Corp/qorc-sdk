@@ -1,4 +1,4 @@
-﻿System State,Events,Expected Next State,Guards,,,,,,,Actions,,,,,,
+System State,Events,Expected Next State,Guards,,,,,,,Actions,,,,,,
 ,,,DFS,VR,AudioHW,PTT_Switch,Mute_Switch,LPSD,CircularBuffer,DFS,VR,AudioHW,PTT_Switch,Mute_Switch,LPSD,CircularBuffer
 WAIT_ON_KWD,,,NODE4,STARTED,STREAMING,DONT_CARE,DONT_CARE,DONT_CARE,SAVING,NODE4,STARTED,STREAMING,DONT_CARE,DONT_CARE,DONT_CARE,SAVING
 ,VR_TRIGGER,WAIT_ON_KWD,,,,,,LPSD_ON,,MIN_NODE4,START,START_STREAMING,,,START_ON,

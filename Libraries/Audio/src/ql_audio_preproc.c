@@ -23,9 +23,10 @@
 /*      -                                                                     */
 /******************************************************************************/
 #include <stdio.h>
+#include <string.h>
 #include "ql_audio_preproc.h"
 #include "ql_util.h"
-#include "ql_dspc_preproc.h" //include speficif defines and files for NS or BF
+#include "ql_dspc_preproc.h" //include specific defines and files for NS or BF
 
 #ifndef UNIT_TEST
 SemaphoreHandle_t  ql_pre_proc_sem;
@@ -104,12 +105,13 @@ t_audio_preproc_info *ql_audio_preproc_init(t_ql_audio_preproc_option_e e_option
     status = e_ql_audio_preproc_status_invalid_param;
   }else
   {
-#ifdef SCHEMATICID
-   ql_schematic_id sch_id = SCHEMATICID;
-   CALL_QL_AUDIO_PREPROC_INIT(&sch_id);
-   o_audio_preproc_info.fs       = QL_AWE_SAMPLING_RATE;
-   o_audio_preproc_info.frame_sz = QL_AWE_FRAME_SIZE;
-   o_audio_preproc_info.channels = QL_AWE_MIC_CHANNELS;
+
+//#ifdef SCHEMATICID
+#if (DSPC_AW == 1)
+   CALL_QL_AUDIO_PREPROC_INIT(QL_AUDIO_PREPROC_ALGO);
+   o_audio_preproc_info.fs       = num_preproc_samplerate;
+   o_audio_preproc_info.frame_sz = preproc_framesize;
+   o_audio_preproc_info.channels = num_preproc_channels;
 #elif QL_CON_MIC_CHANNELS
    CALL_QL_AUDIO_PREPROC_INIT(NULL);
    o_audio_preproc_info.fs       = QL_CON_SAMPLING_RATE;
@@ -226,7 +228,7 @@ void pre_process_bypass(uint32_t bypass)
   o_audio_preproc_info.bypass = bypass;
 }
 //#ifndef UNIT_TEST
-#if (QL_AWE_MIC_CHANNELS == 2)
+#if (PDM_MIC_CHANNELS == 2)
 //Note: The frame size is specific to BF(Beam Forming)
 ///DataBLK is 240 samples = 120 stereo samples, BF blk size = 80
 // => 2 stero DataBlocks = 3 BF Block = 1 Mono DSP output Block
