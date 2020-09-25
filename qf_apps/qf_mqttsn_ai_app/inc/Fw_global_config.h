@@ -188,7 +188,7 @@ extern int FPGA_FFE_LOADED;
 #define CONST_FREQ (1)
 
 // Enable ADC FPGA Driver
-#define AD7476_FPGA_DRIVER   1
+#define AD7476_FPGA_DRIVER   0
 
 #if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
 #error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"

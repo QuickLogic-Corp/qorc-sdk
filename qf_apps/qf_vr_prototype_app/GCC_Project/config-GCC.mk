@@ -68,8 +68,11 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).out" \
-    -L$(LIBAWWE_DIR) -lpryon_lite-PRL1000 \
     -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
+#   To enable pryon_lite-PRL1000 library, delete the top line, uncomment the following two lines \
+#   Order of the lines is important, first include pryon_lite library, then math library \
+#   -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
+#   -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
 
 
 export ELF2BIN_OPTIONS=-O binary

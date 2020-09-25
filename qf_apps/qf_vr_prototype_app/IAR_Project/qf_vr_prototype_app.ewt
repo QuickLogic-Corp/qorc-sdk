@@ -1222,6 +1222,9 @@
                     <name>$PROJ_DIR$\..\inc\host_interface.h</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\inc\pincfg_table.h</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\inc\RtosTask.h</name>
                 </file>
                 <file>
@@ -1262,6 +1265,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\main_dbg_cli_menu.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\src\pincfg_table.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\qf_hardwaresetup.c</name>
