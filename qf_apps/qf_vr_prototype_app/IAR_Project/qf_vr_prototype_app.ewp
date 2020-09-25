@@ -1158,6 +1158,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\qf_hardwaresetup.c</name>
+                    <excluded>
+                        <configuration>Debug</configuration>
+                    </excluded>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\src\ql_vr_app.c</name>
@@ -1203,9 +1206,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\qf_hardwaresetup.c</name>
-                    <excluded>
-                        <configuration>Debug</configuration>
-                    </excluded>
                 </file>
             </group>
         </group>

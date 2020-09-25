@@ -171,6 +171,16 @@ int main(void)
     banner(); 
     //ldo_init();     
     nvic_init();
+#if (PDM_PAD_28_29 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x02;   // 1 for pad10, 2 for pad28
+#endif
+#if (PDM_PAD_8_10 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x01;   // 1 for pad10, 2 for pad28
+#endif
+#if (VOICE_AP_BYPASS_MODE == 1)
+    /* Select for PAD 38 */
+    IO_MUX->PDM_CLKIN_SEL = 0x01;
+#endif
     ql_smart_remote_example();
     /* for debug - view and control over COM */
 #if FEATURE_CLI_DEBUG_INTERFACE
@@ -181,33 +191,6 @@ int main(void)
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     while(1);
-}
-
-//Initialize all System Clocks,Gate settings and  used Power Resources
-void system_init(void)
-{
-    S3x_Clk_Enable(S3X_M4_S0_S3_CLK);
-    S3x_Clk_Enable(S3X_M4_S4_S7_CLK);
-    S3x_Clk_Enable(S3X_M4_S8_S11_CLK);
-    S3x_Clk_Enable(S3X_M4_S12_S15_CLK);
-
-    /* FPU settings ------------------------------------------------------------*/
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
-    SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
-#endif
-
-    /* Configure Memory to support light sleep and retention mode */
-    PMU->M4SRAM_SSW_LPMF = 0xFFFF;
-    PMU->M4SRAM_SSW_LPMH_MASK_N = 0xFFFF;
-
-    //S3x_Clk_Enable(S3X_FB_16_CLK);
-    //S3x_Clk_Enable(S3X_FB_21_CLK);
-
-    S3x_Clk_Enable(S3X_A1_CLK);
-    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-
-    INTR_CTRL->OTHER_INTR = 0xffffff;
-    DMA_SPI_MS->DMA_CTRL = DMA_CTRL_STOP_BIT;
 }
 
 void i2c_init_for_m4(void)
