@@ -51,7 +51,9 @@ const struct cli_cmd_entry qf_gwtest[] =
 {
     CLI_CMD_SIMPLE( "readid", readid, "-- read the gateware id reister (@0x00)" ),
     CLI_CMD_SIMPLE( "readreg", readreg, " 0xaddr -- read register at specified address"),
+    CLI_CMD_SIMPLE( "rr", readreg, " 0xaddr -- read register at specified address"),
     CLI_CMD_SIMPLE( "writereg", writereg, "0xaddr 0xvalue -- write val to specified address"),
+    CLI_CMD_SIMPLE( "wr", writereg, "0xaddr 0xvalue -- write val to specified address"),
 
     CLI_CMD_TERMINATE()
 };

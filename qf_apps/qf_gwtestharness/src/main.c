@@ -75,7 +75,7 @@ int main(void)
     
 	// Setup FPGA clocks
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 12000*1000);
-    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
+    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24000*1000);
     S3x_Clk_Enable(S3X_FB_21_CLK);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
     
