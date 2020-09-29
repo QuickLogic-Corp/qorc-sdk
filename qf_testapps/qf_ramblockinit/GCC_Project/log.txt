@@ -1,0 +1,87 @@
+"shell Bash"
+Building using GCC Toolchain
+Using Linux GNU GCC Toolchain
+make -f makefiles/Makefile_Startup
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+Compile: /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../HAL/startup/startup_EOSS3B_GCC.c
+Compile: /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../HAL/startup/vectors_CM4F_gcc.c
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_HAL
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_FreeRTOS
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_Libraries
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_Power
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_SysFlash
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_Utils
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_FPGA
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_cli
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_quickfeather_BSP
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_FPGA
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+External sources built
+make -f makefiles/Makefile_appfpga
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+ql_symbiflow  -compile -src /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl -d ql-eos-s3 -t top -v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_RAMs.v r512x16_512x16.v r1024x8_1024x8.v AL4S3B_FPGA_Top.v AL4S3B_FPGA_Registers.v r2048x8_2048x8.v r1024x16_1024x16.v AL4S3B_FPGA_IP.v r512x32_512x32.v -p quickfeather.pcf -P PU64 -dump header | grep -v "^Warning [0-9]\{1,\}:.*no timing specification"
+----------------- 
+
+-compile
+-src
+/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl
+-d
+ql-eos-s3
+-t
+top
+-v
+AL4S3B_FPGA_QL_Reserved.v
+AL4S3B_FPGA_RAMs.v
+r512x16_512x16.v
+r1024x8_1024x8.v
+AL4S3B_FPGA_Top.v
+AL4S3B_FPGA_Registers.v
+r2048x8_2048x8.v
+r1024x16_1024x16.v
+AL4S3B_FPGA_IP.v
+r512x32_512x32.v
+-p
+quickfeather.pcf
+-P
+PU64
+-dump
+header
+verilog files: AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_RAMs.v r512x16_512x16.v r1024x8_1024x8.v AL4S3B_FPGA_Top.v AL4S3B_FPGA_Registers.v r2048x8_2048x8.v r1024x16_1024x16.v AL4S3B_FPGA_IP.v r512x32_512x32.v 
+make[2]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/fpga/rtl'
+cd build && synth -t top -v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/AL4S3B_FPGA_QL_Reserved.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/AL4S3B_FPGA_RAMs.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/r512x16_512x16.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/r1024x8_1024x8.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/AL4S3B_FPGA_Top.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/AL4S3B_FPGA_Registers.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/r2048x8_2048x8.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/r1024x16_1024x16.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/AL4S3B_FPGA_IP.v /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/r512x32_512x32.v   -d ql-eos-s3_wlcsp -p /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/quickfeather.pcf -P PU64 2>&1 > /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl/build/top.log
+/home/coolbreeze413/work/quicklogic/symbiflow/installer_1.2.0/install/bin/synth: line 128: yosys: command not found
+make[2]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/fpga/rtl'
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+make -f makefiles/Makefile_appdir
+make[1]: Entering directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'
+"/usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc" -c /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/src/main.c -D__FPU_USED=1 -D__FPU_USED=1 -D__M4_DEBUG -D__EOSS3_CHIP -D__RTOS -D__GNU_SOURCE -D_DEFAULT_SOURCE -DARM_MATH_CM4 -DFFE_NEWARCH -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT -DconfigUSE_STATS_FORMATTING_FUNCTIONS -DconfigUSE_TRACE_FACILITY -DGCC -DNDEBUG -DGCC_MAKE -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Os -fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder -fmessage-length=0 -lm -fsigned-char -ffunction-sections -fdata-sections  -gdwarf-4 -std=c99 -MMD -MD -MP -MT /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/output/main.o -MMD -MP -MF /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/output/depend/main.Td -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/rtl" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../qf_testapps/qf_ramblockinit/fpga/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/CMSIS/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../HAL/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/cli/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/Power/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../FreeRTOS/include" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/Power/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/Utils/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/SysFlash/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../BSP/quickfeather/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/Utils/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/FPGA/inc" -I"/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/../../../Libraries/DatablockManager/inc"  -o /media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project/output/main.o
+make[1]: Leaving directory '/media/coolbreeze413/GALACTICA/work/clients/quicklogic/qorc/github/qorc-sdk/qf_testapps/qf_ramblockinit/GCC_Project'

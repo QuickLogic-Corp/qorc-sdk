@@ -1,0 +1,8 @@
+set_io GPIO_PIN(7) 2
+set_io GPIO_PIN(6) 3
+set_io GPIO_PIN(5) 64
+set_io GPIO_PIN(4) 62
+set_io GPIO_PIN(3) 63
+set_io GPIO_PIN(1) 59
+set_io GPIO_PIN(2) 57
+set_io GPIO_PIN(0) 56

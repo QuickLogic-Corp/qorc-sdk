@@ -1,0 +1,9 @@
+
+HYBRID_SRCS:=$(wildcard $(HYBRID_DIR)/*.c )
+
+SRCS:=$(notdir $(HYBRID_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(HYBRID_DIR)
+
+include $(COMMON_STUB)
+

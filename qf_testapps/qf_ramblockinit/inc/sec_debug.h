@@ -15,12 +15,36 @@
  *==========================================================*/
 
 /*==========================================================
-*                                                          
-*    File   : fpga_loader.h
-*    Purpose: Contains functionality to load FPGA
-*                                                          
-*=========================================================*/
+ *                                                          
+ *    File   : sec_debug.h
+ *    Purpose: 
+ *                                                          
+ *=========================================================*/
 
-extern int load_fpga(uint32_t image_size, uint32_t* image_ptr, uint32_t ram_content_size, uint32_t* ram_content_ptr);
+#ifndef _SEC_DEBUG_H_
+#define _SEC_DEBUG_H_
 
-int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr);
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+
+// variables
+extern unsigned int fault_depth;
+
+
+
+// functions
+void save_assert_info(char* file, int line);
+void invoke_soft_fault();
+
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+
+#endif /* _SEC_DEBUG_H_ */
+
+
+
