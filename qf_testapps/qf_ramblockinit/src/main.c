@@ -43,7 +43,7 @@
 #include "eoss3_hal_spi.h"
 
 #include "fpga_loader.h"        // API for loading FPGA
-#include "top_bit.h"   // FPGA bitstream to load into FPGA
+#include "fpga_design.h"        // Header for FPGA bitstream and memory initialization declarations
 
 
 const char *SOFTWARE_VERSION_STR;
@@ -68,7 +68,7 @@ int main(void)
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(sizeof(axFPGABitStream), axFPGABitStream, sizeof(axFPGAMemInit), axFPGAMemInit);     // Load bitstrem into FPGA
+    load_fpga(axFPGABitStream_length, axFPGABitStream, axFPGAMemInit_length, axFPGAMemInit);     // Load bitstream into FPGA
     S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
     S3x_Clk_Enable(S3X_FB_16_CLK);
     
