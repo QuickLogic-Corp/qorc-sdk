@@ -20,6 +20,7 @@
 __attribute__((weak)) void vr_engine_init(void)
 {
   // initialize the VR engine
+  dbg_str("vr_engine_init: Using a STUB VR engine API, replace with desired VR engine");
   return;
 }
 
