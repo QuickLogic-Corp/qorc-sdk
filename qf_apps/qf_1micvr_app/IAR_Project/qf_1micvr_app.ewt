@@ -1188,7 +1188,7 @@
     <group>
         <name>App</name>
         <group>
-            <name>qf_vr_prototype_app</name>
+            <name>qf_1micvr_app</name>
             <group>
                 <name>fsm</name>
                 <file>
@@ -2602,6 +2602,6 @@
         </group>
     </group>
     <file>
-        <name>$PROJ_DIR$\qf_vr_prototype_app.icf</name>
+        <name>$PROJ_DIR$\qf_1micvr_app.icf</name>
     </file>
 </project>

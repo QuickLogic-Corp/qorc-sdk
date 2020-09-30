@@ -1,0 +1,3113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <fileVersion>4</fileVersion>
+    <fileChecksum>2811593886</fileChecksum>
+    <configuration>
+        <name>Debug</name>
+        <outputs>
+            <file>$PROJ_DIR$\..\src\vr_engine_api.c</file>
+            <file>$PROJ_DIR$\..\src\watchdog.c</file>
+            <file>$PROJ_DIR$\..\src\arm_rfft_fast_init_f32.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\portable\IAR\ARM_CM4F_quicklogic_s3XX\portasm.s</file>
+            <file>$PROJ_DIR$\..\inc\s3x_pwrcfg.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\portable\MemMang\heap_4.c</file>
+            <file>$PROJ_DIR$\..\src\c_lib_retarget.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\croutine.h</file>
+            <file>$PROJ_DIR$\..\src\ql_vr_pe_generic.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\deprecated_definitions.h</file>
+            <file>$PROJ_DIR$\..\src\main_dbg_cli_menu.c</file>
+            <file>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\qf_hardwaresetup.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\event_groups.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\portable\IAR\ARM_CM4F_quicklogic_s3XX\portmacro.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\portable\IAR\ARM_CM4F_quicklogic_s3XX\port.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\FreeRTOS.h</file>
+            <file>$PROJ_DIR$\..\src\host_interface.c</file>
+            <file>$PROJ_DIR$\..\inc\sec_debug.h</file>
+            <file>$PROJ_DIR$\..\src\exceptions.c</file>
+            <file>$PROJ_DIR$\..\src\pincfg_table.c</file>
+            <file>$PROJ_DIR$\..\src\qf_hardwaresetup.c</file>
+            <file>$PROJ_DIR$\..\inc\ww_metadata.h</file>
+            <file>$PROJ_DIR$\..\src\ql_vr_app.c</file>
+            <file>$PROJ_DIR$\..\inc\vr_engine_api.h</file>
+            <file>$PROJ_DIR$\..\src\sec_debug.c</file>
+            <file>$PROJ_DIR$\..\src\main.c</file>
+            <file>$PROJ_DIR$\..\src\s3x_pwrcfg.c</file>
+            <file>$PROJ_DIR$\..\..\..\BSP\quickfeather\inc\leds.h</file>
+            <file>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\leds.c</file>
+            <file>$PROJ_DIR$\..\src\hif_command_table.c</file>
+            <file>$PROJ_DIR$\..\fsm\fsm.h</file>
+            <file>$PROJ_DIR$\..\inc\FreeRTOSConfig.h</file>
+            <file>$PROJ_DIR$\..\inc\Fw_task.h</file>
+            <file>$PROJ_DIR$\..\inc\pincfg_table.h</file>
+            <file>$PROJ_DIR$\..\inc\RtosTask.h</file>
+            <file>$PROJ_DIR$\..\inc\s3_host_proto_defs.h</file>
+            <file>$PROJ_DIR$\..\fsm\fsm_tables.h</file>
+            <file>$PROJ_DIR$\..\inc\Bootconfig.h</file>
+            <file>$PROJ_DIR$\..\fsm\fsm_cli_table.c</file>
+            <file>$PROJ_DIR$\..\inc\Fw_global_config.h</file>
+            <file>$PROJ_DIR$\..\inc\host_interface.h</file>
+            <file>$PROJ_DIR$\Debug\List\sec_debug.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\event_groups.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\fsm.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\vr_engine_api.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_uart.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\hif_command_table.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\stream_buffer.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_audio.i</file>
+            <file>$PROJ_DIR$\Debug\List\fsm.s</file>
+            <file>$PROJ_DIR$\Debug\List\fsm.i</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_pe_generic.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_ffe.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\iar_intrinsics_common.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\port.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_stackwatermark.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\vectors_CM4F_iar.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\time.h</file>
+            <file>$PROJ_DIR$\Debug\List\tempFunc.i</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\core_cmInstr.h</file>
+            <file>$PROJ_DIR$\Debug\List\vectors_CM4F_iar.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\W_50k.en-US.alexa.o</file>
+            <file>$PROJ_DIR$\Debug\List\audio_circularbuffer.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_uart.lst</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nn_activations_q15.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\hif_command_table.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_master_assp.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_usbserial.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\startup_EOSS3B_IAR.lst</file>
+            <file>$PROJ_DIR$\Debug\List\ql_audio.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_audio.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_controlTask.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wb.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_spi.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_spi.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\math.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\port.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_uart.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_uart.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\tasks.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\portasm.o</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nntables.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_audio.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_bufferedprinttask.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pkfb.lst</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_bufferedprinttask.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pi.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\usb2serial.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pi.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_dbg_cli_menu.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\host_interface.__cstat.et</file>
+            <file>$PROJ_DIR$\..\fsm\fsm.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_time.o</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_fsm_interface.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbgtrace.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_engine_api.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_bufferedprinttask.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\qf_hardwaresetup.__cstat.et</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\ql_test_signals.h</file>
+            <file>$PROJ_DIR$\Debug\List\watchdog.lst</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_stdlib.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\qf_hardwaresetup.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pkfb.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\pincfg_table.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_stackwatermark.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\croutine.lst</file>
+            <file>$PROJ_DIR$\Debug\List\main_dbg_cli_menu.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_cpuload.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\vectors_CM4F_iar.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\vr_engine_api.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_uart.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\timers.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
+            <file>$PROJ_DIR$\Debug\List\W_50k.en-US.alexa.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_slave_assp.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\qf_hardwaresetup.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nntables.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\croutine.i</file>
+            <file>$PROJ_DIR$\Debug\List\arm_rfft_fast_init_f32.i</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tlv.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_relu_q15.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_test_signals.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\pincfg_table.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pkfb.o</file>
+            <file>$PROJ_DIR$\Debug\List\dbgtrace.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2c.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\hif_command_table.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_engine_api.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\errno.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_queue_monitor.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_processor.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_lpm.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pkfb.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\stream_buffer.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_cpuload.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\assert.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\freertos_static_memory.__cstat.et</file>
+            <file>$PROJ_DIR$\qf_vr_prototype_app.icf</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_queue_monitor.lst</file>
+            <file>$PROJ_DIR$\Debug\List\freertos_static_memory.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_rdsp.o</file>
+            <file>$PROJ_DIR$\Debug\List\d2h_protocol.i</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nntables.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2c.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_qos.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_rtc.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_controlTask.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\list.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_processor.s</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nn_activations_q15.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_raw_pcm_buffer.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_fsm_interface.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\leds.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pad_config.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_rfft_fast_init_f32.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\vr_engine_api.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_qos.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\ql_audio.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock_hal.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_test_signals.lst</file>
+            <file>$PROJ_DIR$\Debug\List\qf_hardwaresetup.lst</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\arm_nn_tables.h</file>
+            <file>$PROJ_DIR$\Debug\List\W_50k.en-US.alexa.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pwrcfg.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\sec_debug.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_engine_api.i</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_spi.s</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\arm_math.h</file>
+            <file>$PROJ_DIR$\Debug\List\vectors_CM4F_iar.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\tempFunc.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock.lst</file>
+            <file>$PROJ_DIR$\Debug\List\startup_EOSS3B_IAR.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_dfs.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_sdma.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\crc32.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\fsm.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\arm_rfft_fast_init_f32.s</file>
+            <file>$PROJ_DIR$\Debug\List\main.s</file>
+            <file>$PROJ_DIR$\Debug\List\fsm.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_usbserial.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_test_signals.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_dfs.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_gpio.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_rtc.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\event_groups.o</file>
+            <file>$PROJ_DIR$\Debug\List\vr_engine_api.i</file>
+            <file>$PROJ_DIR$\Debug\List\croutine.s</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+            <file>$PROJ_DIR$\Debug\List\fsm_cli_table.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_controlTask.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_audio.o</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pwrcfg.s</file>
+            <file>$PROJ_DIR$\Debug\List\arm_fully_connected_mat_q7_vec_q15_opt.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\croutine.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
+            <file>$PROJ_DIR$\Debug\List\c_lib_retarget.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_fsm_interface.o</file>
+            <file>$PROJ_DIR$\Debug\List\pincfg_table.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_fully_connected_mat_q7_vec_q15_opt.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\queue.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_sdma.i</file>
+            <file>$PROJ_DIR$\Debug\List\startup_EOSS3B_IAR.i</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_engine_api.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_adc.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\queue.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_gpio.o</file>
+            <file>$PROJ_DIR$\Debug\List\arm_fully_connected_mat_q7_vec_q15_opt.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_engine_api.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2c.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wdt.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_circularbuffer.o</file>
+            <file>$PROJ_DIR$\Debug\List\leds.s</file>
+            <file>$PROJ_DIR$\Debug\List\queue.i</file>
+            <file>$PROJ_DIR$\Debug\List\event_groups.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_queue_monitor.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_master_assp.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_sdma.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\c_lib_retarget.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\heap_4.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_uart.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_i2c.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_gpio.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_rtc.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2c.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_audio_config.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_audio_reg.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_adc.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_ffe.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_i2s.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_leds.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_audio.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_def.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_gpio.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_i2s_drv.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_pad_config.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_pads.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_pkfb.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_spi.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_wb.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_uart.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_wdt.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\s3x_clock_hal.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\test_types.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_adc.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_audio.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_ffe.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_timer.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_hal_sdma.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\event_groups.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\list.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\stream_buffer.c</file>
+            <file>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_uart.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\task.h</file>
+            <file>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\projdefs.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\stack_macros.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\tasks.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\timers.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\croutine.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\queue.c</file>
+            <file>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_uart.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_api.h</file>
+            <file>$PROJ_DIR$\..\..\..\freertos_gateware\inc\eoss3_hal_fpga_usbserial.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\inc\eoss3_dev.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\list.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\portable.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\timers.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\stream_buffer.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\mpu_wrappers.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\semphr.h</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\freertos_static_memory.c</file>
+            <file>$PROJ_DIR$\..\..\..\FreeRTOS\include\queue.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\ActivationFunctions\arm_nn_activations_q15.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\ActivationFunctions\arm_relu_q15.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\FullyConnectedFunctions\arm_fully_connected_mat_q7_vec_q15_opt.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\D2HProtocol\inc\d2h_protocol.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\DSP\Lib\IAR\iar_cortexM4lf_math.a</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\Core\Include\cmsis_iccarm.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_structs.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\NNSupportFunctions\arm_nntables.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_time.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\Core\Include\cmsis_compiler.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_print.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_pkfb.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\startup\vectors_CM4F_iar.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\audio_circularbuffer.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\dma_buffer.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\audio_raw_pcm_buffer.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s_master_assp.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_spi.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\ql_i2stx_pe.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\ql_vr_common.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_wdt.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\audio_stereo2mono.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_pad_config.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\startup\startup_EOSS3B_IAR.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\src\audio_raw_pcm_buffer.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_uart.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\audio_encode_opus.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\s3x_clock_hal.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_rtc.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\inc\ql_audio.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_sdma.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_timer.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\src\audio_circularbuffer.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\src\ql_audio.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_filesystem.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_getkey.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_hw.h</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_wb.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_args.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Audio\src\tempFunc.c</file>
+            <file>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s_slave_assp.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\cli\inc\cli\cli_misc.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_clock.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_dfs.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_fsm_interface.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_lpm.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_cpuload.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_pi.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_qos.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_err_base.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_cpuload.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_pi.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_clock.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_dfs.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Power\inc\s3x_lpm.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\DatablockManager\src\datablk_mgr.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\DatablockManager\inc\datablk_mgr.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\D2HProtocol\src\d2h_protocol.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\ql_vr_rdsp.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\public\rdsp_voicespot_utils.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\public\rdsp_voicespot_defines.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\vs_process.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\public\rdsp_model_defines.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\inc\public\rdsp_voicespot.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\models\Alexa\EN-US\Alexa_model-standard_en-US_4_SmallVocabularyCompatible_oct_03.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\rdsp\src\ql_vr_rdsp.c</file>
+            <file>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial_bit.h</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\DatablockProcessor\src\datablk_processor.c</file>
+            <file>$PROJ_DIR$\Debug\List\stream_buffer.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\pincfg_table.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_audio.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_adc.lst</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_fsm_interface.s</file>
+            <file>$PROJ_DIR$\Debug\List\list.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_adc.s</file>
+            <file>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\DatablockProcessor\inc\datablk_processor.h</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\Control\inc\ql_controlDefines.h</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\Control\inc\ql_controlTask.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\d2h_protocol.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_uart.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\setjmp.h</file>
+            <file>$PROJ_DIR$\Debug\List\audio_raw_pcm_buffer.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$PROJ_DIR$\Debug\List\stream_buffer.i</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\DatablockProcessor\inc\process_ids.h</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_uart.s</file>
+            <file>$PROJ_DIR$\qf_1micvr_app.icf</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nn_activations_q15.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pad_config.o</file>
+            <file>$PROJ_DIR$\..\..\..\Tasks\Control\src\ql_controlTask.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\ql_time.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_time.c</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_metadata.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\crc32.c</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_error.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_PRL1000.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\W_50k.en-US.alexa.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_queue_monitor.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_test_signals.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\dbgtrace.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_ww.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_bufferedprinttask.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\ql_util.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_uart.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbgtrace.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\common.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_stackwatermark.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\dbg_queue_monitor.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite_vad.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\pryon_lite.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\lib\libpryon_lite-U.a</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\lib\libpryon_lite-PRL1000.a</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\qlsh_commands.h</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_amazon.c</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_engine_api.c</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\dbg_uart.h</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Amazon\Readme.txt</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Utils\inc\QL_Trace.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_uart.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_timer.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\heap_4.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_adc.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wb.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\port.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\float.h</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_slave_assp.lst</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_qos.i</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_amazon.s</file>
+            <file>$PROJ_DIR$\Debug\List\tempFunc.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_processor.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_pe_generic.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wdt.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\tempFunc.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_usbserial.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_rfft_fast_init_f32.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\crc32.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\host_interface.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\heap_4.lst</file>
+            <file>$PROJ_DIR$\..\inc\ql_rdsp_model.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_adc.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\heap_4.s</file>
+            <file>$PROJ_DIR$\Debug\List\queue.lst</file>
+            <file>$PROJ_DIR$\Debug\List\audio_raw_pcm_buffer.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_ffe.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_fully_connected_mat_q7_vec_q15_opt.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock_hal.o</file>
+            <file>$PROJ_DIR$\Debug\Exe\qf_vr_prototype_app.bin</file>
+            <file>$PROJ_DIR$\Debug\List\c_lib_retarget.lst</file>
+            <file>$PROJ_DIR$\Debug\List\event_groups.s</file>
+            <file>$PROJ_DIR$\Debug\List\timers.lst</file>
+            <file>$PROJ_DIR$\Debug\List\arm_relu_q15.i</file>
+            <file>$PROJ_DIR$\Debug\List\arm_rfft_fast_init_f32.lst</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\arm_nnfunctions.h</file>
+            <file>$PROJ_DIR$\Debug\List\main_dbg_cli_menu.s</file>
+            <file>$PROJ_DIR$\Debug\List\main.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\c_lib_retarget.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\W_50k.en-US.alexa.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\tasks.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\arm_relu_q15.s</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pwrcfg.i</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_mgr.lst</file>
+            <file>$PROJ_DIR$\Debug\List\dbgtrace.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\leds.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\sec_debug.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pad_config.s</file>
+            <file>$PROJ_DIR$\Debug\List\host_interface.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\timers.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pi.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_rdsp.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\exceptions.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\list.o</file>
+            <file>$PROJ_DIR$\Debug\List\ql_controlTask.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wdt.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_dfs.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_uart.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pi.i</file>
+            <file>$PROJ_DIR$\Debug\List\timers.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\freertos_static_memory.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\list.lst</file>
+            <file>$PROJ_DIR$\Debug\List\dbgtrace.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_slave_assp.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_stackwatermark.pbi</file>
+            <file>$PROJ_DIR$\Debug\Exe\qf_vr_prototype_app.out</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_master_assp.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_uart.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wdt.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_ffe.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_uart.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_mgr.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\W_50k.en-US.alexa.s</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock_hal.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_amazon.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pad_config.lst</file>
+            <file>$PROJ_DIR$\Debug\List\sec_debug.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2c.s</file>
+            <file>$PROJ_DIR$\Debug\List\d2h_protocol.lst</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_float_setup.h</file>
+            <file>$PROJ_DIR$\Debug\List\usb2serial.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\fsm_cli_table.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_uart.lst</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_mgr.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\usb2serial.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\audio_raw_pcm_buffer.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_sdma.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_audio.o</file>
+            <file>$PROJ_DIR$\Debug\List\sec_debug.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_mgr.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_sdma.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nntables.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\vectors_CM4F_iar.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\heap_4.i</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_lpm.s</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nn_activations_q15.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\watchdog.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_uart.s</file>
+            <file>$PROJ_DIR$\Debug\List\vectors_CM4F_iar.i</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_uart.i</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_mgr.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_audio.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_queue_monitor.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nn_activations_q15.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\freertos_static_memory.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_amazon.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_EOSS3B_IAR.o</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_pe_generic.s</file>
+            <file>$PROJ_DIR$\Debug\List\tempFunc.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_lpm.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_bufferedprinttask.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\timers.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_ffe.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_stackwatermark.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_rtc.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pi.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_sdma.s</file>
+            <file>$PROJ_DIR$\Debug\List\leds.i</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\core_cm4.h</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_slave_assp.i</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_dbg_cli_menu.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_timer.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_rfft_fast_init_f32.o</file>
+            <file>$PROJ_DIR$\Debug\List\freertos_static_memory.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbgtrace.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\fsm_cli_table.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s.lst</file>
+            <file>$PROJ_DIR$\Debug\List\ql_test_signals.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_rtc.lst</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\arm_nnsupportfunctions.h</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_timer.i</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_lpm.i</file>
+            <file>$PROJ_DIR$\Debug\List\exceptions.i</file>
+            <file>$PROJ_DIR$\Debug\List\watchdog.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_usbserial.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_pe_generic.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_relu_q15.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_rtc.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pwrcfg.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\ql_vr_amazon.c</file>
+            <file>$PROJ_DIR$\Debug\List\crc32.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_fsm_interface.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\CMSIS\Lib\IAR\iar_cortexM4lf_math.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_pe_generic.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\croutine.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pad_config.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\tempFunc.o</file>
+            <file>$PROJ_DIR$\Debug\List\port.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_bufferedprinttask.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock_hal.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_gpio.i</file>
+            <file>$PROJ_DIR$\Debug\List\ql_stackwatermark.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_app.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pkfb.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\c_lib_retarget.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_pkfb.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_app.i</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+            <file>$PROJ_DIR$\Debug\List\queue.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_timer.lst</file>
+            <file>$PROJ_DIR$\Debug\List\list.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_processor.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_raw_pcm_buffer.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\usb2serial.o</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_lpm.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_timer.o</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_rdsp.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_audio.lst</file>
+            <file>$PROJ_DIR$\Debug\List\port.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_controlTask.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wb.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_master_assp.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_fpga_usbserial.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_timer.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_master_assp.lst</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_dfs.lst</file>
+            <file>$PROJ_DIR$\Debug\List\usb2serial.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_uart.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wdt.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\exceptions.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_cpuload.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\qf_1micvr_app.pbd</file>
+            <file>$PROJ_DIR$\Debug\Obj\exceptions.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_adc.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_spi.lst</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_rdsp.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_slave_assp.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wb.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\host_interface.o</file>
+            <file>$PROJ_DIR$\Debug\Exe\qf_1micvr_app.out</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_qos.lst</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_app.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\watchdog.o</file>
+            <file>$PROJ_DIR$\Debug\List\datablk_processor.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_circularbuffer.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2c.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_time.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_EOSS3B_IAR.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wb.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_time.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_test_signals.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\pincfg_table.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_lpm.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\list.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_ffe.o</file>
+            <file>$PROJ_DIR$\Debug\Exe\qf_1micvr_app.bin</file>
+            <file>$PROJ_DIR$\Debug\List\arm_relu_q15.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\hif_command_table.__cstat.et</file>
+            <file>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\inc\ql_vr_amazon.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\fsm_cli_table.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_pad_config.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_controlTask.s</file>
+            <file>$PROJ_DIR$\Debug\List\event_groups.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_bufferedprinttask.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock_hal.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_gpio.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_amazon.lst</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\core_cm4_simd.h</file>
+            <file>$PROJ_DIR$\Debug\List\port.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\crc32.o</file>
+            <file>$PROJ_DIR$\Debug\List\ql_stackwatermark.i</file>
+            <file>$PROJ_DIR$\Debug\List\freertos_static_memory.i</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_cpuload.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\queue.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_raw_pcm_buffer.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_wb.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\qf_hardwaresetup.i</file>
+            <file>$PROJ_DIR$\Debug\List\vr_engine_api.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_time.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\event_groups.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_rdsp.i</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_gpio.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pi.lst</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_queue_monitor.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_nn_activations_q15.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\ql_time.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\W_50k.en-US.alexa.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_cpuload.i</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_dfs.i</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nntables.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_mgr.o</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_qos.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\time32.h</file>
+            <file>$PROJ_DIR$\Debug\List\leds.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_app.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\vr_engine_api.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_dbg_cli_menu.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_wdt.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_fully_connected_mat_q7_vec_q15_opt.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\d2h_protocol.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_amazon.i</file>
+            <file>$PROJ_DIR$\Debug\List\arm_fully_connected_mat_q7_vec_q15_opt.i</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_pwrcfg.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\sec_debug.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_spi.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_usbserial.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\datablk_processor.o</file>
+            <file>$PROJ_DIR$\Debug\List\watchdog.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\audio_circularbuffer.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\heap_4.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_ffe.s</file>
+            <file>$PROJ_DIR$\Debug\List\ql_vr_pe_generic.lst</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stddef.h</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_cpuload.s</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_fsm_interface.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_fpga_uart.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\crc32.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\main.i</file>
+            <file>$PROJ_DIR$\Debug\List\dbg_uart.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\arm_relu_q15.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\host_interface.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_amazon.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\d2h_protocol.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\tasks.i</file>
+            <file>$PROJ_DIR$\Debug\List\ql_time.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\tasks.o</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tlf.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_qos.o</file>
+            <file>$PROJ_DIR$\Debug\List\hif_command_table.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_audio.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\fsm_cli_table.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_engine_api.__cstat.et</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\W_50k.en-US.alexa.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_audio.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2c.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\watchdog.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_app.o</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_dfs.s</file>
+            <file>$PROJ_DIR$\Debug\List\arm_nntables.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbgtrace.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\exceptions.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_gpio.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\eoss3_hal_i2s_slave_assp.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\tasks.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_test_signals.o</file>
+            <file>$PROJ_DIR$\Debug\List\tasks.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\ql_vr_app.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\audio_circularbuffer.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\crc32.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\host_interface.s</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_rtc.i</file>
+            <file>$PROJ_DIR$\Debug\List\qf_hardwaresetup.s</file>
+            <file>$PROJ_DIR$\Debug\Obj\leds.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\hif_command_table.lst</file>
+            <file>$PROJ_DIR$\Debug\List\s3x_clock_hal.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_EOSS3B_IAR.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_clock.o</file>
+            <file>$PROJ_DIR$\..\..\..\Libraries\CMSIS\inc\arm_common_tables.h</file>
+            <file>$PROJ_DIR$\Debug\List\exceptions.lst</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_spi.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\stream_buffer.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\dbg_queue_monitor.o</file>
+            <file>$PROJ_DIR$\Debug\List\qf_1micvr_app.map</file>
+            <file>$PROJ_DIR$\Debug\List\timers.s</file>
+            <file>$PROJ_DIR$\Debug\List\stream_buffer.s</file>
+            <file>$PROJ_DIR$\Debug\List\usb2serial.i</file>
+            <file>$PROJ_DIR$\Debug\List\main_dbg_cli_menu.lst</file>
+            <file>$PROJ_DIR$\Debug\Obj\croutine.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\List\fsm_cli_table.i</file>
+            <file>$PROJ_DIR$\Debug\Obj\pincfg_table.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\s3x_pwrcfg.o</file>
+            <file>$PROJ_DIR$\Debug\List\c_lib_retarget.i</file>
+            <file>$PROJ_DIR$\Debug\List\audio_circularbuffer.i</file>
+            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\d2h_protocol.o</file>
+            <file>$PROJ_DIR$\Debug\List\eoss3_hal_i2s_master_assp.i</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tls.a</file>
+        </outputs>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 602 729</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\vr_engine_api.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 191 640 159 44</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 659</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 110</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 23</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 23</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\watchdog.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 671 542 100 605</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 701</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 502</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 252 243 391 677 368 254 553 15 31 266 277 9 13 503 740 53 280 281 283 264 276 17</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 677 230 391 368 676 71 277 13 15 154 243 31 39 280 740 283 252 281 201 170 254 553 266 9 503 53 264 276 17</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\arm_rfft_fast_init_f32.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 119 181 438 531</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 421</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 158</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 172 294 676 71 230 154 201 170 289 740 122 368 528 76 483 724 137</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 154 230 71 201 76 528 137 294 170 740 368 483 724 122 676 289 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\portable\IAR\ARM_CM4F_quicklogic_s3XX\portasm.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 81</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 31</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\portable\MemMang\heap_4.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 499 427 424 227</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 673</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 406</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 553 15 677 676 31 39 266 277 9 13 503 740 53 280 264 276</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 53 230 71 368 9 264 101 154 266 676 503 553 15 201 170 677 31 277 39 13 280 740 276 567</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\c_lib_retarget.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 738 202 434 564</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 226</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 442</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 391 130 553 368 251 591 677 246 247 275 526 59 194 740 709 630</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 230 154 201 553 591 526 130 368 71 247 275 59 194 391 676 251 170 39 246 630 677 709 740</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\ql_vr_pe_generic.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 51 514 675 544</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 552</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 417</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 122 71 230 154 201 170 368 528 553 567 101 361 676 591 39 341 15 677 31 266 277 9 13 503 740 53 280 283 264 276 370 281 304 137 388 401 363 391 362 30 291 366 290 320 321 326 293 323 295 319 314 242 275 526 59 194 709 630 254 299 23</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 137 283 314 230 71 101 39 740 676 113 304 266 281 677 391 295 591 299 341 567 370 23 264 9 276 401 15 321 709 194 553 361 388 363 122 368 528 154 201 170 31 277 13 280 503 53 291 366 290 293 254 362 30 320 326 323 319 242 275 526 59 630</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\main_dbg_cli_menu.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 107 440 733 529</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 660</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 90</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 567 101 122 528 291 366 290 320 321 326 293 323 295 319 401 677 15 31 266 277 9 13 503 740 53 280 242 591 275 526 59 194 709 630 341 283 264 276 40 281 391 254 388 137 398 393 35 251 246 247 314 362 30 299 363</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 15 39 230 275 251 71 290 676 13 281 283 291 366 293 677 368 393 591 388 30 567 242 314 113 321 295 266 280 503 53 709 194 264 276 254 137 299 391 553 122 401 40 398 363 154 201 170 101 528 320 326 323 319 31 277 9 740 341 526 362 59 630 35 246 247</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\qf_hardwaresetup.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 639 718 164 116</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 98</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 102</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 15 677 31 266 277 9 13 503 740 53 280 244 275 526 59 194 709 630 243 391 254 246 247 591 251 337 281 283 264 276 334 253 4 37</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 13 676 71 337 230 677 39 15 154 201 277 194 122 246 170 31 368 280 503 53 275 526 254 553 244 251 37 528 266 9 740 243 709 247 591 264 253 59 630 391 281 334 4 283 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\portable\IAR\ARM_CM4F_quicklogic_s3XX\port.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 579 631 557 77</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 54</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 410</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 503 740 230 154 201 170 53 15 677 71 368 676 31 39 266 277 9 13 280 264 276 254 553 253 275 526 59 194 709 630 337 281 283 591 334 4 335</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 71 676 283 277 709 591 39 254 154 677 280 503 275 194 264 337 740 31 368 13 15 526 4 253 335 53 230 201 170 266 9 276 553 281 334 59 630</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\host_interface.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 452 716 685 601</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 91</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 423</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 287 567 368 101 553 15 677 31 266 277 9 13 503 740 53 280 264 276 281 283 398 278 34 122 528 40 391 591 254 388 137 401 341 393 35 314 242 275 526 59 194 709 630 362 30 299 253 337 334 4 244 243 363 291 366 290 320 321 326 293 323 295 319 21 385</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 341 9 264 368 34 567 230 553 591 299 15 281 401 385 242 154 201 676 277 254 275 334 320 283 35 337 363 170 71 266 740 122 393 31 391 709 194 39 362 323 287 398 278 40 314 253 244 21 101 677 13 280 503 53 4 326 319 366 276 528 388 137 526 59 630 30 243 291 113 290 321 293 295</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\exceptions.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 541 456 725 706</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 594</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 590</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 137 15 677 31 266 277 9 13 503 740 53 280 264 276 122 528 243 391 254 246 247 275 526 59 194 709 630 591 242 341 283 245 233 251 401 244 17</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 677 275 676 277 553 194 283 264 251 368 71 39 13 230 709 137 243 245 244 31 280 503 53 391 591 15 122 246 242 233 401 17 341 154 201 170 266 9 740 276 528 254 247 526 59 630</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\pincfg_table.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 124 104 204 736</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 354</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 614</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 246 247 275 526 59 194 740 709 630 591 244 243 391 677 368 254 553</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 170 71 275 709 230 244 154 201 676 254 553 246 247 591 526 59 630 740 194 368 39 243 391 677</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\qf_hardwaresetup.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 639 718 164 116</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 98</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 102</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 15 677 31 266 277 9 13 503 740 53 280 403 244 275 526 59 194 709 630 243 391 254 246 247 591 251 337 281 283 264 276 334 253 4 37 33</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 251 676 368 254 39 71 230 740 246 122 244 37 528 266 9 243 194 15 553 403 337 33 154 201 170 677 31 277 13 280 503 53 113 275 526 709 247 591 264 253 59 630 391 281 334 4 283 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\ql_vr_app.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 566 604 562 702</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 713</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 658</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 591 341 15 677 31 266 277 9 13 503 740 53 280 283 264 276 361 370 281 388 137 401 27 275 526 59 194 709 630 278 304 303 311 298 306 242 40 391 254 398 393 35 34 363 567 101 362 30 291 366 290 320 321 326 293 323 295 319 21 314 299</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 277 341 676 401 15 59 591 264 27 71 393 553 298 21 528 677 39 13 230 281 137 290 122 370 303 242 363 368 31 280 503 53 526 740 194 254 567 291 366 293 361 388 304 311 306 40 34 314 154 201 170 283 266 9 276 630 391 398 113 321 295 275 278 709 35 362 101 30 320 326 323 319 299</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sec_debug.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 480 41 493 450</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 667</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 168</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 15 677 31 266 277 9 13 503 740 53 280 264 276 275 526 59 194 709 630 17 401</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 676 368 264 71 230 740 677 122 17 528 266 9 276 709 194 553 15 275 401 154 201 170 31 277 39 13 280 503 53 526 59 630</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 682 182 441 686</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 491</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 206</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 37 411 553 368 15 677 31 266 277 9 13 503 740 53 280 264 276 281 283 278 34 122 528 244 275 526 59 194 709 630 243 391 254 231 233 376 57 656 253 337 591 334 4 336 403 363 567 101 362 30 291 366 290 320 321 326 293 323 295 319 314 242 341 388 137 401 299 398 251 246 247 32 17 249 40 393 35 287</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 243 71 264 403 254 34 17 230 15 567 366 553 376 401 246 676 740 253 291 293 283 411 281 231 337 314 251 40 266 9 528 194 57 39 290 362 275 677 393 37 278 244 233 336 363 398 32 249 287 154 201 170 368 31 277 13 280 503 53 276 709 656 113 591 391 321 295 242 388 122 526 59 630 334 4 101 30 320 326 323 319 299 341 137 247 35</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\s3x_pwrcfg.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 446 198 666 737</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 167</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 547</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 337 15 677 368 31 266 277 9 13 503 740 53 280 281 283 264 276 591 254 553 334 253 275 526 59 194 709 630 4 242 341 338 336</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 254 71 266 740 526 15 336 368 591 242 676 264 253 230 9 283 276 275 194 39 337 338 154 201 170 281 334 4 677 31 277 13 280 503 53 553 709 341 59 630</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\leds.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 525 219 657 156</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 719</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 449</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 275 526 59 194 740 709 630 15 677 31 266 277 9 13 503 53 280 278 264 276 27</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 368 230 278 170 709 740 275 154 201 676 194 266 39 280 276 553 15 27 71 526 59 630 13 264 677 31 277 9 503 53</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\hif_command_table.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 694 128 720 65</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 620</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 46</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 35 40 15 677 71 230 154 201 170 368 676 31 39 266 277 9 13 503 740 53 280 264 276 281 283 391 591 254 553 388 137 401 398 341 393 363 567 101 362 30 291 366 290 320 321 326 293 323 295 319 287 34 122 528 385</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 264 9 368 113 676 591 341 266 230 277 34 170 137 295 71 363 283 388 35 154 201 740 15 391 321 122 401 40 287 385 281 254 398 393 677 31 39 13 280 503 53 567 291 553 366 290 293 276 362 101 30 320 326 323 319 528</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\fsm\fsm_cli_table.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 735 195 534 696</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 485</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 622</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 363 567 368 101 553 591 15 677 31 266 277 9 13 503 740 53 280 264 276 283 391 362 30 291 366 290 320 321 326 293 323 295 319</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 264 154 230 71 201 740 323 567 291 368 266 676 170 591 391 101 9 276 30 320 366 363 553 15 283 362 677 31 277 39 13 280 503 53 326 319 113 290 321 293 295</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\fsm\fsm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 50 49 183 43</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 180</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 362 591 553 71 230 154 201 170 368 30</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 30 71 591 368 553 230 362 154 201 170</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 560 628 644 213</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 188</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 707</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 244 275 526 59 194 740 709 630 243 391 677 368 254 553 246 247 591 31</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2c.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 146 481 216 700</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 127</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 608</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 677 275 526 59 194 740 709 630 243 391 254 253 15 31 266 277 9 13 503 53 280 264 276 231 246 247 591 250 281 283</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 573 228 535 409</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 186</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 596</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 240 245 17 15 677 31 266 277 9 13 503 740 53 280 281 283 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_adc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 407 359 356 211</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 595</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 426</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 275 526 59 194 740 709 630 238 254 553 368 243 391 677 253 15 31 266 277 9 13 503 53 280 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_audio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 48 70 578 492</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 699</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 83</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 137 122 528 275 526 59 194 740 709 630 253 15 677 31 266 277 9 13 503 53 280 264 276 254 242 591 341 283 236 237 299 398 370 388 401 393</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_ffe.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 430 674 473 617</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 52</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 519</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 275 526 59 194 740 709 630 231 677 254 243 391 239 253 15 31 266 277 9 13 503 53 280 264 276 337 281 283 591 334 4 246 247 248</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\event_groups.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 625 435 221 190</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 642</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 42</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 15 677 676 31 39 266 277 9 13 503 740 53 280 264 276 278 12</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 71 264 677 740 278 277 676 15 368 31 230 9 12 101 154 201 170 266 39 13 280 503 53 567 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\list.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 358 570 465 457</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 150</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 616</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 15 677 676 31 39 266 277 9 13 503 740 53 280 276</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 368 9 71 53 276 266 230 676 15 101 154 503 567 201 170 677 31 277 39 13 280 740</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\stream_buffer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 369 731 353 47</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 135</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 727</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 676 71 230 154 201 170 122 368 528 15 677 31 39 266 277 9 13 503 740 53 280 264 276 279</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 277 264 170 677 71 39 280 503 53 230 154 201 31 368 676 13 122 15 279 528 266 9 740 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_usbserial.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 543 184 669 583</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 420</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 67</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 676 71 230 154 201 170 553 368 39 274 591 15 677 31 266 277 9 13 503 740 53 280 283 264 276 275 526 59 194 709 630 243 391 254 337 281 334 253 4</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\tasks.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 689 712 80 691</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 444</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 710</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 122 528 15 677 676 31 39 266 277 9 13 503 740 53 280 264 276 278 267 553</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 503 39 53 676 280 264 553 368 71 230 267 528 266 13 122 15 278 101 154 201 170 677 31 277 9 740 276 567</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\timers.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 463 730 436 518</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 453</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 112</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 15 677 676 31 39 266 277 9 13 503 740 53 280 264 276 283 278</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 201 676 266 101 154 283 230 13 276 15 170 71 39 280 503 53 264 278 368 677 31 277 9 740 567</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\croutine.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 118 192 106 554</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 734</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 200</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 15 677 71 230 154 201 170 368 676 31 39 266 277 9 13 503 740 53 280 264 276 7</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 230 676 266 503 264 677 31 277 154 71 9 53 15 7 368 201 170 39 13 280 740 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\queue.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 220 568 428 212</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 207</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 636</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 567 71 230 154 201 170 368 101 122 528 15 677 676 31 39 266 277 9 13 503 740 53 280 264 276 283</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 39 13 677 264 277 230 101 154 71 31 676 280 122 15 283 368 201 170 528 266 9 503 740 276 567 53</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\freertos_gateware\src\eoss3_hal_fpga_uart.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 680 111 63 78</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 365</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 461</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 677 275 526 59 194 740 709 630 243 391 254 263 251 591 246 247 253 15 31 266 277 9 13 503 53 280 264 276 339 337 281 283 334 4 338</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 13 676 281 246 230 71 275 677 154 201 630 39 253 243 339 170 368 526 59 334 553 122 263 528 709 194 254 251 591 15 266 280 503 53 264 338 4 283 740 391 247 31 277 9 276 337</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\FreeRTOS\freertos_static_memory.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 634 532 141 511</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 138</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 464</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 15 677 71 230 154 201 170 368 676 31 39 266 277 9 13 503 740 53 280</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 201 230 31 71 677 277 368 170 39 13 676 266 154 280 740 15 9 503 53</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\ActivationFunctions\arm_nn_activations_q15.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 501 64 373</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 648</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 510</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 172 294 676 71 230 154 201 170 289 740 122 368 528 76 483 724 439 538 165</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\ActivationFunctions\arm_relu_q15.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 437 445 619 545</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 121</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 684</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 172 294 676 71 230 154 201 170 289 740 122 368 528 76 483 439 538 724 165</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\FullyConnectedFunctions\arm_fully_connected_mat_q7_vec_q15_opt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 665 214 199 431</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 662</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 205</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 172 294 676 71 230 154 201 170 289 740 122 368 528 76 483 439 538 724 165</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS_5\CMSIS\NN\Source\NNSupportFunctions\arm_nntables.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 653 82 704 497</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 145</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 117</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 538 172 294 676 71 230 154 201 170 289 740 122 368 528 76 483 724</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_pkfb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 563 565 85 125</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 134</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 103</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 275 526 59 194 740 709 630 248 254 553 368 243 391 677 253 15 31 266 277 9 13 503 53 280 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\startup\vectors_CM4F_iar.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 505 173 60 56</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 109</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 498</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s_master_assp.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 742 470 585 66</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 223</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 582</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 240 253 15 677 368 31 266 277 9 13 503 740 53 280 264 276 275 526 59 194 709 630 254 553 246 247 591 242 341 283 241 299 337 281 334 4</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_spi.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 726 171 597 75</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 74</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 668</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 15 677 31 266 277 9 13 503 740 53 280 281 283 264 276 401 17 275 526 59 194 709 630 249 391 243 254 253 246 247 591</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 589 472 661 217</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 459</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 418</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 275 526 59 194 740 709 630 253 15 677 368 31 266 277 9 13 503 53 280 264 276 254 553 243 391 252 281 283 17 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_pad_config.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 157 451 479 374</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 623</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 555</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 264 276 246 247 275 526 59 194 709 630 591 553</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\startup\startup_EOSS3B_IAR.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 209 176 68 513</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 722</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 610</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Audio\src\audio_raw_pcm_buffer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 489 367 429 637</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 572</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 153</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 278 264 276 553 567 101 122 528 137 388 401 341 283 300</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_uart.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 588 504 486 471</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 404</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 229</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 677 273 275 526 59 194 740 709 630 391 251 591 246 247 15 31 266 277 9 13 503 53 280 281 283 264 276 253 254 339 337 334 4 338</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\s3x_clock_hal.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 627 477 721 432</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 162</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 559</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 243 391 254 553 253 264 276 275 526 59 194 709 630 337 281 283 591 334 4</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_rtc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 717 546 537 189</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 148</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 521</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 275 526 59 194 740 709 630 233 243 391 677 254 31 401 15 266 277 9 13 503 53 280</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_sdma.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 208 524 490 496</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 178</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 225</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 275 526 59 194 740 709 630 259 254 243 391 677 15 31 266 277 9 13 503 53 280 281 283 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_timer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 539 584 569 576</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 405</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 530</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 254 275 526 59 194 740 709 630 246 247 591 258 391 677 243 244 253 15 31 266 277 9 13 503 53 280 264 276 337 281 283 334 4 34</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Audio\src\audio_circularbuffer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 739 714 62 218</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 672</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 607</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 567 101 122 528 137 15 677 31 266 277 9 13 503 740 53 280 281 283 264 276 370 341 298 363 591 391 362 30 291 366 290 320 321 326 293 323 295 319</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Audio\src\ql_audio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 355 69 161 197</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 695</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 508</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 567 101 122 528 137 314 591 15 677 31 266 277 9 13 503 740 53 280 264 276 283 391 242 275 526 59 194 709 630 341 254 362 30 388 401 299 363 291 366 290 320 321 326 293 323 295 319 398 244 243 241 253 337 281 334 4 338 34 76 483 278</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_wb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 611 581 408 600</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 638</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 73</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 275 526 59 194 740 709 630 246 247 591 250 391 677 254 243 253 15 31 266 277 9 13 503 53 280 264 276 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Audio\src\tempFunc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 58 415 515 556</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 174</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 419</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 363 567 368 101 553 591 15 677 31 266 277 9 13 503 740 53 280 264 276 283 391 362 30 291 366 290 320 321 326 293 323 295 319</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_i2s_slave_assp.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 527 115 412 599</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 467</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 708</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 553 71 230 154 201 170 368 122 528 39 676 240 275 526 59 194 740 709 630 259 254 243 391 677 253 15 31 266 277 9 13 503 53 280 264 276 337 281 283 591 334 4</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_clock.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 495 522 175 723</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 645</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 224</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 275 526 59 194 740 709 630 244 243 391 677 368 254 553 337 15 31 266 277 9 13 503 53 280 281 283 264 276 591 334 253 4 338 336</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_dfs.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 652 703 586 177</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 460</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 187</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 278 264 276 591 244 275 526 59 194 709 630 243 391 254 553 337 281 283 334 253 4 338 339 401 27</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_fsm_interface.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 94 357 679 203</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 550</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 155</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 264 276 338 591 254 553 334 30</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_lpm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 540 500 575 133</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 516</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 615</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 122 368 528 591 244 275 526 59 194 740 709 630 243 391 677 254 553 339 15 31 266 277 9 13 503 53 280 264 276 253 337 281 283 334 4 338 336 335 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_cpuload.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 651 678 635 136</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 592</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 108</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 553 71 230 154 201 170 368 39 676 15 677 31 266 277 9 13 503 740 53 280 275 526 59 194 709 630 335 338 591 254 334 278 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_pi.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 462 454 646 89</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 523</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 87</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 337 15 677 368 31 266 277 9 13 503 740 53 280 281 283 264 276 591 254 553 334 253 275 526 59 194 709 630 4 338 336</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Power\src\s3x_qos.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 413 655 603 693</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 147</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 160</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 275 526 59 194 740 709 630 337 15 677 368 31 266 277 9 13 503 53 280 281 283 264 276 591 254 553 334 253 4 338</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\DatablockManager\src\datablk_mgr.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 507 487 447 654</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 494</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 475</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 341 676 71 230 154 201 170 39 15 677 368 31 266 277 9 13 503 740 53 280 283 264 276 122 528 388 137 553 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\D2HProtocol\src\d2h_protocol.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 143 663 482 741</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 364</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 688</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 122 71 230 154 201 170 368 528 39 676 15 677 31 266 277 9 13 503 740 53 280 281 283 264 276 275 526 59 194 709 630 34 287 567 101 553 401 244 243 391 254 246 247 591 278 385</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\rdsp\src\ql_vr_rdsp.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 643 577 598 142</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 455</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 676 71 230 154 201 170 567 368 101 591 553 304 137 39 341 15 677 31 266 277 9 13 503 740 53 280 283 264 276 281 343 346 348 345 347 344 388 401 370 363 391 362 30 291 366 290 320 321 326 293 323 295 319 314 242 275 526 59 194 709 630 254 299 361 122 528 425 349</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 230 553 264 31 709 370 71 39 368 391 676 304 122 13 591 321 194 348 314 425 281 15 677 277 280 503 53 347 113 295 299 341 349 567 343 388 363 361 154 201 170 101 137 283 266 9 740 276 346 345 291 366 290 293 254 344 401 362 30 320 326 323 319 242 275 526 59 630 528</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Tasks\DatablockProcessor\src\datablk_processor.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 606 151 132 670</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 416</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 571</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 341 676 71 230 154 201 170 39 15 677 368 31 266 277 9 13 503 740 53 280 283 264 276 361 591 370 281 553 122 528 388 137 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 732 587 484 574</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 488</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 88</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 676 71 230 154 201 170 351</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Tasks\Control\src\ql_controlTask.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 458 624 196 72</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 149</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 580</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 567 101 122 528 137 363 591 15 677 31 266 277 9 13 503 740 53 280 264 276 283 391 362 30 291 366 290 320 321 326 293 323 295 319 398 275 526 59 194 709 630 242 341 241 253 254 337 281 334 4 34 76 483 388 401 278 36</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_time.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 690 649 641 93</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 612</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 609</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 275 526 59 194 740 709 630 15 677 31 266 277 9 13 503 53 280 264 276 376 57 656 233 243 391 254</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\crc32.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 179 549 422 632</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 715</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 681</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\W_50k.en-US.alexa.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 114 476 166 61</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 443</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 650</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 677 71 230 154 201 170 368</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_queue_monitor.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 647 509 140 728</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 222</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 131</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 31 15 677 368 266 277 9 13 503 740 53 280 283 264 276 553 401 393</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_test_signals.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 536 185 163 711</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 613</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 123</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 99 388 137 553 368 401 677 15 31 266 277 9 13 503 740 53 280</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_bufferedprinttask.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 86 97 84 517</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 558</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 626</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 15 677 368 31 266 277 9 13 503 740 53 280 264 276 34 122 528 283 251 591 246 247 275 526 59 194 709 630 401</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbg_uart.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 506 371 683 45</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 79</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 474</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 591 122 528 677 251 246 247 275 526 59 194 740 709 630 401 15 31 266 277 9 13 503 53 280</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\dbgtrace.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 466 448 126 95</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 533</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 705</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 385 676 71 230 154 201 170 39 401 677 368 15 31 266 277 9 13 503 740 53 280</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Utils\src\ql_stackwatermark.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 633 561 55 520</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 105</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 468</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 39 676 71 230 154 201 170 553 368 122 528 15 677 31 266 277 9 13 503 740 53 280 278 264 276</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_amazon.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 664 414 629 512</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 478</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 687</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 122 71 230 154 201 170 368 528 553 567 101 381 677 386 380 394 378 39 676 40 15 31 266 277 9 13 503 740 53 280 264 276 281 283 391 591 254 388 137 401 398 341 393 35</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_engine_api.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 169 210 215 129</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 697</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 96</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 23 621</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\qf_vr_prototype_app.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 433</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 139 431 373 497 545 531 218 637 564 632 554 741 654 670 517 728 45 95 211 492 617 78 583 213 700 409 66 599 374 125 189 496 75 576 471 600 217 190 706 511 696 227 65 601 288 156 397 396 457 686 529 736 77 81 116 197 72 520 711 93 512 702 129 544 212 723 432 136 177 203 133 89 737 693 450 513 47 691 556 518 574 56 44 61 605 551 144 193 120 692</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\ql_vr_amazon.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 664 512</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 478</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 687</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\qf_1micvr_app.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 729</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 618</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 372 431 373 497 545 531 218 637 564 632 554 741 654 670 517 728 45 95 211 492 617 78 583 213 700 409 66 599 374 125 189 496 75 576 471 600 217 190 706 511 696 227 65 601 288 156 457 686 529 736 77 81 116 197 72 520 711 93 702 544 212 723 432 136 177 203 133 89 737 693 450 513 47 691 556 518 574 56 44 605 551 144 193 743 692</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\W_50k.en-US.alexa.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 114 61</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 443</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 650</file>
+                </tool>
+            </outputs>
+        </file>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\BSP\quickfeather\src\qf_hardwaresetup.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\qf_hardwaresetup.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\fsm\fsm.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\W_50k.en-US.alexa.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_amazon.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Licensed3rdParty\amazon\src\ql_vr_engine_api.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\ql_vr_amazon.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\W_50k.en-US.alexa.c</name>
+            <tool>C-STAT</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\HAL\src\eoss3_hal_fpga_adc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_fsminterface.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_args.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_misc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_filesystem.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_stdcmds.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_hexdump.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_io.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_loop.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\cli\src\cli_platform.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_file.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_format.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_locking.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_dir.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_crc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_ioman.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_memory.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_time.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_fat.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_sys.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_stdio.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_error.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\ff_string.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\portable\QL\ff_test_apis.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\portable\common\ff_ramdisk.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FreeRTOS_FAT\portable\QL\media_drv_spi.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\debug\src\print_s3_registers.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\FPGA\src\fpga_loader.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\src\QL_SensorFramework.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\src\QL_Trace.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Accel2_FFE_Drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\BMI160\Accel_BMI160.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\LSM6DSL\Gyro_LSM6DSL.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Sensiml_ffe_drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\lib\ffe_export_section.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\lib\ffe_ipc_lib.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\riff_file\src\riff_block_pool.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\riff_file\src\riff_file.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Accel_ffe_drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Gyro_FFE_Drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\M4\LSM6DSL\Accel_LSM6DSL.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\riff_file\src\riff_misc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\Mag_FFE_Drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\riff_file\src\riff_writer.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SensorFramework\drivers\FFE\DT_FFE_Drv.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLFS\src\ql_fs.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLFS\src\freeRTOSFs_test.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLFS\src\media_drv_spi_sd.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLSPI\src\qlspi_s3.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLFS\src\mmc_s3.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\QLSPI\src\qlspi_fw_loader.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\rdsp\src\ql_vr_rdsp.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Tasks\BLE\src\ql_bleTask.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Tasks\Audio\src\ql_audioTask.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\SysFlash\src\spi_flash.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\ql_vr_amazon.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\Libraries\Amazon\src\W_50k.en-US.alexa.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+    </configuration>
+</project>

@@ -16,6 +16,6 @@ if exist "%IARBUILD_EXE%" (
    rem exit 1
 )
 
-"%IARBUILD_EXE%" qf_vr_prototype_app.ewp -clean Debug
-"%IARBUILD_EXE%" qf_vr_prototype_app.ewp -build Debug
+"%IARBUILD_EXE%" qf_1micvr_app.ewp -clean Debug
+"%IARBUILD_EXE%" qf_1micvr_app.ewp -build Debug
 

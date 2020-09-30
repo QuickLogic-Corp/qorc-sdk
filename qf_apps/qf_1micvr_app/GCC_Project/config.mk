@@ -2,7 +2,7 @@
 # Environment Configuration options for Quick-AI SDK
 #
 
-APP_NAME=qf_vr_prototype_app
+APP_NAME=qf_1micvr_app
 export APP_NAME
 
 # By default, many commands are hidden
