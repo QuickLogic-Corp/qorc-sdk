@@ -61,91 +61,6 @@
  *************************************************************/
 
 
-
-
-int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
-{
-    uint32_t current_index = 0;
-    uint32_t ram_content_size_in_words = 0;
-    volatile uint32_t* current_block_addr = 0;
-    uint32_t current_block_size_in_words = 0;
-    uint32_t current_block_iterator = 0;
-    uint8_t ram_block_num = 0;
-    // the ram content initialization array is of the form:
-    //    uint32_t   axFPGAMemInit[] = {
-    //          [0]start_addr1, [1]size_in_bytes1,
-    //          [2 ... ] values1 (size_in_bytes1/4)...
-    //          start_addr2, size_in_bytes2,
-    //          values2 (size_in_bytes2/4) ...
-    // and so on.
-    
-    // so, we do:
-    // each ram block is defined by : 1 word addr, 1 word size_in_words
-    // and size_in_bytes next words of values
-    // read the block address and block size
-    // read the next "block_size_in_words" entries from the array and write to consecutive addresses
-    // starting from the block address
-    // check if we have reached end of the array, then done.
-    // othewise, we process the next ram block in the same way as above.
-    
-    // check if there is any ram blocks to init
-    if (ram_content_size == 0) 
-    {
-        printf("no content to init ram blocks\r\n");
-        return 0;
-    }   
-    
-    
-    // calculate the total number of entries in the array
-    ram_content_size_in_words = ram_content_size/4;
-    
-    printf("ram init content size: 0x%08x, %u\r\n", ram_content_size_in_words, ram_content_size_in_words);
-        
-    
-    // process all ram blocks
-    while(1)
-    {
-        // read block_addr and block_size_in_words
-        current_block_addr = (uint32_t *)ram_content_ptr[current_index++];
-        current_block_size_in_words = ram_content_ptr[current_index++];
-        printf("ram_block: [%d], start:[0x%08x], size: [0x%08x, %u]\r\n", ram_block_num,
-                                                                     current_block_addr,
-                                                                     current_block_size_in_words,
-                                                                     current_block_size_in_words);
-                                                                     
-        // read the next "block_size_in_words" entries and write value into consecutive addresses
-        for(current_block_iterator = 0; current_block_iterator < current_block_size_in_words; current_block_iterator++)
-        {
-            *(current_block_addr) = ram_content_ptr[current_index + current_block_iterator];
-            // readback-verify
-            if(*current_block_addr != ram_content_ptr[current_index + current_block_iterator])
-            {
-                printf("addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
-                                                                        *current_block_addr,
-                                                                        ram_content_ptr[current_index + current_block_iterator]);
-                                                                        
-            }
-            current_block_addr++;
-        }
-        
-        // increment the index with the current block size
-        current_index += current_block_size_in_words;
-        
-       // check if any more ram blocks remaining:
-       if(current_index >= ram_content_size_in_words) 
-       {
-            printf("end of ram blocks initialization\r\n");
-            break;
-       }
-       
-       // otherwise, move to the next block, current_index is already at the right place.
-       ram_block_num++;
-    }
-    
-    return 1;
-}
-
-
 int load_fpga(uint32_t image_size, uint32_t* image_ptr, uint32_t ram_content_size, uint32_t* ram_content_ptr)
 {
 	unsigned int    i = 0;
@@ -250,3 +165,87 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr, uint32_t ram_content_siz
 	return 1;
 
 }
+
+
+int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
+{
+    uint32_t current_index = 0;
+    uint32_t ram_content_size_in_words = 0;
+    volatile uint32_t* current_block_addr = 0;
+    uint32_t current_block_size_in_words = 0;
+    uint32_t current_block_iterator = 0;
+    uint8_t ram_block_num = 0;
+    // the ram content initialization array is of the form:
+    //    uint32_t   axFPGAMemInit[] = {
+    //          [0]start_addr1, [1]size_in_bytes1,
+    //          [2 ... ] values1 (size_in_bytes1/4)...
+    //          start_addr2, size_in_bytes2,
+    //          values2 (size_in_bytes2/4) ...
+    // and so on.
+    
+    // so, we do:
+    // each ram block is defined by : 1 word addr, 1 word size_in_words
+    // and size_in_bytes next words of values
+    // read the block address and block size
+    // read the next "block_size_in_words" entries from the array and write to consecutive addresses
+    // starting from the block address
+    // check if we have reached end of the array, then done.
+    // othewise, we process the next ram block in the same way as above.
+    
+    // check if there is any ram blocks to init
+    if (ram_content_size == 0) 
+    {
+        printf("no content to init ram blocks\r\n");
+        return 0;
+    }   
+    
+    
+    // calculate the total number of entries in the array
+    ram_content_size_in_words = ram_content_size/4;
+    
+    printf("ram init content size: 0x%08x, %u\r\n", ram_content_size_in_words, ram_content_size_in_words);
+        
+    
+    // process all ram blocks
+    while(1)
+    {
+        // read block_addr and block_size_in_words
+        current_block_addr = (uint32_t *)ram_content_ptr[current_index++];
+        current_block_size_in_words = ram_content_ptr[current_index++];
+        printf("ram_block: [%d], start:[0x%08x], size: [0x%08x, %u]\r\n", ram_block_num,
+                                                                     current_block_addr,
+                                                                     current_block_size_in_words,
+                                                                     current_block_size_in_words);
+                                                                     
+        // read the next "block_size_in_words" entries and write value into consecutive addresses
+        for(current_block_iterator = 0; current_block_iterator < current_block_size_in_words; current_block_iterator++)
+        {
+            *(current_block_addr) = ram_content_ptr[current_index + current_block_iterator];
+            // readback-verify
+            if(*current_block_addr != ram_content_ptr[current_index + current_block_iterator])
+            {
+                printf("addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
+                                                                        *current_block_addr,
+                                                                        ram_content_ptr[current_index + current_block_iterator]);
+                                                                        
+            }
+            current_block_addr++;
+        }
+        
+        // increment the index with the current block size
+        current_index += current_block_size_in_words;
+        
+       // check if any more ram blocks remaining:
+       if(current_index >= ram_content_size_in_words) 
+       {
+            printf("end of ram blocks initialization\r\n");
+            break;
+       }
+       
+       // otherwise, move to the next block, current_index is already at the right place.
+       ram_block_num++;
+    }
+    
+    return 1;
+}
+
