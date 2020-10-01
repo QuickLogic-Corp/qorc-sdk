@@ -63,78 +63,12 @@
  *************************************************************/
 
 
-int temp_test()
-{
-    int i = 0;
-
-#if 0
-    w4 0x40004c4c 0x00000180
-    w4 0x40004610 0x00000007
-    w4 0x40004088 0x0000003f
-    w4 0x40004044 0x00000007
-    w4 0x4000404c 0x00000006
-    w4 0x40004064 0x00000001
-    w4 0x40004070 0x00000001
-    w4 0x4000411c 0x00000006
-    w4 0x40005310 0x1acce551
-    w4 0x40004054 0x00000001
-    
-    w4 0x40000300 0x00000001
-    
-    w4 0x40018000, 0x000198dd
-    w4 0x40018004, 0x000198dd
-    w4 0x40018008, 0x000198dd
-    w4 0x4001800c, 0x000198dd
-#endif
-
-    *(volatile uint32_t*)(0x40004c4c) = 0x00000180;
-    *(volatile uint32_t*)(0x40004610) = 0x00000007;
-    *(volatile uint32_t*)(0x40004088) = 0x0000003f;
-    *(volatile uint32_t*)(0x40004044) = 0x00000007;
-    *(volatile uint32_t*)(0x4000404c) = 0x00000006;
-    *(volatile uint32_t*)(0x40004064) = 0x00000001;
-    *(volatile uint32_t*)(0x40004070) = 0x00000001;
-    *(volatile uint32_t*)(0x4000411c) = 0x00000006;
-    *(volatile uint32_t*)(0x40005310) = 0x1acce551;
-    *(volatile uint32_t*)(0x40004054) = 0x00000001;
-    
-    // fpga programming comes here
-    
-    *(volatile uint32_t*)(0x40000300) = 0x00000001;
-    
-    for (i=0;i<5000; i++) {
-		PMU->GEN_PURPOSE_1  = i << 4;
-	}
-    
-    
-#if 0 // micro test
-    *(volatile uint32_t*)(0x40018000) = 0x000198dd;
-    *(volatile uint32_t*)(0x40018004) = 0x000198dd;
-    *(volatile uint32_t*)(0x40018008) = 0x000198dd;
-    *(volatile uint32_t*)(0x4001800c) = 0x000198dd;
-    
-    printf("addr: 0x%08x, read: 0x%08x\r\n", 0x40018000, *(volatile uint32_t*)(0x40018000));
-    printf("addr: 0x%08x, read: 0x%08x\r\n", 0x40018004, *(volatile uint32_t*)(0x40018004));
-    printf("addr: 0x%08x, read: 0x%08x\r\n", 0x40018008, *(volatile uint32_t*)(0x40018008));
-    printf("addr: 0x%08x, read: 0x%08x\r\n", 0x4001800c, *(volatile uint32_t*)(0x4001800c));    
-#endif
-
-    load_fpga_ram_content(axFPGAMemInit_length, axFPGAMemInit);
-    
-    *(volatile uint32_t*)(0x40000300) = 0x00000000;
-
-}
-
-
 int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 {
 	unsigned int    i = 0;
 	uint32_t        chunk_cnt=0;
 	volatile uint32_t   *gFPGAPtr = (volatile uint32_t*)image_ptr;
 	
-//	temp_test();
-//	return 1;
-
 #if 0 // FPGA PRE-PROGAMMING PART
 
 	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;
