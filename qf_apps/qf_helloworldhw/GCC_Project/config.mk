@@ -92,8 +92,8 @@ export DEPEND_PATH=output\depend
 #COMPILER_LIBS_PATH=C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Lib\IAR
 
 export APP_DIR = $(subst \GCC_Project,,${PROJ_DIR})
-TMP = $(subst \, ,${APP_DIR})
-PROJ_NAME=$(word $(words ${TMP}),${TMP})
+TMPVAR = $(subst \, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
 
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
@@ -139,8 +139,8 @@ export OUTPUT_PATH=$(PROJ_DIR)/output
 export DEPEND_PATH=$(PROJ_DIR)/output/depend
 
 export APP_DIR = $(subst /GCC_Project,,${PROJ_DIR})
-TMP = $(subst ${DIR_SEP}, ,${APP_DIR})
-PROJ_NAME=$(word $(words ${TMP}),${TMP})
+TMPVAR = $(subst ${DIR_SEP}, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
 
 FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell whereis arm-none-eabi-gcc))
