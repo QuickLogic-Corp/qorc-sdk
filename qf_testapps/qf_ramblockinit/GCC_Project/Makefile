@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs appfpga appdir
+all: _makedirs_ appfpga external_srcs appdir
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
