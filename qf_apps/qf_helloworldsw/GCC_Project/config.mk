@@ -1,9 +1,6 @@
 #
-# Environment Configuration options for Quick-AI SDK
+# Environment Configuration options for qorc-sdk
 #
-
-PROJ_NAME=qf_helloworldsw
-export PROJ_NAME
 
 # By default, many commands are hidden
 # To enable VERBOSE mode, there are TWO options
@@ -71,6 +68,7 @@ ifeq ($(BUILD_SYS),WINCMD)
 $(info Building on Windows $(BUILD_SYS))
 
 export DIR_SEP=\\
+
 
 #Configuration options for GNU Win32 GCC Toolchain
 export MKDIR=mkdir
@@ -162,6 +160,11 @@ export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
 endif
 ################
 
+APP_DIR=${PWD}
+APP_DIR := $(subst ${DIR_SEP}GCC_Project,,${APP_DIR})
+TMP = $(subst ${DIR_SEP}, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMP}),${TMP})
+export PROJ_NAME
 
 #Ouput binary name
 export OUTPUT_FILE=${PROJ_NAME}
