@@ -21,6 +21,6 @@
 *                                                          
 *=========================================================*/
 
-extern int load_fpga(uint32_t image_size, uint32_t* image_ptr);
+int load_fpga(uint32_t image_size, uint32_t* image_ptr);
 
-int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr);
+

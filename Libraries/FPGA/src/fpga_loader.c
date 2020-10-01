@@ -62,6 +62,9 @@
  *
  *************************************************************/
 
+// internal function prototype
+int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr);
+
 
 int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 {
@@ -69,22 +72,7 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	uint32_t        chunk_cnt=0;
 	volatile uint32_t   *gFPGAPtr = (volatile uint32_t*)image_ptr;
 
-	
-#if 0 // FPGA PRE-PROGAMMING PART ALT FROM JLINK
-    *(volatile uint32_t*)(0x40004c4c) = 0x00000180; // set IO_19 HIGH for FPGA Progamming Mode
-    *(volatile uint32_t*)(0x40004610) = 0x00000007; // PMU FFE_FB_PF_Software_WU FFE, FB and PF
-    //*(volatile uint32_t*)(0x40004088) = 0x0000003f; // CRU FB_SW_RESET reset all (FB_C02, FB_C09, FB_C16, FB_C21)
-    //*(volatile uint32_t*)(0x40004044) = 0x00000007; // CRU C02_CLK_GATE enable all paths 0,1,2
-    //*(volatile uint32_t*)(0x4000404c) = 0x00000006; // CRU C08_X1_CLK_GATE enable A0(bit 2), and reserved(bit 1)? should be 0x4 instead?
-    //*(volatile uint32_t*)(0x40004064) = 0x00000001; // CRU C16_CLK_GATE enable FB (bit 0)
-    //*(volatile uint32_t*)(0x40004070) = 0x00000001; // CRU C21_CLK_GATE enable FB (bit 0)
-    *(volatile uint32_t*)(0x4000411c) = 0x00000006; // CRU C09_CLK_GATE enable FB (bit 2), PIF (bit 1)
-    //*(volatile uint32_t*)(0x40005310) = 0x1acce551;	// MISC LOCK_KEY_CTRL needed for CRU C11_CLK_GATE write below
-    //*(volatile uint32_t*)(0x40004054) = 0x00000001; // CRU C11_CLK_GATE enable M4 peripherals (bit 0 - AHB/APB bridge, UART, WDT and TIMER)
-#endif // FPGA PRE-PROGAMMING PART ALT FROM JLINK
 
-	
-#if 1 // FPGA PRE-PROGAMMING PART
 	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;    
 
 	S3x_Clk_Enable(S3X_FB_02_CLK);
@@ -92,10 +80,7 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	S3x_Clk_Enable(S3X_FB_16_CLK);	
 	S3x_Clk_Enable(S3X_CLKGATE_FB);
 	S3x_Clk_Enable(S3X_CLKGATE_PIF);
-	// adding below fixes the issue, however looks like above 2 S3x_Clk_Enable() calls are ineffective?
 	*(volatile uint32_t*)(0x4000411c) = 0x00000006; // CRU C09_CLK_GATE enable FB (bit 2), PIF (bit 1)	
-#endif // FPGA PRE-PROGAMMING PART
-
 
 
 	// Configuration of CFG_CTRL for writes
@@ -105,7 +90,7 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
 
-#if 0 // this seems to be extra.
+#if 0 // this seems to be extra, not required, can be removed.
 	REG8 = 0x10;
 	REG8 = 0x20;
 	REG8 = 0x30;
@@ -150,7 +135,12 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
 	
-	load_fpga_ram_content(axFPGAMemInit_length, axFPGAMemInit);
+	if(load_fpga_ram_content(axFPGAMemInit_length, axFPGAMemInit) < 0)
+	{
+	    // indicate error: FPGA RAM initialization failed
+	    printf("FPGA RAM Blocks init failed!\r\n");
+	    return -1;
+	}
 	
 	REG18 = 0x0; // exit APB mode
 	
@@ -159,7 +149,6 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
 	
-
 	
 	REG10 = 0;
 	REG11 = 0;
@@ -179,12 +168,10 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	PMU->FB_ISOLATION = 0x0;
 	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
 
-	//printf("FPGA is programmed\r\n");
-	
+	//printf("FPGA is programmed\r\n");	
 	
 
 	return 1;
-
 }
 
 
@@ -216,7 +203,7 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
     // check if there is any ram blocks to init
     if (ram_content_size == 0) 
     {
-        printf("no content to init ram blocks\r\n");
+        //printf("no content to init ram blocks\r\n");
         return 0;
     }   
     
@@ -224,7 +211,7 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
     // calculate the total number of entries in the array
     ram_content_size_in_words = ram_content_size/4;
     
-    printf("ram init content size: 0x%08x, %u\r\n", ram_content_size_in_words, ram_content_size_in_words);
+    //printf("ram init content size: 0x%08x, %u\r\n", ram_content_size_in_words, ram_content_size_in_words);
         
     
     // process all ram blocks
@@ -233,10 +220,10 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
         // read block_addr and block_size_in_words
         current_block_addr = (uint32_t *)ram_content_ptr[current_index++];
         current_block_size_in_words = ram_content_ptr[current_index++];
-        printf("ram_block: [%d], start:[0x%08x], size: [0x%08x, %u]\r\n", ram_block_num,
-                                                                     current_block_addr,
-                                                                     current_block_size_in_words,
-                                                                     current_block_size_in_words);
+        //printf("ram_block: [%d], start:[0x%08x], size: [0x%08x, %u]\r\n", ram_block_num,
+        //                                                             current_block_addr,
+        //                                                             current_block_size_in_words,
+        //                                                             current_block_size_in_words);
                                                                      
         // read the next "block_size_in_words" entries and write value into consecutive addresses
         for(current_block_iterator = 0; current_block_iterator < current_block_size_in_words; current_block_iterator++)
@@ -248,6 +235,7 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
                 printf("addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
                                                                         *current_block_addr,
                                                                         ram_content_ptr[current_index + current_block_iterator]);
+                return -1;
                                                                         
             }
             current_block_addr++;
@@ -259,7 +247,7 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
        // check if any more ram blocks remaining:
        if(current_index >= ram_content_size_in_words) 
        {
-            printf("end of ram blocks initialization\r\n");
+            //printf("end of ram blocks initialization\r\n");
             break;
        }
        
@@ -267,6 +255,7 @@ int load_fpga_ram_content(uint32_t ram_content_size, uint32_t* ram_content_ptr)
        ram_block_num++;
     }
     
+    // indicate all ok
     return 1;
 }
 
