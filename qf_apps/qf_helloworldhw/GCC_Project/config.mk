@@ -91,6 +91,11 @@ export OUTPUT_PATH=output
 export DEPEND_PATH=output\depend
 #COMPILER_LIBS_PATH=C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Lib\IAR
 
+export APP_DIR = $(subst \GCC_Project,,${PROJ_DIR})
+TMP = $(subst \, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMP}),${TMP})
+export PROJ_NAME
+
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
 $(info using recursive search)
@@ -133,6 +138,11 @@ export PROJ_ROOT=$(PROJ_DIR)/../../..
 export OUTPUT_PATH=$(PROJ_DIR)/output
 export DEPEND_PATH=$(PROJ_DIR)/output/depend
 
+export APP_DIR = $(subst /GCC_Project,,${PROJ_DIR})
+TMP = $(subst ${DIR_SEP}, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMP}),${TMP})
+export PROJ_NAME
+
 FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell whereis arm-none-eabi-gcc))
 export TC_PATH = $(subst /arm-none-eabi-gcc,,$(FIND_TOOL_DIR))
 
@@ -160,18 +170,10 @@ export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
 endif
 ################
 
-APP_DIR=${PWD}
-$(info APP_DIR ${APP_DIR})
-APP_DIR := $(subst ${DIR_SEP}GCC_Project,,${APP_DIR})
-$(info APP_DIR ${APP_DIR})
-TMP = $(subst ${DIR_SEP}, ,${APP_DIR})
-PROJ_NAME=$(word $(words ${TMP}),${TMP})
-$(info PROJ_NAME ${PROJ_NAME})
-export PROJ_NAME
+$(info PROJ_NAME = ${PROJ_NAME})
 
 #Ouput binary name
 export OUTPUT_FILE=${PROJ_NAME}
 
 #Libraries to include
 export LIBS=
-
