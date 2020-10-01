@@ -245,13 +245,12 @@ This section describes how to build and run the qf_helloworldsw project.
   10. Now LED should be blue for 500ms, green for 500ms and red for 1000ms and repeat
   
 ## Creating an application
-   To create an application start by cloning the existing `helloworldsw` application project.
-   `create_newapp.py` python script may be used to quickly create a new application.
-   
-   Run the following command from a command shell in the qf_apps/ folder.  
-   ```python create_newapp.py --source qf_helloworldsw --dest MyNewApplication```  
-   The above would create a folder named *MyNewApplication* with sources and project workspaces
-   cloned from qf_helloworldsw.
+   To create an application start by choosing an existing application that is a close match
+   to your end goal and simply copy the entire application directory giving the name you want.
+   The make files assume that the application directory is two levels from teh topl-level directory.
+   For example qorc-sdk/qf_apps/<application-directory> so you can either create your own project
+   directory and copy the app there, for example qorc-sdk/qf_myprojects/qf_myapp, or put it in one
+   of the existin project directories, for example qorc-sdk/qf_apps/qf_myapp
    
 
 [QORC-HDK]: https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/
