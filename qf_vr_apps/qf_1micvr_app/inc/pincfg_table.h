@@ -14,41 +14,16 @@
  * limitations under the License.
  *==========================================================*/
 
-/*
- * s3x_cpuload.c
- *
- * (C) Copyrighted 2015 Quicklogic Inc.
- */
+#ifndef PINCFG_TABLE_H
+#define PINCFG_TABLE_H
 
-#include <stdio.h>
 #include "Fw_global_config.h"
-#include "FreeRTOS.h"
-#include "eoss3_dev.h"
-#include "s3x_cpuload.h"
-#include "s3x_dfs.h"
-#include "timers.h"
+#include "eoss3_hal_gpio.h"
+#include "eoss3_hal_pad_config.h"
 
-static volatile uint32_t ticksSleeptime;
+extern PadConfig pincfg_table[] ;
+extern GPIOCfgTypeDef  gpiocfg_table[] ;
+extern int sizeof_pincfg_table ;
+extern int sizeof_gpiocfg_table;
 
-uint16_t DFS_cpuload(void)
-{  
-    uint16_t    xcpuload;
-    uint16_t    index = DFS_Get_Curr_Policy();
-    uint32_t    ticksWaketime = dfs_node[index].step_width - ticksSleeptime; 
-
-    xcpuload = (uint16_t)(100.0f*((float)ticksWaketime)/((float)dfs_node[index].step_width));
-    ticksSleeptime = 0;
-    return xcpuload;
-}
-
-void DFS_updatesleepticks(uint32_t ticks)
-{
-    ticksSleeptime += ticks;
-    return;
-}
-
-void DFS_resetsleepticks(void)
-{
-    ticksSleeptime = 0;
-    return;
-}
+#endif /* PINCFG_TABLE_H */

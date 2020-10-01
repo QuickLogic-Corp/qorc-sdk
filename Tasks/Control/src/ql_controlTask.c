@@ -53,7 +53,7 @@
 
 // Include fsm data structures, which are a 'c' file
 
-#include "fsm.c"
+#include "fsm_tables.h"
 xTaskHandle     xHandleTaskControl;
 QueueHandle_t   xHandleQueueControl;
 int             xQueueControlOverflow;

@@ -191,7 +191,7 @@ static unsigned int compute_fbrd(unsigned int clock, unsigned int baud)
     float fbrd;
 
     fbrd = ((float)clock / divider) - (clock/divider);
-    fbrd = fbrd * 64 + 0.5;
+    fbrd = fbrd * 64 + 0.5f;
     return (unsigned int)fbrd;
 }
 

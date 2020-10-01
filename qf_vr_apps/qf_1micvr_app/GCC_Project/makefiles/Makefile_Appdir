@@ -1,0 +1,15 @@
+
+APP_SRCS:=$(wildcard $(APP_DIR)/*.c)
+
+#$(info APP_PATTERN $(APP_DIR)/*.c)
+#$(info APP_SRCS $(APP_SRCS))
+#$(info APP_DIR $(APP_DIR))
+#$(info APP_SRCS $(APP_SRCS))
+
+SRCS:=$(notdir $(APP_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(APP_DIR)
+
+include $(COMMON_STUB)
+
+
