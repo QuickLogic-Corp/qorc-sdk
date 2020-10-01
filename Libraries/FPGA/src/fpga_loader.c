@@ -68,34 +68,36 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	unsigned int    i = 0;
 	uint32_t        chunk_cnt=0;
 	volatile uint32_t   *gFPGAPtr = (volatile uint32_t*)image_ptr;
-	
-#if 0 // FPGA PRE-PROGAMMING PART
 
-	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;
+	
+#if 0 // FPGA PRE-PROGAMMING PART ALT FROM JLINK
+    *(volatile uint32_t*)(0x40004c4c) = 0x00000180; // set IO_19 HIGH for FPGA Progamming Mode
+    *(volatile uint32_t*)(0x40004610) = 0x00000007; // PMU FFE_FB_PF_Software_WU FFE, FB and PF
+    //*(volatile uint32_t*)(0x40004088) = 0x0000003f; // CRU FB_SW_RESET reset all (FB_C02, FB_C09, FB_C16, FB_C21)
+    //*(volatile uint32_t*)(0x40004044) = 0x00000007; // CRU C02_CLK_GATE enable all paths 0,1,2
+    //*(volatile uint32_t*)(0x4000404c) = 0x00000006; // CRU C08_X1_CLK_GATE enable A0(bit 2), and reserved(bit 1)? should be 0x4 instead?
+    //*(volatile uint32_t*)(0x40004064) = 0x00000001; // CRU C16_CLK_GATE enable FB (bit 0)
+    //*(volatile uint32_t*)(0x40004070) = 0x00000001; // CRU C21_CLK_GATE enable FB (bit 0)
+    *(volatile uint32_t*)(0x4000411c) = 0x00000006; // CRU C09_CLK_GATE enable FB (bit 2), PIF (bit 1)
+    //*(volatile uint32_t*)(0x40005310) = 0x1acce551;	// MISC LOCK_KEY_CTRL needed for CRU C11_CLK_GATE write below
+    //*(volatile uint32_t*)(0x40004054) = 0x00000001; // CRU C11_CLK_GATE enable M4 peripherals (bit 0 - AHB/APB bridge, UART, WDT and TIMER)
+#endif // FPGA PRE-PROGAMMING PART ALT FROM JLINK
+
+	
+#if 1 // FPGA PRE-PROGAMMING PART
+	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;    
 
 	S3x_Clk_Enable(S3X_FB_02_CLK);
 	S3x_Clk_Enable(S3X_A0_08_CLK);
-	S3x_Clk_Enable(S3X_FB_16_CLK);
+	S3x_Clk_Enable(S3X_FB_16_CLK);	
 	S3x_Clk_Enable(S3X_CLKGATE_FB);
 	S3x_Clk_Enable(S3X_CLKGATE_PIF);
-	
+	// adding below fixes the issue, however looks like above 2 S3x_Clk_Enable() calls are ineffective?
+	*(volatile uint32_t*)(0x4000411c) = 0x00000006; // CRU C09_CLK_GATE enable FB (bit 2), PIF (bit 1)	
 #endif // FPGA PRE-PROGAMMING PART
 
-#if 1 // FPGA PRE-PROGAMMING PART ALT
-    *(volatile uint32_t*)(0x40004c4c) = 0x00000180;
-    *(volatile uint32_t*)(0x40004610) = 0x00000007;
-    *(volatile uint32_t*)(0x40004088) = 0x0000003f;
-    *(volatile uint32_t*)(0x40004044) = 0x00000007;
-    *(volatile uint32_t*)(0x4000404c) = 0x00000006;
-    *(volatile uint32_t*)(0x40004064) = 0x00000001;
-    *(volatile uint32_t*)(0x40004070) = 0x00000001;
-    *(volatile uint32_t*)(0x4000411c) = 0x00000006;
-    *(volatile uint32_t*)(0x40005310) = 0x1acce551;
-    *(volatile uint32_t*)(0x40004054) = 0x00000001;
-#endif // FPGA PRE-PROGAMMING PART ALT
 
 
-#if 1 // FPGA PROGAMMING PART
 	// Configuration of CFG_CTRL for writes
 	CFG_CTL_CFG_CTL = 0x0000bdff ;
 	// wait some time for fpga to get reset pulse
@@ -139,9 +141,8 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	for (i=0;i<5000; i++) {
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
-#endif	// FPGA PROGRAMMING PART
 
-#if 1 // FPGA MEM INITIALIZATION PART
+
 	REG18 = 0x1; // APB mode
 	
 	// required wait time 
@@ -158,15 +159,10 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
 	
-#endif // FPGA MEM INITIALIZATION PART
+
 	
 	REG10 = 0;
-
-
 	REG11 = 0;
-
-
-
 	REG12 = 0;
 	REG13 = 0;
 	REG14 = 0x90;

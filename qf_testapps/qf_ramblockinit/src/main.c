@@ -69,8 +69,8 @@ int main(void)
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(axFPGABitStream_length, axFPGABitStream);     // Load bitstream into FPGA
-    S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
-    S3x_Clk_Enable(S3X_FB_16_CLK);
+    //S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
+    //S3x_Clk_Enable(S3X_FB_16_CLK);
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
