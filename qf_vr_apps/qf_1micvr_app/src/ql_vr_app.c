@@ -361,7 +361,7 @@ void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int 
    if (isStreamingOn())
    {
      o_ql_audio_meta_data.n_rdsp_length_estimate = p_ql_vr_evt->startFramesBack;
-     o_ql_audio_meta_data.a_kephrase_score = p_ql_vr_evt->score;
+     o_ql_audio_meta_data.a_keyphrase_score = p_ql_vr_evt->score;
      o_ql_audio_meta_data.n_keyphrase_triggered_index = p_ql_vr_evt->len_phrase_text;
      o_ql_audio_meta_data.n_keyphrase_end_index =  p_ql_vr_evt->startFramesBack;
      
@@ -379,7 +379,7 @@ void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int 
    num_blocks = truncate_audio_circularbuffer(num_blocks);
   
    o_ql_audio_meta_data.n_keyphrase_count++;
-   o_ql_audio_meta_data.a_kephrase_score = p_ql_vr_evt->score;
+   o_ql_audio_meta_data.a_keyphrase_score = p_ql_vr_evt->score;
    o_ql_audio_meta_data.n_keyphrase_end_index = num_blocks * AUDIO_BLOCK_SIZE_IN_SAMPLES;
    o_ql_audio_meta_data.n_keyphrase_start_index = o_ql_audio_meta_data.n_keyphrase_end_index
                                                 - p_ql_vr_evt->startFramesBack;

@@ -91,9 +91,9 @@ void verify_cwwv_pretext_data(tAudioTaskState *pAudioTaskState)
         pAudioTaskState->debug_index = 1;
     }
 }
-#define VERIFY_CWWV_PRETECT verify_cwwv_pretext_data
+#define VERIFY_CWWV_PRETEXT verify_cwwv_pretext_data
 #else
-#define VERIFY_CWWV_PRETECT
+#define VERIFY_CWWV_PRETEXT
 #endif
 
 static e_ql_vr_status ql_audio_process_impl(tAudioTaskState *pAudioTaskState, t_ql_audio_stream *p_mic, t_ql_audio_stream *p_ref)
@@ -145,7 +145,7 @@ static e_ql_vr_status ql_audio_process_impl(tAudioTaskState *pAudioTaskState, t_
 #ifdef ENABLE_I2S_CWWV
         if(KP_STREAM_OK == pAudioTaskState->KP_stream)
         {
-            VERIFY_CWWV_PRETECT(pAudioTaskState);
+            VERIFY_CWWV_PRETEXT(pAudioTaskState);
             // start from current o/p buf index - Alexa len - Pretext len
             outBuf = (int16_t *)Out_buf[get_pretext_start_offset(pAudioTaskState)];
             pAudioTaskState->i2s_streaming_index++;

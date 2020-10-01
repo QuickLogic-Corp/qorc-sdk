@@ -15,7 +15,7 @@ state. Audio data is processed by the VR engine to scan for the keyword.
 
 3. Reset the board to start running the 1-Mic VR application.
 
-## Building using a 3rd part VR engine
+## Building using a 3rd party VR engine
 
 The default project does not provide any voice recognition engine, consequently
 no keyword detection will be performed. To plug-in the desired 3rd party engine

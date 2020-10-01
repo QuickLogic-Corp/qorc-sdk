@@ -1,11 +1,11 @@
-This is EclipseReadme.txt file for creating and building QuickAI Projects using
+This is EclipseReadme.txt file for creating and building qorc-sdk Projects using
 GCC Tools and the provided Makefiles using Eclipse IDE. 
 
 This document describes creating an Eclipse project for builiding "only" using
 the provided makefiles and debugging using J-Link.
 
 See the "Docs/QuickAI-Eclipse-IDE.docx" for more detailed description of setting
-up and using Eclipse Tools with QuickAI-SDK projects as well as creating new projects
+up and using Eclipse Tools with qorc-sdk projects as well as creating new projects
 without any makefiles.
 
 
@@ -13,7 +13,7 @@ Overview:
 ========
 
 This document details the installation procedure to setup an Eclipse IDE based 
-development environment for QuickAI projects and provides instructions for migrating
+development environment for qorc-sdk projects and provides instructions for migrating
 existing Makefile projects to Eclipse IDE environment.
 
 Requirements:

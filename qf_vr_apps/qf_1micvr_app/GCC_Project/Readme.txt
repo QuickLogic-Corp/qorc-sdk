@@ -1,4 +1,4 @@
-This is Readme.txt file for creating and building QuickAI Projects using 
+This is Readme.txt file for creating and building qorc-sdk Projects using 
 open-source GCC Tools and the provided Makefiles. 
 
 Requirements:
@@ -12,7 +12,7 @@ The following open-source tools are needed in order to build using Makefiles.
 
 Overview:
 
-The following is a brief description of Makefile Architecture used for QuickAI SDK.
+The following is a brief description of Makefile Architecture used for qorc-sdk.
 
     There are 2 configuration setup files and a main Makefile under GCC_Project directory.
  
