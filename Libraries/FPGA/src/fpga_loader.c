@@ -77,10 +77,9 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 
 	S3x_Clk_Enable(S3X_FB_02_CLK);
 	S3x_Clk_Enable(S3X_A0_08_CLK);
-	S3x_Clk_Enable(S3X_FB_16_CLK);	
+	S3x_Clk_Enable(S3X_FB_16_CLK);
 	S3x_Clk_Enable(S3X_CLKGATE_FB);
 	S3x_Clk_Enable(S3X_CLKGATE_PIF);
-	*(volatile uint32_t*)(0x4000411c) = 0x00000006; // CRU C09_CLK_GATE enable FB (bit 2), PIF (bit 1)	
 
 
 	// Configuration of CFG_CTRL for writes

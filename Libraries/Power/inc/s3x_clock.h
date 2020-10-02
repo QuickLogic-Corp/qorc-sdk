@@ -410,7 +410,7 @@ typedef enum
 {
     C09_CLKGATE_AUDIO_APB = 0x1,
     C09_CLKGATE_PIF = 0x2,
-    C09_CLKGATE_FB = 0x8, //TIM TODO Should this be 0x4?
+    C09_CLKGATE_FB = 0x4,
 } C09_ClkGate;
 
 /*! \enum C10ClkGate
