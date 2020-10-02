@@ -4,7 +4,7 @@
 export RTL_TOP_MODULE=top
 
 #
-# GCC Configuration options for Quick-AI SDK
+# GCC Configuration options for QORC SDK
 #
 
 DASH_G=-gdwarf-4
@@ -34,16 +34,16 @@ export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
         -DGCC_MAKE
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
-export LIBSENSIML_DIR=$(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
+export LIBSENSIML_DIR=$(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS$(DIR_SEP)lib$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/inc" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/IOP_MQTTSN/inc" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/sensiml/inc" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/knowledgepack/inc" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/ad7476/inc" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/sensor_audio/inc" \
+                 -I"$(APP_DIR)/inc" \
+                 -I"$(APP_DIR)/IOP_MQTTSN/inc" \
+                 -I"$(APP_DIR)/knowledgepack/sensiml/inc" \
+                 -I"$(APP_DIR)/knowledgepack/inc" \
+                 -I"$(APP_DIR)/ad7476/inc" \
+                 -I"$(APP_DIR)/sensor_audio/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
                  -I"$(PROJ_ROOT)/s3-gateware/adc_ad7476_if/rtl" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
@@ -84,7 +84,7 @@ export CFLAGS= $(MACROS) \
 
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
 	$(DASH_O) $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections \
-	$(DASH_G) -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
+	$(DASH_G) -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
@@ -112,7 +112,7 @@ export CLI_DIR        = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
 export QLFS_DIR       = $(LIB_DIR)$(DIR_SEP)QLFS$(DIR_SEP)src
 export MQTTSN_DIR     = $(LIB_DIR)$(DIR_SEP)MQTTSN$(DIR_SEP)src
 export MQTTSN_SML_DIR = $(LIB_DIR)$(DIR_SEP)MQTTSN_SML$(DIR_SEP)src
-export MAIN_DIR       = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)src
+export MAIN_DIR       = $(APP_DIR)$(DIR_SEP)src
 export FREERTOS_FAT_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT
 export FREERTOS_FAT_COMMON_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)common
 export FREERTOS_FAT_QL_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)QL
@@ -133,5 +133,5 @@ export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476
 export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)adc_ad7476_if$(DIR_SEP)rtl
 endif
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
-export SENSOR_AD7476_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)ad7476$(DIR_SEP)src
-export SENSOR_AUDIO_DIR = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)sensor_audio$(DIR_SEP)src
+export SENSOR_AD7476_DIR = $(APP_DIR)$(DIR_SEP)ad7476$(DIR_SEP)src
+export SENSOR_AUDIO_DIR = $(APP_DIR)$(DIR_SEP)sensor_audio$(DIR_SEP)src

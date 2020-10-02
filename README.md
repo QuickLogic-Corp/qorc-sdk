@@ -87,7 +87,7 @@ responsibility is on the user to get the right power domains enabled, and the
 clocks set correctly.
 
 
-## Example \#1a: M4 only – qf_helloworldsw
+## Lesson \#1a: M4 only – qf_helloworldsw
 
 This section describes how to build and run the qf_helloworldsw project.
 
@@ -129,7 +129,7 @@ This section describes how to build and run the qf_helloworldsw project.
    12. You can try these by typing red (should turn the red led off), green and so forth.
        Note that if you are level 0, you can access submenu elements by typing `submenuname submenu action`, which is what we did earlier when we typed `diag red`
 
-## Example \#1b: M4 only – modify qf_helloworldsw
+## Lesson \#1b: M4 only – modify qf_helloworldsw
   1. Using the editor of your choice, edit `qorc-sdk/qf_apps/qf_helloworldsw/src/main.c`.
      Change the line  
      ```dbg_str(“\n\nHello world !!\n\n”)```  
@@ -151,7 +151,7 @@ This section describes how to build and run the qf_helloworldsw project.
   7. Run PuTTY or some other terminal emulator and attach to the QuickFeather (NOTE: the port name will most probably be different than the port name used for programming).
   8. You should see a banner and then your changed message.
 
-## Example #2a: FPGA only – qf_helloworldhw
+## Lesson #2a: FPGA only – qf_helloworldhw
   1. Navigate to qf_helloworldsw build folder and run make.  
      ```
      cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_Project
@@ -188,7 +188,7 @@ This section describes how to build and run the qf_helloworldsw project.
         .init_state = INIT_STATE(F_48MHZ, 1, INIT_GATE_OFF),},
         ```
 
-## Example \#2b: FPGA only – modify qf_helloworldhw
+## Lesson \#2b: FPGA only – modify qf_helloworldhw
   1. Using the editor of your choice, edit qf_apps/qf_helloworldhw/fpga/rtl/helloworldfpga.v
      1. Change the terminal counter from 4000000 to 2000000
      2. Change the assign greenled = led to assign redled = led
@@ -245,13 +245,12 @@ This section describes how to build and run the qf_helloworldsw project.
   10. Now LED should be blue for 500ms, green for 500ms and red for 1000ms and repeat
   
 ## Creating an application
-   To create an application start by cloning the existing `helloworldsw` application project.
-   `create_newapp.py` python script may be used to quickly create a new application.
-   
-   Run the following command from a command shell in the qf_apps/ folder.  
-   ```python create_newapp.py --source qf_helloworldsw --dest MyNewApplication```  
-   The above would create a folder named *MyNewApplication* with sources and project workspaces
-   cloned from qf_helloworldsw.
+   To create an application start by choosing an existing application that is a close match
+   to your end goal and simply copy the entire application directory giving the name you want.
+   The make files assume that the application directory is two levels from teh topl-level directory.
+   For example qorc-sdk/qf_apps/<application-directory> so you can either create your own project
+   directory and copy the app there, for example qorc-sdk/qf_myprojects/qf_myapp, or put it in one
+   of the existin project directories, for example qorc-sdk/qf_apps/qf_myapp
    
 
 [QORC-HDK]: https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/
