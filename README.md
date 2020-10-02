@@ -247,10 +247,10 @@ This section describes how to build and run the qf_helloworldsw project.
 ## Creating an application
    To create an application start by choosing an existing application that is a close match
    to your end goal and simply copy the entire application directory giving the name you want.
-   The make files assume that the application directory is two levels from teh topl-level directory.
+   The make files assume that the application directory is two levels from the top-level directory.
    For example qorc-sdk/qf_apps/<application-directory> so you can either create your own project
    directory and copy the app there, for example qorc-sdk/qf_myprojects/qf_myapp, or put it in one
-   of the existin project directories, for example qorc-sdk/qf_apps/qf_myapp
+   of the existing project directories, for example qorc-sdk/qf_apps/qf_myapp
    
 
 [QORC-HDK]: https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/
