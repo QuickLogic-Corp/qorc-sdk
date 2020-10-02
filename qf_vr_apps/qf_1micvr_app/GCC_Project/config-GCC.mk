@@ -1,8 +1,13 @@
 #
+# Symbiflow options for QORC SDK
+#
+export RTL_TOP_MODULE=
+
+#
 # GCC Configuration options for Quick-AI SDK
 #
 
-DASH_G=-g
+DASH_G=-gdwarf-4
 DASH_O=-Os
 
 #Assembler flags
@@ -33,8 +38,8 @@ export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS_5$(DIR_SE
 export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)lib
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
-                 -I"$(PROJ_ROOT)/qf_vr_apps/$(APP_NAME)/inc" \
-                 -I"$(PROJ_ROOT)/qf_vr_apps/$(APP_NAME)/fsm" \
+                 -I"$(APP_DIR)/inc" \
+                 -I"$(APP_DIR)/fsm" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
@@ -64,7 +69,7 @@ export CFLAGS= $(MACROS) \
 
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
 	$(DASH_O) $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections \
-	$(DASH_G) -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
+	$(DASH_G) -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).out" \
@@ -84,8 +89,8 @@ export ELF2BIN_OPTIONS=-O binary
 #
 export COMMON_STUB =$(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
 
-export APP_DIR          = $(PROJ_ROOT)$(DIR_SEP)qf_vr_apps$(DIR_SEP)$(APP_NAME)$(DIR_SEP)src
-export FSM_DIR          = $(PROJ_ROOT)$(DIR_SEP)qf_vr_apps$(DIR_SEP)$(APP_NAME)$(DIR_SEP)fsm
+export MAIN_DIR         = $(APP_DIR)$(DIR_SEP)src
+export FSM_DIR          = $(APP_DIR)$(DIR_SEP)fsm
 
 export QUICKFEATHER_DIR = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
 export HAL_DIR          = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
