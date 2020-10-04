@@ -25,14 +25,14 @@ How to connect the GND is obvious (use J3.1, or J3.13, or J8.16).
 ### VCC
 The datasheet specifies that VCC must be 5V, not 3.3V – so how are we going to get that? Since the board is powered by USB, and the normal USB voltage is 5V, perhaps VBAT (J2.1) is 5V?  We can look at the schematic to find out.
 Zooming in on J2 we find that J2.1 is connected to VBAT:
-![qf_pm2dot5aqi qf-schematic-J2][qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-J2]
+![qf_pm2dot5aqi qf-schematic-J2](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-J2.png)
 And VBAT is driven by the charger:
-![qf_pm2dot5aqi qf-schematic-VBAT][qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-VBAT]
+![qf_pm2dot5aqi qf-schematic-VBAT](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-VBAT.png)
 So, it is unlikely to be 5V, more likely to be 4.2V.  A quick measurement shows it to be 4.3V on my QuickFeather.  We’ll just have to see if that is good enough, otherwise we have the tricky task of finding VBUS on the board as soldering a wire to it.
 
 ### SET
 We want to connect this to a GPIO so that it is under software control.  However, a search of the User Guide results in no matches. So, that means we need to go to the S3 documentation.  We could go to the datasheet, but the S3 TRM (Technical Reference Manual) has a lot more information, so let’s use that.
-![qf_pm2dot5aqi s3-TRM][qf_pm2dot5aqi/images/qf_pm2dot5aqi-s3-TRM]
+![qf_pm2dot5aqi s3-TRM](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-s3-TRM.png)
 Where we learn that GPIO[0] shares IO_6 (pad 6) with several other signals.  
 The table in pincfg.c is used to control which function drives the IO.  
 Continuing the search, we can build the following table:
@@ -50,7 +50,7 @@ Continuing the search, we can build the following table:
 Notice that each GPIO can drive two different pins.  The table in pincfg.c is used to select which of the two IOs is driven by the GPIO.
 Now we need to understand which pins on the QuickFeather are driven by the GPIO and if there is and conflicting function. 
 The QuickFeather User Guide has a useful table that helps with this:
-![qf_pm2dot5aqi qf-ug-iotable][qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-ug-iotable]
+![qf_pm2dot5aqi qf-ug-iotable](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-ug-iotable.png)
 From this we can see that GPIO0 can drive IO_6, which is connected to the User Button and J8.10. 
 GPIO1 can drive IO_9, but the table is silent about IO_9 which presumably means that it has some other use. 
 Filling out the complete table we get:
@@ -82,6 +82,7 @@ So now we can create our wiring table:
 |4	        |RX	                |J3.2	                |TX *   |
 |5	        |TX	                |J3.3	                |RX     |
 |6	        |RESET	            |J8.3	                |GPIO7  |
+
 •	Note that you must be careful with RX and TX.  Does RX mean that this pin receives, or that it expects to drive a receiver?  
 In other words, do you connect RX to RX, or RX to TX.
 
@@ -90,17 +91,17 @@ Since this is a purely software app, a good starting point is qf_helloworldsw.  
 ### Add
 pm2dot5monitortask.c
 ### Modify
-Main.c
-Main_dbg_cli_menu.c
-Copy and modify qf_hardwaresetup.c
-Pincfg_table.c
-Fw_global_config.h
+>Main.c
+>Main_dbg_cli_menu.c
+>Copy and modify qf_hardwaresetup.c
+>Pincfg_table.c
+>Fw_global_config.h
 
 ## Computing AQI
 https://cfpub.epa.gov/airnow/index.cfm?action=aqibasics.aqi
 
-![qf_pm2dot5aqi aqi-def][images/qf_pm2dot5aqi-aqi-def]
-![qf_pm2dot5aqi aqi-normalize][images/qf_pm2dot5aqi-aqi-normalize]
+![qf_pm2dot5aqi aqi-def](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-def.png)
+![qf_pm2dot5aqi aqi-normalize](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-normalize.png)
 
 Since these are normalized values, with 100 set as the acceptable limit, we need to know the mapping.  
 For the US the curve is defined by the EPA and can be found at 
@@ -112,6 +113,7 @@ The first part of the table is:
 This is a piece-wise linear table, such that values from the range 0-12 are mapped onto the range 0-50, and those from the range 12 to 35.4 are mapped onto 50 to 100.
 The condensed table is:
 |PM2.5 ug/m^3	|AQI	|Meaning (if less than AQI)	|AQI Color	|LED Color  |
+| :---:         | :---: |   ---                     | :---:     | :---:     |
 |0	            |0      |                           |           |           |			
 |12	            |50	    |Good	                    |Green	    |Green      |
 |35.4	        |100	|Moderate	                |Yellow	    |Blue       |
