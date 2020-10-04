@@ -33,6 +33,7 @@ So, it is unlikely to be 5V, more likely to be 4.2V.  A quick measurement shows 
 ### SET
 We want to connect this to a GPIO so that it is under software control.  However, a search of the User Guide results in no matches. So, that means we need to go to the S3 documentation.  We could go to the datasheet, but the S3 TRM (Technical Reference Manual) has a lot more information, so let’s use that.
 ![qf_pm2dot5aqi s3-TRM](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-s3-TRM.png)
+
 Where we learn that GPIO[0] shares IO_6 (pad 6) with several other signals.  
 The table in pincfg.c is used to control which function drives the IO.  
 Continuing the search, we can build the following table:
@@ -50,6 +51,7 @@ Continuing the search, we can build the following table:
 Notice that each GPIO can drive two different pins.  The table in pincfg.c is used to select which of the two IOs is driven by the GPIO.
 Now we need to understand which pins on the QuickFeather are driven by the GPIO and if there is and conflicting function. 
 The QuickFeather User Guide has a useful table that helps with this:
+
 ![qf_pm2dot5aqi qf-ug-iotable](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-ug-iotable.png)
 From this we can see that GPIO0 can drive IO_6, which is connected to the User Button and J8.10. 
 GPIO1 can drive IO_9, but the table is silent about IO_9 which presumably means that it has some other use. 
@@ -86,21 +88,25 @@ So now we can create our wiring table:
 •	Note that you must be careful with RX and TX.  Does RX mean that this pin receives, or that it expects to drive a receiver?  
 In other words, do you connect RX to RX, or RX to TX.
 
-##Creating the program
+##
+Creating the program
 Since this is a purely software app, a good starting point is qf_helloworldsw.  So, we copy that directory into a new directory called qf_pm2dot5aqi.
+
 ### Add
-pm2dot5monitortask.c
+* pm2dot5monitortask.c
+
 ### Modify
->Main.c
->Main_dbg_cli_menu.c
->Copy and modify qf_hardwaresetup.c
->Pincfg_table.c
->Fw_global_config.h
+* Main.c
+* Main_dbg_cli_menu.c
+* Copy and modify qf_hardwaresetup.c
+* Pincfg_table.c
+* Fw_global_config.h
 
 ## Computing AQI
 https://cfpub.epa.gov/airnow/index.cfm?action=aqibasics.aqi
 
 ![qf_pm2dot5aqi aqi-def](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-def.png)
+
 ![qf_pm2dot5aqi aqi-normalize](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-normalize.png)
 
 Since these are normalized values, with 100 set as the acceptable limit, we need to know the mapping.  
@@ -108,7 +114,7 @@ For the US the curve is defined by the EPA and can be found at
 https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwjtzK3YpJrsAhUMvJ4KHaBfD8wQFjALegQIARAC&url=https%3A%2F%2Fwww.airnow.gov%2Fsites%2Fdefault%2Ffiles%2F2018-05%2Faqi-technical-assistance-document-may2016.pdf&usg=AOvVaw1_iX6rgxZBBNPTdzqIn_D3
 
 The first part of the table is:
-![qf_pm2dot5aqi aqi-table][qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-table]
+![qf_pm2dot5aqi aqi-table](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-aqi-table.png)
 
 This is a piece-wise linear table, such that values from the range 0-12 are mapped onto the range 0-50, and those from the range 12 to 35.4 are mapped onto 50 to 100.
 The condensed table is:
