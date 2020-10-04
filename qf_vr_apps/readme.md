@@ -58,7 +58,7 @@ datablk_pe_funcs_t ql_vr_funcs = {datablk_pe_config_ql_vr, datablk_pe_process_ql
 ~~~
 one to configure and one to process datablocks.
 ### Required hardware
-QuickFeather
+- QuickFeather
 
 ## qf_2micVR_app: standalone app using two microphones with stub for beamforming
 ![qf_2micVR_app](./images/qf_2micVR_app.png)
