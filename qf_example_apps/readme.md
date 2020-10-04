@@ -8,6 +8,7 @@ uses the LED to indicate whether the level is considered, Good, Moderate or Unhe
 ## Sensor connections
 Adafruit has a nifty PM2.5 sensor:
 ![qf_pm2dot5aqi PMS5003][./qf_pm2dot5aqi/images/qf_pm2dot5aqi-PMS5003.png]
+
  
 The datasheet lets us know the device uses a UART interface with pinout:
 ![qf_pm2dot5aqi PMS5003-pinout][qf_pm2dot5aqi/images/qf_pm2dot5aqi-PMS5003-pinout.png]
