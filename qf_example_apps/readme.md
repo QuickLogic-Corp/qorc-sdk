@@ -53,6 +53,7 @@ Now we need to understand which pins on the QuickFeather are driven by the GPIO 
 The QuickFeather User Guide has a useful table that helps with this:
 
 ![qf_pm2dot5aqi qf-ug-iotable](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-ug-iotable.png)
+
 From this we can see that GPIO0 can drive IO_6, which is connected to the User Button and J8.10. 
 GPIO1 can drive IO_9, but the table is silent about IO_9 which presumably means that it has some other use. 
 Filling out the complete table we get:
@@ -88,8 +89,7 @@ So now we can create our wiring table:
 •	Note that you must be careful with RX and TX.  Does RX mean that this pin receives, or that it expects to drive a receiver?  
 In other words, do you connect RX to RX, or RX to TX.
 
-##
-Creating the program
+## Creating the program
 Since this is a purely software app, a good starting point is qf_helloworldsw.  So, we copy that directory into a new directory called qf_pm2dot5aqi.
 
 ### Add
