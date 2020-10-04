@@ -26,8 +26,11 @@ How to connect the GND is obvious (use J3.1, or J3.13, or J8.16).
 The datasheet specifies that VCC must be 5V, not 3.3V – so how are we going to get that? Since the board is powered by USB, and the normal USB voltage is 5V, perhaps VBAT (J2.1) is 5V?  We can look at the schematic to find out.
 Zooming in on J2 we find that J2.1 is connected to VBAT:
 ![qf_pm2dot5aqi qf-schematic-J2](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-J2.png)
+
 And VBAT is driven by the charger:
+
 ![qf_pm2dot5aqi qf-schematic-VBAT](./qf_pm2dot5aqi/images/qf_pm2dot5aqi-qf-schematic-VBAT.png)
+
 So, it is unlikely to be 5V, more likely to be 4.2V.  A quick measurement shows it to be 4.3V on my QuickFeather.  We’ll just have to see if that is good enough, otherwise we have the tricky task of finding VBUS on the board as soldering a wire to it.
 
 ### SET
@@ -127,3 +130,10 @@ The condensed table is:
 |150.4	        |200	|Unhealthy	                |Red	    |Purple     |
 |250.4	        |300	|Very Unhealthy	            |Purple	    |Purple     |
 |500.4	        |500	|Hazardous	                |Brown	    |Purple     |
+
+## Finished product
+
+Showing green, so my indoor AQI is Good.  When I take it outside, the color switches to blue indicating Moderate air quality.
+So now I know that the natural filtering effect of the house, combined with a number of HEPA filters really helps.
+
+![qf_pm2dot5aqi finished-product](./qf_pm2dot5aqi/images/finished-product.png)
