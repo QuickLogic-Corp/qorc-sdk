@@ -60,7 +60,7 @@ one to configure and one to process datablocks.
 ### Required hardware
 - QuickFeather
 
-## qf_2micVR_app: standalone app using two microphones with stub for beamforming
+## qf_2micVR_app: [coming soon] standalone app using two microphones with stub for beamforming
 ![qf_2micVR_app](./images/qf_2micVR_app.png)
 ### Purpose
 Demonstrate how to setup and handle stereo input.
@@ -73,7 +73,7 @@ Demonstrate how to setup and handle stereo input.
   - QuickFeather AVS Cradle
   - Dual QuickFeather Cradle
   
-## qf_VR_raw_app: companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.
+## qf_VR_raw_app: [coming soon] companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.
 ![qf_VR_raw_app](./images/qf_VR_raw_app.png)
 ### Purpose
 Demonstrate host/companion command protocol and raw audio streaming over SPI.
@@ -86,7 +86,7 @@ Demonstrate host/companion command protocol and raw audio streaming over SPI.
   - Dual QuickFeather Cradle
 - PC to receive and analyze audio packets
   
-## qf_VR_opus_app: companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.
+## qf_VR_opus_app: [coming soon] companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.
 ![qf_VR_opus_app](./images/qf_VR_opus_app.png)
 ### Purpose
 Demonstrate host/companion command protocol, opus conpression and audio streaming over SPI.
@@ -99,7 +99,7 @@ Demonstrate host/companion command protocol, opus conpression and audio streamin
   - Dual QuickFeather Cradle
 - PC to receive and decode opus packets
 
-## qf_VR_I2S_app: companion app implementing VR, host communications over SPI and streaming audio over I2S
+## qf_VR_I2S_app: [coming soon] companion app implementing VR, host communications over SPI and streaming audio over I2S
 ![qf_VR_I2S_app](./images/qf_VR_I2S_app.png)
 ### Purpose
 Demonstrate host/companion command protocol, and I2S isochronous output that handles host/companion clock synchronization.
