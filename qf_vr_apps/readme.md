@@ -89,7 +89,7 @@ Demonstrate host/companion command protocol and raw audio streaming over SPI.
 ## qf_VR_opus_app: [coming soon] companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.
 ![qf_VR_opus_app](./images/qf_VR_opus_app.png)
 ### Purpose
-Demonstrate host/companion command protocol, opus conpression and audio streaming over SPI.
+Demonstrate host/companion command protocol, opus compression and audio streaming over SPI.
 ### Description
 *Coming soon*
 ### Required hardware
@@ -98,6 +98,9 @@ Demonstrate host/companion command protocol, opus conpression and audio streamin
 - Cradle (holds QuickFeather companion and QuickFeather host)
   - Dual QuickFeather Cradle
 - PC to receive and decode opus packets
+### Optional: Local playback
+The hardware is configured to support real-time playback through DAC.  No plans for software support of this option.
+![qf_VR_opus_app_optional](./images/qf_VR_opus_app_optional.png)
 
 ## qf_VR_I2S_app: [coming soon] companion app implementing VR, host communications over SPI and streaming audio over I2S
 ![qf_VR_I2S_app](./images/qf_VR_I2S_app.png)
@@ -110,6 +113,10 @@ Demonstrate host/companion command protocol, and I2S isochronous output that han
 - I2S DAC board (audio output)
 - Cradle (holds QuickFeather companion and QuickFeather host)
   - Dual QuickFeather Cradle
+  
+### Optional: PC analysis
+The hardware is configured to support recording of I2S data on a PC.  No plans for software support of this option.
+![qf_VR_opus_I2S_optional](./images/qf_VR_I2S_app_optional.png)
 
 
 
