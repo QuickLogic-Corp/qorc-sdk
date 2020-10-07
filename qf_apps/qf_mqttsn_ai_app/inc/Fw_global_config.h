@@ -188,7 +188,7 @@ extern int FPGA_FFE_LOADED;
 #define CONST_FREQ (1)
 
 // Enable ADC FPGA Driver
-#define AD7476_FPGA_DRIVER   0
+#define AD7476_FPGA_DRIVER   1
 
 #if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
 #error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
@@ -199,6 +199,9 @@ extern int FPGA_FFE_LOADED;
 //
 ///* enable the AUDIO driver */
 #define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
+
+#define PDM2DEC_FACT    48   // Use 1.5MHz PDM Clock
+
 //
 ///* enable LPSD mode of AUDIO IP*/
 //#define ENABLE_LPSD    0 //Set to 1 enable, 0 to disable LPSD

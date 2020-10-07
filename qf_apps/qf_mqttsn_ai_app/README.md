@@ -27,7 +27,7 @@ and appropriate ARM GCC toolchain to build the project
 3. Reset the board to start running the AI application.
 
 For data collection, building an AI model, and recognition 
-please refer to https://sensiml.com/ and https://sensiml.com/documentation/guides/getting-started/index.html
+please refer to [SensiML QF] and [SensiML Getting Started]
 
 Using with an AD7476 ADC module
 ------------
@@ -45,7 +45,7 @@ Connect a [PmodAD1] module to the quickfeather using the following pinout
 Connect desired sensor to the A0 pin on the PmodAD1 module.
 
 Reset the Quickfeather board to start running the AI application.
-Refer [SensiML Getting Started] to collect data or get inferences from this connected sensor.
+Refer [SensiML QF] to collect data or get inferences from this connected sensor.
 
 MQTT-SN over USB-serial Notes
 ------------
@@ -59,6 +59,6 @@ transmit function to enter busy-wait state when the FIFO fills-up, this applicat
 messages only if the FIFO is empty.
 
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
-[SensiML]: https://sensiml.com/
+[SensiML QF]: https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html
 [SensiML Getting Started]: https://sensiml.com/documentation/guides/getting-started/index.html
 [PmodAD1]: https://reference.digilentinc.com/reference/pmod/pmodad1/start
