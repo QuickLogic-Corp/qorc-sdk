@@ -22,5 +22,6 @@
 *=========================================================*/
 
 int load_fpga(uint32_t image_size, uint32_t* image_ptr);
+int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr);
 
 

@@ -68,13 +68,33 @@ int main(void)
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(axFPGABitStream_length, axFPGABitStream);     // Load bitstream into FPGA
-    S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
+    
+    // Load bitstream into FPGA
+    if(load_fpga(axFPGABitStream_length, axFPGABitStream) < 0)
+    {
+        printf("FPGA Load Failed!\r\n");
+	    while(1);
+    }
+    
+    // Init FPGA MEM blocks
+    if(init_fpga_mem(axFPGAMemInit_length, axFPGAMemInit) < 0)
+	{
+	    // indicate error: FPGA RAM initialization failed
+	    printf("FPGA RAM Blocks init failed!\r\n");
+	    while(1);
+	}
+	
+	// test if we can still access RAM from M4 code
+	printf("read addr: 0x%08x, value: 0x%08x\r\n", 0x40018000, *(uint32_t *)0x40018000);
+	printf("read addr: 0x%08x, value: 0x%08x\r\n", 0x40018004, *(uint32_t *)0x40018004);
+
+	// Start FPGA clock
+    S3x_Clk_Enable(S3X_FB_21_CLK);
     S3x_Clk_Enable(S3X_FB_16_CLK);
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather Standalone FPGA\n");
+    dbg_str( "Quicklogic QuickFeather RAM Init Test\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
