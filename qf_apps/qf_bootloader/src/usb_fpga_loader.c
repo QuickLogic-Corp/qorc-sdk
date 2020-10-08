@@ -69,7 +69,7 @@ int check_fpga_crc(int image_size, uint32_t expected_crc)
 */
 int load_usb_flasher(void)
 {
-#if FEATURE_USBSERIAL
+#if (UART_ID_BOOTLOADER == UART_ID_USBSERIAL)
   unsigned char *bufPtr;
   uint32_t image_crc, image_size;
   

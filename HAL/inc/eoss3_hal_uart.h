@@ -141,7 +141,9 @@ typedef enum
 #define UART_ID_DBG UART_ID_HW
 #endif
 
+#ifndef UART_ID_BOOTLOADER
 #define UART_ID_BOOTLOADER  UART_ID_HW
+#endif
 
 
 /*! \struct UartHandler eoss3_hal_uart.h "inc/eoss3_hal_uart.h"
