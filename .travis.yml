@@ -5,13 +5,14 @@ git:
   depth: 1
 
 before_install:
-  - sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa     
-  - sudo apt-get update     
-  - sudo apt-get install gcc-arm-embedded
+  - echo "retrieve gcc arm toolchain"
+  - wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2     
+  - sudo tar xvjf gcc-arm-none-eabi-your-version.tar.bz2 -C /usr/share/
+  - export PATH=/usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH
   - export  INSTALL_DIR=~/symbiflow
   - SRC=https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.2.0/Symbiflow_v1.2.0.gz.run
   - RUNFILE=$(basename $SRC)
-  - echo "retrive new file"
+  - echo "retrieve symbiflow installer"
   - wget $SRC
   - echo 'y' | bash $RUNFILE
   - export PATH="$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH"
