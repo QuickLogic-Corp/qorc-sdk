@@ -180,7 +180,7 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL, //PAD_PULLUP,//PAD_NOPULL,
   },
-  
+#if (FEATURE_USBSERIAL == 1)
   //------------- USB ---------------//
    { // Pad 37 -- USB Pullup control
     .ucPin = PAD_37,
@@ -212,7 +212,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-
+#endif
   //------------- Buttons ---------------//
    { // Pad 6 -- User Buttion 
     .ucPin = PAD_6,

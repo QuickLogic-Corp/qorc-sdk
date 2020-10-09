@@ -24,3 +24,9 @@ bootfpga	    |Used	|0x0002_0000|	0x0002_0000|	0x0003_FFFF	|	 131,072 |	 131,072 
 appfpga	        |Future	|0x0004_0000|	0x0002_0000|	0x0005_FFFF	|	 262,144 |	 131,072 |	 393,216 
 appffe	        |Future	|0x0006_0000|	0x0002_0000|	0x0007_FFFF	|	 393,216 |	 131,072 |	 524,288 
 M4app	        |Used	|0x0008_0000|	0x0006_E000|	0x000E_DFFF	|	 524,288 |	 450,560 |	 974,848 
+
+Communication Interface
+-----------------------
+
+This bootloader project uses USB-Serial interface available on the Quickfeather board to receive and transmit commands from TinyFPGA Programmer.  
+
