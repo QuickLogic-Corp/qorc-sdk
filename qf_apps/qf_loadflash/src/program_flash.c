@@ -71,8 +71,8 @@ void program_flash( void *pParameter )
         // Get pkt (first 5 bytes)
         while (ipkt != 5) {
             vTaskDelay(0);
-            if( uart_rx_available( UART_ID_USBSERIAL ) ){
-                c = uart_rx( UART_ID_USBSERIAL  );
+            if( uart_rx_available( UART_ID_BOOTLOADER ) ){
+                c = uart_rx( UART_ID_BOOTLOADER  );
                 //First 5 bytes are pkt
                 atflPkt[ipkt++] = c;
                 if (atflPkt[0] == 0) {
@@ -90,8 +90,8 @@ void program_flash( void *pParameter )
 
         // Grab the write data
         while (icmd < kbWrite) {
-            if( uart_rx_available( UART_ID_USBSERIAL ) ){
-                c = uart_rx( UART_ID_USBSERIAL  );
+            if( uart_rx_available( UART_ID_BOOTLOADER ) ){
+                c = uart_rx( UART_ID_BOOTLOADER  );
                 atflCmd[icmd++] = c;
             }
         }
@@ -101,19 +101,19 @@ void program_flash( void *pParameter )
             dbg_str("Release Deep Power-Down() ... ");
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_NoResponse);
             dbg_str("Done\n");
-            uart_tx_buf(UART_ID_USBSERIAL, atflResponse, kbRead);
+            uart_tx_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
             break;
         case 0x9F:
             dbg_str("Read ID() ... ");
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_WithResponse);
             xval = (atflResponse[2] << 16) | (atflResponse[1] << 8) | (atflResponse[0] << 0);
             dbg_str_hex32("Done", xval);
-            uart_tx_buf(UART_ID_USBSERIAL, atflResponse, kbRead);
+            uart_tx_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
             break;
         case 0x05:
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_WithResponse);
             xval = (atflResponse[1] << 8) | (atflResponse[0] << 0);
-            uart_tx_buf(UART_ID_USBSERIAL, atflResponse, kbRead);
+            uart_tx_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
             break;
         case 0x20:
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
@@ -151,7 +151,7 @@ void program_flash( void *pParameter )
         case 0x0B:
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, READ_CMD);
-            uart_tx_raw_buf(UART_ID_USBSERIAL, atflResponse, kbRead);
+            uart_tx_raw_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
             break;
         default:
             dbg_str_hex8("Unknown OpCode", (int)atflCmd[0]);
