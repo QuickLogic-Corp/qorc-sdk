@@ -136,15 +136,6 @@ typedef enum
 #if !defined(UART_ID_CONSOLE)   /* most often, the UART_HW */
 #define UART_ID_CONSOLE UART_ID_USBSERIAL
 #endif
-#if !defined(UART_ID_DBG)
-/* most often, the UART_HW but could be disabled */
-#define UART_ID_DBG UART_ID_HW
-#endif
-
-#ifndef UART_ID_BOOTLOADER
-#define UART_ID_BOOTLOADER  UART_ID_HW
-#endif
-
 
 /*! \struct UartHandler eoss3_hal_uart.h "inc/eoss3_hal_uart.h"
  * 	\brief UART configuration structure filled in by user.
