@@ -163,7 +163,7 @@ void banner(void)
 
 int main(void)
 {
-    SOFTWARE_VERSION_STR = "QORC-SDK-1MIC-VR-App";
+    SOFTWARE_VERSION_STR = "QORC-SDK-2MIC-VR-App";
 
     qf_hardwareSetup();
     uart_set_lpm_state(UART_ID_HW,1);

@@ -1,0 +1,15 @@
+
+AUDIO_SRCS:=$(wildcard $(AUDIO_DIR)/*.c)
+
+# To use other VR preprocess APIs, uncomment the line so ql_audio_preproc.c is excluded from
+# in the filters below
+filters=ql_i2stx_pe.c ql_voice_hearable_protocol.c audio_encode_opus.c \
+          dummyaudiope.c ql_audio_process.c ql_audio_stream.c stereo2mono.c
+#         ql_audio_preproc.c
+
+SRCS:=$(filter-out $(filters),$(notdir $(AUDIO_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(AUDIO_DIR)
+
+include $(COMMON_STUB)
+

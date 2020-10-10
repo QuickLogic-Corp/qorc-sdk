@@ -26,7 +26,6 @@
 #include <string.h>
 #include "ql_audio_preproc.h"
 #include "ql_util.h"
-#include "ql_dspc_preproc.h" //include specific defines and files for NS or BF
 
 #ifndef UNIT_TEST
 SemaphoreHandle_t  ql_pre_proc_sem;
@@ -94,36 +93,25 @@ e_ql_audio_preproc_status ql_preproc_bypass_mix_left_ref_process(t_ql_audio_stre
 
   return e_ql_audio_preproc_status_ok;
 }
+
+e_ql_audio_preproc_status ql_preproc_bypass_mix_left_right_process(int16_t * p_mic_left, int16_t * p_mic_right, int16_t *p_output, int n_frame_sz)
+{
+    for(int i = 0; i < n_frame_sz; i++){
+      p_output[i] = p_mic_left[i] + p_mic_right[i];
+    }
+
+  return e_ql_audio_preproc_status_ok;
+}
+
 t_audio_preproc_info o_audio_preproc_info = {.bypass = 0};
 t_audio_preproc_info *ql_audio_preproc_init(t_ql_audio_preproc_option_e e_option)
 {
 
   e_ql_audio_preproc_status status = e_ql_audio_preproc_status_ok;
 
-  if(e_option != e_ql_audio_preproc_option_default)
-  { /* not supported now */
-    status = e_ql_audio_preproc_status_invalid_param;
-  }else
-  {
-
-//#ifdef SCHEMATICID
-#if (DSPC_AW == 1)
-   CALL_QL_AUDIO_PREPROC_INIT(QL_AUDIO_PREPROC_ALGO);
-   o_audio_preproc_info.fs       = num_preproc_samplerate;
-   o_audio_preproc_info.frame_sz = preproc_framesize;
-   o_audio_preproc_info.channels = num_preproc_channels;
-#elif QL_CON_MIC_CHANNELS
-   CALL_QL_AUDIO_PREPROC_INIT(NULL);
-   o_audio_preproc_info.fs       = QL_CON_SAMPLING_RATE;
-   o_audio_preproc_info.frame_sz = QL_CON_FRAME_SIZE;
-   o_audio_preproc_info.channels = QL_CON_MIC_CHANNELS;
-#else
-   /* chalil - move these macros to a common header ? to avoid magic number */
    o_audio_preproc_info.fs       = 16000;
-   o_audio_preproc_info.frame_sz = 80;
-   o_audio_preproc_info.channels = 1;
-#endif
-  }
+   o_audio_preproc_info.frame_sz = 120;
+   o_audio_preproc_info.channels = 2;
   o_audio_preproc_info.e_status = status;
   return &o_audio_preproc_info;
 }
@@ -163,33 +151,6 @@ int a_mips_pre_proc_count = 0;
 
 #endif
 
-e_ql_audio_preproc_status ql_audio_preproc_process(t_ql_audio_stream *p_mic_input,
-                                                   t_ql_audio_stream *p_ref_input,
-                                                   t_ql_audio_stream *p_audio_output)
-{
-  e_ql_audio_preproc_status status = e_ql_audio_preproc_status_ok;
-#ifdef DEBUG_PRE_PROC
-  p_mic_input->p_buffer = &SineTable_test[0];
-#endif
-
-#ifdef MEASURE_PRE_PROC_MIPS
-  start_timer();
-    a_mips_pre_proc[a_mips_pre_proc_count] = get_timer();
-#endif
-  CALL_QL_AUDIO_PREPROC_PROC(p_mic_input, p_ref_input, p_audio_output);
-
- #ifdef MEASURE_PRE_PROC_MIPS
-     stop_timer();
-   a_mips_pre_proc[a_mips_pre_proc_count] = get_timer() - a_mips_pre_proc[a_mips_pre_proc_count];
-    if(a_mips_pre_proc_count++ >= MIPS_AVE_COUNT)
-    {float ave;
-      a_mips_pre_proc_count = 0;
-      calc_max_and_ave(a_mips_pre_proc, MIPS_AVE_COUNT, &ave, "pp ");
-    }
-#endif 
-  
-  return status;
-}
 
 
 
@@ -203,38 +164,26 @@ e_ql_audio_preproc_status ql_audio_preproc_close(void)
   return status;
 }
 
-#ifndef UNIT_TEST
 static void reset_stereo_blk_count(void);
+
 void datablk_pe_config_ql_pre_process(void *p_pe_object)
 {
   ql_pre_proc_sem = xSemaphoreCreateBinary(  );
 
   ql_audio_preproc_init(e_ql_audio_preproc_option_default);
- 
+
   reset_stereo_blk_count();
+ 
   xSemaphoreGive(ql_pre_proc_sem);
   
   return ;
 }
-#endif
 
-int frame_sz_adapter(uint16_t *p_buffer, uint32_t num_samples, int16_t *p_brick, uint32_t n_size);
-
-static t_ql_audio_stream o_mic_input;
-static t_ql_audio_stream o_audio_output;
-
-void pre_process_bypass(uint32_t bypass)
-{
-  o_audio_preproc_info.bypass = bypass;
-}
-//#ifndef UNIT_TEST
-#if (PDM_MIC_CHANNELS == 2)
-//Note: The frame size is specific to BF(Beam Forming)
-///DataBLK is 240 samples = 120 stereo samples, BF blk size = 80
-// => 2 stero DataBlocks = 3 BF Block = 1 Mono DSP output Block
+///DataBLK is 240 samples = 120 stereo samples
+// => 2 stero DataBlocks = 1 Mono DSP output Block
 //So we produce output for alternative buffers based on input_stereo_blk_count
 // if it is 0 no output, 1 there is 1 datablock output
-uint16_t stereo_stride_buffer[QL_AWE_FRAME_SIZE*2*3]; // QL_AWE_FRAME_SIZE = 80 => 2*240 keep room to collect 3 BF Stereo blocks
+uint16_t stereo_stride_buffer[2*240]; // 2*240 keep room to collect 1 Stereo blocks
 int input_stereo_blk_count = 0;
  //Note: blk_size is assumed to be 240 samples for this function to work
 uint16_t *fill_n_get_stride_buffer(uint16_t *p_interleaved_buf, int blk_size, int blk_count)
@@ -245,8 +194,8 @@ uint16_t *fill_n_get_stride_buffer(uint16_t *p_interleaved_buf, int blk_size, in
   if(blk_count)
   {
     //if one stereo DataBlock is filled increment the start points
-    i += blk_size;//+= 120 
-    j += blk_size;//+= 120 
+    i += blk_size;//+= 120
+    j += blk_size;//+= 120
   }
 
 #if (EN_STEREO_DUAL_BUF == 1) //first half left channel and the next half right channel
@@ -255,14 +204,14 @@ uint16_t *fill_n_get_stride_buffer(uint16_t *p_interleaved_buf, int blk_size, in
   p_interleaved_buf += blk_size;
   memcpy(&stereo_stride_buffer[j], p_interleaved_buf, sizeof(uint16_t)*blk_size);
 
-#else // interleaved samples    
+#else // interleaved samples
   for(int k = 0; k < blk_size; k++)
   {
     stereo_stride_buffer[i++] = *p_interleaved_buf++;
     stereo_stride_buffer[j++] = *p_interleaved_buf++;
   }
-#endif  
-  
+#endif
+
   //we wait for 2 input blocks
   if(blk_count & 0x1) {
     return stereo_stride_buffer;
@@ -274,11 +223,12 @@ static void reset_stereo_blk_count(void)
 {
   input_stereo_blk_count = 0;
 }
+
 void datablk_pe_process_ql_pre_process(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_DataBlock_t **pRet,
                                  void (*p_event_notifier)(int pid, int event_type, void *p_event_data, int num_data_bytes))
 {
   e_ql_audio_preproc_status ret = e_ql_audio_preproc_status_ok;
-  
+
      uint16_t *pInbuf;
      pInbuf = fill_n_get_stride_buffer((uint16_t*)&pIn->p_data, pIn->dbHeader.numDataElements, input_stereo_blk_count);
      input_stereo_blk_count++;
@@ -294,78 +244,13 @@ void datablk_pe_process_ql_pre_process(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pO
      }
      //We can produce 1 DataBlock of Mono size 240 samples from BF
      input_stereo_blk_count = 0; //reset stereo block count
-     uint32_t frame_sz = o_audio_preproc_info.frame_sz;
-     t_ql_audio_stream *p_ref_input = NULL;
-     uint16_t *pOutbuf = (uint16_t*)&pOut->p_data ;
-        
-     o_mic_input.n_frame_sz = frame_sz;
-     o_mic_input.n_channels = 2;
-     o_mic_input.n_stride = pIn->dbHeader.numDataElements; //left and right inputs channels of size 1 DataBlock
-                                                           // are split to be one after other
 
-     o_audio_output.n_frame_sz = frame_sz;
-     o_audio_output.n_channels = 1;
-     o_audio_output.n_stride = frame_sz; //output should be stored consecutively
+     int16_t *p_left = (int16_t *)pInbuf;
+     int16_t *p_right = p_left + pOut->dbHeader.numDataElements;
+     ql_preproc_bypass_mix_left_right_process(p_left, p_right, (int16_t*)pOut->p_data, pOut->dbHeader.numDataElements);
 
-     for(int i = 0; i < 3; i++)
-     { // 3 loops for 2 input Data Blocks for BF
-        o_mic_input.p_buffer = pInbuf; 
-        o_audio_output.p_buffer = pOutbuf;
-        
-        ret = ql_audio_preproc_process(&o_mic_input, p_ref_input, &o_audio_output);
-        
-        ql_assert(ret == e_ql_audio_preproc_status_ok);
-        pInbuf += frame_sz;
-        pOutbuf += frame_sz;
-
-     }
-     
      /* return the output */
-     *pRet =  pOut; 
+     *pRet =  pOut;
      return ;
 }
-#else //1Mic NS
-void datablk_pe_process_ql_pre_process(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_DataBlock_t **pRet,
-                                 void (*p_event_notifier)(int pid, int event_type, void *p_event_data, int num_data_bytes))
-{
-  e_ql_audio_preproc_status ret = e_ql_audio_preproc_status_ok;
-  
-     uint32_t new_sampels = pIn->dbHeader.numDataElements;
-     uint32_t frame_sz = o_audio_preproc_info.frame_sz;
-     t_ql_audio_stream *p_ref_input = NULL;
-     uint32_t i = 0;
-        
-     o_mic_input.n_frame_sz = frame_sz;
-     o_mic_input.n_channels = 1;
-     o_mic_input.n_stride = frame_sz;
-
-     o_audio_output.n_frame_sz = frame_sz;
-     o_audio_output.n_channels = 1;
-     o_audio_output.n_stride = frame_sz;
-        
-     while(new_sampels >= frame_sz)
-     { // 3 loops for NS/BF and
-       // 1 loop for cons
-        o_mic_input.p_buffer = (uint16_t*)&pIn->p_data[i*o_mic_input.n_frame_sz * 2];
-        o_audio_output.p_buffer = (uint16_t*)&pOut->p_data[i*o_mic_input.n_frame_sz * 2];
-        
-        if(o_audio_preproc_info.bypass == 0){
-          ret = ql_audio_preproc_process(&o_mic_input, p_ref_input, &o_audio_output);
-        }
-        else{
-          ret = ql_preproc_bypass1_process(&o_mic_input, p_ref_input, &o_audio_output);
-        }
-        
-        ql_assert(ret == e_ql_audio_preproc_status_ok);
-        new_sampels -= frame_sz;
-        i++;
-     }
-     ql_assert(new_sampels == 0);
-     /* need to check if the another buffer to be acquired for any other case. as of now ok */
-     /* returning the output - thanks lavanya ! */
-     *pRet =  pOut; 
-     return ;
-}
-
-#endif
 
