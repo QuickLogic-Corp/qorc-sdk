@@ -7,12 +7,13 @@ include config.mk
 VPATH:=$(OUTPUT_PATH)
 
 all: _makedirs_ external_srcs appdir s3gw_drivers
-	-$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
+	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
-	-${MKDIR} $(OUTPUT_PATH)$(DIR_SEP)bin
-	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin $(OUTPUT_PATH)$(DIR_SEP)bin
-	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).map $(OUTPUT_PATH)$(DIR_SEP)bin
-	$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf $(OUTPUT_PATH)$(DIR_SEP)bin
+	-${HIDE}${MKDIR} $(OUTPUT_PATH)$(DIR_SEP)bin
+	@echo Copy output files ...
+	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin $(OUTPUT_PATH)$(DIR_SEP)bin
+	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).map $(OUTPUT_PATH)$(DIR_SEP)bin
+	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf $(OUTPUT_PATH)$(DIR_SEP)bin
 
 _makedirs_:
 	@-${MKDIR} ${DEPEND_PATH}
@@ -83,9 +84,17 @@ clean_s3gw_drivers:
 
 CLEAN_TARGET += s3gw_drivers
 
+DELETEME=
+DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)
+DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)*.o)
+DELETEME += $(wildcard $(DEPEND_PATH)$(DIR_SEP)*.d)
+DELETEME := $(strip $(DELETEME))
 # Clean
-clean: ${CLEAN_TARGET:%=clean_%}
+clean: $(CLEAN_TARGET:%=clean_%)
 	make -f makefiles/Makefile_output clean
-	-$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)*
-	-$(RM) $(OUTPUT_PATH)$(DIR_SEP)*.o
-	-$(RM) ${DEPEND_PATH}$(DIR_SEP)*.d
+ifneq (,$(DELETEME))
+	-$(HIDE)$(RM) $(DELETEME)
+endif
+
+
+

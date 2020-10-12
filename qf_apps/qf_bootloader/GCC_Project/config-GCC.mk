@@ -1,5 +1,10 @@
 #
-# GCC Configuration options for Quick-AI SDK
+# Symbiflow options for QORK SDK
+#
+export RTL_TOP_MODULE=
+
+#
+# GCC Configuration options for QORC SDK
 #
 
 DASH_G=-gdwarf-4
@@ -32,7 +37,7 @@ export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
-                 -I"$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/inc" \
+                 -I"$(APP_DIR)/inc" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
@@ -56,7 +61,7 @@ export CFLAGS= $(MACROS) \
 
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
             ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
-            ${DASH_G} -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
+            ${DASH_G} -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
             -Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
             -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm
@@ -71,7 +76,7 @@ export ELF2BIN_OPTIONS=-O binary
 #
 export COMMON_STUB =$(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
 
-export BSP_DIR        = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)src
+export BSP_DIR        = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
 export HAL_DIR        = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
 export FREERTOS_DIR   = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 export LIB_DIR        = $(PROJ_ROOT)$(DIR_SEP)Libraries
@@ -80,5 +85,5 @@ export POWER_DIR      = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
 export SYSFLASH_DIR   = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
 export UTILS_DIR      = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
 export FPGA_DIR       = $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
-export MAIN_DIR       = $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)src
+export MAIN_DIR       = $(APP_DIR)$(DIR_SEP)src
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
