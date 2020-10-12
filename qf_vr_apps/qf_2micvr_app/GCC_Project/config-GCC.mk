@@ -76,7 +76,7 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	$(DASH_G) -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
-    -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).out" \
+    -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
     -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
     -L$(LIBDSPC_DIR) -lAdvanced -lCFramework -ldspc_beamformer  -lStandard -lVectorLib -lModuleHelperLib -ldspc_scnr \
     -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
