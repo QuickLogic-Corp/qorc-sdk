@@ -60,17 +60,16 @@
  *
  *************************************************************/
 
+// internal function
+int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr);
 
-int load_fpga(uint32_t image_size, uint32_t* image_ptr)
+int load_fpga(uint32_t img_size,uint32_t* image_ptr)
 {
 	unsigned int    i = 0;
 	uint32_t        chunk_cnt=0;
 	volatile uint32_t   *gFPGAPtr = (volatile uint32_t*)image_ptr;
 
-
 	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;
-	printf("read addr: 0x%08x, value: 0x%08x\r\n", 0x400047F0, *(uint32_t*)(0x400047F0));
-	printf("read addr: 0x%08x, value: 0x%08x\r\n", 0x40000300, *(uint32_t*)(0x40000300));        
 
 	S3x_Clk_Enable(S3X_FB_02_CLK);
 	S3x_Clk_Enable(S3X_A0_08_CLK);
@@ -86,7 +85,28 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 		PMU->GEN_PURPOSE_1  = i << 4;
 	}
 
-	for(chunk_cnt=0;chunk_cnt<(image_size/4);chunk_cnt++)
+	REG8 = 0x10;
+	REG8 = 0x20;
+	REG8 = 0x30;
+	REG8 = 0x40;
+	REG8 = 0x50;
+	REG8 = 0x60;
+	REG8 = 0x70;
+	REG8 = 0x80;
+
+	REG9 = 0xBDFF;
+
+	REG8 = 0x10;
+	REG8 = 0x20;
+	REG8 = 0x30;
+	REG8 = 0x40;
+	REG8 = 0x50;
+	REG8 = 0x60;
+	REG8 = 0x70;
+	REG8 = 0x80;
+
+
+	for(chunk_cnt=0;chunk_cnt<(img_size/4);chunk_cnt++)
 		CFG_CTL_CFG_DATA = gFPGAPtr[chunk_cnt];
 
 	// wait some time for fpga to get reset pulse
@@ -95,21 +115,19 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	}
 
 	CFG_CTL_CFG_CTL = 0x0; // exit config mode
-	
-	// required wait time
-	for (i=0;i<5000; i++) {
-		PMU->GEN_PURPOSE_1  = i << 4;
-	}
+	REG10 = 0;
 
-	
-	//REG10 = 0; // this causes mem init fail, this is same as PMU->GEN_PURPOSE_0 below!
+
 	REG11 = 0;
+
+
+
 	REG12 = 0;
 	REG13 = 0;
 	REG14 = 0x90;
 
 
-	//PMU->GEN_PURPOSE_0 = 0x0; //set APB_FB_EN = 0 for normal mode // this causes mem init fail
+	PMU->GEN_PURPOSE_0 = 0x0; //set APB_FB_EN = 0 for normal mode
 
 	// required wait time before releasing LTH_ENB
 	for (i=0;i<500; i++) {
@@ -120,8 +138,83 @@ int load_fpga(uint32_t image_size, uint32_t* image_ptr)
 	PMU->FB_ISOLATION = 0x0;
 	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
 
-	//printf("FPGA is programmed\r\n");	
+	//printf("FPGA is programmed\r\n");
+
+	return 1;
+
+}
+
+
+int load_fpga_with_mem_init(uint32_t image_size, uint32_t* image_ptr, uint32_t mem_content_size, uint32_t* mem_content_ptr)
+{
+	unsigned int    i = 0;
+	uint32_t        chunk_cnt=0;
+	volatile uint32_t   *gFPGAPtr = (volatile uint32_t*)image_ptr;
+
+    // PMU->GEN_PURPOSE_0, FB_Cfg_Enable = 1 for configuration interface enabled at S3 reset
+    // PMU->FB_ISOLATION, Enable_the_FB_Isolation = 1 at S3 reset
+    // CRU FB_SW_RESET held in reset of FB_C02, FB_C09, FB_C16, FB_C21 domains at S3 reset
+
+    // set IO_19 HIGH for FPGA Progamming Mode
+	*((volatile unsigned int*) 0x40004c4c) = 0x00000180;
 	
+	// enable clocks
+	S3x_Clk_Enable(S3X_FB_02_CLK);
+	S3x_Clk_Enable(S3X_A0_08_CLK);
+	S3x_Clk_Enable(S3X_FB_16_CLK);
+	S3x_Clk_Enable(S3X_CLKGATE_FB);
+	S3x_Clk_Enable(S3X_CLKGATE_PIF);
+
+	// enable FPGA configuration mode
+	CFG_CTL_CFG_CTL = 0x0000bdff ;
+	
+	// wait some time for fpga to get reset pulse
+	for (i=0;i<50; i++) {
+		PMU->GEN_PURPOSE_1  = i << 4;
+	}
+
+    // write FPGA bitstream
+	for(chunk_cnt=0;chunk_cnt<(image_size/4);chunk_cnt++)
+		CFG_CTL_CFG_DATA = gFPGAPtr[chunk_cnt];
+
+	// wait some time for fpga to get reset pulse
+	for (i=0;i<50; i++) {
+		PMU->GEN_PURPOSE_1  = i << 4;
+	}
+
+    // exit FPGA configuration mode
+	CFG_CTL_CFG_CTL = 0x0;
+	
+	// required wait time
+	for (i=0;i<5000; i++) {
+		PMU->GEN_PURPOSE_1  = i << 4;
+	}
+
+    // initialize the memory blocks here
+	init_fpga_mem(mem_content_size, mem_content_ptr);
+
+    // CRU FB_SW_RESET disable reset of FB_C02, FB_C09, FB_C16, FB_C21 domains.
+	REG12 = 0;
+	// CRU FB_MISC_SW_RST_CTL disable reset of AHBWB_SW_RESET, PFAFIFO1_SW_RESET
+	REG13 = 0;
+	// PMU General_Purpose_1 reset to default value
+	REG14 = 0x90;
+
+    // set FB_Cfg_Enable = 0 for normal mode
+	PMU->GEN_PURPOSE_0 = 0x0;
+
+	// required wait time before releasing LTH_ENB
+	for (i=0;i<500; i++) {
+		PMU->GEN_PURPOSE_1  = i << 4;
+	}
+
+	// release isolation - LTH_ENB
+	PMU->FB_ISOLATION = 0x0;
+	
+	// set IO_19 back to POR configuration
+	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
+
+	//printf("FPGA is programmed\r\n");	
 
 	return 1;
 }
@@ -158,17 +251,11 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
     {
         //printf("no content to init mem blocks\r\n");
         return 0;
-    }   
-    
-    S3x_Clk_Enable(S3X_FB_02_CLK);
-	S3x_Clk_Enable(S3X_A0_08_CLK);
-	S3x_Clk_Enable(S3X_FB_16_CLK);
-   	S3x_Clk_Enable(S3X_CLKGATE_FB);
-	S3x_Clk_Enable(S3X_CLKGATE_PIF);
-	
+    }
 
     
-  	//REG18 = 0x1; // APB mode
+    // set FPGA in APB mode
+  	REG18 = 0x1;
 	
 	// required wait time 
 	for (i=0;i<5000; i++) {
@@ -223,14 +310,13 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
        mem_block_num++;
     }
     
-    //REG18 = 0x0; // exit APB mode
+    // set FPGA out of APB mode
+    REG18 = 0x0;
 	
 	// required wait time 
 	for (i=0;i<500; i++) {
 		PMU->GEN_PURPOSE_1  = i << 4;
-	}
-	
-	PMU->GEN_PURPOSE_0 = 0x200;
+	}   
     
     // indicate all ok
     return 1;
