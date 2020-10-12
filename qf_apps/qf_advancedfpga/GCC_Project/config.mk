@@ -1,9 +1,6 @@
 #
-# Environment Configuration options for Quick-AI SDK
+# Environment Configuration options for qorc-sdk
 #
-
-PROJ_NAME=qf_advancedfpga
-export PROJ_NAME
 
 # By default, many commands are hidden
 # To enable VERBOSE mode, there are TWO options
@@ -72,6 +69,7 @@ $(info Building on Windows $(BUILD_SYS))
 
 export DIR_SEP=\\
 
+
 #Configuration options for GNU Win32 GCC Toolchain
 export MKDIR=mkdir
 export RM=del /S /Q
@@ -92,6 +90,11 @@ export PROJ_ROOT=$(PROJ_DIR)\..\..\..
 export OUTPUT_PATH=output
 export DEPEND_PATH=output\depend
 #COMPILER_LIBS_PATH=C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Lib\IAR
+
+export APP_DIR = $(subst \GCC_Project,,${PROJ_DIR})
+TMPVAR = $(subst \, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
+export PROJ_NAME
 
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
@@ -135,6 +138,11 @@ export PROJ_ROOT=$(PROJ_DIR)/../../..
 export OUTPUT_PATH=$(PROJ_DIR)/output
 export DEPEND_PATH=$(PROJ_DIR)/output/depend
 
+export APP_DIR = $(subst /GCC_Project,,${PROJ_DIR})
+TMPVAR = $(subst ${DIR_SEP}, ,${APP_DIR})
+PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
+export PROJ_NAME
+
 FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell whereis arm-none-eabi-gcc))
 export TC_PATH = $(subst /arm-none-eabi-gcc,,$(FIND_TOOL_DIR))
 
@@ -162,10 +170,10 @@ export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
 endif
 ################
 
+$(info PROJ_NAME = ${PROJ_NAME})
 
 #Ouput binary name
 export OUTPUT_FILE=${PROJ_NAME}
 
 #Libraries to include
 export LIBS=
-

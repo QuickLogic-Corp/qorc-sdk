@@ -88,7 +88,11 @@
 // #define UART_ID_FPGA      3 // second uart if part of FPGA
 // #define UART_ID_BUFFER    4 // Write data to buffer
 // #define UART_ID_SEMBUF    5 // Write datat to semihost and buffer
+// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
 #define DEBUG_UART UART_ID_HW        // the hard UART on the S3
+
+// Set the UART ID to use for bootloader
+#define UART_ID_BOOTLOADER UART_ID_USBSERIAL
 
 #define USE_SEMIHOSTING     1       // 1 => use semihosting, 0 => use UART_ID_HW
 

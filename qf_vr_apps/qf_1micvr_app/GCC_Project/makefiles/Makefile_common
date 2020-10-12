@@ -3,8 +3,9 @@
 
 D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
 O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
+R_FILES:=$(addprefix $(MAIN_FPGA_RTL_DIR)$(DIR_SEP),$(FPGA_RTL_SRCS))
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.Td
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.d
 
 all: $(OBJS)
 
@@ -18,8 +19,6 @@ all: $(OBJS)
 $(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
 	$(HIDE)echo Compile $<
 	$(HIDE)$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
-	$(HIDE)$(CP) $(DEPEND_PATH)$(DIR_SEP)$*.Td $(DEPEND_PATH)$(DIR_SEP)$*.d
-	-$(HIDE)$(RM) $(DEPEND_PATH)$(DIR_SEP)$*.Td 
 
 -include $(D_FILES))
 	
@@ -33,5 +32,9 @@ clean:
 ifneq (,${DELETEME})
 	-$(HIDE)$(RM) $(D_FILES)
 	-$(HIDE)$(RM) $(O_FILES)    
+ifneq (,${FPGA_RTL_OBJ})
+	-$(HIDE)$(RM) $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ)
+endif
+	-$(HIDE)$(RMDIR) $(MAIN_FPGA_RTL_DIR)/build
 endif
 

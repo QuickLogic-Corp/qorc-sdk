@@ -69,6 +69,7 @@ int check_fpga_crc(int image_size, uint32_t expected_crc)
 */
 int load_usb_flasher(void)
 {
+#if (UART_ID_BOOTLOADER == UART_ID_USBSERIAL)
   unsigned char *bufPtr;
   uint32_t image_crc, image_size;
   
@@ -104,7 +105,9 @@ int load_usb_flasher(void)
   for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
 
   // remind what to do when done programming
-  dbg_str("FPGA Programmed\nPresss Reset button after flashing ..\n");
+  dbg_str("FPGA Programmed\n");
+#endif
+  dbg_str("Presss Reset button after flashing ..\n");
   //wait for the reset button to be pressed
   program_flash();
   NVIC_SystemReset();
