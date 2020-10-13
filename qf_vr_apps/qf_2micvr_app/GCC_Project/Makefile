@@ -24,7 +24,7 @@ _makedirs_:
 	@echo Starting Build ...
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control
+external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control # AMAZON DSPC DSPC_Schematics
 	@echo "External sources built"
 
 .PHONY: Appdir
@@ -65,6 +65,14 @@ clean_BSP:
 	make -f makefiles/Makefile_quickfeather_BOARD clean
 
 CLEAN_TARGET += BSP
+
+.PHONY: AMAZON
+AMAZON:
+	make -f makefiles/Makefile_Amazon
+clean_AMAZON:
+	make -f makefiles/Makefile_Amazon clean
+
+CLEAN_TARGET += AMAZON
 
 .PHONY:DSPC
 DSPC:

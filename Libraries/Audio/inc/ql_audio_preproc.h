@@ -24,10 +24,8 @@
 #include "ql_audio_stream.h"
 #include "Fw_global_config.h"
 
-#ifndef UNIT_TEST
 #include "datablk_mgr.h"
 #include "semphr.h"
-#endif
 
 #define     QL_AUDIO_PREPROC_NONE               (0)
 #define     QL_AUDIO_PREPROC_BYPASS1            (1)
