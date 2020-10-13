@@ -60,7 +60,7 @@ one to configure and one to process datablocks.
 ### Required hardware
 - QuickFeather
 
-## qf_2micVR_app: [coming soon] standalone app using two microphones with stub for beamforming
+## qf_2micVR_app: standalone app using two microphones with stub for beamforming
 ![qf_2micVR_app](./images/qf_2micVR_app.png)
 ### Purpose
 Demonstrate how to setup and handle stereo input.
