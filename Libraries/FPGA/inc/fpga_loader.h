@@ -21,4 +21,11 @@
 *                                                          
 *=========================================================*/
 
-extern int load_fpga(uint32_t img_size,uint32_t* image_ptr);
+// Load FPGA bitstream
+int load_fpga(uint32_t img_size,uint32_t* image_ptr);
+
+// Load FPGA bitstream and initialize memory blocks
+int load_fpga_with_mem_init(uint32_t image_size, uint32_t* image_ptr, uint32_t mem_content_size, uint32_t* mem_content_ptr);
+
+
+
