@@ -1,0 +1,10 @@
+
+QLSPI_SRCS:=$(wildcard $(QLSPI_DIR)/*.c )
+
+filters=
+SRCS:=$(filter-out $(filters), $(notdir $(QLSPI_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(QLSPI_DIR)
+
+include $(COMMON_STUB)
+

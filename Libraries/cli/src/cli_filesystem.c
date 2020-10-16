@@ -16,14 +16,14 @@
 
 #include "Fw_global_config.h"
 
+#if FEATURE_CLI_FILESYSTEM
+
 #include "cli.h"
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "ql_time.h"
 #include "ql_fs.h" /* fix me: Move to Indra's solution */
-
-#if FEATURE_CLI_FILESYSTEM
 
 /* simple DIR command */
 static void do_dir( const struct cli_cmd_entry *pEntry )
