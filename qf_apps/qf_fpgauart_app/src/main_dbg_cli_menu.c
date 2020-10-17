@@ -29,6 +29,7 @@
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
+#include "eoss3_hal_uart.h"
 //#include "qlsh_commands.h"
 
 #if FEATURE_CLI_DEBUG_INTERFACE
@@ -194,8 +195,71 @@ const struct cli_cmd_entry qf_diagnostic[] =
     CLI_CMD_TERMINATE()
 };
 
+#define SEND_STRING_BUFLEN (512)
+#define RECV_STRING_BUFLEN (512)
+uint16_t kbWrite = 0;
+char send_string_buf[SEND_STRING_BUFLEN];
+char recv_string_buf[RECV_STRING_BUFLEN];
+static void uart_send(const struct cli_cmd_entry *pEntry)
+{
+
+    (void)pEntry;
+    // Add functionality here
+    memset(send_string_buf, 0, SEND_STRING_BUFLEN);
+    CLI_string_buf_getshow( "string to send to FPGA UART", send_string_buf, SEND_STRING_BUFLEN );
+    send_string_buf[SEND_STRING_BUFLEN-1] = 0;
+    uint32_t xtickStart = xTaskGetTickCount();
+    uart_tx_raw_buf(UART_ID_FPGA, send_string_buf, strlen(send_string_buf));
+    uint32_t xtickStop = xTaskGetTickCount();
+    dbg_str_int("elapsed ms", xtickStop - xtickStart);
+    return;
+}
+
+static void uart_recv(const struct cli_cmd_entry *pEntry)
+{
+
+    (void)pEntry;
+    // Add functionality here
+    CLI_uint16_getshow( "number of bytes to receive", &kbWrite );
+    memset(recv_string_buf, 0, RECV_STRING_BUFLEN);
+    if (kbWrite < 0)
+       kbWrite = 1;
+    if (kbWrite > RECV_STRING_BUFLEN)
+       kbWrite = RECV_STRING_BUFLEN-1;
+    recv_string_buf[kbWrite] = 0;
+    dbg_str_int_noln("Waiting for ", kbWrite-1);
+    dbg_str(" bytes from FPGA-UART");
+    uart_rx_raw_buf(UART_ID_FPGA, recv_string_buf, kbWrite);
+    dbg_str(recv_string_buf);
+    return;
+}
+
+static void uart_speedtest(const struct cli_cmd_entry *pEntry)
+{
+    (void)pEntry;
+    // Add functionality here
+    CLI_uint16_getshow( "number of bytes to write", &kbWrite );
+    uint32_t xtickStart = xTaskGetTickCount();
+    for (int i = 0; i != kbWrite; i++) {
+        uart_tx_raw(UART_ID_FPGA, '.');
+    }
+    uint32_t xtickStop = xTaskGetTickCount();
+    dbg_str_int("elapsed ms", xtickStop - xtickStart);
+    return;
+}
+
+
+const struct cli_cmd_entry qf_fpga_uart[] =
+{
+    CLI_CMD_SIMPLE( "send", uart_send, "send user string to fpga-uart" ),
+    CLI_CMD_SIMPLE( "recv", uart_recv, "receive user string from fpga-uart" ),
+    CLI_CMD_SIMPLE( "speedtest", uart_speedtest, "FPGA-UART speed test" ),
+    CLI_CMD_TERMINATE()
+};
+
 const struct cli_cmd_entry my_main_menu[] = {
     CLI_CMD_SUBMENU( "diag", qf_diagnostic, "QuickFeather diagnostic commands" ),
+    CLI_CMD_SUBMENU( "uart", qf_fpga_uart, "QuickFeather FPGA-UART commands" ),
     CLI_CMD_TERMINATE()
 };
 

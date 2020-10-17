@@ -14,8 +14,14 @@ FPGA clocks and runs a CLI (Command Line Interface) that allows the user to
 Setup
 -----
 
-Build the project using the Makefile located in the folder qorc-sdk/qf_apps/qf_fpgauart_app. Load the binary to the Quickfeather board.
-Connect one UART cable to the Quickfeather board HEADER_TX and HEADER_RX headers and another UART cable to the FPGA UART configured pins. The table below gives the default assignment. These can be changed by updating the quickfeather.pcf file in the FPGA UART gateware project.
+Build the project using the Makefile located in the folder
+qorc-sdk/qf_apps/qf_fpgauart_app. Load the binary to the Quickfeather board.
+Connect one UART cable to the Quickfeather board HEADER_TX and HEADER_RX headers
+and another UART cable to the FPGA UART configured pins. The table below gives
+the default assignment. These can be changed by updating the quickfeather.pcf
+file in the FPGA UART gateware project. The CLI (command line interface) attached
+to the first UART terminal may be used to send and receive data from the FPGA-UART
+terminal
 
 UART | Quickfeather pad# | Quickfeather IO# | Quickfeather Header |
 ---- | ------------      | ---------------- | ------------------- |

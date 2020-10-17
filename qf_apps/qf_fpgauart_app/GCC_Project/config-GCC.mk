@@ -2,14 +2,14 @@
 # Symbiflow options for QORK SDK
 #
 export RTL_TOP_MODULE=helloworldfpga
-export GATEWARE_DIR=$(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)projects$(DIR_SEP)S3_FPGA_UART
+export GATEWARE_DIR=$(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)projects$(DIR_SEP)S3_FPGA_UART_GPIO
 
 #
 # GCC Configuration options for QORC SDK
 #
 
 DASH_G=-gdwarf-4
-DASH_O=-Os
+DASH_O=-O
 
 #Assembler flags
 export AS_FLAGS= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(DASH_O) -fmessage-length=0 \
@@ -66,7 +66,7 @@ export CFLAGS= $(MACROS) \
 
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
             ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
-            ${DASH_G} -T "$(PROJ_DIR)/$(OUTPUT_FILE).ld" -Xlinker --gc-sections -Wall -Werror \
+            ${DASH_G} -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
             -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
@@ -91,7 +91,7 @@ export SYSFLASH_DIR     = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
 export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
 export FPGA_DIR       		= $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
 export CLI_DIR        		= $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
-export MAIN_DIR       		= $(PROJ_ROOT)$(DIR_SEP)qf_apps$(DIR_SEP)$(PROJ_NAME)$(DIR_SEP)src
-export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
-export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+export MAIN_DIR       	= $(APP_DIR)$(DIR_SEP)src
+#export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
+#export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src

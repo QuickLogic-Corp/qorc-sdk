@@ -138,7 +138,7 @@ void fb_uart_set_clk(uint8_t en)
 {
     if (en)
     {
-        S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_18MHZ);
+        S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_24MHZ);
         S3x_Clk_Enable(S3X_FB_16_CLK);
         S3x_Clk_Enable(S3X_FB_02_CLK);
         S3x_Clk_Enable(S3X_FFE_X1_CLK);

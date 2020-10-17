@@ -91,15 +91,13 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART  UART_ID_FPGA    // Write data to FPGA UART serial port
+#define DEBUG_UART  UART_ID_HW    // Write data to FPGA UART serial port
      
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
 #define SIZEOF_DBGBUFFER    2048    // Number of characters in circular debug buffer
 
-#if (FEATURE_FPGA_UART == 1)
-#define UART_ID_CONSOLE UART_ID_FPGA
-#endif
+#define UART_ID_CONSOLE UART_ID_HW
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
