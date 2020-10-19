@@ -7,3 +7,6 @@
 [submodule "s3-gateware"]
 	path = s3-gateware
 	url = https://github.com/QuickLogic-Corp/s3-gateware
+[submodule "qorc-testapps"]
+	path = qorc-testapps
+	url = https://github.com/QuickLogic-Corp/qorc-testapps
