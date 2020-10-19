@@ -95,7 +95,26 @@ int main(void)
     uartObj.intrMode = UART_INTR_ENABLE;
     uartHandlerUpdate(uart_id,&uartObj);
 
+    for (int i = 0; i != 4000000; i++) ;   // [TODO] Analyze and remove need for this delay
     uart_init( uart_id, NULL, NULL, &uartObj);
+
+    uint32_t device_id = *(uint32_t *)FPGA_PERIPH_BASE ;
+
+    if (device_id == 0xABCD0002)
+    {
+      uart_id = UART_ID_FPGA_UART1;
+      brate = BAUD_115200;
+      uartObj.baud = brate;
+      uartObj.wl = WORDLEN_8B;
+      uartObj.parity = PARITY_NONE;
+      uartObj.stop = STOPBITS_1;
+      uartObj.mode = TX_RX_MODE;
+      uartObj.hwCtrl = HW_FLOW_CTRL_DISABLE;
+      uartObj.intrMode = UART_INTR_ENABLE;
+      uartHandlerUpdate(uart_id,&uartObj);
+
+      uart_init( uart_id, NULL, NULL, &uartObj);
+    }
 #endif
 
     dbg_str("\n\n");

@@ -27,7 +27,11 @@
 #include <eoss3_hal_def.h>
 #include "eoss3_hal_uart.h"
 
+#define FB_UART0_BASE         (FPGA_PERIPH_BASE+0x1000)
+#define FB_UART1_BASE         (FPGA_PERIPH_BASE+0x2000)
 
+#define FB_UART0              ((FPGA_UART_TypeDef *)FB_UART0_BASE)
+#define FB_UART1              ((FPGA_UART_TypeDef *)FB_UART1_BASE)
 //
 // Interrupt Enable Register
 //
@@ -126,13 +130,13 @@
  *  \return status
  */
 //HAL_StatusTypeDef HAL_FB_UART_Init(UartHandler *pxObj);
-void HAL_FB_UART_Init(const UartHandler *pxObj);
+void HAL_FB_UART_Init(int uartid, const UartHandler *pxObj);
 
 /*! \fn void HAL_FB_UART_Stop(void)
  *  \brief Stop pending RX/TX.
  *
  */
-void HAL_FB_UART_Stop(void);
+void HAL_FB_UART_Stop(int uartid);
 
 
 /*! \fn void HAL_FB_UART_Tx(int c)
@@ -140,17 +144,17 @@ void HAL_FB_UART_Stop(void);
  *
  *  \param c    Byte to transmit over UART
  */
-void HAL_FB_UART_Tx(int c);
+void HAL_FB_UART_Tx(int uartid, int c);
 
 /*! \fn int HAL_FB_UART_Rx(void)
  *  \brief Send byte over UART implemented in FPGA.
  *
  *  \return Byte read from UART
  */
-int HAL_FB_UART_Rx(void);
+int HAL_FB_UART_Rx(int uartid);
 
 int fb_uart_read(int uartid, ptrdiff_t buf, size_t len);
 
-int FB_getRxBufSize(void);
-int FB_getRxBuf(uint8_t *b, const int l);
+int FB_getRxBufSize(int uartid);
+int FB_getRxBuf(int uartid, uint8_t *b, const int l);
 #endif /* !__EOSS3_HAL_FB_UART_H_ */

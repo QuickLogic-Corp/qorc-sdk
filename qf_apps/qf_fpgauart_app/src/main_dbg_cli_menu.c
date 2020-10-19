@@ -31,6 +31,7 @@
 #include "dbg_uart.h"
 #include "eoss3_hal_uart.h"
 //#include "qlsh_commands.h"
+#include "task.h"
 
 #if FEATURE_CLI_DEBUG_INTERFACE
 
@@ -200,22 +201,32 @@ const struct cli_cmd_entry qf_diagnostic[] =
 uint16_t kbWrite = 0;
 char send_string_buf[SEND_STRING_BUFLEN];
 char recv_string_buf[RECV_STRING_BUFLEN];
-static void uart_send(const struct cli_cmd_entry *pEntry)
+
+static void get_deviceid(const struct cli_cmd_entry *pEntry)
+{
+    (void)pEntry;
+    // Add functionality here
+    uint32_t device_id = *(uint32_t *)FPGA_PERIPH_BASE ;
+    dbg_str_hex32 ("Device ID", device_id);
+}
+
+static void uart_send(int uartid, const struct cli_cmd_entry *pEntry)
 {
 
     (void)pEntry;
     // Add functionality here
     memset(send_string_buf, 0, SEND_STRING_BUFLEN);
-    CLI_string_buf_getshow( "string to send to FPGA UART", send_string_buf, SEND_STRING_BUFLEN );
+    CLI_string_buf_getshow( "string to send ", send_string_buf, SEND_STRING_BUFLEN );
+    dbg_str_int("FPGA-UART", uartid);
     send_string_buf[SEND_STRING_BUFLEN-1] = 0;
     uint32_t xtickStart = xTaskGetTickCount();
-    uart_tx_raw_buf(UART_ID_FPGA, send_string_buf, strlen(send_string_buf));
+    uart_tx_raw_buf(uartid, send_string_buf, strlen(send_string_buf));
     uint32_t xtickStop = xTaskGetTickCount();
     dbg_str_int("elapsed ms", xtickStop - xtickStart);
     return;
 }
 
-static void uart_recv(const struct cli_cmd_entry *pEntry)
+static void uart_recv(int uartid, const struct cli_cmd_entry *pEntry)
 {
 
     (void)pEntry;
@@ -227,39 +238,83 @@ static void uart_recv(const struct cli_cmd_entry *pEntry)
     if (kbWrite > RECV_STRING_BUFLEN)
        kbWrite = RECV_STRING_BUFLEN-1;
     recv_string_buf[kbWrite] = 0;
-    dbg_str_int_noln("Waiting for ", kbWrite-1);
-    dbg_str(" bytes from FPGA-UART");
-    uart_rx_raw_buf(UART_ID_FPGA, recv_string_buf, kbWrite);
+    dbg_str_int_noln("Waiting for ", kbWrite);
+    dbg_str_int(" bytes from FPGA-UART", uartid);
+    uart_rx_raw_buf(uartid, recv_string_buf, kbWrite);
     dbg_str(recv_string_buf);
+    dbg_nl();
     return;
 }
 
-static void uart_speedtest(const struct cli_cmd_entry *pEntry)
+static void uart_speedtest(int uartid, const struct cli_cmd_entry *pEntry)
 {
     (void)pEntry;
     // Add functionality here
     CLI_uint16_getshow( "number of bytes to write", &kbWrite );
+    dbg_str_int("FPGA-UART", uartid);
     uint32_t xtickStart = xTaskGetTickCount();
     for (int i = 0; i != kbWrite; i++) {
-        uart_tx_raw(UART_ID_FPGA, '.');
+        uart_tx_raw(uartid, '.');
     }
     uint32_t xtickStop = xTaskGetTickCount();
     dbg_str_int("elapsed ms", xtickStop - xtickStart);
     return;
 }
 
-
-const struct cli_cmd_entry qf_fpga_uart[] =
+static void uart0_send(const struct cli_cmd_entry *pEntry)
 {
-    CLI_CMD_SIMPLE( "send", uart_send, "send user string to fpga-uart" ),
-    CLI_CMD_SIMPLE( "recv", uart_recv, "receive user string from fpga-uart" ),
-    CLI_CMD_SIMPLE( "speedtest", uart_speedtest, "FPGA-UART speed test" ),
+	uart_send(UART_ID_FPGA, pEntry);
+}
+
+static void uart0_recv(const struct cli_cmd_entry *pEntry)
+{
+	uart_recv(UART_ID_FPGA, pEntry);
+}
+
+static void uart0_speedtest(const struct cli_cmd_entry *pEntry)
+{
+	uart_speedtest(UART_ID_FPGA, pEntry);
+}
+
+static void uart1_send(const struct cli_cmd_entry *pEntry)
+{
+    uint32_t device_id = *(uint32_t *)FPGA_PERIPH_BASE ;
+	uart_send(UART_ID_FPGA_UART1, pEntry);
+}
+
+static void uart1_recv(const struct cli_cmd_entry *pEntry)
+{
+    uint32_t device_id = *(uint32_t *)FPGA_PERIPH_BASE ;
+	uart_recv(UART_ID_FPGA_UART1, pEntry);
+}
+
+static void uart1_speedtest(const struct cli_cmd_entry *pEntry)
+{
+    uint32_t device_id = *(uint32_t *)FPGA_PERIPH_BASE ;
+	uart_speedtest(UART_ID_FPGA_UART1, pEntry);
+}
+
+const struct cli_cmd_entry qf_fpga_uart0[] =
+{
+    CLI_CMD_SIMPLE( "send", uart0_send, "send user string to fpga-uart0" ),
+    CLI_CMD_SIMPLE( "recv", uart0_recv, "receive user string from fpga-uart0" ),
+    CLI_CMD_SIMPLE( "speedtest", uart0_speedtest, "FPGA-UART0 speed test" ),
+    CLI_CMD_TERMINATE()
+};
+
+const struct cli_cmd_entry qf_fpga_uart1[] =
+{
+    CLI_CMD_SIMPLE( "send", uart1_send, "send user string to fpga-uart1" ),
+    CLI_CMD_SIMPLE( "recv", uart1_recv, "receive user string from fpga-uart1" ),
+    CLI_CMD_SIMPLE( "speedtest", uart1_speedtest, "FPGA-UART1 speed test" ),
     CLI_CMD_TERMINATE()
 };
 
 const struct cli_cmd_entry my_main_menu[] = {
+    CLI_CMD_SIMPLE( "readid", get_deviceid, "Get FPGA device-id" ),
     CLI_CMD_SUBMENU( "diag", qf_diagnostic, "QuickFeather diagnostic commands" ),
-    CLI_CMD_SUBMENU( "uart", qf_fpga_uart, "QuickFeather FPGA-UART commands" ),
+    CLI_CMD_SUBMENU( "uart0", qf_fpga_uart0, "QuickFeather FPGA-UART0 commands" ),
+    CLI_CMD_SUBMENU( "uart1", qf_fpga_uart1, "QuickFeather FPGA-UART1 commands" ),
     CLI_CMD_TERMINATE()
 };
 

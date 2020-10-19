@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stddef.h>
+#include <assert.h>
 #include <eoss3_dev.h>
 #include <eoss3_hal_def.h>
 #include <eoss3_hal_fpga_uart.h>
@@ -37,7 +38,9 @@
 //#include "Periph_setup.h"
 #include "Fw_global_config.h"
 
+#ifndef USE_FPGA_UART
 #define USE_FPGA_UART (FEATURE_FPGA_UART)
+#endif
 
 #if  (USE_FPGA_UART == 1)
 
@@ -45,7 +48,7 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 #endif
-#if (!USE_FPGA_UART)
+#if (USE_FPGA_UART == 0)
 #define FB_UART_LPM_EN /* Enable LPM for FPGA UART saves power */
 #endif
 #define RXBUF_LEN       (256)
@@ -57,57 +60,102 @@ struct RxBuf
     uint8_t start;
     uint8_t end;
 };
+
+typedef struct fpga_uart_obj
+{
+  FPGA_UART_TypeDef *p_fpga_uart_mem;
+  struct RxBuf rxBuf;
+  xSemaphoreHandle consumer_wakeup_sem;
+  unsigned char uart_init_done;
+  int FB_uart_lpm_en ;
+  int FB_uart_in_lpm ;
+} fpga_uart_obj_t;
+
+fpga_uart_obj_t  fpgaUartObj0 = { .p_fpga_uart_mem = (FPGA_UART_TypeDef *)FB_UART0_BASE };
+fpga_uart_obj_t  fpgaUartObj1 = { .p_fpga_uart_mem = (FPGA_UART_TypeDef *)FB_UART1_BASE };
+
+UartHandler FBUartObj;
+#if 0
 static struct RxBuf rxBuf;
 static xSemaphoreHandle consumer_wakeup_sem;
-UartHandler FBUartObj;
 unsigned char uart_init_done=0;
 static int FB_uart_lpm_en = 0, FB_uart_in_lpm = 0;
+#endif
+
 void FB_uart_register_lpm(void);
 
-static void initRxBuf()
+static fpga_uart_obj_t *fpga_uart_id2obj(int uartid)
 {
-    rxBuf.start = rxBuf.end = 0;
+  fpga_uart_obj_t *pfpgaUartObj = NULL;
+
+#if defined(UART_ID_FPGA)
+    if (uartid == UART_ID_FPGA)
+      pfpgaUartObj = &fpgaUartObj0;
+#endif
+
+#if defined(UART_ID_FPGA_UART0)
+    if (uartid == UART_ID_FPGA_UART0)
+      pfpgaUartObj = &fpgaUartObj0;
+#endif
+
+#if defined(UART_ID_FPGA_UART1)
+    if (uartid == UART_ID_FPGA_UART1)
+      pfpgaUartObj = &fpgaUartObj1;
+#endif
+    assert(pfpgaUartObj != NULL);
+    return pfpgaUartObj;
 }
 
-int FB_getRxBufSize(void)
+static void initRxBuf(struct RxBuf *prxBuf)
 {
-    if(rxBuf.start <= rxBuf.end) return (rxBuf.end - rxBuf.start);
-    else return (RXBUF_LEN + rxBuf.end - rxBuf.start);
+    prxBuf->start = prxBuf->end = 0;
 }
-void FB_fillRxBuf(const uint8_t *b, const int l, BaseType_t *pxHigherPriorityTaskWoken)
+
+int FB_getRxBufSize(int uartid)
 {
+  fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+  struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
+    if(prxBuf->start <= prxBuf->end) return (prxBuf->end - prxBuf->start);
+    else return (RXBUF_LEN + prxBuf->end - prxBuf->start);
+}
+void FB_fillRxBuf(int uartid, const uint8_t *b, const int l, BaseType_t *pxHigherPriorityTaskWoken)
+{
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
     int wrLen = l;
     int i;
 
-    if ((FB_getRxBufSize() + wrLen) > RXBUF_LEN)
+    if ((FB_getRxBufSize(uartid) + wrLen) > RXBUF_LEN)
     {
-        wrLen = RXBUF_LEN - FB_getRxBufSize();
+        wrLen = RXBUF_LEN - FB_getRxBufSize(uartid);
     }
     for(i=l-wrLen; i<l; i++)
     {
-        rxBuf.b[rxBuf.end++] = b[i];
+        prxBuf->b[prxBuf->end++] = b[i];
     }
-    if (FB_getRxBufSize() > 0 && consumer_wakeup_sem) {
-        xSemaphoreGiveFromISR(consumer_wakeup_sem, pxHigherPriorityTaskWoken);
+    if (FB_getRxBufSize(uartid) > 0 && pfpgaUartObj->consumer_wakeup_sem) {
+        xSemaphoreGiveFromISR(pfpgaUartObj->consumer_wakeup_sem, pxHigherPriorityTaskWoken);
     }
 }
 
-int FB_getRxBuf(uint8_t *b, const int l)
+int FB_getRxBuf(int uartid, uint8_t *b, const int l)
 {
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
     int rdLen = l;
     int i;
 
-    if (FB_getRxBufSize() == 0 && consumer_wakeup_sem) {
-        xSemaphoreTake(consumer_wakeup_sem, portMAX_DELAY);
+    if (FB_getRxBufSize(uartid) == 0 && pfpgaUartObj->consumer_wakeup_sem) {
+        xSemaphoreTake(pfpgaUartObj->consumer_wakeup_sem, portMAX_DELAY);
     }
-    if (FB_getRxBufSize() < rdLen)
+    if (FB_getRxBufSize(uartid) < rdLen)
     {
-        rdLen = FB_getRxBufSize();
+        rdLen = FB_getRxBufSize(uartid);
     }
     for(i=0; i<rdLen; i++)
     {
-        b[i] = rxBuf.b[rxBuf.start];
-        rxBuf.start++;
+        b[i] = prxBuf->b[prxBuf->start];
+        prxBuf->start++;
     }
     return i;
 }
@@ -121,8 +169,26 @@ static void FB_UART_ISR_Func(void)
         if (iir & IIR_RXRDY) {
             while (FB_UART->UART_LSR & LSR_RXRDY) {    //TBD : Enable fifo
                 tmp = FB_UART->UART_DR_DLLSB & 0xFF;
-                FB_fillRxBuf(&tmp, 1, &pxHigherPriorityTaskWoken);
+                FB_fillRxBuf(UART_ID_FPGA, &tmp, 1, &pxHigherPriorityTaskWoken);
                 tmp = FB_UART->UART_LSR;
+            }
+        }
+    }
+    portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+}
+
+static void FB_UART1_ISR_Func(void)
+{
+  FPGA_UART_TypeDef *p_fpga_uart = FB_UART1;
+    unsigned int iir = p_fpga_uart->UART_IIR_FCR;
+    unsigned char tmp = 0;
+    BaseType_t pxHigherPriorityTaskWoken = pdFALSE;
+    if (!(iir & IIR_NOPEND)) {
+        if (iir & IIR_RXRDY) {
+            while (p_fpga_uart->UART_LSR & LSR_RXRDY) {    //TBD : Enable fifo
+                tmp = p_fpga_uart->UART_DR_DLLSB & 0xFF;
+                FB_fillRxBuf(UART_ID_FPGA_UART1, &tmp, 1, &pxHigherPriorityTaskWoken);
+                tmp = p_fpga_uart->UART_LSR;
             }
         }
     }
@@ -131,14 +197,16 @@ static void FB_UART_ISR_Func(void)
 
 int fb_uart_read(int uartid, ptrdiff_t buf, size_t len)
 {
-    return FB_getRxBuf(( unsigned char *)buf, len);
+    return FB_getRxBuf(uartid, ( unsigned char *)buf, len);
 }
 
 void fb_uart_set_clk(uint8_t en)
 {
     if (en)
     {
-        S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_24MHZ);
+        S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_18MHZ);
+        //uint32_t clkrate = S3x_Clk_Get_Rate(S3X_FB_16_CLK);
+        //assert(clkrate == F_18MHZ );
         S3x_Clk_Enable(S3X_FB_16_CLK);
         S3x_Clk_Enable(S3X_FB_02_CLK);
         S3x_Clk_Enable(S3X_FFE_X1_CLK);
@@ -155,7 +223,7 @@ void fb_uart_set_clk(uint8_t en)
     }
 }
 
-void HAL_FB_UART_Init(const UartHandler *pxObj)
+void HAL_FB_UART_Init(int uartid, const UartHandler *pxObj)
 {
     UINT32_t lcr_h_value = 0;
     UINT32_t cr_value = 0;
@@ -164,6 +232,10 @@ void HAL_FB_UART_Init(const UartHandler *pxObj)
     UINT32_t clock, baud;
 
     UartHandler *ptrObj;
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
+    FPGA_UART_TypeDef *p_fpga_uart = pfpgaUartObj->p_fpga_uart_mem;
+
     if(pxObj)
     {
         memcpy(&FBUartObj, pxObj, sizeof(FBUartObj));
@@ -171,7 +243,7 @@ void HAL_FB_UART_Init(const UartHandler *pxObj)
     ptrObj = &FBUartObj;
 
 
-    initRxBuf();
+    initRxBuf(prxBuf);
     /* Unlock write to C11 clock gate register */
 //    MISC_CTRL->LOCK_KEY_CTRL = 0x1ACCE551;
 
@@ -247,16 +319,19 @@ void HAL_FB_UART_Init(const UartHandler *pxObj)
     }
 
     // Disable UART
-    FB_UART->UART_LCR = 0;
+    p_fpga_uart->UART_LCR = 0;
 
     // Clear and disable all interrupts
 
     /* Program Divisor latch */
-    FB_UART->UART_LCR = LCR_DLAB;
-    FB_UART->UART_IER_DLMSB = (dlatch_value >> 8) & 0xFF;
+    p_fpga_uart->UART_LCR = LCR_DLAB;
+    p_fpga_uart->UART_IER_DLMSB = (dlatch_value >> 8) & 0xFF;
 
-    FB_UART->UART_DR_DLLSB = dlatch_value & 0xFF;
+    p_fpga_uart->UART_DR_DLLSB = dlatch_value & 0xFF;
 
+    int abaud = (clock / 16 / (dlatch_value+1));
+    assert ( ( (baud*.97f) < abaud ) || (abaud < (baud*1.03f)) );
+    printf("baud=%d\n", abaud);
 #if (0) // pad configuration setup moved to pincfg_table.c
     // Set up IO pin for TX
     if ((pxObj->mode == TX_MODE) || (pxObj->mode == TX_RX_MODE))
@@ -307,27 +382,37 @@ void HAL_FB_UART_Init(const UartHandler *pxObj)
     //setup interrupt here
     if ((pxObj->mode == RX_MODE) || (pxObj->mode == TX_RX_MODE))
     {
-    consumer_wakeup_sem = xSemaphoreCreateBinary();
-    FB_RegisterISR(FB_INTERRUPT_2, FB_UART_ISR_Func);
-    FB_ConfigureInterrupt(FB_INTERRUPT_2, FB_INTERRUPT_TYPE_LEVEL/* FIXME */,
-                  FB_INTERRUPT_POL_LEVEL_HIGH/* FIXME */,
-                  FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
-    NVIC_ClearPendingIRQ(FbMsg_IRQn);
-    NVIC_EnableIRQ(FbMsg_IRQn);
-    FB_UART->UART_LCR &= ~LCR_DLAB;
-    FB_UART->UART_IER_DLMSB = IER_ERXRDY ;
+    pfpgaUartObj->consumer_wakeup_sem = xSemaphoreCreateBinary();
+    if (uartid == UART_ID_FPGA) {
+      FB_RegisterISR(FB_INTERRUPT_2, FB_UART_ISR_Func);
+      FB_ConfigureInterrupt(FB_INTERRUPT_2, FB_INTERRUPT_TYPE_LEVEL/* FIXME */,
+                    FB_INTERRUPT_POL_LEVEL_HIGH/* FIXME */,
+                    FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
+      NVIC_ClearPendingIRQ(FbMsg_IRQn);
+      NVIC_EnableIRQ(FbMsg_IRQn);
+    }
+    else if (uartid == UART_ID_FPGA_UART1) {
+      FB_RegisterISR(FB_INTERRUPT_3, FB_UART1_ISR_Func);
+      FB_ConfigureInterrupt(FB_INTERRUPT_3, FB_INTERRUPT_TYPE_LEVEL/* FIXME */,
+                    FB_INTERRUPT_POL_LEVEL_HIGH/* FIXME */,
+                    FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
+      NVIC_ClearPendingIRQ(FbMsg_IRQn);
+      NVIC_EnableIRQ(FbMsg_IRQn);
+    }
+    p_fpga_uart->UART_LCR &= ~LCR_DLAB;
+    p_fpga_uart->UART_IER_DLMSB = IER_ERXRDY ;
     }
 
     // Set up UART LCR and MCR
-    FB_UART->UART_LCR = ptrObj->lcr_h_value = lcr_h_value;
-    FB_UART->UART_MCR = ptrObj->cr_value = cr_value;
+    p_fpga_uart->UART_LCR = ptrObj->lcr_h_value = lcr_h_value;
+    p_fpga_uart->UART_MCR = ptrObj->cr_value = cr_value;
 
     /* Program FIFO Enable */
-    FB_UART->UART_IIR_FCR = FCR_ENABLE|FCR_TRIGGER_14;
+    p_fpga_uart->UART_IIR_FCR = FCR_ENABLE|FCR_TRIGGER_14;
 
     /* flag to indicate the UART init is completed.
     This is to make sure before any UART prints called the init is completed */
-    uart_init_done = 1;
+    pfpgaUartObj->uart_init_done = 1;
 
     FB_uart_register_lpm();
 #ifdef FB_UART_LPM_EN
@@ -340,30 +425,32 @@ void HAL_FB_UART_Init(const UartHandler *pxObj)
  *  \brief Stop pending RX/TX.
  *
  */
-void HAL_FB_UART_Stop()
+void HAL_FB_UART_Stop(int uartid)
 {
-    FB_UART->UART_LCR |= LCR_SBREAK;
-    FB_UART->UART_LCR &= ~LCR_SBREAK;
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    FPGA_UART_TypeDef *p_fpga_uart = pfpgaUartObj->p_fpga_uart_mem;
+    p_fpga_uart->UART_LCR |= LCR_SBREAK;
+    p_fpga_uart->UART_LCR &= ~LCR_SBREAK;
 }
 
 /*
  * Basic read, write, put, get routines follow here.
  */
-static int fb_uart_getc(void)
+static int fb_uart_getc(FPGA_UART_TypeDef *p_fpga_uart)
 {
     int c;
 
-    while (!(FB_UART->UART_LSR & LSR_RXRDY));
-    c = FB_UART->UART_DR_DLLSB & 0xFF;
+    while (!(p_fpga_uart->UART_LSR & LSR_RXRDY));
+    c = p_fpga_uart->UART_DR_DLLSB & 0xFF;
     return(c);
 }
 
-static void uart_putc(int c)
+static void uart_putc(FPGA_UART_TypeDef *p_fpga_uart, int c)
 {
     //while ((FB_UART->UART_LSR & LSR_TXRDY));
-    while (!(FB_UART->UART_LSR & LSR_THRE /*LSR_TXRDY*/));
+    while (!(p_fpga_uart->UART_LSR & LSR_THRE /*LSR_TXRDY*/));
 
-    FB_UART->UART_DR_DLLSB = c  & 0xFF ;
+    p_fpga_uart->UART_DR_DLLSB = c  & 0xFF ;
 }
 
 /*! \fn void HAL_FB_UART_Tx(int c)
@@ -371,9 +458,11 @@ static void uart_putc(int c)
  *
  *  \param c    Byte to transmit over UART
  */
-void HAL_FB_UART_Tx(int c)
+void HAL_FB_UART_Tx(int uartid, int c)
 {
-      uart_putc(c);
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    FPGA_UART_TypeDef *p_fpga_uart = pfpgaUartObj->p_fpga_uart_mem;
+      uart_putc(p_fpga_uart, c);
 }
 
 /*! \fn int HAL_FB_UART_Rx(void)
@@ -381,12 +470,14 @@ void HAL_FB_UART_Tx(int c)
  *
  *  \return Byte read from UART
  */
-int HAL_FB_UART_Rx(void)
+int HAL_FB_UART_Rx(int uartid)
 {
-    return(fb_uart_getc());
+    fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
+    FPGA_UART_TypeDef *p_fpga_uart = pfpgaUartObj->p_fpga_uart_mem;
+    return(fb_uart_getc(p_fpga_uart));
 }
 
-
+#if 0
 int FB_uart_enter_lpm(void)
 {
     if (FB_uart_lpm_en)
@@ -424,9 +515,9 @@ int FB_uart_lpm_callback( int state)
     }
     return ret;
 }
-
+#endif
 void FB_uart_register_lpm(void)
 {
-    S3x_Register_Lpm_Cb(FB_uart_lpm_callback, "FB_UART");
+//    S3x_Register_Lpm_Cb(FB_uart_lpm_callback, "FB_UART");
 }
 #endif /* USE_FPGA_UART */
