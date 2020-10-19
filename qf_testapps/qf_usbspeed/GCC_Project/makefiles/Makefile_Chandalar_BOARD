@@ -1,9 +1,0 @@
-
-CHANDALAR_SRCS:=$(wildcard $(CHANDALAR_DIR)/*.c)
-
-SRCS:=$(notdir $(CHANDALAR_SRCS))
-OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
-SRC_PATH:= $(CHANDALAR_DIR)
-
-include $(COMMON_STUB)
-

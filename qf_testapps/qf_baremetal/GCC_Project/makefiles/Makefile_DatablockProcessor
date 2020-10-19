@@ -1,9 +1,0 @@
-
-DBP_SRCS:=$(wildcard $(DBP_DIR)/*.c)
-
-SRCS:=$(notdir $(DBP_SRCS))
-OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
-SRC_PATH:= $(DBP_DIR)
-
-include $(COMMON_STUB)
-

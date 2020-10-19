@@ -1,9 +1,0 @@
-
-SYSFLASH_SRCS:=$(wildcard $(SYSFLASH_DIR)/*.c )
-
-SRCS:=$(notdir $(SYSFLASH_SRCS))
-OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
-SRC_PATH:= $(SYSFLASH_DIR)
-
-include $(COMMON_STUB)
-
