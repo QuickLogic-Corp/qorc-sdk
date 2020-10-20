@@ -116,7 +116,9 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
 #endif
-   {
+#if (FEATURE_D2HPROTOCOL_HOST == 1)
+  
+   { //for H2D Interrupt 
     .ucPin = PAD_11,
     .ucFunc = PAD11_FUNC_SEL_GPIO_2,
     .ucCtrl = PAD_CTRL_SRC_A0,
@@ -126,17 +128,17 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS
    },
-   {
-    .ucPin = PAD_6,
-    .ucFunc = PAD6_FUNC_SEL_GPIO_0,
+   { //for H2D Ack
+    .ucPin = PAD_30,
+    .ucFunc = PAD30_FUNC_SEL_GPIO_3,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_PULLUP,
+    .ucPull = PAD_PULLDOWN,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS
    },
-  
+#endif  
    { // Pad 33 -- Test clock
     .ucPin = PAD_33,
     .ucFunc = PAD33_FUNC_SEL_FBIO_33,
@@ -327,14 +329,24 @@ PadConfig pincfg_table[] =
 
 GPIOCfgTypeDef  gpiocfg_table[] =
 {
-  {
+#if (FEATURE_D2HPROTOCOL_HOST == 1)  
+  {  //for D2H interrupt 
      .usPadNum = PAD_12,
      .ucGpioNum = GPIO_6,
      .ucFunc = PAD12_FUNC_SEL_SENS_INT_6,
      .intr_type = EDGE_TRIGGERED,
      .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
      .ucPull = PAD_NOPULL
+  },
+  {  //for D2H ack 
+     .usPadNum = PAD_13,
+     .ucGpioNum = GPIO_7,
+     .ucFunc = PAD13_FUNC_SEL_SENS_INT_7,
+     .intr_type = EDGE_TRIGGERED,
+     .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
+     .ucPull = PAD_NOPULL
   }
+#endif
 };
 
 int sizeof_pincfg_table = sizeof(pincfg_table)/sizeof(pincfg_table[0]);

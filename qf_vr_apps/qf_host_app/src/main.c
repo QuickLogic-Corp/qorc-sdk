@@ -50,6 +50,7 @@
 #include "h2d_protocol.h"
 #include "ql_hostTask.h"
 #include "gateware.h"
+#include "eoss3_hal_uart.h"
 
 #ifndef USBSERIAL_PRODUCTID
 #define USBSERIAL_PRODUCTID     (0x6141)
@@ -189,7 +190,9 @@ int main(void)
     /* Use the following APIs to send and receive data from USB-serial 
      * uart_tx_raw_buf ( UART_ID_USBSERIAL, txbuf, txbuflen );
      * uart_rx_raw_buf ( UART_ID_USBSERIAL, txbuf, txbuflen );
-     */    
+     */
+//    char test_usb[] =  "\nUSB Serial init done \n";
+//uart_tx_raw_buf( UART_ID_USBSERIAL,test_usb, sizeof(test_usb));
 #endif
 
     dbg_str("\n\n");

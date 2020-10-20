@@ -53,6 +53,7 @@ HAL_StatusTypeDef HAL_PMU_Timer_Interrupt_Callback();
 void S3x_Tick_Hook(void);
 
 extern void service_intr_from_device(void);
+extern void service_ack_from_device(void);
 extern void SendBLERxDataReady(void);
 
 /******************************************************************************/
@@ -438,6 +439,14 @@ void SensorGpio_Handler(void)
 		service_intr_from_device();
 		INTR_CTRL->GPIO_INTR |= (1<<GPIO_6);
 	}
+    //GPIO_7 
+    if(INTR_CTRL->GPIO_INTR & (1<<GPIO_7))
+	{
+        /* This is ack  device to Host*/
+		service_ack_from_device();
+		INTR_CTRL->GPIO_INTR |= (1<<GPIO_7);
+	}
+    
 	NVIC_ClearPendingIRQ(Gpio_IRQn);
 	NVIC_EnableIRQ(Gpio_IRQn);
     

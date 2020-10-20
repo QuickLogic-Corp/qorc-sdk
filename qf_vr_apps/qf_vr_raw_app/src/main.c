@@ -88,7 +88,70 @@ GPIOCfgTypeDef D2H_FSMConfigData =
    PAD_NOPULL,
    EDGE_TRIGGERED,
    RISE_HIGH
-};								   
+};
+//this is Ack coming from Host as an interrupt
+GPIOCfgTypeDef H2D_AckConfigData = 
+{ 
+   GPIO_6,//Gpio number has to be interrupt number 
+   PAD_31,
+   PAD31_FUNC_SEL_SENS_INT_6,
+   PAD_NOPULL,
+   EDGE_TRIGGERED,
+   RISE_HIGH
+};
+//Using PAD_24 as Ack from S3 and PAD_31 as Ack from Host 
+void setup_d2h_hardware(void) {
+  
+  //these setup only 2 pins
+  h2d_config_intr(&D2H_FSMConfigData);
+
+#if 0  
+  //these 2 setups are for 4 pin protocol
+  
+  //configure H2D Ack as input interrupt
+  HAL_GPIO_IntrCfg(&H2D_AckConfigData);
+
+  //Configure D2H Ack as output 
+  PadConfig padcfg;
+
+  //output pin
+  padcfg.ucCtrl = PAD_CTRL_SRC_A0; 
+  padcfg.ucMode = PAD_MODE_OUTPUT_EN;
+  padcfg.ucPull = PAD_NOPULL;
+  padcfg.ucDrv = PAD_DRV_STRENGHT_4MA;
+  padcfg.ucSpeed = PAD_SLEW_RATE_FAST;
+  padcfg.ucSmtTrg = PAD_SMT_TRIG_DIS;
+  
+  //Pad 24 -- Gpio0
+  padcfg.ucPin = PAD_24;
+  padcfg.ucFunc = PAD24_FUNC_SEL_GPIO_0;
+  HAL_PAD_Config(&padcfg);
+#endif
+  
+  return;
+}
+
+void start_d2h_protocol_task(void) {
+  
+  //setup gpios and interrupts
+  setup_d2h_hardware();
+    
+  D2H_Platform_Info d2h_plat_info;
+  d2h_plat_info.H2D_gpio = GPIO_7;
+  d2h_plat_info.D2H_gpio = 0xFF;      // D2H intr is through PAD 43. AP intr
+
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+  
+  d2h_plat_info.H2D_ack = GPIO_6; //GPIO_4;
+  d2h_plat_info.D2H_ack = GPIO_0;      // D2H intr is through PAD 24.
+
+#endif
+  
+  d2h_protocol_init(&d2h_plat_info);
+  
+  return;
+}
+
 
 extern int  VR_FSMConfigData;
 
@@ -166,6 +229,11 @@ int main(void)
     SOFTWARE_VERSION_STR = "QORC-SDK-VR-RAW-App";
 
     qf_hardwareSetup();
+
+    //setup D2H protocol pins and interrupts and start the task
+    start_d2h_protocol_task();
+    hif_task_Start();
+
     uart_set_lpm_state(UART_ID_HW,1);
     HAL_RTC_Init(0);
     banner(); 

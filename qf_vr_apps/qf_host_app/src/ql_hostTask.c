@@ -671,8 +671,17 @@ void h2d_start( void)
 void    h2d_config(void) {
     // init h2d protocol
     H2D_Platform_Info h2d_plat_info;
-    h2d_plat_info.H2D_gpio = GPIO_2;
+    
+    h2d_plat_info.H2D_gpio = GPIO_2; //PAD_11
     h2d_plat_info.D2H_gpio = GPIO_6;
+
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+
+    h2d_plat_info.H2D_ack = GPIO_3; //PAD_30
+    h2d_plat_info.D2H_ack = GPIO_7;
+
+#endif
+    
     h2d_protocol_init(&h2d_plat_info);
 }
 

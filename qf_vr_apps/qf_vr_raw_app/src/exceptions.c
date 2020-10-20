@@ -54,6 +54,7 @@ HAL_StatusTypeDef HAL_PMU_Timer_Interrupt_Callback();
 void S3x_Tick_Hook(void);
 
 extern void service_intr_from_host(void);
+extern void service_ack_from_host(void);
 
 extern void SendBLERxDataReady(void);
 
@@ -437,7 +438,8 @@ void SensorGpio_Handler(void)
 	NVIC_DisableIRQ(Gpio_IRQn);
 	if(INTR_CTRL->GPIO_INTR & (1<<GPIO_6))
 	{
-		//VM1010_wakeup_handler();
+        /* This is ack from Host to Device */
+		service_ack_from_host();
 		INTR_CTRL->GPIO_INTR |= (1<<GPIO_6);
 	}
     if(INTR_CTRL->GPIO_INTR & (1<<GPIO_7))

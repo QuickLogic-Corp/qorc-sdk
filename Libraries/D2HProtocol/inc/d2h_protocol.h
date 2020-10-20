@@ -33,6 +33,13 @@
 
 #define DEBUG_D2H_PROTOCOL          (0)     // define this to 1 to enable debug prints/functions
 
+//Note: This is by default 4-pin protocol 1 interrupt pin and 1 ack pin each from Device and Host
+//But when there is a requirement to use only  2 pins, one pin from each of Device and Host
+//there is a inherent limitation in the protocol. Since same pin is used for both interrupt generation
+//and ack generation, there will be times a misinterpretation occurs which will lead to missing
+//the interrupts. So, 2-pin protocol should be avoided.
+#define USE_4PIN_D2H_PROTOCOL       (1) //1=use 4 pins, 2 for interrupt and 2 for ack, 0=2 pin protocol (optional)
+
 /* These addr should be in sync with icf/ld file*/
 #define D2H_READ_ADDR                  (0x7C800)  // this is where host writes and slave reads (H2D_WRITE_ADDR on host side)
 #define D2H_WRITE_ADDR                   (0x7C400)  // this is whrer host reads and slave writes (H2D_READ_ADDR on host side)
@@ -55,6 +62,11 @@
 typedef struct {
 	uint8_t	H2D_gpio;	/* For Host to Device interrupt generation (QL_INT) */
 	uint8_t	D2H_gpio;	/* For Device to Host interrupt (AP_INT) */
+
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+	uint8_t	H2D_ack;	/* For Host to Device Ack (is an interrupt to Device) */
+	uint8_t	D2H_ack;	/* For Device to Host interrupt (is an interrupt to Host) */
+#endif    
 } D2H_Platform_Info;
 
 /* Structure to be used by user to send info for transmitting command to device */

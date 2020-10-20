@@ -116,6 +116,14 @@ static void extract_rx_packet(H2D_Cmd_Info *h2d_cmd_info){
                              
     h2d_cmd_info->cmd = (g_h2d_rx_buf[1] & H2D_CMD_MASK );
     
+#if (DEBUG_H2D_PROTOCOL == 1)    
+//if(h2d_cmd_info->cmd != EVT_RAW_PKT_READY)
+{
+  printf("[H2D Protocol]: Rx pkt = 0x%02X, 0x%02X, 0x%02X, 0x%02X ",g_h2d_rx_buf[0],g_h2d_rx_buf[1],g_h2d_rx_buf[2],g_h2d_rx_buf[3]);
+  printf("0x%02X, 0x%02X, 0x%02X, 0x%02X \n",g_h2d_rx_buf[4],g_h2d_rx_buf[5],g_h2d_rx_buf[6],g_h2d_rx_buf[7]);
+}
+//else {    printf("[H2D Protocol]: Rx RAW pkt = %d, %d \n",h2d_cmd_info->seq, h2d_cmd_info->cmd); }
+#endif
     /*copy remaining data as it is*/
     memcpy(&(h2d_cmd_info->data[0]),&(g_h2d_rx_buf[2]),H2D_DATA_NUM_BYTES);
     return;
@@ -172,6 +180,22 @@ static inline uint8_t read_gpio_out_val(uint8_t gpio_num)
 * \param   - 
 * \returns -
 */
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+static void generate_pulse_to_device(void){
+uint8_t h2d_ack = g_h2d_protocol_info.pfm_info.H2D_ack;
+
+    /* set the ack intr to device */
+    HAL_GPIO_Write(h2d_ack, 1);
+
+    int delay_in_ms = 1; // Add one ms delay
+    vTaskDelay((delay_in_ms/portTICK_PERIOD_MS));
+
+    /*clear ack intr to device */
+    HAL_GPIO_Write(h2d_ack, 0);
+
+    return;
+}
+#else
 static void generate_pulse_to_device(void){
     
     /*generate intr to device (QL_INT high)*/
@@ -185,8 +209,26 @@ static void generate_pulse_to_device(void){
 
     return;
 }
-
-
+#endif
+//Receiving a Data pkt is done in 2 stages. First the pkt info is read;
+//Then the data is read using the pointer from the pkt info.
+//In between there should not be any interruption.
+//So, all the read_device_mem() are to be protected between start and end locks
+static int start_recv_lock(void) {
+   //take the lock
+   if (xSemaphoreTake(g_h2d_transmit_lock, portMAX_DELAY) != pdTRUE) {
+        dbg_fatal_error("Error unable to take lock to g_h2d_transmit_lock\n");
+        return H2D_ERROR;
+   }
+   return H2D_STATUS_OK;
+}
+static int end_recv_lock(void) {
+    //release the lock 
+    if (xSemaphoreGive(g_h2d_transmit_lock) != pdTRUE) {
+        dbg_fatal_error("Error : unable to release lock to g_h2d_transmit_lock\n");
+    }
+   return H2D_STATUS_OK;
+}
 /*!
 * \fn      int read_device_mem(uint32_t addr, uint8_t * buf, uint32_t len)
 * \brief   function to read from device memory using QLSPI
@@ -214,7 +256,120 @@ void get_data_buf(uint8_t * dest_buf, uint32_t len_bytes)
     memcpy((void *)dest_buf, &g_data_buf[0], len_bytes);
     return;
 }
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+/* Receive task handler */
+void h2dRxTaskHandler(void *pParameter){
+  
+    BaseType_t qret;
+    unsigned int h2dRxTaskStop = 0;
+    H2D_Rx_Pkt h2drx_msg;
 
+    while(!h2dRxTaskStop){
+        //clear the Msg Q buffer 
+        memset(&h2drx_msg, 0, sizeof(h2drx_msg));
+        qret = xQueueReceive(H2DRx_MsgQ, &h2drx_msg, H2DRX_MSGQ_WAIT_TIME);
+        configASSERT(qret == pdTRUE);
+        uint8_t ack_gpio;
+
+#if 1 //print interrupts states 
+        //interrupts 
+        uint8_t out_gpio,in_gpio, out_gpio_val, in_gpio_val;
+        in_gpio = g_h2d_protocol_info.pfm_info.D2H_gpio;
+        out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
+        out_gpio_val = read_gpio_out_val(out_gpio);
+        in_gpio_val = read_gpio_out_val(in_gpio);
+        //acks
+        uint8_t out_ack,in_ack, out_ack_val, in_ack_val;
+        in_ack = g_h2d_protocol_info.pfm_info.D2H_ack;
+        out_ack = g_h2d_protocol_info.pfm_info.H2D_ack;
+        out_ack_val = read_gpio_out_val(out_ack);
+        in_ack_val = read_gpio_out_val(in_ack);
+
+        printf("[H2D %d %d %d %d]", out_gpio_val, in_gpio_val, out_ack_val, in_ack_val);
+#endif
+
+        switch(h2drx_msg.msg)     {
+        case H2DRX_MSG_INTR_RCVD:
+            /* This is an event from device.
+                read the device mem for rx buf over qlspi
+                extract the ch_num and invoke the callback
+                check if second read required for this event and fill data_buf
+            */
+            //To prevent another process to use the SPI bus. Start the lock
+            start_recv_lock();
+            // read rx buf from device mem
+            if (read_device_mem(H2D_READ_ADDR,(uint8_t *)&(g_h2d_rx_buf[0]), (H2D_PACKET_SIZE_IN_BYTES))) {   //SJ
+                dbg_fatal_error("device memory read failed\n");
+            }
+            else {
+                // extract info from rx buf and fill info pkt to be sent to callback
+                H2D_Cmd_Info h2d_cmd;
+                Rx_Cb_Ret cb_ret = {0};
+                extract_rx_packet(&h2d_cmd);
+                uint8_t  ch_num = h2d_cmd.channel;
+
+#if (DEBUG_H2D_PROTOCOL == 1)    
+                dbg_str_int("[H2D Protocol]: calling Rx callback channel = %d\n", ch_num);
+#endif
+                /*invoke the callback*/
+                if (g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr) {
+                    cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,cb_ret.data_read_req);
+                    //printf("[H2D Protocol]: finished calling\n");
+                }
+                
+                /* keep checking from callback ret value if second read is needed */
+                /* if yes, then read the data from addr and length passed by cb ret value*/
+                while(1 == cb_ret.data_read_req){
+                    //printf("cb_ret.data_read_req = %d\n", cb_ret.data_read_req);
+                    // need to read data buffer from device memory
+                    if (read_device_mem(cb_ret.addr,(uint8_t *)&(g_data_buf[0]), cb_ret.len)) {
+                        dbg_fatal_error("device memory read failed\n");
+                    }
+                    else{
+#if (DEBUG_H2D_PROTOCOL == 1)
+                        dbg_str("[H2D Protocol]: Read data for received event type.\n");
+#endif
+                        cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,1);
+                    }
+                }
+                generate_pulse_to_device();
+#if (DEBUG_H2D_PROTOCOL == 1)
+                dbg_str("[H2D Protocol]: Received event from device. Pulse sent\n");
+#endif
+            }
+            //Release only after both pkt info and data are read 
+            end_recv_lock();
+            break;
+
+        case H2DRX_MSG_ACK_RCVD:
+            /* This is an ack from the device for host transmit
+                Wait for intr from device to go low and then pull QL_INT low
+            */
+            ack_gpio = g_h2d_protocol_info.pfm_info.D2H_ack;
+            // wait for ack intr to go low
+            while (read_gpio_intr_val(ack_gpio)) {
+                vTaskDelay(1); // Leave time for other process to execute
+            }
+
+            // pull QL_INT low
+            clear_interrupt_to_device();
+#if 0
+            // release the lock
+            if (xSemaphoreGive(g_h2d_transmit_lock) != pdTRUE) {
+                dbg_fatal_error("Error : unable to release lock to g_h2d_transmit_lock\n");
+            }
+#endif
+            break;
+
+        default:
+            dbg_str("Invalid msg event received\n");
+            break;
+        } //end of switch
+    } //end of while(1)
+  
+    return;
+}
+#else //use 2-pin protocol
 /* Receive task handler */
 void h2dRxTaskHandler(void *pParameter){
   
@@ -238,22 +393,36 @@ void h2dRxTaskHandler(void *pParameter){
             out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
 
             out_gpio_val = read_gpio_out_val(out_gpio);
-#if DEBUG_H2D_PROTOCOL
-            dbg_str_int("QL_INT value : ", out_gpio_val);
+#if (DEBUG_H2D_PROTOCOL ==1)
+            dbg_str("[H2D Protocol]: QL_INT value = %d\n", out_gpio_val);
 #endif
-            if (uxSemaphoreGetCount(g_h2d_transmit_lock) == 0 || out_gpio_val){ // Host is transmitting so this should be an ACK from device
+#if 1 //print interrupts states 
+      //printf("[H2D]: QL_INT = %d, S3_INT = %d\n", out_gpio_val, read_gpio_intr_val(in_gpio));
+      printf("[H2D %d %d]", out_gpio_val, read_gpio_intr_val(in_gpio));
+#endif
+            
+            if(out_gpio_val){          // if QL_INT is high
+            
+                /* This is an ack from the device for host transmit
+                    Wait for intr from device to go low 
+                    and then pull QL_INT low
+                    */
             
                 // wait for intr to go low
                 while (read_gpio_intr_val(in_gpio)) {
-                    vTaskDelay(2); // Leave 2 ticks for other process to execute
+                    vTaskDelay(1); // Leave 2 ticks for other process to execute
                 }
+              
+                // pull QL_INT low
                 clear_interrupt_to_device();
+#if 0 //we give it after writting to S3. so should not release it
                 // release the lock
                 if (xSemaphoreGive(g_h2d_transmit_lock) != pdTRUE) {
                     dbg_fatal_error("[H2D Protocol] : Error : unable to release lock to g_h2d_transmit_lock\n");
                 }
-#if DEBUG_H2D_PROTOCOL
-                dbg_str("[H2D_PROTOCOL] Transmit from host complete. Received pulse from device\n");
+#endif                
+#if (DEBUG_H2D_PROTOCOL ==1)
+                dbg_str("[H2D Protocol]:Transmit from host complete. Received pulse from device\n");
 #endif
             }
             else{           // H2D is low -- device is writing to us
@@ -262,6 +431,8 @@ void h2dRxTaskHandler(void *pParameter){
                     extract the ch_num and invoke the callback
                     check if second read required for this event and fill data_buf
                 */
+                //To prevent another process to use the SPI bus. Start the lock
+                start_recv_lock();
                 // read rx buf from device mem
                 if (read_device_mem(H2D_READ_ADDR,(uint8_t *)&(g_h2d_rx_buf[0]), (H2D_PACKET_SIZE_IN_BYTES))) {   //SJ
                     dbg_str("device memory read failed\n");
@@ -296,6 +467,8 @@ void h2dRxTaskHandler(void *pParameter){
                     dbg_str("[H2D_PROTOCOL] Received event from device. Pulse sent\n");
 #endif
                 }
+                //Release only after both pkt info and data are read 
+                end_recv_lock();
             }
           
             break;
@@ -305,7 +478,7 @@ void h2dRxTaskHandler(void *pParameter){
   
     return;
 }
-
+#endif //USE_4PIN_D2H_PROTOCOL
 
 /*!
 * \fn      void send_msg_to_h2drx_task_fromISR(uint8_t msg_type)
@@ -339,6 +512,17 @@ void service_intr_from_device(void){
     send_msg_to_h2drx_task_fromISR(H2DRX_MSG_INTR_RCVD);
     return;
 }
+/*!
+* \fn      void service_ack_from_device(void)
+* \brief   function to service ack interrupt received from the device (s3)
+*          This function is called from ISR. should use only isr safe apis  
+* \param   - 
+* \returns -
+*/
+void service_ack_from_device(void *arg){
+    send_msg_to_h2drx_task_fromISR(H2DRX_MSG_ACK_RCVD);
+    return;
+}
 
 
 /*!
@@ -361,7 +545,28 @@ static signed portBASE_TYPE start_rtos_task_h2drx( void) {
     
     return pdPASS;
 }
+//make sure while generating the interrupt to device no task switching happens
+//Check both input gpio (interrupt from device) and output gpio (ack to device)
+//are low before generating the interrupt to the device
+static int generate_protected_interrupt(void)
+{
+    uint8_t out_gpio,in_gpio;
+    in_gpio = g_h2d_protocol_info.pfm_info.D2H_gpio;
+    out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
+    int return_value = 0;
 
+    portENTER_CRITICAL();
+    if( (read_gpio_intr_val(in_gpio) == 0) && 
+        (read_gpio_out_val(out_gpio) == 0) )
+        {
+           // generate interrupt to device, QL_INT
+           generate_interrupt_to_device();
+           return_value = 1;
+        }
+    portEXIT_CRITICAL();
+
+    return return_value;
+}
 /*!
 * \fn      int h2d_transmit_cmd(H2D_Cmd_Info *h2d_cmd_info)
 * \brief   api to transmit cmd to device 
@@ -372,16 +577,25 @@ int h2d_transmit_cmd(H2D_Cmd_Info *h2d_cmd_info) {
     if( !g_h2d_protocol_info.init_done )
         return H2D_ERROR;
     
+    // create tx packet
    create_tx_packet(h2d_cmd_info);
-   // If D2H is high, that means device got in first so we should wait for that trasaction to complete
-   while (read_gpio_intr_val(g_h2d_protocol_info.pfm_info.D2H_gpio)) {
-        vTaskDelay(2); // Leave 2 ticks for other process to execute
-   }
 
-   if (xSemaphoreTake(g_h2d_transmit_lock, 0) != pdTRUE) {
+   if (xSemaphoreTake(g_h2d_transmit_lock, portMAX_DELAY) != pdTRUE) {
         dbg_fatal_error("[H2D Protocol] : Error unable to take lock to g_h2d_transmit_lock\n");
         return H2D_ERROR;
    }
+
+#if 0   
+    uint8_t in_gpio = g_h2d_protocol_info.pfm_info.D2H_gpio;
+   //wait till intr from Device is low (AP_INT is low)
+   //TIM!!! DOn;t see how this happens if Device is waiting for an ACK
+   // wait for intr to go low
+   while (read_gpio_intr_val(in_gpio)) {
+        vTaskDelay(1); // Leave 2 ticks for other process to execute
+        //ets_delay_us(10); //wait 10 micro secs
+   }
+#endif
+   
    // transmit over qlspi
    if( QLSPI_Write_S3_Mem(H2D_WRITE_ADDR, (uint8_t *)&(g_h2d_tx_buf[0]), H2D_PACKET_SIZE_IN_BYTES )) {
         dbg_str_int("Error in h2d transmit ", __LINE__);
@@ -391,9 +605,25 @@ int h2d_transmit_cmd(H2D_Cmd_Info *h2d_cmd_info) {
         }
         return H2D_ERROR;
    }
-   // generate interrupt to device, QL_INT
+
+    //must release the lock 
+    if (xSemaphoreGive(g_h2d_transmit_lock) != pdTRUE) {
+        dbg_fatal_error("[H2D Protocol] : Error : unable to release lock to g_h2d_transmit_lock\n");
+    }
+
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+   // generate interrupt to device independent of other states
    generate_interrupt_to_device();
+
+#else //check the states before generating interrupt 
+
+    //use protected read of both lines, and then generate interupt
+    while(generate_protected_interrupt() == 0)
+    {
+        vTaskDelay(1);
+    }
    
+#endif //USE_4PIN_D2H_PROTOCOL
    return H2D_STATUS_OK;
 }
 
@@ -420,7 +650,6 @@ int h2d_register_rx_callback(H2D_Callback rx_cb, uint8_t ch_num) {
     return ret;
 }
 
-
 /*platform configuration*/
 void h2d_platform_init (H2D_Platform_Info * pfm_info) {   
     // Nothing to do as of now
@@ -444,12 +673,19 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
     
     uint8_t out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
     HAL_GPIO_Write(out_gpio, 0);            // write 0 to the QL_INT at init
+
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+    out_gpio = g_h2d_protocol_info.pfm_info.H2D_ack;
+    HAL_GPIO_Write(out_gpio, 0);            // write 0 to the H2D_ack
+#endif
     
     // Check to see if D2H is active, if so wait for it to go inactive
     if (read_gpio_intr_val(g_h2d_protocol_info.pfm_info.D2H_gpio)) {
         dbg_str("Waiting for D2H to go inactive\n");
         while (read_gpio_intr_val(g_h2d_protocol_info.pfm_info.D2H_gpio)) {
-            vTaskDelay(1);
+            //this delay should not be there before the task started
+            //vTaskDelay(1);
+            dbg_str("Waiting for D2H to go inactive\n");
         }
         dbg_str("D2H inactive - resuming config\n");
     }

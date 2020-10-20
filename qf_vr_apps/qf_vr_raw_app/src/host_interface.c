@@ -177,6 +177,7 @@ enum process_state D2H_FSMAction(enum process_action pa, void* pv){
             
     switch(pa) {
     case PACTION_CONFIG:
+#if 0   //moved to main   
         h2d_config_intr(pv);
     
         D2H_Platform_Info d2h_plat_info;    //TIM TODO THis information should come through FSMConfigData
@@ -185,6 +186,8 @@ enum process_state D2H_FSMAction(enum process_action pa, void* pv){
         d2h_protocol_init(&d2h_plat_info);
 
         hif_task_Start();
+#endif
+        
         D2H_State = PSTATE_STOPPED;
         break;
                

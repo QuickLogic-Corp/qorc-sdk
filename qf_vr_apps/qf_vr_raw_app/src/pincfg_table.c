@@ -94,6 +94,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
+#if 0 //GPIO_6 is used by  PAD_31
   { // setup red LED
     .ucPin = PAD_22,
     .ucFunc = PAD22_FUNC_SEL_GPIO_6,
@@ -104,6 +105,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
+#endif  
 #if 0
    {
     // Pad6 is the user button
@@ -278,8 +280,26 @@ PadConfig pincfg_table[] =
     .ucDrv = PAD_DRV_STRENGHT_4MA;
     .ucSpeed = PAD_SLEW_RATE_SLOW;
     .ucSmtTrg = PAD_SMT_TRIG_DIS;
-  }
+  },
 #endif
+#if(FEATURE_D2HPROTOCOL_DEVICE == 1)  
+  {
+    /* D2H Ack  */
+    .ucPin = PAD_24,
+    .ucFunc = PAD24_FUNC_SEL_GPIO_0,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_PULLUP,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS
+  }, 
+  /* D2H Interrupt is always using PAD_43.
+     It needs set up differently. (?)
+     So, not setup here.   
+  */
+#endif
+  
 #if (VOICE_AP_BYPASS_MODE == 1)
   {
     //S3B_AP_PDM_CKO_IN
@@ -307,16 +327,24 @@ PadConfig pincfg_table[] =
 
 GPIOCfgTypeDef  gpiocfg_table[] =
 {
-  {
-    //vm1010 dout setup as hardware interrupt pin on PAD_41 (sensor interrupt 6)  //Chandalar jumper J3.4
-    .usPadNum = PAD_3,
-    .ucGpioNum = GPIO_0,
-    .ucFunc = PAD3_FUNC_SEL_SENS_INT_0,
-    .intr_type = LEVEL_TRIGGERED,
-    .pol_type = FALL_LOW,
-    .ucPull = PAD_NOPULL,
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)  
+  {  //for H2D interrupt 
+     .usPadNum = PAD_23,
+     .ucGpioNum = GPIO_7,
+     .ucFunc = PAD23_FUNC_SEL_SENS_INT_7,
+     .intr_type = EDGE_TRIGGERED,
+     .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
+     .ucPull = PAD_NOPULL
   },
-
+  {  //for H2D ack 
+     .usPadNum = PAD_31,
+     .ucGpioNum = GPIO_6,
+     .ucFunc = PAD31_FUNC_SEL_SENS_INT_6,
+     .intr_type = EDGE_TRIGGERED,
+     .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
+     .ucPull = PAD_NOPULL
+  }
+#endif
 };
 
 int sizeof_pincfg_table = sizeof(pincfg_table)/sizeof(pincfg_table[0]);

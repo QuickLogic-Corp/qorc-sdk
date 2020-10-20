@@ -35,6 +35,7 @@
 #define FEATURE_CLI_DEBUG_INTERFACE  0
 #define FEATURE_CLI_FILESYSTEM       0
 
+#define FEATURE_D2HPROTOCOL_DEVICE (1)
 
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)

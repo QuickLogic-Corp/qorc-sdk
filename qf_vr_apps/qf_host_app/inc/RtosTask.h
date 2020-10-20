@@ -117,4 +117,9 @@ extern xTaskHandle xHandleTaskH2DRx;
 extern QueueHandle_t H2DRx_MsgQ;
 //extern signed portBASE_TYPE _start_rtos_task_h2drx( void);
 
+#define PRIORITY_TASK_D2H_RX              ((unsigned)(PRIORITY_HIGH+1))
+#define STACK_SIZE_TASK_D2H_RX            (2*256)
+extern xTaskHandle xHandleTaskD2HRx;
+extern QueueHandle_t D2HRx_MsgQ;
+
 #endif /* __RTOSTASK_H__ */

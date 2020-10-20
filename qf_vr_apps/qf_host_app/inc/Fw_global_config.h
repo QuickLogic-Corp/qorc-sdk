@@ -35,8 +35,10 @@
 #define FEATURE_CLI_DEBUG_INTERFACE  1
 #define FEATURE_CLI_FILESYSTEM       0
 
-#define FEATURE_USBSERIAL   1       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   (1)       // USBSERIAL port is present
 
+#define FEATURE_D2HPROTOCOL_HOST (1)
+   
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
 #define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem
@@ -75,7 +77,7 @@ extern const char *SOFTWARE_VERSION_STR;
 
 extern int FPGA_FFE_LOADED;
 
-//#define ENABLE_PRINTF 1
+#define ENABLE_PRINTF 1
 
 /** Enable Host mode for Voice application, This standalone S3 mode */
 

@@ -14,6 +14,13 @@
  * limitations under the License.
  *==========================================================*/
 
+/*==========================================================
+ *                                                          
+ *    File   : s3_host_proto_defs.h
+ *    Purpose: header file for host to s3 device communication protocol 
+ *                                                          
+ *=========================================================*/
+
 #ifndef QUICKLOGIC_S3_HOST_PROTO_DEFS_H_
 #define QUICKLOGIC_S3_HOST_PROTO_DEFS_H_
 
@@ -33,6 +40,7 @@ typedef enum HIF_MESSAGE_
   MESSAGE_PTT_STOP              = 0x0C,
   MESSAGE_STOP_TX,
   MESSAGE_GET_MONINFO,
+  MESSAGE_STREAM_KPT_DETECTED, //while streaming another KP detected
   MESSAGE_NOP                               // Does nothing (used for side effect of monitoring D2H status */
 }HIF_MESSAGE;
 
@@ -45,6 +53,7 @@ typedef enum HIF_EVT_
   EVT_OPUS_PKT_END    = 0x12,
   EVT_THRESHOLD       = 0x13,
   EVT_PING            = 0x14,
+  EVT_STREAM_KP_DETECTED   = 0x15, //while streaming another KP detected
   EVT_RAW_PKT_READY   = 0x21,
   EVT_RAW_PKT_END     = 0x22,
   EVT_MUTE_START      = 0x30,
