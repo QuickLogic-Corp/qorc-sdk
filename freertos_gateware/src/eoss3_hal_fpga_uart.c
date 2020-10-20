@@ -75,12 +75,6 @@ fpga_uart_obj_t  fpgaUartObj0 = { .p_fpga_uart_mem = (FPGA_UART_TypeDef *)FB_UAR
 fpga_uart_obj_t  fpgaUartObj1 = { .p_fpga_uart_mem = (FPGA_UART_TypeDef *)FB_UART1_BASE };
 
 UartHandler FBUartObj;
-#if 0
-static struct RxBuf rxBuf;
-static xSemaphoreHandle consumer_wakeup_sem;
-unsigned char uart_init_done=0;
-static int FB_uart_lpm_en = 0, FB_uart_in_lpm = 0;
-#endif
 
 void FB_uart_register_lpm(void);
 
@@ -111,7 +105,7 @@ static void initRxBuf(struct RxBuf *prxBuf)
     prxBuf->start = prxBuf->end = 0;
 }
 
-int FB_getRxBufSize(int uartid)
+int HAL_FB_UART_dataavailable(int uartid)
 {
   fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
   struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
@@ -125,32 +119,32 @@ void FB_fillRxBuf(int uartid, const uint8_t *b, const int l, BaseType_t *pxHighe
     int wrLen = l;
     int i;
 
-    if ((FB_getRxBufSize(uartid) + wrLen) > RXBUF_LEN)
+    if ((HAL_FB_UART_dataavailable(uartid) + wrLen) > RXBUF_LEN)
     {
-        wrLen = RXBUF_LEN - FB_getRxBufSize(uartid);
+        wrLen = RXBUF_LEN - HAL_FB_UART_dataavailable(uartid);
     }
     for(i=l-wrLen; i<l; i++)
     {
         prxBuf->b[prxBuf->end++] = b[i];
     }
-    if (FB_getRxBufSize(uartid) > 0 && pfpgaUartObj->consumer_wakeup_sem) {
+    if (HAL_FB_UART_dataavailable(uartid) > 0 && pfpgaUartObj->consumer_wakeup_sem) {
         xSemaphoreGiveFromISR(pfpgaUartObj->consumer_wakeup_sem, pxHigherPriorityTaskWoken);
     }
 }
 
-int FB_getRxBuf(int uartid, uint8_t *b, const int l)
+int HAL_FB_UART_RxBuf(int uartid, uint8_t *b, const int l)
 {
     fpga_uart_obj_t *pfpgaUartObj = fpga_uart_id2obj(uartid);
     struct RxBuf *prxBuf = &pfpgaUartObj->rxBuf;
     int rdLen = l;
     int i;
 
-    if (FB_getRxBufSize(uartid) == 0 && pfpgaUartObj->consumer_wakeup_sem) {
+    if (HAL_FB_UART_dataavailable(uartid) == 0 && pfpgaUartObj->consumer_wakeup_sem) {
         xSemaphoreTake(pfpgaUartObj->consumer_wakeup_sem, portMAX_DELAY);
     }
-    if (FB_getRxBufSize(uartid) < rdLen)
+    if (HAL_FB_UART_dataavailable(uartid) < rdLen)
     {
-        rdLen = FB_getRxBufSize(uartid);
+        rdLen = HAL_FB_UART_dataavailable(uartid);
     }
     for(i=0; i<rdLen; i++)
     {
@@ -197,7 +191,7 @@ static void FB_UART1_ISR_Func(void)
 
 int fb_uart_read(int uartid, ptrdiff_t buf, size_t len)
 {
-    return FB_getRxBuf(uartid, ( unsigned char *)buf, len);
+    return HAL_FB_UART_RxBuf(uartid, ( unsigned char *)buf, len);
 }
 
 void fb_uart_set_clk(uint8_t en)

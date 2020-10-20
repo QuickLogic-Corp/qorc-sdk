@@ -486,7 +486,7 @@ int uart_rx( int uartid )
 #if FEATURE_FPGA_UART == 1
     if(( uartid == UART_ID_FPGA ) || (uartid == UART_ID_FPGA_UART1) ){
         uint8_t rdValue;
-        FB_getRxBuf(uartid, &rdValue, 1);
+        HAL_FB_UART_RxBuf(uartid, &rdValue, 1);
 	return rdValue;
     }
 #endif
@@ -643,7 +643,7 @@ int uart_rx_available( int uartid )
     int r;
 #if FEATURE_FPGA_UART == 1
     if(( uartid == UART_ID_FPGA ) || (uartid == UART_ID_FPGA_UART1) ){
-        return FB_getRxBufSize(uartid); // fgpa_uart_rx_available();
+        return HAL_FB_UART_dataavailable(uartid); // fgpa_uart_rx_available();
     }
 #endif
 #if FEATURE_USBSERIAL == 1

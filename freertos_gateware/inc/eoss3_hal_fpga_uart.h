@@ -155,6 +155,6 @@ int HAL_FB_UART_Rx(int uartid);
 
 int fb_uart_read(int uartid, ptrdiff_t buf, size_t len);
 
-int FB_getRxBufSize(int uartid);
-int FB_getRxBuf(int uartid, uint8_t *b, const int l);
+int HAL_FB_UART_dataavailable(int uartid);
+int HAL_FB_UART_RxBuf(int uartid, uint8_t *b, const int l);
 #endif /* !__EOSS3_HAL_FB_UART_H_ */
