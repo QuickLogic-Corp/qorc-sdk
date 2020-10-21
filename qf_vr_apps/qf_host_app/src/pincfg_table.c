@@ -104,21 +104,18 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-#if 0
+#if (FEATURE_D2HPROTOCOL_HOST == 1)
    {
-    // Pad6 is the user button
+    // Pad6 is the Reset for Device 
     .ucPin = PAD_6,
     .ucFunc = PAD6_FUNC_SEL_GPIO_0,
-    .ucMode = PAD_MODE_INPUT_EN,
+    .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_PULLUP,
     .ucDrv = PAD_DRV_STRENGTH_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
-#endif
-#if (FEATURE_D2HPROTOCOL_HOST == 1)
-  
-   { //for H2D Interrupt 
+  { //for H2D Interrupt 
     .ucPin = PAD_11,
     .ucFunc = PAD11_FUNC_SEL_GPIO_2,
     .ucCtrl = PAD_CTRL_SRC_A0,
