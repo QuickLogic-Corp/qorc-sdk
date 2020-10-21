@@ -27,10 +27,10 @@
 #define OSC_MINIMUM_FREQ                            (HSOSC_1MHZ)
 #define OSC_MAXIMMUM_FREQ                           (HSOSC_1MHZ * 80)
 
-#define HSOSC_DEF_RATE HSOSC_72MHZ
-#define HSOSC_QOS_VAL HSOSC_9MHZ
+#define HSOSC_DEF_RATE F_48MHZ
+#define HSOSC_QOS_VAL F_9MHZ
 
-#define FFE_MHZ (HSOSC_1MHZ * 80)
+#define FFE_MHZ (F_1MHZ * 80)
 /*Sensor Only*/
 #ifndef ENABLE_VOICE_SOLUTION
 

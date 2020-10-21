@@ -23,6 +23,9 @@
 
 #include "string.h"
 #include "Fw_global_config.h"
+
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)
+
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "eoss3_dev.h"
@@ -783,3 +786,5 @@ int h2d_transmit_lock_release(void)
         }
     return ret;
 }
+
+#endif /* FEATURE_D2HPROTOCOL_DEVICE */

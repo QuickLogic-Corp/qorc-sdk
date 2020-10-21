@@ -38,7 +38,7 @@ S3x_ClkD S3clk [] = {
         .cru_ctrl = CRU_CTRL(0x0, 0x1fe, 9, 0x4, 0x50, 0x7f, 0),
         .flags = HW_GATED,
         .def_max_rate = HSOSC_DEF_RATE,
-        .init_state = INIT_STATE(HSOSC_48MHZ, 0x5f, INIT_GATE_ON),
+        .init_state = INIT_STATE(F_48MHZ, 0x5f, INIT_GATE_ON),
     },
     [CLK_C02] = {
         .name = "C2",
@@ -46,10 +46,10 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK ,
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x8, 0x1fe, 9, 0x130, 0x44, 0x7, 1),
-        .def_max_rate = (HSOSC_40MHZ),             
-        //.init_state = INIT_STATE(HSOSC_40MHZ, 7, INIT_GATE_OFF),     //for SD card
-        //.init_state = INIT_STATE(HSOSC_6MHZ, 7, INIT_GATE_OFF),
-        .init_state = INIT_STATE(HSOSC_24MHZ, 7, INIT_GATE_OFF),
+        .def_max_rate = (F_40MHZ),             
+        //.init_state = INIT_STATE(F_40MHZ, 7, INIT_GATE_OFF),     //for SD card
+        //.init_state = INIT_STATE(F_6MHZ, 7, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_1MHZ, 7, INIT_GATE_OFF),
     },
     [CLK_C08X4] = {
         .name = "C8X4",
@@ -57,8 +57,8 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK,
         .sync_clk = SYNC_CLKD (1, CLK_C08X1, 0),
         .cru_ctrl = CRU_CTRL (0x10, 0x1fe, 9, 0x134, 0x48, 0x1, 2),
-        .def_max_rate = (HSOSC_40MHZ),
-        .init_state = INIT_STATE(HSOSC_2MHZ, 0x1, INIT_GATE_OFF),
+        .def_max_rate = (F_40MHZ),
+        .init_state = INIT_STATE(F_2MHZ, 0x1, INIT_GATE_OFF),
     },
     [CLK_C11] = {
         .name = "C11",
@@ -67,8 +67,8 @@ S3x_ClkD S3clk [] = {
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x14, 0x1fe, 9, 0x138, 0x54, 0x1, 3),
         .flags = LOCK_KEY,
-        .def_max_rate = (HSOSC_12MHZ),
-        .init_state = INIT_STATE(HSOSC_2MHZ, 0, INIT_GATE_OFF),
+        .def_max_rate = (F_12MHZ),
+        .init_state = INIT_STATE(F_2MHZ, 0, INIT_GATE_OFF),
     },
     [CLK_C16] = {
         .name = "C16",
@@ -76,10 +76,10 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK,
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x20, 0x1fe, 9, 0x24, 0x64, 0x01, 5),
-        .def_max_rate = (HSOSC_24MHZ),
-        //.init_state = INIT_STATE(HSOSC_18MHZ, 1, INIT_GATE_ON),
-        //.init_state = INIT_STATE(HSOSC_6MHZ, 1, INIT_GATE_OFF),
-        .init_state = INIT_STATE(HSOSC_256KHZ, 1, INIT_GATE_OFF),
+        .def_max_rate = (F_24MHZ),
+        //.init_state = INIT_STATE(F_18MHZ, 1, INIT_GATE_ON),
+        //.init_state = INIT_STATE(F_6MHZ, 1, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_12MHZ, 1, INIT_GATE_OFF),
     },
     [CLK_C30] = {
         .name = "C30",
@@ -87,7 +87,7 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK,
         .sync_clk = SYNC_CLKD (1, CLK_C31, 0xFF),
         .cru_ctrl = CRU_CTRL (0x28, 0x1fe, 9, 0x144, 0x120, 0xF, 6),
-        .def_max_rate = (HSOSC_6MHZ),
+        .def_max_rate = (F_6MHZ),
         .init_state = INIT_STATE(PDM2PCM_CLK_C30, 5, INIT_GATE_OFF),
 
     },
@@ -97,9 +97,9 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK,
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x2c, 0x1fe, 9, 0x13c, 0x6c, 0x1, 7),
-        .def_max_rate = (HSOSC_1MHZ),
-        //.init_state = INIT_STATE(HSOSC_1MHZ, 1, INIT_GATE_OFF),
-        .init_state = INIT_STATE(HSOSC_256KHZ/4, 1, INIT_GATE_OFF),
+        .def_max_rate = (F_1MHZ),
+        //.init_state = INIT_STATE(F_1MHZ, 1, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_256KHZ/4, 1, INIT_GATE_OFF),
     },
     [CLK_C21] = {
         .name = "C21",
@@ -107,9 +107,9 @@ S3x_ClkD S3clk [] = {
         .type = SRC_CLK,
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x34, 0x1fe, 9, 0x38, 0x70, 0x1, 8),
-        .def_max_rate = (10 * MHZ),
-        //.init_state = INIT_STATE(HSOSC_3MHZ, 1, INIT_GATE_OFF),
-        .init_state = INIT_STATE(HSOSC_256KHZ, 1, INIT_GATE_OFF),
+        .def_max_rate = (F_48MHZ),
+        //.init_state = INIT_STATE(F_3MHZ, 1, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_48MHZ, 1, INIT_GATE_OFF),
     },
     [CLK_C01] = {
         .name = "C1",
@@ -117,9 +117,9 @@ S3x_ClkD S3clk [] = {
         .type = SD_CLK,
         .sync_clk = SRC_DOMAIN (CLK_C10),
         .cru_ctrl = CRU_CTRL (0x110, 0xf, 4, 0, 0x40, 0x2ff, 4),
-        .def_max_rate = (HSOSC_10MHZ),
+        .def_max_rate = (F_10MHZ),
         //.init_state = INIT_STATE(C01_N0_CLK, 0x01, INIT_GATE_ON),
-        .init_state = INIT_STATE(HSOSC_10MHZ, 0x01, INIT_GATE_ON), //AHB bus at max for SD card
+        .init_state = INIT_STATE(F_10MHZ, 0x01, INIT_GATE_ON), //AHB bus at max for SD card
     },
     [CLK_C08X1] = {
         .name = "C8x",
@@ -128,9 +128,9 @@ S3x_ClkD S3clk [] = {
         .div_val = 4,
         .sync_clk = SRC_DOMAIN (CLK_C08X4),
         .cru_ctrl = CRU_CTRL (0, 4, 0, 0, 0x4c, 0xd, 2),
-        .def_max_rate = (HSOSC_12MHZ),
-        //.init_state = INIT_STATE(HSOSC_3MHZ, 8, INIT_GATE_OFF),
-        .init_state = INIT_STATE(HSOSC_256KHZ, 8, INIT_GATE_OFF),
+        .def_max_rate = (F_12MHZ),
+        //.init_state = INIT_STATE(F_3MHZ, 8, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_256KHZ, 8, INIT_GATE_OFF),
     },
     [CLK_C09] = {
         .name = "C9",
@@ -138,8 +138,8 @@ S3x_ClkD S3clk [] = {
         .type = SD_CLK,
         .sync_clk = SRC_DOMAIN (CLK_C10),
         .cru_ctrl = CRU_CTRL (0x114, 0xf, 4, 0, 0x11c, 0x7, 4),
-        .def_max_rate = (HSOSC_10MHZ),
-        .init_state = INIT_STATE(HSOSC_6MHZ, 1, INIT_GATE_ON),
+        .def_max_rate = (F_10MHZ),
+        .init_state = INIT_STATE(F_6MHZ, 1, INIT_GATE_ON),
     },
     [CLK_C31] = {
         .name = "C31",
@@ -147,7 +147,7 @@ S3x_ClkD S3clk [] = {
         .type = SD_CLK,
         .sync_clk = SRC_DOMAIN (CLK_C30),
         .cru_ctrl = CRU_CTRL (0x118, 0xf, 4, 0, 0x120, 0xF , 4),
-        .def_max_rate = (HSOSC_10MHZ), //1 Mhz
+        .def_max_rate = (F_10MHZ), //1 Mhz
         .init_state = INIT_STATE(PDM2PCM_CLK_C31 , 8, INIT_GATE_OFF),
     },
 };
@@ -246,77 +246,47 @@ uint8_t policyInitial = 1;  // Policy value to start with
 
 S3x_Policy_Node dfs_node[]  = {
 /* 0th Policy is only for lpm not for run mode */
-    [0] = { // WOS Sleep
+    [0] = { // Sleep
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_3MHZ, FREQ_256KHZ},
+        .rate = {F_256KHZ, F_256KHZ, F_48MHZ, F_256KHZ},
         .step_width =  800,/* msec */
         .cpuload_downthreshold = 0,
-        .policySleep = 0xFF,                   // WOS Sleep policy -- shoudl already be sleeping
-        .minHSOSC = FREQ_3MHZ,
+        .cpuload_upthreshold = 98,
+        .policySleep = 0xFF,                   // Sleep policy: this is the sleep state, do nothing
+        .minHSOSC = F_48MHZ,
     },
 
-    [1] = { // WOS Active
+    [1] = { // Minimum performance
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_3MHZ, FREQ_256KHZ},
+        .rate = {F_3MHZ, F_3MHZ, F_48MHZ, F_256KHZ},
         .step_width = 100,/* msec */
-        .cpuload_downthreshold = 0,
-        .policySleep = 0,                       // Deep sleep: go to node 0
-        .minHSOSC = FREQ_3MHZ,
+        .cpuload_downthreshold = 0,             // Lowest active state, never go lower
+        .cpuload_upthreshold = 110,
+        .policySleep = 0,                       // When idle, go to deep sleep (node 0)
+        .minHSOSC = F_48MHZ,
+    },
+#if 1
+    [2] = {
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {C01_N2_CLK, C09_N2_CLK, C10_N2_CLK, C8X4_N2_CLK},
+        .step_width =  STEP_2,/* msec */
+        .cpuload_downthreshold = CPU_DOWN2,
     },
     
-    [2] = { // LPSD Sleep
+    [3] = {
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_3MHZ, FREQ_256KHZ},
-        .step_width = 100,/* msec */
-        .cpuload_downthreshold = 0,
-        .policySleep = 0xFF,                   // LPSD Sleep policy -- should already be sleeping
-        .minHSOSC = FREQ_12MHZ,
-    },
-    
-    [3] = { // LPSD Active
-        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_12MHZ, FREQ_256KHZ},
-        .step_width = 100,/* msec */
-        .cpuload_downthreshold = 0,
-        .policySleep = 2,                   // Deep sleep: switch to policy 2 when sleeping
-        .minHSOSC = FREQ_12MHZ,
+        .rate = {C01_N3_CLK, C09_N3_CLK, C10_N3_CLK, C8X4_N3_CLK},
+        .step_width = STEP_3,/* msec */
+        .cpuload_downthreshold = CPU_DOWN3,
     },
 
-    [4] = { // WOK Min
+    [4] = {
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-#if (DSPC_AW == 1)
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_48MHZ, FREQ_256KHZ},
-#else
-        .rate = {FREQ_3MHZ, FREQ_3MHZ, FREQ_24MHZ, FREQ_256KHZ},
-#endif
-        .step_width =  50,/* msec */
-        .cpuload_downthreshold = 10,
-        .policySleep = 0xFF,                   // Light sleep, just stay at this policy
+        .rate = {C01_N4_CLK, C09_N4_CLK, C10_N4_CLK, C8X4_N4_CLK},
+        .step_width = STEP_3,/* msec */
+        .cpuload_downthreshold = CPU_DOWN4,
     },
-
-    [5] = {
-        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-#if (DSPC_AW == 1)
-        .rate = {FREQ_6MHZ, FREQ_3MHZ, FREQ_60MHZ, FREQ_256KHZ},
-#else
-        .rate = {FREQ_6MHZ, FREQ_3MHZ, FREQ_36MHZ, FREQ_256KHZ},        
 #endif        
-        .step_width = 100,/* msec */
-        .cpuload_downthreshold = 60,
-        .policySleep = 0xFF,                   // Light sleep, just stay at this policy
-    },
-
-    [6] = {
-        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
-#if (DSPC_AW == 1)
-        .rate = {FREQ_6MHZ, FREQ_3MHZ, FREQ_72MHZ, FREQ_256KHZ},
-#else
-        .rate = {FREQ_6MHZ, FREQ_3MHZ, FREQ_48MHZ, FREQ_256KHZ},
-#endif
-        .step_width = 100,/* msec */
-        .cpuload_downthreshold = 65,
-        .policySleep = 0xFF,                   // Light sleep, just stay at this policy
-    },
 };
 
 void S3x_pwrcfg_init(void)

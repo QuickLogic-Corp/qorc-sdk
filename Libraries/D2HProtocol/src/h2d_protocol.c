@@ -16,6 +16,8 @@
 
 #include "string.h"
 #include "Fw_global_config.h"
+
+#if (FEATURE_D2HPROTOCOL_HOST == 1)
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "RtosTask.h"
@@ -710,3 +712,4 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
     return H2D_STATUS_OK;
 }
 
+#endif /* FEATURE_D2HPROTOCOL_HOST */
