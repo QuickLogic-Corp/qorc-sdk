@@ -459,7 +459,9 @@ void hostTaskHandler(void * parameter)
             HAL_GPIO_Write(GPIO_0, 0);
             
             /*set GPIO19/20 of device */
+#if 0 // do we need this?
             config_set_pad_for_device_bootstrap();
+#endif
             vTaskDelay((1/portTICK_PERIOD_MS));
             
             
@@ -501,12 +503,12 @@ void hostTaskHandler(void * parameter)
             /* Waking up process to be done*/
             t_ql_audio_meta_data *pwwinfo;
             pwwinfo = (t_ql_audio_meta_data *)g_data_buf;
-            dbg_str_int_noln("wakeword index", pwwinfo->n_keyphrase_triggered_index);
+            dbg_str_int_noln("wakeword length", pwwinfo->n_keyphrase_triggered_index);
             dbg_str_int_noln(" count", pwwinfo->n_keyphrase_count);
             dbg_str_int_noln(" start", pwwinfo->n_keyphrase_start_index);
             dbg_str_int_noln(" end  ", pwwinfo->n_keyphrase_end_index);
             dbg_str_int_noln(" score", pwwinfo->a_keyphrase_score);
-            dbg_str_int     (" RDSP Estimate", pwwinfo->n_rdsp_length_estimate);
+            dbg_str_int     (" Length Estimate", pwwinfo->n_length_estimate);
               
             /* For debug, reset save buffer to make svaebin easier */
             flush_opus_storage_buf();

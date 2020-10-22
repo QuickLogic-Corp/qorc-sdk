@@ -273,7 +273,7 @@ void h2dRxTaskHandler(void *pParameter){
         configASSERT(qret == pdTRUE);
         uint8_t ack_gpio;
 
-#if 1 //print interrupts states 
+#if 0 //print interrupts states 
         //interrupts 
         uint8_t out_gpio,in_gpio, out_gpio_val, in_gpio_val;
         in_gpio = g_h2d_protocol_info.pfm_info.D2H_gpio;

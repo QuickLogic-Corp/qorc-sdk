@@ -394,26 +394,8 @@ void hostIfTaskHandler(void *pParameter)
             //start ausio session timer
             p_hif_channel_info->firstTime = 0;     // SJ
             set_spi_session_qos(1);
-#if 1
             stream_kp_detect_enable = 0;
             SendEventKPDetected(p_hif_channel_info, EVT_KP_DETECTED);
-#else            
-            uint8_t ucData[6];
-            uint32_t addr;
-            uint16_t size;
-            addr = (uint32_t)(&o_ql_audio_meta_data);
-            size = sizeof (o_ql_audio_meta_data);
-            printf ("addr = 0x%X, size = %d\n", addr, size);
-
-            // send wake word meta data size and address in little endian order
-            ucData[0] = (uint8_t)(size & 0xFF);
-            ucData[1] = (uint8_t)((size >> 8) & 0xFF);
-            ucData[2] = (uint8_t)(addr & 0xFF);
-            ucData[3] = (uint8_t)((addr >> 8) & 0xFF);
-            ucData[4] = (uint8_t)((addr >> 16)& 0xFF);
-            ucData[5] = (uint8_t)((addr >> 24) & 0xFF);
-            SendEventToD2H(p_hif_channel_info, EVT_KP_DETECTED,(uint8_t *)(&ucData[0]));
-#endif
             timeout_count_bytes = 0;
             break;
 

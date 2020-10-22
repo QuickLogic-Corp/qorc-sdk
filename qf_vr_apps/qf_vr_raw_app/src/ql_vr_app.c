@@ -317,7 +317,7 @@ float ave_score = 0;
 int ave_count = 0;
 #endif
 
-t_ql_audio_meta_data o_ql_audio_meta_data = { NO_OF_KPDS, -1, -1, -1, 0 };
+t_ql_audio_meta_data o_ql_audio_meta_data = { 0, -1, -1, -1, 0 };
 
 void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int num_data_bytes)
 {
@@ -360,7 +360,7 @@ void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int 
    //if streaming is going on, then the message directly goes to HIF task
    if (isStreamingOn())
    {
-     o_ql_audio_meta_data.n_rdsp_length_estimate = p_ql_vr_evt->startFramesBack;
+     o_ql_audio_meta_data.n_length_estimate = p_ql_vr_evt->startFramesBack;
      o_ql_audio_meta_data.a_keyphrase_score = p_ql_vr_evt->score;
      o_ql_audio_meta_data.n_keyphrase_triggered_index = p_ql_vr_evt->len_phrase_text;
      o_ql_audio_meta_data.n_keyphrase_end_index =  p_ql_vr_evt->startFramesBack;
@@ -386,7 +386,7 @@ void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int 
    if (o_ql_audio_meta_data.n_keyphrase_start_index < 0)
      o_ql_audio_meta_data.n_keyphrase_start_index = 0;
    o_ql_audio_meta_data.n_keyphrase_triggered_index = p_ql_vr_evt->len_phrase_text;
-   o_ql_audio_meta_data.n_rdsp_length_estimate = p_ql_vr_evt->startFramesBack;
+   o_ql_audio_meta_data.n_length_estimate = p_ql_vr_evt->startFramesBack;
    //TIM
     struct xCQ_Packet CQpacket;
  
