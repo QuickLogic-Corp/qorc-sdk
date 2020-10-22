@@ -10,3 +10,6 @@
 [submodule "qorc-testapps"]
 	path = qorc-testapps
 	url = https://github.com/QuickLogic-Corp/qorc-testapps
+[submodule "qorc-example-apps"]
+	path = qorc-example-apps
+	url = https://github.com/QuickLogic-Corp/qorc-example-apps.git
