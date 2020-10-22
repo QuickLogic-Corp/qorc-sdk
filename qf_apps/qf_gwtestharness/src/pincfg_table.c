@@ -242,6 +242,16 @@ PadConfig pincfg_table[] =
 	.ucSpeed = PAD_SLEW_RATE_SLOW,
 	.ucSmtTrg = PAD_SMT_TRIG_DIS,
 	},
+  { // Pad 7 -- FPGA GPIO Input control
+    .ucPin = PAD_7,
+    .ucFunc = PAD7_FUNC_SEL_FBIO_7,
+	.ucCtrl = PAD_CTRL_SRC_FPGA,
+	.ucMode = PAD_MODE_INPUT_EN,
+	.ucPull = PAD_NOPULL,
+	.ucDrv = PAD_DRV_STRENGHT_4MA,
+	.ucSpeed = PAD_SLEW_RATE_SLOW,
+	.ucSmtTrg = PAD_SMT_TRIG_DIS,
+	},
 
 };
 

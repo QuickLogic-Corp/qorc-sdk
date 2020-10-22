@@ -2,11 +2,8 @@
 # Symbiflow options for QORK SDK --> point to gateware project (s3-gateware or local)
 #
 
-# Enable the following line to use local gateware project
-export GATEWARE_DIR=$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/gateware/projects/S3_FPGA_UART
-
 # Enable the following line to use s3-gateware submodule project
-#export GATEWARE_DIR=$(PROJ_ROOT)/s3-gateware/projects/S3_FPGA_UART
+export GATEWARE_DIR=$(PROJ_ROOT)/s3-gateware/projects/S3_FPGA_UART_GPIO
 
 #
 # GCC Configuration options for QORC SDK

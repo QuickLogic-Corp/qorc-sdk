@@ -15,18 +15,22 @@ read and write registers to monitor and exercise the gateware (slowly, of course
 ## Setup
 
 ### Setup gateware
-The app is located in qorc-sdk/qf_apps/qf_gwtestharness.  The new gateware should be replace the example gateware located on the gateware directory.
-Gateware is split between the projects directory, which contains the top level designs, and the modules directory, which contains common modules.
-As an example, the repo implements a gateware UART.  The modules directory contains only one module, UART_16550, and the projects directory contains
-only one project, S3_FPGA_UART.  Note that all designs will have a project, but not all designs will use modules.
+The app is located in qorc-sdk/qf_apps/qf_gwtestharness. This example application
+uses the UART+GPIO design located in projects/S3_FPGA_UART_GPIO folder of the s3-gateware
+submodule. The new gateware should be replace the example gateware located on the
+gateware directory. Gateware is split between the projects directory, which contains
+the top level designs, and the modules directory, which contains common modules.
+The example used by this application uses the modules UART_16550 and GPIO located
+in ip_modules folder of s3-gateware submodule. Note that all designs will have a project,
+but not all designs will use modules.
 
 You will want to add a new directory under projects for you project: projects/yourproject.  
 And if you project uses modules, add the appropriate module directories under the modules directory.
 
 You will need a makefile in the projects directory that creates top_bit.h in the projects directory.
-Recommend that you simply copy the makefile from projects/S3_FPGA_UART into your project directory (it should not require modification),
-and copy the makefile from projects/S3_FPGA_UART/rtl into you rtl directory.
-The makefile in the RTL directory shold be modifed to specify any moduels that are used. This is done by replacing 'UART_16550' with the list of used modules 
+Recommend that you simply copy the makefile from projects/S3_FPGA_UART_GPIO into your project directory (it should not require modification),
+and copy the makefile from projects/S3_FPGA_UART_GPIO/rtl into you rtl directory.
+The makefile in the RTL directory shold be modified to specify any modules that are used. This is done by replacing 'UART_16550' with the list of used modules 
 (or blank if no moduels are used) in the line 'IPMODULES = UART_16550'.
 
 At this point you can test the gateware build by cd gateware/yourproject and make all.  This should create top_bit.h in gateware/yourproject.
@@ -35,13 +39,16 @@ At this point you can test the gateware build by cd gateware/yourproject and mak
 You will need to edit the config-GCC.mk file which is located in the qf_apps/qf_gwtestharness/GCC_Project directory.
 On the line that says
 ```
-export GATEWARE_DIR=$(PROJ_ROOT)/qf_apps/$(PROJ_NAME)/gateware/projects/S3_FPGA_UART
+export GATEWARE_DIR=$(PROJ_ROOT)/s3-gateware/projects/S3_FPGA_UART_GPIO
 ```
-replace the S3_FPGA_UART with the name of the directory that contains your project.
+replace the S3_FPGA_UART_GPIO with the name of the directory that contains your project.
 
 Running make from the GCC_Project directory should now create a qf_gwtestharness app that includes your project.
 
-The default clocks is 12MHz for both FPGA clocks.  If this is not appropriate, you will need to edit main.c a set the clock values that you want.
+The default clocks is 12MHz for both FPGA clocks.  If this is not appropriate, you will need to edit main.c and set the clock values that you want.
+
+Update the qf_apps/qf_gwtestharness/src/pincfg_table.c to setup S3 pin configuration as defined in the
+quickfeather.pcf file in your projects/yourproject directory
 
 ## Running qf_gwtestharness
 qf_gwtestharness sends its output to the UART pins on teh Quickfeeather board, so you will need to attach a USB to serial adaptor to the appropriate pins, and then use a terminal
