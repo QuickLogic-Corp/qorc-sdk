@@ -1,0 +1,9 @@
+export NN_1_DIR = $(CMSIS_DIR)$(DIR_SEP)ActivationFunctions
+CMSIS_SRCS:=$(NN_1_DIR)/arm_nn_activations_q15.c $(NN_1_DIR)/arm_relu_q15.c
+
+SRCS:=$(notdir $(CMSIS_SRCS))  
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(NN_1_DIR)
+
+
+include $(COMMON_STUB)
