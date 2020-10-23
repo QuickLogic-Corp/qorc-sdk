@@ -1,6 +1,6 @@
 # -*- mode: Makefile -*-
 
-all: POWER CLI UTILS DATABLOCKMANAGER QLSPI
+all: POWER CLI UTILS DATABLOCKMANAGER QLSPI FPGA D2HPROTOCOL
 
 
 .PHONY: POWER
@@ -37,6 +37,14 @@ CLI:
 QLSPI:
 	make -f makefiles/Makefile_QLSPI
 
+.PHONY: FPGA
+FPGA:
+	make -f makefiles/Makefile_FPGA
+
+.PHONY: D2HProtocol
+D2HProtocol:
+	make -f makefiles/Makefile_D2HProtocol
+
 clean:
 	make -f makefiles/Makefile_Power clean
 	make -f makefiles/Makefile_Utils clean
@@ -44,4 +52,5 @@ clean:
 	make -f makefiles/Makefile_Audio clean
 	make -f makefiles/Makefile_cli clean
 	make -f makefiles/Makefile_QLSPI clean
+	make -f makefiles/Makefile_FPGA clean
 

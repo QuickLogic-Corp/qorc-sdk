@@ -42,12 +42,15 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/fsm" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
+                 -I"$(PROJ_ROOT)/freertos_gateware/inc" \
+                 -I"$(PROJ_ROOT)/s3-gateware" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
                  -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/Core/Include" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/DSP/Include" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/NN/Include" \
+                 -I"$(PROJ_ROOT)/Libraries/D2HProtocol/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Power/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
                  -I"$(PROJ_ROOT)/Libraries/cli/inc" \
@@ -96,6 +99,11 @@ export CLI_DIR        = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
 export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
 export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
 export DBM_DIR          = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
+export FPGA_DIR         = $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
 export QLSPI_DIR        = $(LIB_DIR)$(DIR_SEP)QLSPI$(DIR_SEP)src
 export DBP_DIR                  = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor$(DIR_SEP)src
+export D2H_DIR          = $(LIB_DIR)$(DIR_SEP)D2HProtocol$(DIR_SEP)src
 export CONTROL_DIR      = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)Control$(DIR_SEP)src
+export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
+export MAIN_FPGA_RTL_DIR	= 
+export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src

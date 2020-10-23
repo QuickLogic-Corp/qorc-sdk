@@ -176,3 +176,52 @@ int HAL_usbserial_tx_is_fifo_empty(void)
   else 
     return 0;
 }
+
+/* Return 1 if FIFO is atleast half empty
+ */
+int HAL_usbserial_tx_is_fifo_half_empty(void)
+{
+  if (pusbserial_regs->m2u_fifo_flags == FPGA_USBSERIAL_TX_FIFO_GT_HALF)
+    return 1;
+  else 
+    return 0;
+}
+
+/* Returns FIFO status value, refer the eoss3_hal_fpga_usbserial.h header file for definitions */
+int HAL_usbserial_tx_get_fifo_status(void)
+{
+  return pusbserial_regs->m2u_fifo_flags ;
+}
+
+/* Returns FIFO status value, refer the eoss3_hal_fpga_usbserial.h header file for definitions */
+int HAL_usbserial_tx_get_fifo_space_available(void)
+{
+  int ret = pusbserial_regs->m2u_fifo_flags ;
+  switch (ret)
+  {
+  case FPGA_USBSERIAL_TX_FIFO_FULL:  // (0x00)    // 0000 Full
+    return 0;
+  case FPGA_USBSERIAL_TX_FIFO_EMPTY:   // (0x01)    // 0001 Empty
+    return USBSERIAL_TX_FIFOSIZE;
+  case FPGA_USBSERIAL_TX_FIFO_GT_HALF:       // (0x02)    // 0010 Room for more than 1/2
+    return (USBSERIAL_TX_FIFOSIZE/2);
+  case FPGA_USBSERIAL_TX_FIFO_GT_QUARTER:    // (0x03)    // 0011 Room for more than 1/4
+    return (USBSERIAL_TX_FIFOSIZE/4);
+  case FPGA_USBSERIAL_TX_FIFO_LT_QUARTER:    // (0x04)    // 0100 Room for less than 1/4
+    return 32;
+  case FPGA_USBSERIAL_TX_FIFO_32_TO_63:      // (0x0A)    // 1010 Room for 32 to 63
+    return 32;
+  case FPGA_USBSERIAL_TX_FIFO_16_TO_31:      // (0x0B)    // 1011 Room for 16 to 31
+    return 16;
+  case FPGA_USBSERIAL_TX_FIFO_8_TO_15:       // (0x0C)    // 1100 Room for 8 to 15
+    return 8;
+  case FPGA_USBSERIAL_TX_FIFO_4_TO_7:        // (0x0D)    // 1101 Room for 4 to 7
+    return 4;
+  case FPGA_USBSERIAL_TX_FIFO_GE_2:          // (0x0E)    // 1110 Room for atleast 2
+    return 2;
+  case FPGA_USBSERIAL_TX_FIFO_GE_1:          // (0x0F)    // 1111 Room for atleast 1
+    return 1;
+  default:
+    return 0;
+  }
+}
