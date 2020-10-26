@@ -191,8 +191,9 @@ int main(void)
      * uart_tx_raw_buf ( UART_ID_USBSERIAL, txbuf, txbuflen );
      * uart_rx_raw_buf ( UART_ID_USBSERIAL, txbuf, txbuflen );
      */
-//    char test_usb[] =  "\nUSB Serial init done \n";
-//uart_tx_raw_buf( UART_ID_USBSERIAL,test_usb, sizeof(test_usb));
+char info_usbserial[] =  "\nUSB Serial init done \nThis is used for debugging Audio data only\n\n\n";   
+uart_tx_raw_buf( UART_ID_USBSERIAL,info_usbserial, sizeof(info_usbserial)); 
+    
 #endif
 
     dbg_str("\n\n");

@@ -45,7 +45,7 @@
 
 /* use this flag to check the data block header */
 /* can be used only iff the QL_XPORT_INCLUDE_HEADER is defined for Device */
-#define TST_HEADER_VERIFY (1)
+#define TST_HEADER_VERIFY (0)
 
 
 #define uartHandlerUpdate(id,x)

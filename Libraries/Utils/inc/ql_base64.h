@@ -45,4 +45,4 @@ extern int base64Decode(char *inBuf, int count, char *outBuf);
 * Output will be always 4/3 times input + 1 bytes.
 * If input is not exact multiple of 3, it is an error .
 */
-extern int base64EncodeLine(char *inBuf, int count, char *outBuf)
+extern int base64EncodeLine(char *inBuf, int count, char *outBuf);

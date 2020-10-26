@@ -765,10 +765,8 @@ void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
     BaseType_t  xResult;
     uint16_t     kbytes = 0;
 
-
-//    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 2) {          
-//    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 4) {          
-    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 6) {          
+    //send 4 blocks
+    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 4) {          
         // Check buffer availability
         if (xSemaphoreTake(p_hif_channel_info->xSemaphore, 0) == pdTRUE) {
             QAI_DataBlock_t* pdatablk;
@@ -794,56 +792,28 @@ void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
                 if(pdatablk->dbHeader.numUseCount > 0)
                 datablk_mgr_release_generic(pdatablk);
             }
-#if 1 //send 4 or 6 blocks
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-#if 1 //send 6 blocks      
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-#endif            
-#endif            
-#if 0 //for test only
-//fill the memory with a pattern to test reader on host
-//memset(aucAudioBuffer, 0xAA, sizeof(aucAudioBuffer));
-memset(aucAudioBuffer, 0xA3, sizeof(aucAudioBuffer));
 
-#endif            
+            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
+            configASSERT(xResult != pdFAIL);
+            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
+            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
+            if(pdatablk) { 
+                /* only if nonzero usecount, else it is an error */
+                /* Should we assert here since this should never happen ? */
+                if(pdatablk->dbHeader.numUseCount > 0)
+                datablk_mgr_release_generic(pdatablk);
+            }
+            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
+            configASSERT(xResult != pdFAIL);
+            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
+            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
+            if(pdatablk) { 
+                /* only if nonzero usecount, else it is an error */
+                /* Should we assert here since this should never happen ? */
+                if(pdatablk->dbHeader.numUseCount > 0)
+                datablk_mgr_release_generic(pdatablk);
+            }
+
             SendEventAudioTransportBlockReadyD2H(p_hif_channel_info, aucAudioBuffer, kbytes);
             timeout_count_bytes += kbytes;
         }
