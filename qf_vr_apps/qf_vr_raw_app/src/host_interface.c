@@ -72,8 +72,8 @@ static bool streamingOn = false;
 /* This flag is used to ignore the lpsd interrupts (i.e Audio DMA to continue) 
 when transmission session between device and host is started*/
 // static bool g_lpsd_ignore_flag = false;
-
-uint8_t             aucAudioBuffer[4*960];
+#define D2H_MAX_DATA_SIZE   (4*960)
+uint8_t             aucAudioBuffer[D2H_MAX_DATA_SIZE];
 
 hif_channel_info_t hif_channel_info_audio = {
   .sequence_number = 0,
@@ -761,59 +761,32 @@ void    hif_release_inputQ(void) {
     }
 }
 
+#define D2H_NUM_AUDIO_BLOCKS_TO_SEND    (4)
 void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
     BaseType_t  xResult;
     uint16_t     kbytes = 0;
 
     //send 4 blocks
-    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 4) {          
+    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= D2H_NUM_AUDIO_BLOCKS_TO_SEND) {
         // Check buffer availability
         if (xSemaphoreTake(p_hif_channel_info->xSemaphore, 0) == pdTRUE) {
             QAI_DataBlock_t* pdatablk;
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            /* release only if valid block pointer */
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
+            for (int num_blocks = 0; num_blocks < D2H_NUM_AUDIO_BLOCKS_TO_SEND; num_blocks++)
+            {
+                xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
+                configASSERT(xResult != pdFAIL);
+                int block_size = (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize);
+                configASSERT( (block_size+kbytes) <= D2H_MAX_DATA_SIZE ) ;
+                memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, block_size);
+                kbytes += block_size; // pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
+                /* release only if valid block pointer */
+                if(pdatablk) {
+                    /* only if nonzero usecount, else it is an error */
+                    /* Should we assert here since this should never happen ? */
+                    if(pdatablk->dbHeader.numUseCount > 0)
+                       datablk_mgr_release_generic(pdatablk);
+                }
             }
-
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-
             SendEventAudioTransportBlockReadyD2H(p_hif_channel_info, aucAudioBuffer, kbytes);
             timeout_count_bytes += kbytes;
         }

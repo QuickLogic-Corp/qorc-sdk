@@ -82,7 +82,10 @@ uint8_t g_h2d_tx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 #pragma data_alignment = 32
 uint8_t g_h2d_rx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 
-uint8_t g_data_buf[4*1024] = {0};
+/* Allocating 4kB for reading data received from the device.
+ * This has enough room for receiving 128ms 16-bit audio data @16kHz */
+#define H2D_MAX_DATA_SIZE   (4*1024)
+uint8_t g_data_buf[H2D_MAX_DATA_SIZE] = {0};
 
 //uint8_t g_data_buf_ready = 0;
 
@@ -324,6 +327,7 @@ void h2dRxTaskHandler(void *pParameter){
                 while(1 == cb_ret.data_read_req){
                     //printf("cb_ret.data_read_req = %d\n", cb_ret.data_read_req);
                     // need to read data buffer from device memory
+                	configASSERT( cb_ret.len <= H2D_MAX_DATA_SIZE );
                     if (read_device_mem(cb_ret.addr,(uint8_t *)&(g_data_buf[0]), cb_ret.len)) {
                         dbg_fatal_error("device memory read failed\n");
                     }
@@ -454,6 +458,7 @@ void h2dRxTaskHandler(void *pParameter){
                     /* if yes, then read the data from addr and length passed by cb ret value*/
                     while(cb_ret.data_read_req == 1){
                         // need to read data buffer from device memory
+                    	configASSERT( cb_ret.len <= H2D_MAX_DATA_SIZE );
                         if (read_device_mem(cb_ret.addr,(uint8_t *)&(g_data_buf[0]), cb_ret.len)) {
                             dbg_str("device memory read failed\n");
                         }

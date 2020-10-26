@@ -156,7 +156,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay			1
 #define INCLUDE_xTaskGetCurrentTaskHandle		1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
-
+#define INCLUDE_uxTaskGetStackHighWaterMark 0 // Enable this to monitor stack usage
 #define __NVIC_PRIO_BITS          3       /*!< Tamar uses 3 Bits for the Priority Levels */
 
 /* Cortex-M specific definitions. */

@@ -53,4 +53,5 @@ clean:
 	make -f makefiles/Makefile_cli clean
 	make -f makefiles/Makefile_QLSPI clean
 	make -f makefiles/Makefile_FPGA clean
+	make -f makefiles/Makefile_D2HProtocol clean
 

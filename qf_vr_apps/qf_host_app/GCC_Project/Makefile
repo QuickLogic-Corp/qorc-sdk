@@ -126,7 +126,7 @@ gateware:
 clean_gateware:
 	make -f makefiles/Makefile_gateware clean
 
-CLEAN_TARGET += s3gw_drivers
+CLEAN_TARGET += gateware
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)
