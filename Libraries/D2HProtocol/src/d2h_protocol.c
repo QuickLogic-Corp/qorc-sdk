@@ -435,6 +435,7 @@ void d2hRxTaskHandler(void *pParameter){
             }
             break;
         case D2HRX_MSG_ACK_RCVD:
+          {
             //Ack from Host
 
             //Extract tx packet info from the tx buffer and send to the tx_done_callback
@@ -471,6 +472,7 @@ void d2hRxTaskHandler(void *pParameter){
             #if MONITOR_D2H_TRANSMIT_TIME
                xTimerStop(D2H_TimerHandle, pdMS_TO_TICKS(0));
             #endif
+          }
             break;
 
         default:   

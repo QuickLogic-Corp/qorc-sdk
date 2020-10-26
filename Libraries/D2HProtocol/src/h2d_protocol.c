@@ -82,7 +82,7 @@ uint8_t g_h2d_tx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 #pragma data_alignment = 32
 uint8_t g_h2d_rx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 
-uint8_t g_data_buf[1024] = {0};
+uint8_t g_data_buf[4*1024] = {0};
 
 //uint8_t g_data_buf_ready = 0;
 
