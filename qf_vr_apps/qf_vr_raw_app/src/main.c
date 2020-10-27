@@ -80,54 +80,14 @@ volatile uint32_t SystemCoreClock = 72000000;
 volatile uint32_t SystemCoreClock = 0;
 #endif
 
-GPIOCfgTypeDef D2H_FSMConfigData = 
-{ 
-   GPIO_7,
-   PAD_23,
-   PAD23_FUNC_SEL_SENS_INT_7,
-   PAD_NOPULL,
-   EDGE_TRIGGERED,
-   RISE_HIGH
-};
-//this is Ack coming from Host as an interrupt
-GPIOCfgTypeDef H2D_AckConfigData = 
-{ 
-   GPIO_6,//Gpio number has to be interrupt number 
-   PAD_31,
-   PAD31_FUNC_SEL_SENS_INT_6,
-   PAD_NOPULL,
-   EDGE_TRIGGERED,
-   RISE_HIGH
-};
+int D2H_FSMConfigData = 0;
+
 //Using PAD_24 as Ack from S3 and PAD_31 as Ack from Host 
 void setup_d2h_hardware(void) {
   
   //these setup only 2 pins
   h2d_config_intr(&D2H_FSMConfigData);
 
-#if 0  
-  //these 2 setups are for 4 pin protocol
-  
-  //configure H2D Ack as input interrupt
-  HAL_GPIO_IntrCfg(&H2D_AckConfigData);
-
-  //Configure D2H Ack as output 
-  PadConfig padcfg;
-
-  //output pin
-  padcfg.ucCtrl = PAD_CTRL_SRC_A0; 
-  padcfg.ucMode = PAD_MODE_OUTPUT_EN;
-  padcfg.ucPull = PAD_NOPULL;
-  padcfg.ucDrv = PAD_DRV_STRENGHT_4MA;
-  padcfg.ucSpeed = PAD_SLEW_RATE_FAST;
-  padcfg.ucSmtTrg = PAD_SMT_TRIG_DIS;
-  
-  //Pad 24 -- Gpio0
-  padcfg.ucPin = PAD_24;
-  padcfg.ucFunc = PAD24_FUNC_SEL_GPIO_0;
-  HAL_PAD_Config(&padcfg);
-#endif
-  
   return;
 }
 

@@ -73,7 +73,7 @@ Demonstrate how to setup and handle stereo input.
   - QuickFeather AVS Cradle
   - Dual QuickFeather Cradle
   
-## qf_VR_raw_app: [coming soon] companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.r
+## qf_VR_raw_app: companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.r
 ![qf_VR_raw_app](./images/qf_VR_raw_app.png)
 ### Purpose
 Demonstrate host/companion command protocol and raw audio streaming over SPI.
@@ -83,7 +83,7 @@ Demonstrate host/companion command protocol and raw audio streaming over SPI.
 - 2xQuickFeather (one as companion, one as host)
 - I2S DAC board (audio output)
 - Cradle (holds QuickFeather companion and QuickFeather host)
-  - Dual QuickFeather Cradle
+  - [Dual QuickFeather Cradle]
 - PC to receive and analyze audio packets
   
 
@@ -123,7 +123,7 @@ The hardware is configured to support recording of I2S data on a PC.  No plans f
 
 
 
-
+[Dual QuickFeather Cradle]: https://github.com/QuickLogic-Corp/qf-cradle
 
 
 
