@@ -1,9 +1,0 @@
-
-CONTROL_SRCS:=$(wildcard $(CONTROL_DIR)/*.c)
-
-SRCS:=$(notdir $(CONTROL_SRCS))
-OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
-SRC_PATH:= $(CONTROL_DIR)
-
-include $(COMMON_STUB)
-
