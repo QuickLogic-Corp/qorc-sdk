@@ -62,6 +62,6 @@ optional arguments:
                         Output WAV file
 ```
 
-[VR raw streaming Hardware Setup]: ../qf_vr_apps#qf_vr_raw_app-coming-soon-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spir
+[VR raw streaming Hardware Setup]: ../readme.md#qf_vr_raw_app-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spir
 [Base64 Audio Decoder]: ../../Tools/uartaudio/convb64towav.py
 [Dual QuickFeather Cradle]: https://github.com/QuickLogic-Corp/qf-cradle

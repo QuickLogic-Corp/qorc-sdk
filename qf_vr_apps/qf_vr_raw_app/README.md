@@ -55,4 +55,4 @@ follow these steps:
 6. Reset the host Quickfeather board to start running the VR raw streaming 
    application.
 
-[VR raw streaming Hardware Setup]: ../qf_vr_apps#qf_vr_raw_app-coming-soon-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spir
+[VR raw streaming Hardware Setup]: ../readme.md#qf_vr_raw_app-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spir
