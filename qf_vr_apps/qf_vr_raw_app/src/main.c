@@ -97,13 +97,13 @@ void start_d2h_protocol_task(void) {
   setup_d2h_hardware();
     
   D2H_Platform_Info d2h_plat_info;
-  d2h_plat_info.H2D_gpio = GPIO_7;
+  d2h_plat_info.H2D_gpio = GPIO_6;
   d2h_plat_info.D2H_gpio = 0xFF;      // D2H intr is through PAD 43. AP intr
 
 #if (USE_4PIN_D2H_PROTOCOL == 1)
   
-  d2h_plat_info.H2D_ack = GPIO_6; //GPIO_4;
-  d2h_plat_info.D2H_ack = GPIO_0;      // D2H intr is through PAD 24.
+  d2h_plat_info.H2D_ack = GPIO_7;
+  d2h_plat_info.D2H_ack = GPIO_2;      // D2H Ack is through PAD 11.
 
 #endif
   

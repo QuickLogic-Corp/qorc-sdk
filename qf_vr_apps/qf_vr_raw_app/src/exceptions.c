@@ -436,17 +436,17 @@ void SensorGpio_Handler(void)
 	//spurious_interrupt(__LINE__);
 
 	NVIC_DisableIRQ(Gpio_IRQn);
-	if(INTR_CTRL->GPIO_INTR & (1<<GPIO_6))
+	if(INTR_CTRL->GPIO_INTR & (1<<GPIO_7))
 	{
         /* This is ack from Host to Device */
 		service_ack_from_host();
-		INTR_CTRL->GPIO_INTR |= (1<<GPIO_6);
+		INTR_CTRL->GPIO_INTR |= (1<<GPIO_7);
 	}
-    if(INTR_CTRL->GPIO_INTR & (1<<GPIO_7))
+    if(INTR_CTRL->GPIO_INTR & (1<<GPIO_6))
 	{
         /* This is QL_INT from Host to Device*/
 		service_intr_from_host();
-		INTR_CTRL->GPIO_INTR |= (1<<GPIO_7);
+		INTR_CTRL->GPIO_INTR |= (1<<GPIO_6);
 	}
 
 	NVIC_ClearPendingIRQ(Gpio_IRQn);
