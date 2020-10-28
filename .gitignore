@@ -32,3 +32,8 @@
 *.app
 
 **/output/
+
+# RTL build files
+**/rtl/build/
+**/rtl/Makefile.symbiflow
+**/rtl/*.h
