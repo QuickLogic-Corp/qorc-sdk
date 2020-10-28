@@ -1,0 +1,12 @@
+
+export NN_2_DIR = $(CMSIS_DIR)$(DIR_SEP)FullyConnectedFunctions
+CMSIS_SRCS:=$(NN_2_DIR)/arm_fully_connected_mat_q7_vec_q15_opt.c 
+
+
+SRCS:=$(notdir $(CMSIS_SRCS))  
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(NN_2_DIR)
+
+
+include $(COMMON_STUB)
+
