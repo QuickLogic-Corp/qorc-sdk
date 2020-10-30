@@ -23,6 +23,9 @@
 
 #include "string.h"
 #include "Fw_global_config.h"
+
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)
+
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "eoss3_dev.h"
@@ -102,6 +105,7 @@ D2H_Protocol_info g_d2h_protocol_info = {0};
 //H2D_packet g_h2d_tx_packet = {0};
 uint8_t g_d2h_tx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 
+int d2h_spurious_interrupts = 0;
 /*Internal APIs*/
 static void clear_interrupt_to_host(void);
 
@@ -226,15 +230,6 @@ void h2d_config_intr(void *pv){
 	IO_MUX->PAD_43_CTRL = PAD43_FUNC_SEL_AP_INTR | PAD_E_12MA | PAD_OEN_NORMAL;
 	MISC_CTRL->LOCK_KEY_CTRL = 0x00000000;
 
-
-    // QL_INT configuration (Host to Device)
-    {
-		HAL_GPIO_IntrCfg((GPIOCfgTypeDef *)pv);    // (&xGpioCfg);
-
-        NVIC_ClearPendingIRQ(Gpio_IRQn);        //SJ
-        NVIC_EnableIRQ(Gpio_IRQn);
-    }
-
     return;
 }
 
@@ -304,6 +299,22 @@ static void clear_interrupt_to_host(void){
 * \param   -
 * \returns -
 */
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+static void generate_pulse_to_host(void){
+uint8_t d2h_ack = g_d2h_protocol_info.pfm_info.D2H_ack;
+
+    /* set the ack intr to host */
+    HAL_GPIO_Write(d2h_ack, 1);
+
+    int delay_in_ms = 1; // Add one ms delay
+    vTaskDelay((delay_in_ms/portTICK_PERIOD_MS));
+
+    /*clear ack intr to host */
+    HAL_GPIO_Write(d2h_ack, 0);
+
+    return;
+}
+#else
 static void generate_pulse_to_host(void){
 
     /*generate intr to host (AP_INT high)*/
@@ -317,7 +328,7 @@ static void generate_pulse_to_host(void){
 
     return;
 }
-
+#endif
 
 /*!
 * \fn      void send_msg_to_d2hrx_task_fromISR(uint8_t msg_type)
@@ -353,9 +364,120 @@ void service_intr_from_host(void){
     return;
 }
 
+/*!
+* \fn      void service_ack_from_host(void)
+* \brief   function to service ack interrupt received from the host 
+*          This function is called from ISR. should use only isr safe apis
+* \param   -
+* \returns -
+*/
+void service_ack_from_host(void){
+
+    send_msg_to_d2hrx_task_fromISR(D2HRX_MSG_ACK_RCVD);
+    return;
+}
+
 /* to hold the value of previous cmd sequence received from host*/
 static int g_prev_seq = -1;
 
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+/* Receive task handler */
+void d2hRxTaskHandler(void *pParameter){
+
+    BaseType_t qret;
+    unsigned int d2hRxTaskStop = 0;
+    D2H_Rx_Pkt d2hrx_msg;
+
+    while(!d2hRxTaskStop){
+        //clear the Msg Q buffer
+        memset(&d2hrx_msg, 0, sizeof(d2hrx_msg));
+        qret = xQueueReceive(D2HRx_MsgQ, &d2hrx_msg, D2HRX_MSGQ_WAIT_TIME);
+        configASSERT(qret == pdTRUE);
+
+        D2H_Pkt_Info d2h_rx_pkt = {0};
+        D2H_Pkt_Info d2h_tx_pkt = {0};
+
+//uint8_t h2dack = read_gpio_intr_val(g_d2h_protocol_info.pfm_info.H2D_ack);
+//printf("\n[D2H %d %d]", d2hrx_msg.msg, h2dack);
+
+        switch(d2hrx_msg.msg)
+        {
+        case D2HRX_MSG_INTR_RCVD:
+            // D2H interrupt (AP_INT) means the Host initiated 
+            extract_rx_packet(&d2h_rx_pkt);
+            if (d2h_rx_pkt.seq == g_prev_seq) { // Trouble: host did not update rx buffer so assume this is a spurious interrupt and ignore
+                d2h_spurious_interrupts++; //count the spurious interrupts
+                #if 1 //DEBUG_D2H_PROTOCOL
+                dbg_str("[D2H_PROTOCOL] unexpected host interrupt - ignoring\n");
+                #endif
+            } else {
+                g_prev_seq = d2h_rx_pkt.seq;   // Update last completed sequence number
+                /*Invoke callback*/
+                if(g_d2h_protocol_info.cb_info[d2h_rx_pkt.channel].rx_cb_ptr){
+                    void * pchannel_info =  g_d2h_protocol_info.cb_info[d2h_rx_pkt.channel].pchannel_info_rx;
+                    g_d2h_protocol_info.cb_info[d2h_rx_pkt.channel].rx_cb_ptr(pchannel_info,d2h_rx_pkt);
+                }
+                // Send acknowledge pulse to host
+                generate_pulse_to_host();
+                
+                #if DEBUG_D2H_PROTOCOL
+                dbg_str("[D2H_PROTOCOL] received cmd from host. Pulse sent to host\n");
+                #endif
+            }
+            break;
+        case D2HRX_MSG_ACK_RCVD:
+          {
+            //Ack from Host
+
+            //Extract tx packet info from the tx buffer and send to the tx_done_callback
+            extract_tx_packet_info(&d2h_tx_pkt);
+            if(g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].tx_done_cb_ptr){
+                void * pchannel_info =  g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].pchannel_info_tx;
+                g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].tx_done_cb_ptr(pchannel_info, d2h_tx_pkt);
+            }
+            
+            uint32_t start_ticks = xTaskGetTickCount();
+            uint32_t current_ticks = start_ticks;
+            //wait for H2D_ack to go low, which means host has completed the ACK
+            while (read_gpio_intr_val(g_d2h_protocol_info.pfm_info.H2D_ack)) {
+             vTaskDelay(1); 
+             uint32_t elapsed_ticks = xTaskGetTickCount() - current_ticks; 
+             //print msg every 200ms
+             if(elapsed_ticks > 200)
+             {
+                current_ticks = xTaskGetTickCount();
+                dbg_str_int_noln("D2H: Host Ack not down for (ms) ",current_ticks - start_ticks);
+             }
+            }
+            clear_interrupt_to_host();  // pull AP_INT low (tell host we heard the ACK)
+
+            //release the tx lock
+            if (xSemaphoreGive(g_d2h_transmit_lock) != pdTRUE) {        // release the tx lock
+                dbg_fatal_error("[D2H Protocol] : Error : unable to release lock to g_d2h_transmit_lock\n");
+            }
+
+            #if DEBUG_D2H_PROTOCOL
+            dbg_str("[D2H_PROTOCOL] Device transmit complete. received pulse from host\n");
+            #endif
+
+            #if MONITOR_D2H_TRANSMIT_TIME
+               xTimerStop(D2H_TimerHandle, pdMS_TO_TICKS(0));
+            #endif
+          }
+            break;
+
+        default:   
+            dbg_str("[D2H_PROTOCOL] Error unknown msg \n");
+            break;
+
+        } //end of switch
+//h2dack = read_gpio_intr_val(g_d2h_protocol_info.pfm_info.H2D_ack);        
+//printf("\n[D2H done %d]", h2dack);
+    } //end of while(1)
+
+    return;
+}
+#else //use only 2 pins for the D2H protocol
 /* Receive task handler */
 void d2hRxTaskHandler(void *pParameter){
 
@@ -442,7 +564,7 @@ void d2hRxTaskHandler(void *pParameter){
 
     return;
 }
-
+#endif  // USE_4PIN_D2H_PROTOCOL 
 /*!
 * \fn      signed portBASE_TYPE start_rtos_task_d2hrx( void)
 * \brief   Setup msg queue and Task Handler for D2H rx Task
@@ -487,12 +609,22 @@ int d2h_protocol_init(D2H_Platform_Info * d2h_platform_info) {
 
 
     memcpy( &(g_d2h_protocol_info.pfm_info), d2h_platform_info, sizeof(D2H_Platform_Info));
-    
+
+    //clear the D2H Ack and D2H interrutps
+#if (USE_4PIN_D2H_PROTOCOL == 1)
+    uint8_t d2h_ack = g_d2h_protocol_info.pfm_info.D2H_ack;
+    HAL_GPIO_Write(d2h_ack, 0);
+#endif
+   
+    clear_interrupt_to_host();
+
     // Check to see if H2D is inactive.  If it is active, print message and wait for it to go inactive
     if (read_gpio_intr_val(g_d2h_protocol_info.pfm_info.H2D_gpio)) {
         dbg_str("Waiting for H2D to go inactive\n");
         do {
-            vTaskDelay(1);
+            //this delay should not be there before the task started
+            //vTaskDelay(1);
+            dbg_str("Waiting for H2D to go inactive\n");
         }while (read_gpio_intr_val(g_d2h_protocol_info.pfm_info.H2D_gpio));
         dbg_str("H2D inactive - resuming config\n");
     }
@@ -515,6 +647,7 @@ int d2h_protocol_init(D2H_Platform_Info * d2h_platform_info) {
     start_rtos_task_d2hrx();
 
     g_d2h_protocol_info.init_done = 1;
+    d2h_spurious_interrupts = 0;
 
     return D2H_STATUS_OK;
 }
@@ -532,6 +665,7 @@ int d2h_transmit_cmd(D2H_Pkt_Info *d2h_evt_info) {
     uint8_t in_gpio = g_d2h_protocol_info.pfm_info.H2D_gpio;
 
     dbgtrace(__LINE__, d2h_evt_info->cmd, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
+   //take the lock to prevent another tx before ack 
    if (xSemaphoreTake(g_d2h_transmit_lock, portMAX_DELAY) != pdTRUE) {
         dbg_fatal_error("[D2H Protocol] : Error unable to take lock to g_d2h_transmit_lock\n");
         return D2H_ERROR;
@@ -540,10 +674,20 @@ int d2h_transmit_cmd(D2H_Pkt_Info *d2h_evt_info) {
    // create tx packet
    create_tx_packet(d2h_evt_info);
 
+   uint32_t start_ticks = xTaskGetTickCount();
+   uint32_t current_ticks = start_ticks;
+
    // wait till intr from host is low (QL_INT is low)
    do {
         // wait for intr to go low
        vTaskDelay(1);
+       uint32_t elapsed_ticks = xTaskGetTickCount() - current_ticks;
+       //print msg every 200ms
+       if(elapsed_ticks > 200)
+       {
+         current_ticks = xTaskGetTickCount();
+         dbg_str_int_noln("D2H: Host Interrupt not down for (ms) ",current_ticks - start_ticks);
+       }
    }while (read_gpio_intr_val(in_gpio));
 
    // write data to the shared memory location
@@ -635,3 +779,5 @@ int h2d_transmit_lock_release(void)
         }
     return ret;
 }
+
+#endif /* FEATURE_D2HPROTOCOL_DEVICE */

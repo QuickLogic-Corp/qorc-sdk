@@ -720,3 +720,29 @@ int uart_tx_is_fifo_empty(int uartid)
 #endif
     return 1;
 }
+
+#if FEATURE_USBSERIAL == 1
+int uart_tx_is_fifo_half_empty(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_is_fifo_half_empty();
+    }
+    return -1; // Unknown UART ID
+}
+
+int uart_tx_get_fifo_status(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_get_fifo_status();
+    }
+    return -1; // Unknown UART ID    
+}
+
+int uart_tx_get_fifo_space_available(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_get_fifo_space_available();
+    }
+    return -1; // Unknown UART ID    
+}
+#endif

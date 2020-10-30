@@ -250,6 +250,10 @@ void uart_set_lpm_state(int uart_id, int lpm_en);
 int uart_tx_is_fifo_full(int uart_id);
 int uart_tx_is_fifo_empty(int uartid);
 
+extern int uart_tx_is_fifo_half_empty(int uartid);
+extern int uart_tx_get_fifo_status(int uartid);
+extern int uart_tx_get_fifo_space_available(int uartid);
+
 /*
  * @}
  */

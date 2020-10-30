@@ -1,0 +1,9 @@
+
+NUANCE_SRCS:=$(wildcard $(NUANCE_DIR)/*.c)
+
+SRCS:=$(notdir $(NUANCE_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(NUANCE_DIR)
+
+include $(COMMON_STUB)
+
