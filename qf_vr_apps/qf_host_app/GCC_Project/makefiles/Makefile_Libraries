@@ -1,0 +1,57 @@
+# -*- mode: Makefile -*-
+
+all: POWER CLI UTILS DATABLOCKMANAGER QLSPI FPGA D2HPROTOCOL
+
+
+.PHONY: POWER
+POWER:
+	make -f makefiles/Makefile_Power
+
+.PHONY: CMSIS
+CMSIS:
+	make -f makefiles/Makefile_CMSIS
+	make -f makefiles/Makefile_CMSIS_2
+	make -f makefiles/Makefile_CMSIS_3
+
+.PHONY: UTILS
+UTILS:
+	make -f makefiles/Makefile_Utils
+
+.PHONY: DATABLOCKMANAGER
+DATABLOCKMANAGER:
+	make -f makefiles/Makefile_DatablockManager
+
+.PHONY: D2HPROTOCOL
+D2HPROTOCOL:
+	make -f makefiles/Makefile_D2HProtocol
+
+.PHONY: AUDIO
+AUDIO:
+	make -f makefiles/Makefile_Audio
+
+.PHONY: CLI
+CLI:
+	make -f makefiles/Makefile_cli
+
+.PHONY: QLSPI
+QLSPI:
+	make -f makefiles/Makefile_QLSPI
+
+.PHONY: FPGA
+FPGA:
+	make -f makefiles/Makefile_FPGA
+
+.PHONY: D2HProtocol
+D2HProtocol:
+	make -f makefiles/Makefile_D2HProtocol
+
+clean:
+	make -f makefiles/Makefile_Power clean
+	make -f makefiles/Makefile_Utils clean
+	make -f makefiles/Makefile_DatablockManager clean
+	make -f makefiles/Makefile_Audio clean
+	make -f makefiles/Makefile_cli clean
+	make -f makefiles/Makefile_QLSPI clean
+	make -f makefiles/Makefile_FPGA clean
+	make -f makefiles/Makefile_D2HProtocol clean
+

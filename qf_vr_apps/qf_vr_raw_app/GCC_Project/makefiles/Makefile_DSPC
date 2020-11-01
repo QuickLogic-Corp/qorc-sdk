@@ -1,0 +1,11 @@
+
+DSPC_SRCS:=$(wildcard $(DSPC_DIR)/*.c)
+
+filters=ControlDriver.c GPIO.c
+
+SRCS:=$(filter-out $(filters), $(notdir $(DSPC_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(DSPC_DIR)
+
+include $(COMMON_STUB)
+

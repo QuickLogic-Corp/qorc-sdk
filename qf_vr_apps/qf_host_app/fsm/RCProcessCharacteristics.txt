@@ -1,0 +1,99 @@
+//Process,Type,Action/Interrupt,Call/Event,NextState/NextState,Comments,Issues
+Process: DFS
+Action: CONFIG => NODE0
+Action: MIN_NODE0 => NODE0
+Action: MIN_NODE1 => NODE1
+Action: MIN_NODE2 => NODE2
+Action: MIN_NODE3 => NODE3
+Action: MIN_NODE4 => NODE4
+Action: MIN_NODE5 => NODE5
+Action: MIN_NODE6 => NODE6
+Action: MIN_NODE7 => NODE7
+
+Process: PTT_Switch
+Action: CONFIG => STOPPED
+
+Process: Mute_Switch
+Action: CONFIG => STOPPED
+
+
+Process: VM1010
+Action: CONFIG=>STOPPED
+Action: STOP => STOPPED
+Action: START_NORMAL => NORMAL
+Action: START_WOS => WOS
+Event: WOS
+
+Process: VM3011
+Action: CONFIG=>STOPPED
+Action: STOP => STOPPED
+Action: START_NORMAL => NORMAL
+Action: START_WOS => WOS
+Event: WOS
+
+Process: WOS_Timer
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED
+Event:	WOS_TIMER
+
+Process: AudioHW
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START_SAVING => SAVING
+Action: START_STREAMING => STREAMING
+
+Process: LPSD
+Action: CONFIG => STOPPED
+Action: STOP => STOPPED
+Action: START_OFF => LPSD_OFF
+Action: START_ON => LPSD_ON
+Action:	STATE_OFF => LPSD_OFF
+Action:	STATE_ON => LPSD_ON
+Event: LPSD_ON
+Event: LPSD_OFF
+
+Process: CircularBuffer
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START_SAVING => SAVING
+Action: START_OUTQ => OUTQING
+
+
+Process: VR
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED
+Event:	VR_TRIGGER
+
+Process: HIF
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED
+Event:	HOST_READY_TO_RECEIVE
+Event:	HOST_PROCESS_OFF
+Event:	HOST_PROCESS_ON
+Event:	HOST_MUTE_OFF
+Event:	HOST_MUTE_ON
+Event:	HIF_EOT
+
+Process: Opus
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED
+
+Process: D2H
+Action: CONFIG => STOPPED,
+Action: FINISH_STOPPING => STOPPED
+Action: BEGIN_STOPPING => STOPPING
+Action: START => STARTED
+
+Process: H2D
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED
+
+Process: CLI
+Action: CONFIG => STOPPED,
+Action: STOP => STOPPED
+Action: START => STARTED

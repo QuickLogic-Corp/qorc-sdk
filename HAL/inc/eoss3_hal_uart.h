@@ -132,6 +132,7 @@ typedef enum
 #define UART_ID_BUFFER       4   // Write data to buffer
 #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 #define UART_ID_USBSERIAL    6   // Write data to USB serial port
+#define UART_ID_FPGA_UART1   7   // FPGA UART 1
 
 #if !defined(UART_ID_CONSOLE)   /* most often, the UART_HW */
 #define UART_ID_CONSOLE UART_ID_USBSERIAL
@@ -248,6 +249,10 @@ void uart_set_lpm_state(int uart_id, int lpm_en);
 
 int uart_tx_is_fifo_full(int uart_id);
 int uart_tx_is_fifo_empty(int uartid);
+
+extern int uart_tx_is_fifo_half_empty(int uartid);
+extern int uart_tx_get_fifo_status(int uartid);
+extern int uart_tx_get_fifo_space_available(int uartid);
 
 /*
  * @}
