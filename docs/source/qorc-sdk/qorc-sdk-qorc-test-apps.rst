@@ -1,3 +1,0 @@
-
-QORC SDK TEST APPS
-==================

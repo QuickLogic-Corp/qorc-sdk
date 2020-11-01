@@ -1,11 +1,6 @@
 
-
-QuickLogic TinyFPGA Programmer
-==============================
-
-.. note:: Placeholder, point to the TinyFPGA Programmer docs dir, and clone that as a submodule of qorc-sdk while building documentation at the minimum.
-
-
+.. include:: /../../TinyFPGA-Programmer-Application/q-series/python/readme.rst
 
 .. toctree::
    :maxdepth: 2
+   

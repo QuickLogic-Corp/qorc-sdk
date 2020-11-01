@@ -1,9 +1,8 @@
 
-QuickLogic Symbiflow FPGA Toolchain
+QuickLogic FPGA Toolchain
 ===================================
 
-.. note:: Placeholder, point to the FPGA Toolchain docs dir, and clone that as a submodule of qorc-sdk while building documentation at the minimum.
-
+The QuickLogic FPGA Toolchain (as part of Symbiflow) and its complete documentation can be found :doc:`here <ql-symbiflow:index>`.
 
 .. toctree::
    :maxdepth: 2
