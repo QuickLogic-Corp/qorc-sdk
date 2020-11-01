@@ -1,12 +1,11 @@
 .. include:: /common.rst
 
-QORC-SDK QuickFeather Test Applications
-=======================================
-
-HAL Layer Components
-
-.. todo:: Add components available and brief explanations
+.. include:: /../../qorc-testapps/README.rst
 
 .. toctree::
    :hidden:
    :maxdepth: 2
+
+   qorc-sdk-qorc-test-apps-qf-baremetal
+   qorc-sdk-qorc-test-apps-qf-ramblockinit
+   qorc-sdk-qorc-test-apps-qf-usbspeed

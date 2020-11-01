@@ -1,6 +1,6 @@
 .. include:: /common.rst
 
-.. include:: /../../qorc-example-apps/README.rst
+.. include:: /../../qf_vr_apps/qf_2micvr_app/README.rst
 
 .. toctree::
    :hidden:

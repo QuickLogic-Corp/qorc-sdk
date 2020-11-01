@@ -2,10 +2,18 @@
 
 .. include:: /../../qf_apps/README.rst
 
-.. todo:: add brief explanation of the applications, and add a readme for each app.
-
 .. toctree::
    :hidden:
    :maxdepth: 2
-   
+
+   qorc-sdk-qf-apps-qf-helloworldsw
+   qorc-sdk-qf-apps-qf-helloworldhw
+   qorc-sdk-qf-apps-qf-advancedfpga
+   qorc-sdk-qf-apps-qf-fpgauart-app
+   qorc-sdk-qf-apps-qf-gwtestharness
    qorc-sdk-qf-apps-qf-bootloader
+   qorc-sdk-qf-apps-qf-bootloader-uart
+   qorc-sdk-qf-apps-qf-loadflash
+   qorc-sdk-qf-apps-qf-loadflash-uart
+   qorc-sdk-qf-apps-qf-mqttsn-ai-app
+

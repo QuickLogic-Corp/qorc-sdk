@@ -1,6 +1,6 @@
 .. include:: /common.rst
 
-.. include:: /../../qf_apps/qf_bootloader/README.rst
+.. include:: /../../qorc-testapps/qf_baremetal/README.rst
 
 .. toctree::
    :hidden:
