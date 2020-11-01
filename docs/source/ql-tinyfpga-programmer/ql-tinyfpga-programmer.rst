@@ -1,5 +1,5 @@
 
-.. include:: /../../TinyFPGA-Programmer-Application/q-series/python/readme.rst
+.. include:: /../../TinyFPGA-Programmer-Application/q-series/python/README.rst
 
 .. toctree::
    :maxdepth: 2
