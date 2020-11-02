@@ -1,6 +1,4 @@
-
-.. role:: bash(code)
-   :language: bash
+.. include:: /common.rst
 
 
 GCC Arm Embedded Toolchain
