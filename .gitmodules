@@ -19,3 +19,6 @@
 [submodule "TinyFPGA-Programmer-Application"]
 	path = TinyFPGA-Programmer-Application
 	url = https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
+[submodule "quicklogic-fpga-toolchain"]
+	path = quicklogic-fpga-toolchain
+	url = https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain.git
