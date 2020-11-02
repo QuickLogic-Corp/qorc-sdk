@@ -3,9 +3,16 @@
 QORC-SDK EOS S3 FPGA Designs
 ============================
 
-.. todo:: Add FPGA designs available to use and brief explanations
+- :doc:`qorc-sdk-s3-gateware-adc_ad7476_if.rst`
+
+- :doc:`qorc-sdk-s3-gateware-usb2serial.rst`
+
+.. todo:: Add other FPGA designs available to use and brief explanations
 
 .. toctree::
    :hidden:
    :maxdepth: 2
+
+   qorc-sdk-s3-gateware-adc_ad7476_if.rst
+   qorc-sdk-s3-gateware-usb2serial.rst
 

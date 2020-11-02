@@ -4,21 +4,21 @@ Setup
 
 1. Hardware
 
-- QuickFeather Development Board
+- Development Board: :doc:`/ql-development-boards/ql-development-boards` 
 
-- USB-UART cable 3.3v
+- UART cable: :doc:`setup-hw-usbuart`
 
 2. Software
 
-- QORC SDK
+- QORC SDK: :doc:`setup-sw-qorcsdk`
 
-- ARM Cortex M4 Build Environment: GCC Arm Embedded Toolchain
+- ARM Cortex M4 Build Environment: :doc:`setup-sw-gccarmembedded`
 
-- FPGA Build Environment: Quicklogic Symbiflow Toolchain
+- FPGA Build Environment: :doc:`setup-sw-qlsymbiflow`
 
-- Flash Progammer Tool : TinyFPGAProgammer
+- QuickLogic TinyFPGAProgrammer: :doc:`setup-sw-tinyfpgaprogrammer`:
 
-- Serial Port Terminal Application
+- :doc:`setup-sw-serialportapp`
 
 
 
@@ -26,7 +26,7 @@ Setup
    :hidden:
    :maxdepth: 2
 
-   setup-hw-quickfeather
+   /ql-development-boards/ql-development-boards
    setup-hw-usbuart
    setup-sw-qorcsdk
    setup-sw-gccarmembedded
