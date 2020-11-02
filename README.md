@@ -13,57 +13,49 @@ Easiest way to get started on quickfeather development kit is to build and
 run example application projects included in this SDK on a quickfeather 
 development kit.
 
-Install the items listed in Pre-requisites section below. Clone this QORC SDK
-repository using  
-```git clone https://github.com/QuickLogic-Corp/qorc-sdk```
+Clone this QORC SDK repository using  
+```git clone --recursive https://github.com/QuickLogic-Corp/qorc-sdk```
+
+Install the items listed in Pre-requisites section below. 
 
 ## Pre-requisites
 
 ### Toolchain
 
 * Firmware
-    - [ARM GNU GCC toolchain] Version 7.2.1 or later.  
-      Refer [Launchpad Ubuntu] for details to install the toolchain on Ubuntu Linux system.
-      ```sh
-      sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa     
-      sudo apt-get update     
-      sudo apt-get install gcc-arm-embedded  
-      ```
+    1. Download tarball according to the system configuration from: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+    
+       Current stable version tested with is `9-2020-q2-update`
+       
+    2. Extract the tarball to a preferred path(/BASEPATH/TO/TOOCHAIN/)
+    
+       `sudo tar xvjf gcc-arm-none-eabi-your-version.tar.bz2 -C /BASEPATH/TO/TOOCHAIN/`
+       
+       The usual preferred path is for example `/usr/share`
+       
+       `sudo tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /usr/share/`
+       
+    3. Add the /BASEPATH/TO/TOOCHAIN/gcc-arm-none-eabi-your-version/bin/ to PATH (only for current terminal session)
+    
+       `export PATH=/BASEPATH/TO/TOOCHAIN/gcc-arm-none-eabi-your-version/bin/:$PATH`
+       
+       For the preferred path of `/usr/share` and current tested stable version `9-2020-q2-update` for example:
+       
+       `export PATH=/usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH`
+       
+    4. If the path settings need to be permanent, it can be added to the `~/.bashrc` or `~/.bash_profile.`
+    
+       Examples and illustrations are for example here: https://stackabuse.com/how-to-permanently-set-path-in-linux/
+       
 * Gateware
     - QuickLogic Symbiflow: Refer [QuickLogic Symbiflow] to install the QuickLogic Symbiflow toolchain
     
 ### Utilities
 
-* Flash programmer: [TinyFPGA programmer]
-    - To install clone the repository and install the dependancy
-    ```
-    git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
-    pip3 install tinyfpgab
-    ```
+* Flash programmer: TinyFPGA programmer
+
+    Refer to [TinyFPGA programmer] for installation instructions.
     
-    On Ubuntu the lsusb command should display something similar to the following:
-    ```
-    lsusb
-    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-    Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.
-    ```
-    If the OpenMoko device is not present (it could also have ID 1d50:6130) then run the following commands.
-    ```
-    pip3 install apio
-    apio drivers --serial-enable
-    Serial drivers enabled
-    Unplug and reconnect your board
-    ```
-    Recommend adding an alias to simplify programming:
-    
-    Using the editor of your choice add the following line to ~/.bashrc:
-    ```
-    alias qfprog="python3 ~/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
-    ```
-    and then source that file:
-    ```sh
-    source ~/.bashrc
-    ```
 * Terminal application program such as: [putty]
     ```
     sudo apt-get install putty -y
