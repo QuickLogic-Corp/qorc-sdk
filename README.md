@@ -1,5 +1,7 @@
 # QORC SDK
 
+[![Documentation Status](https://readthedocs.org/projects/qorc-sdk/badge/?version=latest)](https://qorc-sdk.readthedocs.io/en/latest/?badge=latest&style=for-the-badge)
+
 QuickLogic Open Reconfigurable Computing (QORC) SDK provides components needed
 to get started on the QuickLogic's EOSS3 device and open source development boards
 such as Quickfeather. 
