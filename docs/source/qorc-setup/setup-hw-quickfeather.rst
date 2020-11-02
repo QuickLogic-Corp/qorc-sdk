@@ -1,2 +1,0 @@
-QuickFeather Development Board
-====================================
