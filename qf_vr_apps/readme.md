@@ -111,7 +111,7 @@ Demonstrate host/companion command protocol, opus compression and audio streamin
 - 2xQuickFeather (one as companion, one as host)
 - I2S DAC board (audio output)
 - Cradle (holds QuickFeather companion and QuickFeather host)
-  - Quicklogic Expansion Board 2 (coming soon)
+  - ![Quicklogic Expansion Board Duo](https://github.com/QuickLogic-Corp/quickfeather-expansion-board-duo) (coming soon)
 - PC to receive and decode opus packets
 
 ### Optional: Local playback
@@ -128,7 +128,7 @@ Demonstrate host/companion command protocol, and I2S isochronous output that han
 - 2xQuickFeather (one as companion, one as host)
 - I2S DAC board (audio output)
 - Cradle (holds QuickFeather companion and QuickFeather host)
-  - Quicklogic Expansion Board 2 (coming soon)
+  - ![Quicklogic Expansion Board Duo](https://github.com/QuickLogic-Corp/quickfeather-expansion-board-duo) (coming soon)
  
 ### Optional: PC analysis
 The hardware is configured to support recording of I2S data on a PC.  No plans for software support of this option.
