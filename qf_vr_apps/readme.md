@@ -82,7 +82,7 @@ The output of this pre-processing has a PID of AUDIO_QL_PRE_PROC which is fed in
 ### Required hardware
 - Modified QuickFeather (modifed to use external microphone)
 - Calaveras board (support 2 microphones)
-- Cradle (holds QuickFeather and Calaveras boards)
+- ![QuickFeather Expansion Board](https://github.com/QuickLogic-Corp/quickfeather-expansion-board) (holds QuickFeather and Calaveras boards)
   - Quicklogic Expansion Board 1
   - Quicklogic Expansion Board 2 (coming soon)
   
@@ -96,7 +96,7 @@ Demonstrate host/companion command protocol and raw audio streaming over SPI.
 - 2xQuickFeather (one as companion, one as host)
 - I2S DAC board (audio output)
 - Cradle (holds QuickFeather companion and QuickFeather host)
-  - Quicklogic Expansion Board 2 (coming soon)
+  - ![Quicklogic Expansion Board Duo](https://github.com/QuickLogic-Corp/quickfeather-expansion-board-duo) (coming soon)
 - PC to receive and analyze audio packets
   
 
