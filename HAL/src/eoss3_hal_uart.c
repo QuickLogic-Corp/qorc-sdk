@@ -47,6 +47,9 @@
 #if FEATURE_USBSERIAL == 1
 #include "eoss3_hal_fpga_usbserial.h"
 #endif // FEATURE_USBSERIAL
+#if FEATURE_FPGA_UART == 1
+#include "eoss3_hal_fpga_uart.h"
+#endif
 /*
  * Private variables
  */
@@ -366,8 +369,8 @@ void uart_init( int uartid, PadConfig* ppadConfigTx, PadConfig* ppadConfigRx, co
     uint32_t imsc_value;
     
 #if FEATURE_FPGA_UART == 1
-    if( uartid == UART_ID_FPGA ){
-        fgpa_uart_init( pConfig );
+    if ( ( uartid == UART_ID_FPGA ) || ( uartid == UART_ID_FPGA_UART1) ){
+        HAL_FB_UART_Init( uartid, pConfig );
         return;
     }
 #endif
@@ -481,8 +484,10 @@ int uart_rx( int uartid )
     int r;
 
 #if FEATURE_FPGA_UART == 1
-    if( uartid == UART_ID_FPGA ){
-        return fpga_uart_rx( c );
+    if(( uartid == UART_ID_FPGA ) || (uartid == UART_ID_FPGA_UART1) ){
+        uint8_t rdValue;
+        HAL_FB_UART_RxBuf(uartid, &rdValue, 1);
+	return rdValue;
     }
 #endif
 #if FEATURE_USBSERIAL == 1
@@ -525,8 +530,8 @@ volatile int uart_bad_tx_char ;
 void uart_tx_raw(int uartid, int c)
 	{
 #if FEATURE_FPGA_UART == 1
-    if( uartid == UART_ID_FPGA ){
-        fpga_uart_tx_raw( c );
+    if( (uartid == UART_ID_FPGA) || (uartid == UART_ID_FPGA_UART1) ) {
+        HAL_FB_UART_Tx( uartid, c );
         return;
 	}
 #endif
@@ -587,8 +592,8 @@ void uart_tx_raw_buf(int uartid, const uint8_t *buf, size_t len)
 int uart_rx_wait( int uartid, int msecs )
 {
 #if FEATURE_FPGA_UART == 1
-    if( uartid == UART_ID_FPGA ){
-        return fgpa_uart_rx_wait( msecs );
+    if( (uartid == UART_ID_FPGA) || (uartid == UART_ID_FPGA_UART1) ){
+      return EOF; // fgpa_uart_rx_wait( msecs );
 }
 #endif
 
@@ -637,8 +642,8 @@ int uart_rx_available( int uartid )
 {
     int r;
 #if FEATURE_FPGA_UART == 1
-    if( uartid == UART_ID_FPGA ){
-        return fgpa_uart_rx_available();
+    if(( uartid == UART_ID_FPGA ) || (uartid == UART_ID_FPGA_UART1) ){
+        return HAL_FB_UART_dataavailable(uartid); // fgpa_uart_rx_available();
     }
 #endif
 #if FEATURE_USBSERIAL == 1
@@ -715,3 +720,29 @@ int uart_tx_is_fifo_empty(int uartid)
 #endif
     return 1;
 }
+
+#if FEATURE_USBSERIAL == 1
+int uart_tx_is_fifo_half_empty(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_is_fifo_half_empty();
+    }
+    return -1; // Unknown UART ID
+}
+
+int uart_tx_get_fifo_status(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_get_fifo_status();
+    }
+    return -1; // Unknown UART ID    
+}
+
+int uart_tx_get_fifo_space_available(int uartid)
+{
+    if( uartid == UART_ID_USBSERIAL ){
+        return HAL_usbserial_tx_get_fifo_space_available();
+    }
+    return -1; // Unknown UART ID    
+}
+#endif

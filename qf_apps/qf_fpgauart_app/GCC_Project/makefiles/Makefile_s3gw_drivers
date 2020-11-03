@@ -1,0 +1,18 @@
+#S3GW_DRIVERS_SRCS:=$(wildcard $(S3GW_DRIVERS_DIR)/*.c )
+S3GW_DRIVERS_SRCS:=$(S3GW_DRIVERS_DIR)/eoss3_hal_fpga_uart.c
+
+filters=
+#  eoss3_hal_audio.c eoss3_hal_ffe.c eoss3_hal_fpga_adc.c eoss3_hal_i2s_master_assp.c 
+#  eoss3_hal_fpga_clk_sync.c \
+#        eoss3_hal_fpga_gpio.c  eoss3_hal_fpga_sdma.c eoss3_hal_fpga_uart.c \
+#        eoss3_hal_i2s.c eoss3_hal_i2s_slave_assp.c
+SRCS:=$(filter-out $(filters),$(notdir $(S3GW_DRIVERS_SRCS)))
+
+#SRCS:=$(notdir $(S3GW_DRIVERS_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(S3GW_DRIVERS_DIR)
+
+include $(COMMON_STUB)
+
+
+

@@ -27,11 +27,15 @@
 #include "s3x_clock.h"
 
 
+#define USBSERIAL_TX_FIFOSIZE (512)
+#define USBSERIAL_RX_FIFOSIZE (512)
+
 #define USBSERIAL_RX_BUFSIZE (256)
 
 #define FPGA_USBSERIAL_ID_VALUE         0xA5BD
 #define FPGA_USBSERIAL_REV_NUM          0x0100
 
+/* USB-Serial FIFO status values */
 #define FPGA_USBSERIAL_TX_FIFO_FULL          (0x00)    // 0000 Full
 #define FPGA_USBSERIAL_TX_FIFO_EMPTY         (0x01)    // 0001 Empty
 #define FPGA_USBSERIAL_TX_FIFO_GT_HALF       (0x02)    // 0010 Room for more than 1/2
@@ -76,5 +80,8 @@ int         HAL_usbserial_rxwait(int msecs);
 int         HAL_usbserial_tx_is_fifo_full(void);
 int         HAL_usbserial_tx_is_fifo_empty(void);
 void        HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid);
+int         HAL_usbserial_tx_is_fifo_half_empty(void);
+int         HAL_usbserial_tx_get_fifo_status(void);
+int         HAL_usbserial_tx_get_fifo_space_available(void);
 
 #endif // EOSS3_HAL_USBSERIAL_H_

@@ -86,7 +86,7 @@ The output of this pre-processing has a PID of AUDIO_QL_PRE_PROC which is fed in
   - Quicklogic Expansion Board 1
   - Quicklogic Expansion Board 2 (coming soon)
   
-## qf_VR_raw_app: [coming soon] companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.r
+## qf_VR_raw_app: companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.r
 ![qf_VR_raw_app](./images/qf_VR_raw_app.png)
 ### Purpose
 Demonstrate host/companion command protocol and raw audio streaming over SPI.
@@ -136,7 +136,7 @@ The hardware is configured to support recording of I2S data on a PC.  No plans f
 
 
 
-
+[Dual QuickFeather Cradle]: https://github.com/QuickLogic-Corp/qf-cradle
 
 
 
