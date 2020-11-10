@@ -17,12 +17,13 @@ import sys
 import struct
 import wave
 import argparse
+import subprocess
 
-#Note: These definitions are based on QF Application to auto detect whether it
-# Raw Audio data or Opus Encoded Audio data. So change the values if the QF 
-# Application prints different line sizes
+#Note: These definitions are based on QF Application to auto detect whether
+# it is Raw Audio data or Opus Encoded Audio data. So change the values if 
+# the QF Application prints different line sizes
 RAW_AUDIO_LINE_LENGTH=81
-OPUS_AUDIO_LINE_LENGTH=21
+OPUS_AUDIO_LINE_LENGTH=89
 
 #just for test re-encode and compare
 def encode_raw_data(output_data):
@@ -47,6 +48,7 @@ def decode_line_raw(line):
     #print('enc and dec')
     #print(line.decode())
     #print(out.decode())
+    print('.',end='')
     
     return dec_line
 
@@ -65,6 +67,11 @@ def decode_base64_file(input_file, output_file):
                     start_found = 1
                     encode_type = 'raw_audio'
                 output_array.extend(decode_line_raw(bytearray(line, 'ascii')))
+            elif (line_length == OPUS_AUDIO_LINE_LENGTH):
+                if (start_found == 0):
+                    start_found = 1
+                    encode_type = 'opus_audio'
+                output_array.extend(decode_line_raw(bytearray(line, 'ascii')))
             else:
                 if(start_found == 1):
                     break
@@ -78,6 +85,28 @@ def decode_base64_file(input_file, output_file):
             #    break
     #encode_raw_data(output_array)
         
+    print()
+    print(f'Extracted {count} lines')
+    
+    # if opus stream, first save it with .opus extension and call the opus decoder
+    # Opus decoder saves the decoded data as a wav file
+    if(encode_type == 'opus_audio'):
+        dot_index = input_file.find('.')
+        opus_file = input_file[:dot_index] + '.opus'
+        with open(opus_file, 'wb') as w:
+            w.write(output_array)
+        
+        #call the opus decoder from command line
+        subprocess.call(['opusdec.exe', '--rate 16000', opus_file, output_file])
+        
+        #get the wav file size and subtract header bytes
+        file_length = os.stat(output_file).st_size
+        if (file_length > 44):
+            file_length = file_length - 44
+        
+        return (file_length/2) #return the number of samples saved in wav file
+    
+    # It is raw data stream. Save directly into wav file
     if(len(output_array) > 0):
         
         #just for test save as bin file
