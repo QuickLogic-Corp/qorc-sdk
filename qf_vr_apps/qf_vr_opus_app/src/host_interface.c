@@ -43,6 +43,8 @@
 #include <eoss3_hal_audio.h>
 #include "ql_controlTask.h"
 #include "ww_metadata.h"
+#include "ql_opus_encode.h"
+#include "ql_stackwatermark.h"
 ///////////// Debug Trace ////////////////////////////////
 #include "dbgtrace.h"
 #define     K_DBGTRACE_HIF  200
@@ -61,19 +63,21 @@ s3_mon_info_t s3_monitor_info;
 #define HOSTIF_QUEUE_LENGTH 100 //must able to handle messages while waiting for Host response
 #define AUDIO_SESSION_TIMER_PERIOD_IN_MS        (10000)
 
+extern void hifcb_cmd_host_process_off(void *pdata, int len);;
 extern void reset_audio_isr_data_blocks(void);
 
 //transport protocol related variables
 extern t_ql_audio_meta_data o_ql_audio_meta_data;
 
-
-
 static bool streamingOn = false;
 /* This flag is used to ignore the lpsd interrupts (i.e Audio DMA to continue) 
 when transmission session between device and host is started*/
 // static bool g_lpsd_ignore_flag = false;
-
-uint8_t             aucAudioBuffer[4*960];
+#define D2H_MAX_DATA_SIZE   (4*960)
+uint8_t aucAudioBuffer[D2H_MAX_DATA_SIZE];
+#if (FEATURE_OPUS_ENCODER == 1)
+uint8_t aucOpusBuffer[D2H_MAX_DATA_SIZE/3]; //compression is by factor 4 + 8 byte header per frame
+#endif
 
 hif_channel_info_t hif_channel_info_audio = {
   .sequence_number = 0,
@@ -81,7 +85,7 @@ hif_channel_info_t hif_channel_info_audio = {
   .channel_number = HIF_CHAN_NUM_AUDIO,
   .firstTime    = 0,
   .xSemaphore   = 0,
-  .pucData     = aucAudioBuffer,
+  .pucData     = aucAudioBuffer, //this is not used?
   .pdata_block = NULL
 };
 //hif_channel_info_t hif_channel_info_pcm1 = {
@@ -239,7 +243,11 @@ static void SendEventAudioTransportBlockReadyD2H(hif_channel_info_t* p_ci, uint8
     D2H_Pkt_Info d2h_evt_info;
     d2h_evt_info.seq = p_ci->sequence_number;
     d2h_evt_info.channel = p_ci->channel_number;
+#if (FEATURE_OPUS_ENCODER == 1)
+    d2h_evt_info.cmd = EVT_OPUS_PKT_READY; 
+#else    
     d2h_evt_info.cmd = EVT_RAW_PKT_READY;
+#endif
 
     if(kbytes > 0) {
         d2h_evt_info.data[0] = ((kbytes >> 0) & 0xff);
@@ -324,7 +332,10 @@ void hostIfTaskHandler(void *pParameter)
   int  payload_address ;
   memset(&receivedMsg,0,sizeof(struct xQ_Packet));
 
-  //////////////////////////////////////////////////////////////////
+  //enable this to fine tune stack usage
+  //set_task_stack_watermark_monitor(1,0); //1 = use timer, 0 = no assert
+
+   //////////////////////////////////////////////////////////////////
   /* Start of while loop */
   while(1)
   {
@@ -397,6 +408,10 @@ void hostIfTaskHandler(void *pParameter)
             stream_kp_detect_enable = 0;
             SendEventKPDetected(p_hif_channel_info, EVT_KP_DETECTED);
             timeout_count_bytes = 0;
+#if (FEATURE_OPUS_ENCODER == 1)
+            //must init the opus encoder
+            init_opus_encoder();
+#endif
             break;
 
           case MESSAGE_GET_MONINFO:
@@ -469,12 +484,18 @@ void transmit_done_callback(void *cookie, D2H_Pkt_Info tx_pkt_info)
 {
     hif_channel_info_t *pchannel_info = (hif_channel_info_t*) cookie;
 
-    if (tx_pkt_info.cmd == EVT_RAW_PKT_READY) {
+
+#if (FEATURE_OPUS_ENCODER == 1)
+      if (tx_pkt_info.cmd == EVT_OPUS_PKT_READY) {
+#else
+      if (tx_pkt_info.cmd == EVT_RAW_PKT_READY) {
+#endif      
         if(xSemaphoreGive(pchannel_info->xSemaphore) != pdTRUE) {   // Release lock on buffer
             dbg_str("HIF: Failed to release buffer lock");
         }
     }
     hif_msg_sendRawBlockReady(NULL);                            // Trigger check for input data
+    //hif_msg_sendOpusBlockReady(NULL); //not interpreted
     return;
 }
 
@@ -761,19 +782,24 @@ void    hif_release_inputQ(void) {
     }
 }
 
+#define D2H_NUM_AUDIO_BLOCKS_TO_SEND    (4)
 void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
     BaseType_t  xResult;
     uint16_t     kbytes = 0;
 
     //send 4 blocks
-    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= 4) {          
+    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= D2H_NUM_AUDIO_BLOCKS_TO_SEND) {
         // Check buffer availability
         if (xSemaphoreTake(p_hif_channel_info->xSemaphore, 0) == pdTRUE) {
             QAI_DataBlock_t* pdatablk;
+            for (int num_blocks = 0; num_blocks < D2H_NUM_AUDIO_BLOCKS_TO_SEND; num_blocks++)
+            {
             xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
             configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
+                int block_size = (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize);
+                configASSERT( (block_size+kbytes) <= D2H_MAX_DATA_SIZE ) ;
+                memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, block_size);
+                kbytes += block_size; // pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
             /* release only if valid block pointer */
             if(pdatablk) { 
                 /* only if nonzero usecount, else it is an error */
@@ -781,40 +807,15 @@ void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
                 if(pdatablk->dbHeader.numUseCount > 0)
                 datablk_mgr_release_generic(pdatablk);
             }
-
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
             }
-
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
-            configASSERT(xResult != pdFAIL);
-            memcpy(aucAudioBuffer+kbytes, pdatablk->p_data, (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize));
-            kbytes += pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize;
-            if(pdatablk) { 
-                /* only if nonzero usecount, else it is an error */
-                /* Should we assert here since this should never happen ? */
-                if(pdatablk->dbHeader.numUseCount > 0)
-                datablk_mgr_release_generic(pdatablk);
-            }
-
+#if (FEATURE_OPUS_ENCODER == 1)
+            //int opus_byte_count = 88*3;
+            //memset(aucAudioBuffer, 0xAA,opus_byte_count);
+            int opus_byte_count = get_opus_encoded_data((int16_t *)aucAudioBuffer, kbytes/2,  aucOpusBuffer);
+            SendEventAudioTransportBlockReadyD2H(p_hif_channel_info, aucOpusBuffer, opus_byte_count);
+#else
             SendEventAudioTransportBlockReadyD2H(p_hif_channel_info, aucAudioBuffer, kbytes);
+#endif            
             timeout_count_bytes += kbytes;
         }
     }
@@ -837,7 +838,7 @@ extern void enable_stream_VR(void);
       timeout_count_bytes = 0;
 
       printf("===Internal Timeout 12 secs\n");
-      hifcb_cmd_host_process_off();
+      hifcb_cmd_host_process_off((void *)0, 0);
 
     }
 #endif    
@@ -871,7 +872,7 @@ void hif_msg_sendRawBlockReady(QAI_DataBlock_t *pdata_block)
 
 void hif_msg_sendStopTx(void)
 {
-  UINT32_t address = NULL;
+  UINT32_t address = 0;//NULL;
   struct xQ_Packet packet={0};
   packet.ucCommand = MESSAGE_STOP_TX;
   packet.ucSrc = HOSTIF_TASK_MESSAGE;

@@ -27,6 +27,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <math.h>
 #include <eoss3_hal_uart.h>
 
 
@@ -97,15 +98,17 @@ int _read (int file, char *ptr, int len)
 	return 0;
 }
 
-float floorf(float X)
+#if 0 //for GCC cannot override if math.h is included
+double floor(float X)
 {
-  return (float)floor(X);
+  return (double)floorf(X);
 }
 
 double sin(double v)
 {
   return (double)sinf(v);
 }
+#endif
 
 FILE *f_open(const char* filename, const char* mode)
 {

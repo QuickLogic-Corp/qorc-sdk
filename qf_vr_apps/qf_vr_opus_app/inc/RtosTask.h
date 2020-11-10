@@ -77,7 +77,7 @@ extern QueueHandle_t xHandleQueueAudio;
 extern signed portBASE_TYPE StartRtosTaskAudio( void);  // to remove warnings
 
 #define PRIORITY_TASK_HOSTIF               ((unsigned)(PRIORITY_HIGH))
-#define STACK_SIZE_TASK_HOSTIF        (256)
+#define STACK_SIZE_TASK_HOSTIF        (4*256)
 extern xTaskHandle xHandleTaskHostIf;
 extern QueueHandle_t xHandleQueueHostIf;
 extern signed portBASE_TYPE hif_task_Start( void);  // to remove warnings
@@ -111,7 +111,7 @@ extern QueueHandle_t xHandleQueueADC;
 extern signed portBASE_TYPE StartRtosTaskADC( void);
 
 #define PRIORITY_TASK_D2H_RX              ((unsigned)(PRIORITY_HIGH+1))
-#define STACK_SIZE_TASK_D2H_RX            (256)
+#define STACK_SIZE_TASK_D2H_RX            (2*256)
 extern xTaskHandle xHandleTaskD2HRx;
 extern QueueHandle_t D2HRx_MsgQ;
 #endif /* __RTOSTASK_H__ */

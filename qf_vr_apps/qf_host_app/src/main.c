@@ -168,7 +168,7 @@ int spi_master_init(uint32_t baud_rate)
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "OP2-Chandalar-Roku-host-emulator";
+    SOFTWARE_VERSION_STR = "QORC-SDK-Host-App";
     
     qf_hardwareSetup();
     

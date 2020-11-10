@@ -37,6 +37,8 @@
 
 #define FEATURE_D2HPROTOCOL_DEVICE (1)
 
+#define FEATURE_OPUS_ENCODER    (1)
+
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
 #define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem

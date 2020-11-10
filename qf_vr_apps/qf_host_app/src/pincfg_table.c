@@ -169,8 +169,8 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
   { // Pad 39 -- SPI Master SSn1
-    .ucPin = PAD_23,
-    .ucFunc = PAD23_FUNC_SEL_SPIm_SSn2,
+    .ucPin = PAD_27,
+    .ucFunc = PAD27_FUNC_SEL_SPIm_SSn2,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,

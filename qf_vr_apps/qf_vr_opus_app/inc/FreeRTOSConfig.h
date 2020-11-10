@@ -110,7 +110,7 @@
 #ifdef BOOT_LOADER
 #define configTOTAL_HEAP_SIZE ( ( size_t ) ( 60 * 1024 ) )
 #else
-#define configTOTAL_HEAP_SIZE ( ( size_t ) ( 24 * 1024 ) )
+#define configTOTAL_HEAP_SIZE ( ( size_t ) ( 40 * 1024 ) )
 #endif
 
 #define configMAX_TASK_NAME_LEN			( 16 )
@@ -156,6 +156,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay			1
 #define INCLUDE_xTaskGetCurrentTaskHandle		1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
+#define INCLUDE_uxTaskGetStackHighWaterMark 1
 
 #define __NVIC_PRIO_BITS          3       /*!< Tamar uses 3 Bits for the Priority Levels */
 
