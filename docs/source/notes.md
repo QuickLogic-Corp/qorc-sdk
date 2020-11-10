@@ -75,6 +75,7 @@ There are 4 parts to the documentation to be handled.
 
 # Further Reading for rST and SPHINX
 1. pandoc
+
    This is the most useful tool while converting from mardown to rst.  
    One of the few things it cannot automatically do is convert markdown tables to rst tables 100%.
    For tables, it is recommended to code by hand, the 2 quickest options are:
@@ -82,11 +83,11 @@ There are 4 parts to the documentation to be handled.
       This can also be used to generate markdown tables, rather than manual input, use the https://www.tablesgenerator.com/markdown_tables link.
    2. for rst, we can also use a csv file, and include this into the rst file. However, note that this cannot be used with github rendered rst files, but can be used with sphinx. We use the option 1, unless we have a really complex table structure.
    
-2. rst cheatshet
+2. rst cheatsheet
 
-   https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#internal-and-external-links
+   https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
    
-   http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html#internal-and-external-links
+   http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
    
 3. a collection of stuff useful for sphinx/rst
 
