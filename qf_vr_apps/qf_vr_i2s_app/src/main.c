@@ -58,9 +58,26 @@
 #include "host_interface.h"
 #include "d2h_protocol.h"
 
-//#include "fpga_loader.h"
-//#include "FPGA_VoxAI.h"
+#include "qf_hardwareSetup.h"
 #include "eoss3_hal_pad_config.h"
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+#include "fpga_loader.h"
+//#include "FLL_top_bit_11_02_2020.h"
+//#include "FLL_top_bit_11_05_2020.h"
+//#include "FLL_top_bit_11_05_2020_2.h"
+//#include "FLL_top_bit_11_05_2020_3.h"
+//#include "FLL_top_bit_11_06_2020.h"
+//#include "FLL_top_bit_spde_11_06_2020.h"
+//#include "FLL_top_bit_11_06_2020_2.h"
+//#include "FLL_top_bit_11_06_2020_3.h"
+//#include "FLL_top_bit_11_06_2020_4.h"
+//#include "FLL_top_bit_11_06_2020_5.h"
+//#include "FLL_top_bit_11_06_2020_6.h"
+//#include "FLL_top_bit_11_09_2020.h"
+//#include "FLL_top_bit_Tim.h"
+#include "FLL_top_bit_IO_10.h"
+#include "eoss3_hal_fpga_FLL.h"
+#endif
 
 extern void ql_smart_remote_example();
 extern const struct cli_cmd_entry my_main_menu[];
@@ -97,13 +114,13 @@ void start_d2h_protocol_task(void) {
   setup_d2h_hardware();
     
   D2H_Platform_Info d2h_plat_info;
-  d2h_plat_info.H2D_gpio = GPIO_7;
+  d2h_plat_info.H2D_gpio = GPIO_6;
   d2h_plat_info.D2H_gpio = 0xFF;      // D2H intr is through PAD 43. AP intr
 
 #if (USE_4PIN_D2H_PROTOCOL == 1)
   
-  d2h_plat_info.H2D_ack = GPIO_6; //GPIO_4;
-  d2h_plat_info.D2H_ack = GPIO_0;      // D2H intr is through PAD 24.
+  d2h_plat_info.H2D_ack = GPIO_7;
+  d2h_plat_info.D2H_ack = GPIO_2;      // D2H Ack is through PAD 11.
 
 #endif
   
@@ -126,18 +143,6 @@ void SystemInit(void)
 }
 
 extern void hardwareSetup_Chandalar();
-
-static void ldo_init(void)
-{
-    /* LDO Settings */
-#if ( ENABLE_INTERNAL_LDO == 1)
-    AIP->LD0_30_CTRL_0 = 0x1ac; // LDO Enable       /* 0x1ac -> Vo =1.01V, imax = 7.2mA, LDO enabled. */
-    AIP->LD0_50_CTRL_0 = 0x1ac; // LDO Enable
-#else
-    AIP->LD0_30_CTRL_0 = 0x1a1; // LDO Disable     /* 0x1a1 -> Vo = 1.01 V, LDO Disabled */
-    AIP->LD0_50_CTRL_0 = 0x1a1; // LDO Disable
-#endif
-}
 
 static void nvic_init(void)
  {
@@ -186,10 +191,39 @@ void banner(void)
 
 int main(void)
 {
-    SOFTWARE_VERSION_STR = "QORC-SDK-VR-RAW-App";
+    SOFTWARE_VERSION_STR = "QORC-SDK-VR-I2S-App";
 
     qf_hardwareSetup();
 
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+
+    // length of axFPGABitStream array in bytes
+    int axFPGABitStream_FLL_length = sizeof(axFPGABitStream_FLL);
+
+    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 1*1024*1000 - 8*32768); //for 16K sample rate = 2*32*16K = 1024000
+    //S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*1024*1000); //for 16K sample rate = 2*32*16K = 1024000    
+S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24*1000*1000); 
+
+    S3x_Clk_Enable(S3X_FB_21_CLK);
+    S3x_Clk_Enable(S3X_FB_16_CLK);
+    
+    S3x_Clk_Enable(S3X_A1_CLK);
+    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
+    
+    load_fpga(axFPGABitStream_FLL_length,(uint32_t *)axFPGABitStream_FLL);
+    
+    S3x_Clk_Enable(S3X_FB_21_CLK);
+    S3x_Clk_Enable(S3X_FB_16_CLK);
+    
+    HAL_FB_FLL_Set_Sample_Time(0x800);
+    HAL_FB_FLL_Set_Gap_Time(0x800);
+    
+    HAL_FB_FLL_Enable();
+    int count1 = HAL_FB_FLL_Get_Sample_Time();
+    int count2 = HAL_FB_FLL_Get_Gap_Time();
+    printf("%d, %d\n", count1,count2);
+#endif    
+    
     //setup D2H protocol pins and interrupts and start the task
     start_d2h_protocol_task();
     hif_task_Start();

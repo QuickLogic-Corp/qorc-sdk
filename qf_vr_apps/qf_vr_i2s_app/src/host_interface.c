@@ -62,11 +62,10 @@ s3_mon_info_t s3_monitor_info;
 #define AUDIO_SESSION_TIMER_PERIOD_IN_MS        (10000)
 
 extern void reset_audio_isr_data_blocks(void);
+extern void hifcb_cmd_host_process_off(void *pdata, int len);
 
 //transport protocol related variables
 extern t_ql_audio_meta_data o_ql_audio_meta_data;
-
-
 
 static bool streamingOn = false;
 /* This flag is used to ignore the lpsd interrupts (i.e Audio DMA to continue) 
@@ -177,17 +176,6 @@ enum process_state D2H_FSMAction(enum process_action pa, void* pv){
             
     switch(pa) {
     case PACTION_CONFIG:
-#if 0   //moved to main   
-        h2d_config_intr(pv);
-    
-        D2H_Platform_Info d2h_plat_info;    //TIM TODO THis information should come through FSMConfigData
-        d2h_plat_info.H2D_gpio = GPIO_7;
-        d2h_plat_info.D2H_gpio = 0xFF;      // D2H intr is through PAD 43. AP intr
-        d2h_protocol_init(&d2h_plat_info);
-
-        hif_task_Start();
-#endif
-        
         D2H_State = PSTATE_STOPPED;
         break;
                
@@ -810,7 +798,7 @@ extern void enable_stream_VR(void);
       timeout_count_bytes = 0;
 
       printf("===Internal Timeout 12 secs\n");
-      hifcb_cmd_host_process_off();
+      hifcb_cmd_host_process_off((void *)0, 0);
 
     }
 #endif    

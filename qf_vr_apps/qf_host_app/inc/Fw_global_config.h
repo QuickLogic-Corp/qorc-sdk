@@ -35,7 +35,8 @@
 #define FEATURE_CLI_DEBUG_INTERFACE  1
 #define FEATURE_CLI_FILESYSTEM       0
 
-#define FEATURE_USBSERIAL   (1)       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   (0)       // USBSERIAL port is present
+#define FEATURE_I2S_MASTER_CLKS   (1) // Generates I2S Master clks
 
 #define FEATURE_D2HPROTOCOL_HOST (1)
    

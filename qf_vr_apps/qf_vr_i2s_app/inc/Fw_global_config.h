@@ -37,6 +37,12 @@
 
 #define FEATURE_D2HPROTOCOL_DEVICE (1)
 
+#define FEATURE_FLL_I2S_DEVICE (1) 
+
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+#define FLL_I2S_LOCAL_CLK  (1*1024*1000) //for 16K sample rate = 2*32*16K = 1024000
+#endif    
+
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
 #define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem

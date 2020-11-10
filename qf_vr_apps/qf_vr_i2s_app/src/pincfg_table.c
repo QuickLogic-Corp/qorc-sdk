@@ -282,11 +282,11 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS;
   },
 #endif
-#if(FEATURE_D2HPROTOCOL_DEVICE == 1)  
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)  
   {
     /* D2H Ack  */
-    .ucPin = PAD_24,
-    .ucFunc = PAD24_FUNC_SEL_GPIO_0,
+    .ucPin = PAD_11,
+    .ucFunc = PAD11_FUNC_SEL_GPIO_2,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_PULLUP,
@@ -323,28 +323,96 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS;
   },
 #endif
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+#if 1  
+  { // Pad 10 -- I2S master-in clk
+    .ucPin = PAD_10,
+    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+#else
+  { // Pad 4 -- I2S master-in clk
+    .ucPin = PAD_4,
+    .ucFunc = PAD4_FUNC_SEL_FBIO_4,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+#endif
+  { // Pad 2 -- FLL Speedup interrupt
+    .ucPin = PAD_2,
+    .ucFunc = PAD2_FUNC_SEL_FBIO_2,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 27 -- FLL Slowdown interrupt
+    .ucPin = PAD_27,
+    .ucFunc = PAD27_FUNC_SEL_FBIO_27,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 8 -- Debug FLL out bitclk Master
+    .ucPin = PAD_8,
+    .ucFunc = PAD8_FUNC_SEL_FBIO_8,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 3 -- Debug FLL out bitclk Slave
+    .ucPin = PAD_3,
+    .ucFunc = PAD3_FUNC_SEL_FBIO_3,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  
+  
+#endif  
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =
 {
 #if (FEATURE_D2HPROTOCOL_DEVICE == 1)  
   {  //for H2D interrupt 
-     .usPadNum = PAD_23,
-     .ucGpioNum = GPIO_7,
-     .ucFunc = PAD23_FUNC_SEL_SENS_INT_7,
+     .usPadNum = PAD_12,
+     .ucGpioNum = GPIO_6,
+     .ucFunc = PAD12_FUNC_SEL_SENS_INT_6,
      .intr_type = EDGE_TRIGGERED,
      .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
      .ucPull = PAD_NOPULL
   },
   {  //for H2D ack 
-     .usPadNum = PAD_31,
-     .ucGpioNum = GPIO_6,
-     .ucFunc = PAD31_FUNC_SEL_SENS_INT_6,
+     .usPadNum = PAD_13,
+     .ucGpioNum = GPIO_7,
+     .ucFunc = PAD13_FUNC_SEL_SENS_INT_7,
      .intr_type = EDGE_TRIGGERED,
      .pol_type = RISE_HIGH,  // Active HIGH (1 for level triggered is active high)
      .ucPull = PAD_NOPULL
-  }
+  },
 #endif
+
 };
 
 int sizeof_pincfg_table = sizeof(pincfg_table)/sizeof(pincfg_table[0]);
