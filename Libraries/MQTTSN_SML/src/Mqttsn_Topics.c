@@ -180,6 +180,14 @@ Mqttsn_TopicInfo_t Topics[] =
         .isRegistration = 1,
         .retainFlag = DEFAULT_RETAIN_FLAG
     },
+    {
+        .topicValue = TOPIC_LIVE_SENSOR_DATA,
+        .tpcString = "sensiml/live/sensor/data",
+        .assgndID = { .data.id = TOPIC_ID_UNASSIGNED, .type = MQTTSN_TOPIC_TYPE_NORMAL},
+        .qosLevel = QOS0,
+        .isRegistration = 1,
+        .retainFlag = DEFAULT_RETAIN_FLAG
+    },
 
     /*********************************RESULT**************************************/
     {   

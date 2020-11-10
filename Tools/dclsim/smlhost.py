@@ -40,6 +40,14 @@ accel_group.add_argument('--audio_rate', dest='audio_rate', default=16000, type=
 audio_group.add_argument('--audio_count_down', dest='audio_count_down', default=3, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
 audio_group.add_argument('--audio_spp', dest='audio_spp', default=8, type=int, help='samples per packet for live-streaming')
 
+ssss_group = parser.add_argument_group('ssss', 'Generic sensor group')
+ssss_group.add_argument('--ssss', dest='ssss', action='store_true', help='add generic sensor for tests')
+ssss_group.add_argument('--ssss_rate', dest='ssss_rate', default=100, type=int, help='Sampling rate in Hz')
+ssss_group.add_argument('--ssss_range', dest='ssss_range', default=2, type=int, help='sample range multiple of gravity constant g')
+ssss_group.add_argument('--ssss_count_down', dest='ssss_count_down', default=0, type=int, help='count down for live-streaming, actual live rate will be rate/(count_down+1)')
+ssss_group.add_argument('--ssss_spp', dest='ssss_spp', default=8, type=int, help='samples per packet for live-streaming')
+
+
 recog_group = parser.add_argument_group('recog', 'Recognition group')
 recog_group.add_argument('--features', dest='features', default=False, action='store_true', help='publish feature vector in recognition results')
 
@@ -55,6 +63,7 @@ topics = [ ("sensiml/sys/device/uuids/rsp", 1),
            ("sensiml/live/sensor/list/rsp", 1),
            ("sensiml/live/set/rate/rsp", 1),
            ("sensiml/live/raw/data", 1),
+           ("sensiml/live/sensor/data", 1),
            ("sensiml/result/class/data", 1),
            ("sensiml/sys/will/status", 1)]
 
@@ -114,7 +123,15 @@ class AUDO(SENSOR):
         self.sensor_add +=struct.pack('>B',self.bit)
         for i in self.chan:
              self.sensor_add +=struct.pack('>B',i)
-        
+
+class SSSS(SENSOR):
+    def __init__(self, sensor_id, rate, bit, cd, spp, *chan):
+        super().__init__(sensor_id, rate, bit, cd,spp,*chan)
+
+    def generate_fields(self):
+        super().generate_fields()
+        self.sensor_add +=struct.pack('>B',0)
+
 # Process log messages
 def on_log(client, userdata, level, buf):
     print("log: ", buf)
@@ -156,6 +173,24 @@ def cb_sysver_response(client, userdata, msg):
 # userdata is expected to contain a file object
 # received data will be written to this file object
 def cb_live_raw_data(client, userdata, msg):
+    global total_bytes
+    global total_packets
+    global live_stream_start_time
+    global live_stream_end_time
+    userdata.write(msg.payload)
+    if (total_bytes == 0):
+        live_stream_start_time = time.time()
+    else:
+        live_stream_end_time = time.time()
+    total_bytes = total_bytes + len(msg.payload)
+    total_packets = total_packets + 1
+
+# Process live streaming data
+# the following topics are expected to be registered for this callback
+# sensiml/live/sensor/data
+# userdata is expected to contain a file object
+# received data will be written to this file object
+def cb_live_sensor_data(client, userdata, msg):
     global total_bytes
     global total_packets
     global live_stream_start_time
@@ -277,6 +312,69 @@ def test_live_streaming(sensorobj, filename, streaming_time=30, log=False):
         msg = sensorobj.live_start
         send_message(mqttc, "sensiml/live/start", msg, qos=1, wait=False)
         mqttc.message_callback_add("sensiml/live/raw/data", cb_live_raw_data)
+
+        total_bytes = 0
+        total_packets = 0
+
+        if streaming_time != 0:
+            time.sleep(streaming_time)
+            live_disconnect(mqttc)
+        else:
+            while(True):
+                try:
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    live_disconnect(mqttc)
+                    break
+
+def test_sensor_streaming(sensorobj, filename, streaming_time=30, log=False):
+    global total_bytes
+    global total_packets
+    total_bytes = 0
+    empty = b''
+    with open(filename,'wb') as outfile:
+        mqttc = mqtt.Client(client_id="SensiML-Host")
+        mqttc.on_connect = on_connect
+        mqttc.on_message = on_message
+        mqttc.on_publish = on_publish
+        if (log):
+           mqttc.on_log  = on_log
+
+        def live_disconnect(mqttc):
+            send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
+            mqttc.message_callback_remove("sensiml/live/sensor/data")
+            mqttc.message_callback_remove("sensiml/sys/#")
+            mqttc.message_callback_remove("sensiml/sensor/#")
+            mqttc.message_callback_remove("sensiml/live/+/+/rsp")
+            mqttc.disconnect()
+
+        mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sys/version/rsp", cb_sysver_response)
+        mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/live/sensor/data", cb_live_sensor_data)
+        mqttc.connect("localhost", 1883, 60)
+
+        mqttc.loop_start()
+        mqttc.subscribe(topics)
+
+        mqttc.on_message = on_message
+        mqttc.on_publish = on_publish
+        mqttc.user_data_set(outfile)
+        mqttc.message_callback_add("sensiml/sys/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/sensor/#", cb_dev_response)
+        mqttc.message_callback_add("sensiml/live/+/+/rsp", cb_dev_response)
+
+        send_message(mqttc, "sensiml/sys/all/stop", empty, qos=1, wait=False)
+        send_message(mqttc, "sensiml/sys/status/clr", empty, qos=1, wait=False)
+        send_message(mqttc, "sensiml/sys/status/req", empty, qos=1, wait=True)
+        send_message(mqttc, "sensiml/sys/version/req", empty, qos=1, wait=True)
+        if (sysver == 'Collection'):
+            pass
+        else:
+            print("Current device mode: ", sysver, "does not perform Collection/Live-streaming")
+            print("Load data collection enabled image and retry")
+            live_disconnect(mqttc)
+            return
 
         total_bytes = 0
         total_packets = 0
@@ -419,9 +517,24 @@ if (args.ad7476):
    #ADC_AD7476(b'AD\x1d4',1000000,16, 2499, 4)
    sensorobj = ADC_AD7476(b'AD\x1d\x34',args.ad7476_rate,16, args.ad7476_count_down, args.ad7476_spp)
 
+if (args.ssss):
+   print('Configuring SSSS @{} Hz, {}G, {} count-down, {} samples-per-packet'.format( args.ssss_rate, args.ssss_range, args.ssss_count_down, args.ssss_spp))
+   sensor_rate = args.ssss_rate        # sensor sample rate in Hz
+   sensor_count_down = args.ssss_count_down  # sub-sampling, if any for the sensor
+   sensor_samples_per_packet = args.ssss_spp # 10 samples per packet
+   sensor_live_rate = sensor_rate / (sensor_count_down + 1)
+   sample_size = 6
+   sensorobj = SSSS(b'SSSS',  args.ssss_rate, 16, args.ssss_count_down, args.ssss_spp, args.ssss_range)
+   #test_sensor_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
+   #args.live = False
+
+
 if (args.live == True):
    print("Testing live-streaming ... ")
-   test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
+   if (sensorobj.sensor_id == b'SSSS'):
+      test_sensor_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
+   else:
+      test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
    live_stream_time = live_stream_end_time - live_stream_start_time
    print('{} bytes received in {} secs ({} packets)'.format(total_bytes, live_stream_time, total_packets))
    spp = (total_bytes - 5*total_packets) / sample_size / total_packets

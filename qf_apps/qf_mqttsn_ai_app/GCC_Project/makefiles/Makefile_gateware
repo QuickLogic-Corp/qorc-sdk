@@ -11,7 +11,7 @@ $(info $(SRCS))
 FPGA_ALL_RTL_SRCS:=$(wildcard $(MAIN_FPGA_RTL_DIR)/*.v)
 filters=
 FPGA_RTL_SRCS:=$(filter-out $(filters),$(notdir $(FPGA_ALL_RTL_SRCS)))
-$(info $(FPGA_RTL_SRCS) $(MAIN_FPGA_RTL_DIR))
+$(info FPGA_RTL_SRCS=$(FPGA_RTL_SRCS) MAIN_FPGA_RTL_DIR=$(MAIN_FPGA_RTL_DIR))
 ifneq ($(FPGA_RTL_SRCS),)
 FPGA_RTL_OBJ:=$(RTL_TOP_MODULE)_bit.c
 OBJS:=$(OBJS) $(addprefix $(OUTPUT_PATH)/,$(RTL_TOP_MODULE)_bit.o)

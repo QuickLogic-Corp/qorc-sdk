@@ -58,7 +58,72 @@ To avoid queueing up multiple CONNECT messages in the transmit FIFO which may ca
 transmit function to enter busy-wait state when the FIFO fills-up, this application sends CONNECT
 messages only if the FIFO is empty.
 
+## Adding a sensor
+
+This section provides basic guideline on adding a new sensor to the project for data collection.
+Sensor data acquisition and processing or transfer to an external application such as [DataCaptureLab] 
+uses [datablock manager] (qorc-sdk/Libraries/DatablockManager) and [datablock processor] (qorc-sdk/Tasks/DatablockProcessor) for acquiring samples and processing these acquired samples.
+Qorc-sdk uses MQTT-SN protocol to send the acquired sensor data over to the [DataCaptureLab]
+
+FreeRTOS software timer is used to trigger a timer event to read 1 sample from the sensor and
+fill the datablock. When enough samples are collected (determined by the sensor sample rate, 
+and latency), the datablock is processed and the samples are sent over the UART using the 
+MQTT-SN topic sensiml/live/sensor/data.
+
+## Configure the sensor
+
+To add a new sensor start with the sensor\_ssss.h and sensor\_ssss.c source files. 
+
+### sensor_ssss.h
+
+Modify the header file sensor_ssss.h and update the following macros
+- SENSOR\_SSSS\_SAMPLE\_RATE to specify the desired sensor sampling rate 
+- SENSOR\_SSSS\_CHANNELS\_PER\_SAMPLE to specify the desired number of channels for the new sensor
+- SENSOR\_BIT\_DEPTH to specify the bit-depth of the sensor samples. This can be either 16 or 32 bits.
+- SENSOR\_SSSS\_LATENCY default latency is set to 20ms. This value determines how often the samples are processed and transmitted to the DCL ([DataCaptureLab]). The default value may be left as is.
+
+The above macros determine the number of samples held in one datablock. These datablocks are held in 
+the array sensor\_ssss\_data_blocks\[\]. 
+
+### sensor_ssss.c
+
+- Update the function sensor\_ssss\_configure() to initialize and setup the sensor configuration.
+
+## Acquring and processing sensor samples
+
+Based on the sensor sample rate, a FreeRTOS soft timer triggers requesting 1 sensor sample to
+be filled-in the datablock.
+
+### sensor_ssss.c
+
+- Update the function sensor\_ssss\_acquisition\_buffer\_ready to read 1 sample into the current
+  datablock. This function returns 1 if datablock is ready for processing, returns 0 otherwise.
+  
+## Capturing the sensor samples
+
+- Sensor samples are sent using the MQTT-SN topic id sensiml/live/sensor/data. Quickfeather uses
+either an S3 UART or the USB serial to transmit these data. Sensor samples may be captured
+using either [DataCaptureLab] or an MQTT client application. An example MQTT client application
+(smlhost.py) is provided in the qorc-sdk/Tools/dclsim folder. To use this example application,
+- Open a command terminal and navigate to the folder qorc-sdk/Tools
+- run the rsmb broker ( [Tools/rsmb] ) 
+```
+  C:\> start "RSMB Server" rsmb\rsmb.exe -f rsmb\rsmb_config.txt
+```
+- run the MQTT-UART bridge ( [Tools/bridge] )
+```
+  C:\> start "mqttc" bridge\MqttConsoleApp.exe -G 1885 -n -d -c <COMport#> --baudrate 921600
+```
+- run the example MQTT client application 
+```
+  C:\> python smlhost.py --live --ssss --timeout 5 --log
+```
+  The above command would read sensor data samples for 5 secs.
+
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
 [SensiML QF]: https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html
 [SensiML Getting Started]: https://sensiml.com/documentation/guides/getting-started/index.html
 [PmodAD1]: https://reference.digilentinc.com/reference/pmod/pmodad1/start
+[datablock manager]: qf_vr_apps#datablock-manager
+[datablock processor]: qf_vr_apps#datablock-processor
+[DataCaptureLab]: https://sensiml.com/products/data-capture-lab/

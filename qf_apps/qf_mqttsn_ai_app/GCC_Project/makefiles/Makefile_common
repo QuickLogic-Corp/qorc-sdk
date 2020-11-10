@@ -20,13 +20,14 @@ $(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
 
 SYMBIFLOW_WARN_PATTERN="^Warning [0-9]\{1,\}:.*no timing specification"
 $(MAIN_FPGA_SRC_DIR)/$(FPGA_RTL_OBJ): $(R_FILES)
+ifneq (,${R_FILES})
 	time ql_symbiflow  -compile -src $(MAIN_FPGA_RTL_DIR) -d ql-eos-s3 -t $(RTL_TOP_MODULE) -v $(FPGA_RTL_SRCS) -p quickfeather.pcf -P PU64 -dump header | grep -v $(SYMBIFLOW_WARN_PATTERN)
 	$(MV) $(MAIN_FPGA_RTL_DIR)/$(RTL_TOP_MODULE)_bit.h $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c
 	@echo "#include <stdint.h>" | cat - $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c > /tmp/out && mv /tmp/out $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c
 	@echo "" >> $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c
 	@echo "// length of axFPGABitStream array in bytes" >> $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c
 	@echo "const int axFPGABitStream_length = sizeof(axFPGABitStream);" >> $(MAIN_FPGA_SRC_DIR)/$(RTL_TOP_MODULE)_bit.c
-
+endif
 -include $(D_FILES))
 	
 

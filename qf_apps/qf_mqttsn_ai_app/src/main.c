@@ -306,6 +306,10 @@ void setup_sensors_data_block_processor(void)
 #if (AD7476_FPGA_DRIVER == 1)  
   ad7476_block_processor();
 #endif
+  
+#if 1 // (SENSOR_SSSS_DRIVER == 1)
+  sensor_ssss_block_processor();
+#endif
 }
 
 int main(void)
