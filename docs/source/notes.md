@@ -72,3 +72,27 @@ There are 4 parts to the documentation to be handled.
    So, we set it into the intersphinx mapping, so we can in the future, directly refer to any object in the indpendent documentation there.
 
    Just note that the intersphinx mapping path should point to a path where there is a sphinx inventory file, in our case it is at: `https://quicklogic-fpga-tool-docs.readthedocs.io/en/latest/objects.inv` and hence the path in the intersphinx mapping is `https://quicklogic-fpga-tool-docs.readthedocs.io/en/latest`
+
+# Further Reading for rST and SPHINX
+1. pandoc
+   This is the most useful tool while converting from mardown to rst.  
+   One of the few things it cannot automatically do is convert markdown tables to rst tables 100%.
+   For tables, it is recommended to code by hand, the 2 quickest options are:
+   1. Use https://www.tablesgenerator.com/text_tables to generate, check the `Use reStructuredText syntax` option while generating.
+      This can also be used to generate markdown tables, rather than manual input, use the https://www.tablesgenerator.com/markdown_tables link.
+   2. for rst, we can also use a csv file, and include this into the rst file. However, note that this cannot be used with github rendered rst files, but can be used with sphinx. We use the option 1, unless we have a really complex table structure.
+   
+2. rst cheatshet
+
+   https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#internal-and-external-links
+   
+   http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html#internal-and-external-links
+   
+3. a collection of stuff useful for sphinx/rst
+
+   https://github.com/yoloseem/awesome-sphinxdoc
+   
+   https://www.ericholscher.com/blog/2016/jul/1/sphinx-and-rtd-for-writers/
+   
+   
+   
