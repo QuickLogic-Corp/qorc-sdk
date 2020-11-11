@@ -333,7 +333,7 @@ void hostIfTaskHandler(void *pParameter)
   memset(&receivedMsg,0,sizeof(struct xQ_Packet));
 
   //enable this to fine tune stack usage
-  //set_task_stack_watermark_monitor(1,0); //1 = use timer, 0 = no assert
+  set_task_stack_watermark_monitor(1,0); //1 = use timer, 0 = no assert
 
    //////////////////////////////////////////////////////////////////
   /* Start of while loop */
