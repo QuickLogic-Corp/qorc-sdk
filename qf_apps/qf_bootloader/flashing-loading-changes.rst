@@ -7,16 +7,20 @@ Problem
 We need a way to support usage scenarios as below:
 
 1. M4 only
+
    This is currently supported.
    This covers both M4 only usage as well as M4 + FPGA usage where the FPGA code is included inside the M4 binary itself via the header inclusion method.
 
 2. FPGA only
-    A way for the users to flash FPGA image, and which the Bootloader can load without need for a M4 image.
+
+   A way for the users to flash FPGA image, and which the Bootloader can load without need for a M4 image.
 
 3. M4 + (independent)FPGA
+
    A way to flash the M4 image and FPGA image separately, and ability to load the FPGA image (by Bootloader) followed by loading the M4 image.
 
 4. [FUTURE] FFE combinations
+
    A way to flash/load independent combinations of M4+FFE, M4+FFE+FPGA in the future.
 
 Current plan is to add support for use cases 2 and 3, 4 being on the future roadmap.
@@ -25,7 +29,7 @@ Current plan is to add support for use cases 2 and 3, 4 being on the future road
 Solution Design P1 - FPGA bin
 -----------------------------
 
-We need to generate a binary file for the FPGA, which include the below components:
+We need to generate a binary file for the FPGA, which includes the below components:
 
 1. FPGA bitstream (already being generated as ${TOP}.bit)
 2. FPGA meminit (as a separate bin) for FPGA RAM initialization
@@ -46,7 +50,7 @@ The header contains the fields:
 - FPGA BIN VERSION - which will help handle future changes in bin structure if needed. Currently at v0.1.
 - BITSTREAM BIN SIZE, CRC - size in bytes, and crc of the bitstream binary
 - MEMINIT BIN SIZE, CRC - size in bytes, and crc of the meminit binary
-- BITSTREAM BIN SIZE, CRC - size in bytes, and crc of the bitstream binary
+- IOMUX BIN SIZE, CRC - size in bytes, and crc of the iomux binary
 
 FPGA bitstream bin:
 
@@ -86,9 +90,10 @@ The number of pad configurations would be equal to the number of pads used by th
 Implementation Notes P1 - FPGA bin
 ----------------------------------
 
-There a few places we need to change to enable generation of the FPGA bin:
+.. note:: TODO: Add the changes needed in various repos to enable the FPGA bin generation
 
-.. note:: Add the places.
+- meminit (RAM block initialization) will be taken up as a separate task
+- fpga bin with bitstream + dummy-meminit + iomux bin will be the goal for current task.
 
 
 Solution Design P2 - TinyFPGAProgrammer/Bootloader
@@ -101,36 +106,36 @@ The Flash Memory Map changes are covered separately in the `Flash Memory Map<fla
 TinyFPGAProgrammer
 ~~~~~~~~~~~~~~~~~~
 
-- Add support for the `--appfpga` param which will flash the FPGA image into the APPFPGA partition.
+- Add support for the :code:`--appfpga` param which will flash the FPGA image into the APPFPGA partition.
   
   It will also add the required metadata (CRC, SIZE, IMAGE_INFO) in the APPFPGA Metadata section.
 
-- Add support for a new `--mode` param to denote the use case scenario.
+- Add support for a new :code:`--mode` param to denote the use case scenario.
 
   Examples for the use case scenarios:
 
-  1. M4 only - `--mode m4`
-  2. FPGA only - `--mode fpga`
-  3. M4 + (independent)FPGA - `--mode m4-fpga` or `--mode fpga-m4`
-  4. M4 + FFE (future) - `--mode m4-ffe` or `--mode ffe-m4`
-  5. M4 + FPGA + FFE (future) - any order of `m4`, `fpga` and `ffe` in `--mode m4-fpga-ffe`
+  1. M4 only - :code:`--mode m4`
+  2. FPGA only - :code:`--mode fpga`
+  3. M4 + (independent)FPGA - :code:`--mode m4-fpga` or :code:`--mode fpga-m4`
+  4. M4 + FFE (future) - :code:`--mode m4-ffe` or :code:`--mode ffe-m4`
+  5. M4 + FPGA + FFE (future) - any order of :code:`m4`, :code:`fpga` and :code:`ffe` in :code:`--mode m4-fpga-ffe`
 
-  Add logic, which will, depending on the `mode` argument value, will set the `IMAGE ACTIVE FLAG` value of the corresponding flash partition.
+  Add logic, which will, depending on the :code:`mode` argument value, will set the :code:`IMAGE ACTIVE FLAG` value of the corresponding flash partition.
 
-  For example, with `--mode fpga`, the FPGA partition will be marked ACTIVE, and others (M4/FFE/...) will be marked as INACTIVE.
+  For example, with :code:`--mode fpga`, the FPGA partition will be marked ACTIVE, and others (M4/FFE/...) will be marked as INACTIVE.
 
-  Add logic, which can support reading or setting only the `mode` param from flash memory, without needing to actually flash images too.
+  Add logic, which can support reading or setting only the :code:`mode` param from flash memory, without needing to actually flash images too.
 
   For example both of the below usages are ok:
   
-  1. `qfprog --port /dev/ttyACM0 --m4app output/bin/m4app.bin --mode m4` will set the mode as well as flash the image.
-  2. `qfprog --port /dev/ttyACM0 --mode m4` will set the mode only.
+  1. :code:`qfprog --port /dev/ttyACM0 --m4app output/bin/m4app.bin --mode m4` will set the mode as well as flash the image.
+  2. :code:`qfprog --port /dev/ttyACM0 --mode m4` will set the mode only.
 
 
 Bootloader
 ~~~~~~~~~~
 
-As per the Flash Memory Map changes, the booloader will use the `IMAGE ACTIVE FLAG` and decide to load the corresponding images.
+As per the Flash Memory Map changes, the booloader will use the :code:`IMAGE ACTIVE FLAG` and decide to load the corresponding images.
 
 We would use the following order of loading in the general case:
 
