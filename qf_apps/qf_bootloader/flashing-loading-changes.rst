@@ -41,7 +41,8 @@ We will need a header in the FPGA bin which indicates the component info, for wh
 
 The diagrams below show a complete picture of the FPGA bin structure proposed.
 
-FPGA bin header:
+FPGA bin header
+~~~~~~~~~~~~~~~
 
 .. image:: fpga-bin-structure-header.png
 
@@ -52,13 +53,15 @@ The header contains the fields:
 - MEMINIT BIN SIZE, CRC - size in bytes, and crc of the meminit binary
 - IOMUX BIN SIZE, CRC - size in bytes, and crc of the iomux binary
 
-FPGA bitstream bin:
+FPGA bitstream bin
+~~~~~~~~~~~~~~~~~~
 
 .. image:: fpga-bin-structure-bitstream.png
 
 The bitstream bin will have 4B words, as is currently generated in ${TOP}.bit
 
-FPGA meminit bin:
+FPGA meminit bin
+~~~~~~~~~~~~~~~~
 
 .. image:: fpga-bin-structure-meminit.png
 
@@ -72,7 +75,8 @@ For each RAM block, we will have:
 
 This set will be repeated for as many RAM blocks in the design.
 
-FPGA iomux bin:
+FPGA iomux bin
+~~~~~~~~~~~~~~
 
 .. image:: fpga-bin-structure-iomux.png
 
@@ -85,15 +89,23 @@ The number of pad configurations would be equal to the number of pads used by th
 
 |
 
-.. note:: With the header file inclusion approach, we have (1) and (2) supported, and (3) needs to be added there too.
+::
+
+    NOTE: With the header file inclusion approach, we have (1) and (2) supported, and (3) needs to be added there too.
 
 Implementation Notes P1 - FPGA bin
 ----------------------------------
 
-.. note:: TODO: Add the changes needed in various repos to enable the FPGA bin generation
+:: 
+
+    TODO: Add the changes needed in various repos to enable the FPGA bin generation
 
 - meminit (RAM block initialization) will be taken up as a separate task
-- fpga bin with bitstream + dummy-meminit + iomux bin will be the goal for current task.
+- fpga bin with bitstream + dummy-meminit + iomux bin will be the goal for current task
+- :code:`eos_s3_iomux_config.py` - this is always creating a jlink file for the iomux, modify to create the iomux bin too.
+- :code:`todo file` - to create the meminit bin
+- :code:`ql_symbiflow` bash script - add a " binary " target, which will invoke new file :code:`bitstream_to_binary.py`
+- :code:`bitstream_to_binary.py` - create fpga bin with header + bitstream bin + meminit bin + iomux bin
 
 
 Solution Design P2 - TinyFPGAProgrammer/Bootloader
@@ -139,21 +151,23 @@ As per the Flash Memory Map changes, the booloader will use the :code:`IMAGE ACT
 
 We would use the following order of loading in the general case:
 
-1. if FFE image is marked ACTIVE, do FFE Load Process
-2. if FPGA image is marked ACTIVE, do FPGA Load Process
-3. if M4 image is marked ACTIVE, do M4 Load Process
+1. If FFE image is marked ACTIVE, do FFE Load Process
+2. If FPGA image is marked ACTIVE, do FPGA Load Process
+3. If M4 image is marked ACTIVE, do M4 Load Process
 
 FFE Load Process
 ++++++++++++++++
 
-.. note:: Future Usage.
+::
+
+    NOTE: Future Usage.
 
 FPGA Load Process
 +++++++++++++++++
 
-1. check the FPGA bin is ok (CRC)
-2. read the FPGA bin header VERSION (future use)
-3. read the fields of BITSTREAM SIZE/CRC, MEMINIT SIZE/CRC, IOMUX SIZE/CRC
+1. Check the FPGA bin is ok (CRC)
+2. Read the FPGA bin header VERSION (future use)
+3. Read the fields of BITSTREAM SIZE/CRC, MEMINIT SIZE/CRC, IOMUX SIZE/CRC
 4. Read the BITSTREAM bin using the SIZE, and execute FPGA Configuration.
 5. Read the MEMINIT bin using the SIZE, and execute FPGA RAM initialization. (future use)
 6. Read the IOMUX bin using the SIZE, and set the pad configurations accordingly.
@@ -161,7 +175,7 @@ FPGA Load Process
 M4 Load Process
 +++++++++++++++
 
-same as current implementation, load the bin into SRAM 0x0 and release M4 core reset.
+Keep same as current implementation, load the bin into SRAM 0x0 and release M4 core reset.
 
 
 Implementation Notes P2 - TinyFPGAProgrammer/Bootloader
@@ -170,9 +184,13 @@ Implementation Notes P2 - TinyFPGAProgrammer/Bootloader
 TinyFPGAProgrammer
 ~~~~~~~~~~~~~~~~~~
 
-.. note:: Add the files/functions changed in the programmer.
+::
+
+    TODO: Add the files/functions changed in the programmer.
 
 Bootloader
 ~~~~~~~~~~
 
-.. note:: Add the files/functions changed in the bootloader.
+::
+
+    TODO: Add the files/functions changed in the bootloader.
