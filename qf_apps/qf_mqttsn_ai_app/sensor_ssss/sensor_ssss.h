@@ -23,11 +23,13 @@
 #include "sensor_generic.h"
 #include "datablk_mgr.h"
 
+/*--- BEGIN User modifiable section ---*/
 /* User settable MACROs and variables */
+
 #define SENSOR_SSSS_SAMPLE_RATE_HZ       (100) // sensor sample rate per channel in Hz
-#define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 1)  // from user
+#define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 1)  // Number of channels
 #define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms 
-#define SENSOR_SSSS_BIT_DEPTH            (32)  // from user, must be either 16 or 32
+#define SENSOR_SSSS_BIT_DEPTH            (32)  // bit-depth per sample, must be either 16 or 32
                                                // 16 => 16-bits per sample per channel
                                                // 32 => 32-bits per sample per channel
 
@@ -47,6 +49,7 @@
 #define SENSOR_SSSS_LIVESTREAM_PID         ((process_id_t)24)
 
 /* END of User settable MACROs and variables */
+/*--- END of User modifiable section ---*/
 
 /* Do not modify the below MACRO definitions */
 
@@ -59,6 +62,7 @@
 
 #define SENSOR_SSSS_SAMPLES_PER_CHANNEL  ((SENSOR_SSSS_LATENCY) * (SENSOR_SSSS_SAMPLE_RATE_HZ) / 1000)
 #if (SENSOR_SSSS_SAMPLES_PER_CHANNEL == 0)
+#undef  SENSOR_SSSS_SAMPLES_PER_CHANNEL
 #define SENSOR_SSSS_SAMPLES_PER_CHANNEL    (1)
 #endif
 #define SENSOR_SSSS_SAMPLES_PER_BLOCK    ((SENSOR_SSSS_SAMPLES_PER_CHANNEL) * (SENSOR_SSSS_CHANNELS_PER_SAMPLE))
@@ -89,6 +93,8 @@ extern void sensor_ssss_add(void);
 extern QAI_DataBlock_t *psensor_ssss_data_block_prev;
 extern int              sensor_ssss_samples_collected;
 extern outQ_processor_t sensor_ssss_isr_outq_processor;
+
+extern int sensor_ssss_batch_size_get(void);
 
 extern void sensor_ssss_set_first_data_block();
 extern void sensor_ssss_acquisition_read_callback(void);

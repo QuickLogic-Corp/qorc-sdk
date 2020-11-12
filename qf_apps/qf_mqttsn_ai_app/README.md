@@ -101,8 +101,22 @@ be filled-in the datablock.
   
 ## Capturing the sensor samples
 
-- Sensor samples are sent using the MQTT-SN topic id sensiml/live/sensor/data. Quickfeather uses
-either an S3 UART or the USB serial to transmit these data. Sensor samples may be captured
+- Sensor samples are sent using the MQTT-SN topic id sensiml/live/sensor/data. This topic uses
+  the following packet format to transmit the payload.
+  ```
+  SensorID | SeqNum | SampleRate | NumChannels | BitDepth | SensorDataPayload
+  ```
+  
+  Field Name  | # bits  | Description
+  ----------  | ------  | -----------
+  SensorID    | 32 bits | Sensor ID identifies the sensor for which the payload data belongs
+  SeqNum      |  8 bits | An 8-bits sequence number for the current payload. 
+  SampleRate  | 24 bits | Sample rate in Hz for the sensor(s)
+  NumChannels |  7 bits | A 7-bit field indicating the sample rate (in Hz)
+  BitDepth    |  1 bits | A 1-bit field, 0 indicates 16-bit data size, 1 indicates 32-bit data size
+  SensorDataPayload | N bytes | N byte payload
+  
+  Quickfeather uses either an S3 UART or the USB serial to transmit these data. Sensor samples may be captured
 using either [DataCaptureLab] or an MQTT client application. An example MQTT client application
 (smlhost.py) is provided in the qorc-sdk/Tools/dclsim folder. To use this example application,
 - Open a command terminal and navigate to the folder qorc-sdk/Tools
@@ -120,6 +134,22 @@ using either [DataCaptureLab] or an MQTT client application. An example MQTT cli
 ```
   The above command would read sensor data samples for 5 secs.
 
+## Loadcell sensor example
+
+An example loadcell sensor on the SparkFun NAU7802 is provided as part of this application. This example loadcell sensor that uses SparkFun Qwiic Scale NAU7802 for configuring and reading sensor values
+of a loadcell sensor. Refer [Qwiic Scale Hookup Guide] for hooking up the SparkFun NAU7802 to the
+quickfeather board.
+
+The sensor configuration function sensor\_ssss\_configure() uses the NAU7802_begin() function to 
+configure and sets up the NAU7802 for acquiring samples approximately at the chosen sampling rate (SENSOR\_SSSS\_SAMPLE\_RATE) that is supported by the NAU7802. 
+
+To read samples from at the configured sampling rate, sensor data read is performed when the FreeRTOS 
+soft timer triggers the function sensor\_ssss\_acquisition\_buffer\_ready(). NAU7802_getReading() 
+function is used to read a 24-bit sample and fill-in the current data block. When 20ms (= SENSOR\_SSSS\_LATENCY) samples are filled in the data block, these samples are processed by the
+function sensor\_ssss\_livestream\_data_processor() to send these samples over UART using 
+MQTT-SN sensiml/live/sensor/data topic using the packet format described in the above section.
+
+
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
 [SensiML QF]: https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html
 [SensiML Getting Started]: https://sensiml.com/documentation/guides/getting-started/index.html
@@ -127,3 +157,4 @@ using either [DataCaptureLab] or an MQTT client application. An example MQTT cli
 [datablock manager]: qf_vr_apps#datablock-manager
 [datablock processor]: qf_vr_apps#datablock-processor
 [DataCaptureLab]: https://sensiml.com/products/data-capture-lab/
+[Qwiic Scale Hookup Guide]: https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.193267885.1228472612.1605042107-1202899191.1566946929

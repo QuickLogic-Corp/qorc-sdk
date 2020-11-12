@@ -537,9 +537,10 @@ if (args.live == True):
       test_live_streaming(sensorobj, filename=args.filename, streaming_time=args.timeout, log=args.log)
    live_stream_time = live_stream_end_time - live_stream_start_time
    print('{} bytes received in {} secs ({} packets)'.format(total_bytes, live_stream_time, total_packets))
-   spp = (total_bytes - 5*total_packets) / sample_size / total_packets
-   sample_rate_estimate = total_packets * spp / live_stream_time
-   print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, sensor_live_rate))
+   if (sensorobj.sensor_id != b'SSSS'):
+      spp = (total_bytes - 5*total_packets) / sample_size / total_packets
+      sample_rate_estimate = total_packets * spp / live_stream_time
+      print('sample rate estimate = {} (Expected: {})'.format(sample_rate_estimate, sensor_live_rate))
 
 if (args.recog == True):
    print("Testing recognition mode ...")

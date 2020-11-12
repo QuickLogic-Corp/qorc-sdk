@@ -30,16 +30,11 @@
 #include "sensor_ssss.h"
 #include "micro_tick64.h"
 
-#include "eoss3_hal_i2c.h"
-
 /* User settable MACROs */
-
-/* NAU7802 I2C register definitions */
-#define SENSOR_SSSS_I2C_ADDR (0x2A)
-#define SENSOR_SSSS_I2C_ADCO (0x12)
+/* This section defines MACROs that may be user modified */
 
 /* User modifiable function. Update the below function
- * to intialize and setup I2C sensors */
+ * to initialize and setup I2C sensors */
 void sensor_ssss_configure(void)
 {
   /** @todo Replace contents of this function */
@@ -47,48 +42,18 @@ void sensor_ssss_configure(void)
   sensor_ssss_config.n_channels = SENSOR_SSSS_CHANNELS_PER_SAMPLE;
   sensor_ssss_config.bit_depth = SENSOR_SSSS_BIT_DEPTH;
   static int sensor_ssss_configured = false;
+
+  /*--- BEGIN User modifiable section ---*/
+
+  NAU7802_begin(1, sensor_ssss_config.rate_hz);
+
+  /*--- END of User modifiable section ---*/
+
   if (sensor_ssss_configured == false)
   {
     sensor_ssss_configured = true;
   }
   sensor_ssss_startstop(1);
-
-  // power up sequence for NAU7802
-  // 1. Set RR bit in R0x00 to 1, to guarantee a reset of all registers
-  // 2. set RR bit to 0 and PUD bit to 1 in R0x00, to enter normal operation
-  // 3. After about 200 micro-seconds, the PWRUP bit be LOGIC=1 indicating
-  //    the device is ready for the remaining programming setup
-  // 4. At this point, all appropriate device selections and configuration
-  //    can be made
-  //    a. For example R0x00 = 0xAE
-  //    b. R0x15 = 0x30
-  // 5. No conversion will take place until the R0x00 bit 4 "CS" is set Logic=1
-  // 6. Enter the low power mode by setting PUA and PUD bits to 0, in R0x00,
-  // 7. Resume operation by setting PUA and PUD bits to 1, in R0x00. This
-  //    sequence is the same for powering up from the standby condition, except
-  //    that from standby all of the information in the configuration and
-  //    calibration registers will be retained if the power supply is stable.
-  //    Depending on conditions and the application, it may be desirable to
-  //    perform calibration again to update the calibration registers for the
-  //    best possible accuracy.
-  uint8_t val = 6;
-  val = 0x01;       HAL_I2C_Write(SENSOR_SSSS_I2C_ADDR, 0, &val, 1);
-  HAL_DelayUSec(100);
-  val = 0xA2;       HAL_I2C_Write(SENSOR_SSSS_I2C_ADDR, 0, &val, 1);
-
-  // Wait about 1milli-sec for the NAU7802 to power-up
-  HAL_DelayUSec(1000);
-#if 0
-  int8_t pwrup = 0;
-  while (pwrup == 0)
-  {
-    HAL_I2C_Read_UsingRestart(SENSOR_SSSS_I2C_ADDR, 0, &val, 1);
-    pwrup = val & 8;
-  }
-#endif
-  // Set VLDO = 3.0V
-  val = 0x48;       HAL_I2C_Write(SENSOR_SSSS_I2C_ADDR, 0, &val, 1);
-  val = 0xA6;       HAL_I2C_Write(SENSOR_SSSS_I2C_ADDR, 0, &val, 1);
 
 }
 
@@ -105,16 +70,24 @@ int  sensor_ssss_acquisition_buffer_ready()
     p_dest += sizeof(int8_t)*sensor_ssss_samples_collected*dataElementSize;
 
     /* Read 1 sample per channel, Fill the sample data to p_dest buffer */
-    uint8_t sensorValue[4];
-    HAL_I2C_Read_UsingRestart( SENSOR_SSSS_I2C_ADDR, SENSOR_SSSS_I2C_ADCO, sensorValue, 3); // read 3-bytes
-    int bytes_to_read = SENSOR_SSSS_CHANNELS_PER_SAMPLE * (SENSOR_SSSS_BIT_DEPTH/8) ;
+    int32_t sensorValue;
+
+    /*--- BEGIN User modifiable section ---*/
+
+    sensorValue = NAU7802_getReading();
     // Copy read sensor value to the data block in little-endian format
     // Sensor Value will be the 24-bit value
     // (sensorValue[0] << 16) + (sensorValue[1] << 8) + (sensorValue[2])
-    p_dest[0] = sensorValue[2];
-    p_dest[1] = sensorValue[1];
-    p_dest[2] = sensorValue[0];
-    p_dest[3] = 0;
+    p_dest[0] = (sensorValue>>24) & 0xff;
+    p_dest[1] = (sensorValue>>16) & 0xff;
+    p_dest[2] = (sensorValue>> 8) & 0xff;
+    p_dest[3] = (sensorValue    ) & 0xff;
+    p_dest += 4;
+
+    /*--- END of User modifiable section ---*/
+
+    int bytes_to_read = SENSOR_SSSS_CHANNELS_PER_SAMPLE * (SENSOR_SSSS_BIT_DEPTH/8) ;
+
     sensor_ssss_samples_collected += SENSOR_SSSS_CHANNELS_PER_SAMPLE;
     batch_size = sensor_ssss_batch_size_get() * SENSOR_SSSS_CHANNELS_PER_SAMPLE;
 

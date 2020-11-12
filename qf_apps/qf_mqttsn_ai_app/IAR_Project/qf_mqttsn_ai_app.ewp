@@ -363,6 +363,7 @@
                     <state>$PROJ_DIR$\..\inc</state>
                     <state>$PROJ_DIR$\..\ad7476\inc</state>
                     <state>$PROJ_DIR$\..\sensor_audio\inc</state>
+                    <state>$PROJ_DIR$\..\sensor_generic</state>
                     <state>$PROJ_DIR$\..\knowledgepack\inc</state>
                     <state>$PROJ_DIR$\..\knowledgepack\sensiml\inc</state>
                     <state>$PROJ_DIR$\..\..\..\HAL\inc</state>
@@ -1300,6 +1301,21 @@
                         <name>$PROJ_DIR$\..\sensor_audio\src\sensor_audio_process.c</name>
                     </file>
                 </group>
+            </group>
+            <group>
+                <name>sensor_ssss</name>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\nau7802.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss_config_user.h</name>
+                </file>
             </group>
             <group>
                 <name>src</name>
@@ -3076,16 +3092,40 @@
         <group>
             <name>ad7476</name>
             <file>
-                <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\src\fpga.c</name>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\top_bit.c</name>
             </file>
         </group>
         <group>
+            <name>UART_16550</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
+            <group>
+                <name>rtl</name>
+                <group>
+                    <name>FPGA_UART_1x</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\s3-gateware\UART_16550\rtl\FPGA_UART_1x\fpga_uart_1x.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\s3-gateware\UART_16550\rtl\FPGA_UART_1x\fpga_uart_1x.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>FPGA_UART_2x</name>
+                </group>
+            </group>
+        </group>
+        <group>
             <name>usb2serial</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
             <file>
                 <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial_bit.h</name>
             </file>
         </group>
         <file>

@@ -1403,6 +1403,21 @@
                 </group>
             </group>
             <group>
+                <name>sensor_ssss</name>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\nau7802.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\sensor_ssss\sensor_ssss_config_user.h</name>
+                </file>
+            </group>
+            <group>
                 <name>src</name>
                 <file>
                     <name>$PROJ_DIR$\..\src\ble_app.c</name>
@@ -2582,13 +2597,34 @@
         <group>
             <name>ad7476</name>
             <file>
-                <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\src\fpga.c</name>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\adc_ad7476_if\top_bit.c</name>
             </file>
+        </group>
+        <group>
+            <name>UART_16550</name>
+            <group>
+                <name>rtl</name>
+                <group>
+                    <name>FPGA_UART_1x</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\s3-gateware\UART_16550\rtl\FPGA_UART_1x\fpga_uart_1x.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\s3-gateware\UART_16550\rtl\FPGA_UART_1x\fpga_uart_1x.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>FPGA_UART_2x</name>
+                </group>
+            </group>
         </group>
         <group>
             <name>usb2serial</name>
             <file>
                 <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\s3-gateware\usb2serial\src\usb2serial_bit.h</name>
             </file>
         </group>
         <file>
