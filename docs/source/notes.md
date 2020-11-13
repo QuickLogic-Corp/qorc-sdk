@@ -19,8 +19,11 @@ There are 4 parts to the documentation to be handled.
    1. doxygen + doxyrest - simple to setup and use, opensource
       https://github.com/vovkos/doxyrest
 
-   2. doxygen + breathe + exhale(optional) - a bit more complex first time, but produces very good results suitable for `readthedocs`
+   2. doxygen + breathe(optional) - a bit more complex first time, but produces very good results suitable for `readthedocs`
    https://breathe.readthedocs.io/en/latest/
+
+   3.  doxygen + breathe + exhale
+   This is advanced, but doesnt give great output unless the whole project is neatly documented, hence cannot be used as of now.
    https://exhale.readthedocs.io/en/latest/
 
    

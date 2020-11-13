@@ -10,3 +10,7 @@ HAL Layer Components
 .. toctree::
    :hidden:
    :maxdepth: 2
+
+   qorc-sdk-hal-i2c
+   qorc-sdk-hal-i2s
+   qorc-sdk-hal-gpio

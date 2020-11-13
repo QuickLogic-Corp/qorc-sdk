@@ -29,7 +29,9 @@ author = 'QuickLogic Corp'
 # ones.
 extensions = [
     'sphinx.ext.todo',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'breathe',
+#    'exhale'
 ]
 
 # todo extension stuff
@@ -38,6 +40,30 @@ todo_include_todos=True
 # intersphinx extenstion stuff
 intersphinx_mapping = {'ql-symbiflow': ('https://quicklogic-fpga-tool-docs.readthedocs.io/en/latest/', None)}
 
+# breathe extension stuff
+breathe_projects = {"qorc-sdk" : "../doxybuild/xml"}
+breathe_default_project = "qorc-sdk"
+
+# exhale extension stuff
+#exhale_args = {
+#    # These arguments are required
+#    "containmentFolder":     "./qorc-sdk-api",
+#    "rootFileName":          "qorc-sdk-api.rst",
+#    "rootFileTitle":         "QORC SDK API",
+#    "doxygenStripFromPath":  "..",
+#    # Suggested optional arguments
+#    "createTreeView":        True,
+#    # TIP: if using the sphinx-bootstrap-theme, you need
+#    # "treeViewIsBootstrap": True,
+#    "exhaleExecutesDoxygen": True,
+#    "exhaleUseDoxyfile":    True
+#}
+
+# Tell sphinx what the primary language being documented is.
+#primary_domain = 'c'
+
+# Tell sphinx what the pygments highlight language should be.
+#highlight_language = 'c'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -64,3 +90,16 @@ html_theme_options = {
     'logo_only': True,
     'display_version': False,
 }
+
+# warning : a bit of ugly code, with if and else doing the same thing!!
+import subprocess, os
+
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+if read_the_docs_build:
+
+    subprocess.call('doxygen', shell=True)
+
+else:
+    # we do the same in the local build too so that we only have to run make html.
+    subprocess.call('doxygen', shell=True)

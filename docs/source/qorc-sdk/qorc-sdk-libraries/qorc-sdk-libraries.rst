@@ -10,3 +10,5 @@ Library Components
 .. toctree::
    :hidden:
    :maxdepth: 2
+
+   qorc-sdk-libraries-fpga/qorc-sdk-libraries-fpga

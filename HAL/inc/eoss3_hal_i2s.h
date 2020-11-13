@@ -18,7 +18,7 @@
 #define __EOSS3_HAL_I2S_H_
 /*!	\file eoss3_hal_i2s.h
  *
- *  \brief This file contains API declaration for I2S Rx/Tx
+ *  \brief This file contains API declaration for I2S Peripheral(s)
  * 
  */
 #include <stdint.h>
