@@ -253,17 +253,12 @@ static void dbg_str_hexXX( const char *s, uint32_t v, void (*func)(uint32_t) )
     
 static void _dbg_int( int v )
 {
-    /* this blocks several levels of recursion */
-    if( v >= 100000 ){
-        _dbg_int( v / 100000 );
-        v = v % 100000;
+    char tmp = v % 10;
+    v = v / 10;
+    if (v > 0) {
+        _dbg_int(v);
     }
-    
-    if( v >= 10 ){
-        _dbg_int(v/10);
-    } 
-    v = v % 10;
-    dbg_hex4(v);
+    dbg_hex4(tmp);
 }
 
 static int divmodch( int v, int dval, int z )
