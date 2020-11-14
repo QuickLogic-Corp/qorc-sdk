@@ -22,9 +22,6 @@ ENV PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux:$PATH
 #
 # This container image intentionally does not add a user or entrypoint.
 # This allows easy use of this container as a parent image for adapting
-# it to specific needs.  An example that adds a user and entrypoint is 
-# available in the Dockerfile.user file in this directory.
-#
-# Another example, with a prebuilt ready-to-run Docker container package 
-# built through a github actions workflow is here:
+# it to specific needs.  An example with a prebuilt ready-to-run Docker
+# container package built through a github actions workflow is here:
 # https://github.com/Thirsty2/qorc-sdk-user
