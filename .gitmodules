@@ -13,12 +13,3 @@
 [submodule "qorc-example-apps"]
 	path = qorc-example-apps
 	url = https://github.com/QuickLogic-Corp/qorc-example-apps.git
-[submodule "quick-feather-dev-board"]
-	path = quick-feather-dev-board
-	url = https://github.com/QuickLogic-Corp/quick-feather-dev-board.git
-[submodule "TinyFPGA-Programmer-Application"]
-	path = TinyFPGA-Programmer-Application
-	url = https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
-[submodule "quicklogic-fpga-toolchain"]
-	path = quicklogic-fpga-toolchain
-	url = https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain.git
