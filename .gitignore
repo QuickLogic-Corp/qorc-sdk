@@ -37,3 +37,6 @@
 **/rtl/build/
 **/rtl/Makefile.symbiflow
 **/rtl/*.h
+
+# documentation build files
+**/doxybuild/

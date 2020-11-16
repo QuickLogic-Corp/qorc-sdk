@@ -194,3 +194,55 @@ Bootloader
 ::
 
     TODO: Add the files/functions changed in the bootloader.
+
+
+Implementation Phases
+---------------------
+
+Due to the fact that there will be breaking changes, and there are changes needed across the Symbiflow toolchain, qorc-sdk as well as the TinyFPGAProgrammer repos, we need to split the implementation going into mainline into phases.
+
+At this phase, we should be completing the Symbiflow toolchain changes fully, so we don't have to change this in Phase 2.
+
+.. note:: We should ideally always have the TinyFPGAProgrammer repo as a submodule of the qorc sdk, this will help in keeping them in sync, especially for releases.
+          This is because the programmer and the bootloader changes always go together.
+
+Phase 1
+~~~~~~~
+
+1. **TinyFPGAProgrammer**
+
+- add support for --appfpga in the programmer
+- ensure to set the metadata(size,crc) of M4APP to 0xFFFF in this case
+- in case of --m4app option, ensure to the set the metadata (size,crc) of APPFPGA to 0xFFFF
+
+2. **qorc-sdk Bootloader**
+
+- add logic, which will decide looking at the metadata to load the M4APP -OR- APPFPGA only!
+- flash memory map changes will not be done here, we continue with current format as is
+- FPGA load process will include the configuration of bitstream, mem init, and iomux init.
+
+3. **Symbiflow scripts (multiple repos possibly)**
+
+- add "binary" option to generate fpga bin (bitstream + meminit + iomux)
+- add iomux generation in the "header" generation as well
+
+With these, the current operation can continue as is, and there will not be breaking changes, at the same time we support the FPGA standalone loading.
+
+
+Phase 2
+~~~~~~~
+
+Here we will introduce the major changes to support multiple scenarios of usage (and the --mode)
+
+The Flash Memory Map changes will also be brought in.
+
+This will bring a change in the TinyFPGAProgrammer and the qorc-sdk Bootloader repos only, which need to be in sync. (perhaps as a release?)
+
+1. **TinyFPGAProgrammer**
+
+- add --mode flag for operation (m4, m4+fpga, others)
+- add logic to parse and update the mode into the new Flash Memory Map (active partition)
+
+2. **qorc-sdk Bootloader**
+
+- add support for new Flash Memory Map, and use the "active partition" info to load the images in predefined order.
