@@ -32,10 +32,13 @@
 #include "spi_flash.h"
 #include "eoss3_hal_gpio.h"
 #include "dbg_uart.h"
+#include "flash_defines.h"
 
 
+extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
 extern int load_m4app(void);
 extern int load_usb_flasher(void);
+int check_appfpga_m4app_metadata(void);
 
 #define MAX_BOOTLOADER_WAIT_MSEC  (5*1000)
 #define MIN_USER_BTN_PRESS_WAIT_MSEC  (200)
@@ -43,6 +46,12 @@ extern int load_usb_flasher(void);
 #define BLUE_LED_GPIO_NUM         (4) //PAD 18, GPIO is connected to Blue LED
 #define GREEN_LED_GPIO_NUM        (5) //PAD 21, GPIO is connected to Green LED
 #define RED_LED_GPIO_NUM          (6) //PAD 22, GPIO is connected to Red LED
+
+
+#define METADATA_UNKNOWN_FLASH_STATE    (0x0)
+#define METADATA_APPFPGA_IS_FLASHED     (0x1)
+#define METADATA_M4APP_IS_FLASHED       (0x2)
+
 
 TaskHandle_t 	BLTaskHandle;
 static int user_button_pressed = 0;
@@ -208,20 +217,80 @@ static void BLTaskHandler(void *pvParameters)
       {
         dbg_str("User button not pressed: proceeding to load application\n");
         set_waiting_led(0);
-        int error = load_m4app(); //this should never return
-        //if the M4 image is corrupted it needs to be re-flashed. wait indefinitely
-        while(1)
+        // check appfpga and m4app partitions to check which one has been flased with an image.
+        // load the m4app or appfpga accordingly.
+        int metadata_state = check_appfpga_m4app_metadata();
+        if(metadata_state == METADATA_M4APP_IS_FLASHED)
         {
-          //set red LED for error and turn off green LED
-          set_boot_error_led(1);
-          set_downloading_led(0);
-          dbg_str("ERROR loading M4 APP. Waiting for re-flashing .. \n");
-          dbg_str("Press Reset then User Button and start Flash script .. \n\n");
-          vTaskDelay(5*1000);
+            int error = load_m4app(); //this should never return
+            //if the M4 image is corrupted it needs to be re-flashed. wait indefinitely
+            while(1)
+            {
+                //set red LED for error and turn off green LED
+                set_boot_error_led(1);
+                set_downloading_led(0);
+                dbg_str("ERROR loading M4 APP. Waiting for re-flashing .. \n");
+                dbg_str("Press Reset then User Button and start Flash script .. \n\n");
+                vTaskDelay(5*1000);
+            }
         }
+        else if(metadata_state == METADATA_APPFPGA_IS_FLASHED)
+        {
+            int error = load_appfpga(); // this should never return
+
+            while(1)
+            {
+                //set red LED for error and turn off green LED
+                set_boot_error_led(1);
+                set_downloading_led(0);
+                dbg_str("ERROR loading M4 APP. Waiting for re-flashing .. \n");
+                dbg_str("Press Reset then User Button and start Flash script .. \n\n");
+                vTaskDelay(5*1000);
+            }
+        }
+        else
+        {
+            //set red LED for error and turn off green LED
+            set_boot_error_led(1);
+            set_downloading_led(0);
+            dbg_str("ERROR No M4 APP or APPFPGA found. Waiting for re-flashing .. \n");
+            dbg_str("Press Reset then User Button and start Flash script .. \n\n");
+            vTaskDelay(5*1000);
+        }
+        
       }
 	}
 }
+
+int check_appfpga_m4app_metadata()
+{
+    unsigned char* bufPtr;
+    uint32_t image_crc;
+    uint32_t image_size;
+
+    bufPtr = (unsigned char *)image_metadata; 
+    read_flash((unsigned char *)FLASH_APPFPGA_META_ADDRESS, FLASH_APPFPGA_META_SIZE, bufPtr);
+    image_crc = image_metadata[0];
+    image_size = image_metadata[1];
+
+    if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
+    {
+        return METADATA_APPFPGA_IS_FLASHED;
+    }
+
+    read_flash((unsigned char *)FLASH_APP_META_ADDRESS, FLASH_APP_META_SIZE, bufPtr);
+    image_crc = image_metadata[0];
+    image_size = image_metadata[1];
+    
+    if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
+    {
+        return METADATA_M4APP_IS_FLASHED;
+    }
+
+    // if we reach here, then images are not flashed or we have a corrupt state.
+    return METADATA_UNKNOWN_FLASH_STATE;
+}
+
 /*!
 * \fn void BL_Task_Init()
 * \brief  Init function to create BootloaderTask to be called from main()
