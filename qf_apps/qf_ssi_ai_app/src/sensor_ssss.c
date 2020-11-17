@@ -52,7 +52,7 @@ const char json_string_sensor_config[] = \
 	"  \"AccelerometerY\":1,"\
 	"  \"AccelerometerZ\":2"\
    "}"\
-"}" ;
+"}\r\n" ;
 /* END JSON descriptor for the sensor data */
 
 /* User modifiable function. Update the below function

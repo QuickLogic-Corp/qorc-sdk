@@ -41,21 +41,22 @@ int ssi_connect_string_len = sizeof(ssi_connect_string)-1;
 void ssiTaskHandler(void *pParameter)
 {
 	int count = 0;
+	int json_len = 0;
 	char ssi_rxbuf[SSI_RXBUF_SIZE];
 
 	assert(SSI_RXBUF_SIZE >= ssi_connect_string_len);
 
 	memset(ssi_rxbuf, 0, sizeof(ssi_rxbuf));
-
+    json_len = strlen(json_string_sensor_config);
 	while (is_ssi_connected == false)
 	{
 		// Send the JSON string
 		vTaskDelay(100);
-		dbg_str(json_string_sensor_config);
-	    dbg_nl();
-		while (uart_rx_available(DEBUG_UART))
+		uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
+	    //dbg_nl();
+		while (uart_rx_available(UART_ID_SSI))
 		{
-			char ch = uart_rx(DEBUG_UART);
+			char ch = uart_rx(UART_ID_SSI);
 			for ( count = 0; count < ssi_connect_string_len-1; count++ )
 			{
 				ssi_rxbuf[count] = ssi_rxbuf[count+1];
@@ -80,7 +81,7 @@ void ssi_publish_sensor_data( uint8_t *p_source, int ilen )
 {
 	if (is_ssi_connected)
 	{
-		uart_tx_raw_buf(DEBUG_UART, p_source, ilen);
+		uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
 	}
 }
 
