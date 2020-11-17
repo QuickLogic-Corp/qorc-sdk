@@ -15,10 +15,10 @@
  *==========================================================*/
 
 /*==========================================================
- *                                                          
+ *
  *   File   : qf_hardwareSetup.c
- *   Purpose: Contains functionality to setup QuickFeather Board 
- *                                                          
+ *   Purpose: Contains functionality to setup QuickFeather Board
+ *
  *=========================================================*/
 #include "Fw_global_config.h"
 #include <stdio.h>
@@ -90,7 +90,7 @@ static void ldo_init(void)
     AIP->LD0_50_CTRL_0 = 0x1ac; // LDO Enable
     AIP->LD0_30_CTRL_0 = 0x28c; // LDO Enable       /* 0x28c -> Vo =1.15V, imax = 7.2mA, LDO enabled. */
     AIP->LD0_50_CTRL_0 = 0x28c; // LDO Enable
-}   
+}
 
 static void uart_setup()
 {
@@ -100,7 +100,7 @@ static void uart_setup()
     memset( (void *)&(uartObj), 0, sizeof(uartObj) );
 
     uart_id = UART_ID_HW;
-	brate = BAUD_921600;
+	brate = BAUD_460800;
 	uartObj.baud = brate;
 	uartObj.wl = WORDLEN_8B;
 	uartObj.parity = PARITY_NONE;

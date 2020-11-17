@@ -17,11 +17,26 @@
             "is_default": true,
             "serial_port_configuration": {
                 "com_port": null,
-                "baud": 921600,
+                "baud": 460800,
                 "stop_bits": 1,
                 "parity": 0,
                 "handshake": 0,
                 "max_live_sample_rate": 3301
+            }
+        },
+        {
+            "name": "wifi_simple",
+            "display_name": "Simple Stream over WiFi",
+            "value": 2,
+            "is_default": true,
+            "wifi_configuration": {
+                "use_mqttsn": false,
+                "use_external_broker": false,
+                "external_broker_address":"",
+                "broker_port":1885,
+                "device_ip_address": null,
+                "device_port": 0,
+                "max_live_sample_rate": 1000000
             }
         }
     ],

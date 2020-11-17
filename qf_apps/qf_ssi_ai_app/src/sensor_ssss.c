@@ -47,6 +47,7 @@
 const char json_string_sensor_config[] = \
 "{"\
    "\"sample_rate\":100,"\
+   "\"samples_per_packet\":6,"\
    "\"column_location\":{"\
 	"  \"AccelerometerX\":0,"\
 	"  \"AccelerometerY\":1,"\
@@ -154,17 +155,17 @@ int  sensor_ssss_acquisition_buffer_ready()
  * and setting up the datablock processor processing elements (\ref DATABLK_PE).
  * A specific SSSS processing element for motion detection is provided in this
  * example.
- * 
+ *
  * @{
  */
 
 /** Maximum number of ssss data blocks that may be queued for chain processing */
 #define SENSOR_SSSS_NUM_DATA_BLOCKS              (SENSOR_SSSS_MAX_DATA_BLOCKS)
 
-/** maximum number of vertical (parallel processing elements) that may generate datablock outputs 
+/** maximum number of vertical (parallel processing elements) that may generate datablock outputs
  *  that may add to the front of the queue.
  *
- *  Queue size of a given datablock processor must be atleast 
+ *  Queue size of a given datablock processor must be atleast
  *  summation of maximum datablocks of all sensors registered for
  *  processing with some room to handle the vertical depth
  */
@@ -190,13 +191,13 @@ extern int  sensor_ssss_ai_stop(void);
 
 /** Sensor SSSS AI processing element functions */
 
-datablk_pe_funcs_t sensor_ssss_sensiml_ai_funcs = 
+datablk_pe_funcs_t sensor_ssss_sensiml_ai_funcs =
 {
   .pconfig     = sensor_ssss_ai_config,
-  .pprocess    = sensor_ssss_ai_data_processor, 
-  .pstart      = sensor_ssss_ai_start, 
-  .pstop       = sensor_ssss_ai_stop, 
-  .p_pe_object = (void *)NULL 
+  .pprocess    = sensor_ssss_ai_data_processor,
+  .pstart      = sensor_ssss_ai_start,
+  .pstop       = sensor_ssss_ai_stop,
+  .p_pe_object = (void *)NULL
 } ;
 
 /** outQ processor for SSSS AI processing element */
@@ -223,13 +224,13 @@ extern int  sensor_ssss_livestream_stop(void);
 
 /** Sensor SSSS AI processing element functions */
 
-datablk_pe_funcs_t sensor_ssss_livestream_funcs = 
+datablk_pe_funcs_t sensor_ssss_livestream_funcs =
 {
   .pconfig     = sensor_ssss_livestream_config,
-  .pprocess    = sensor_ssss_livestream_data_processor, 
-  .pstart      = sensor_ssss_livestream_start, 
-  .pstop       = sensor_ssss_livestream_stop, 
-  .p_pe_object = (void *)NULL 
+  .pprocess    = sensor_ssss_livestream_data_processor,
+  .pstart      = sensor_ssss_livestream_start,
+  .pstop       = sensor_ssss_livestream_stop,
+  .p_pe_object = (void *)NULL
 } ;
 
 /** outQ processor for SSSS Live-stream processing element */
@@ -247,22 +248,22 @@ datablk_pe_descriptor_t  sensor_ssss_datablk_pe_descr[] =
 { // { IN_ID, OUT_ID, ACTIVE, fSupplyOut, fReleaseIn, outQ, &pe_function_pointers, bypass_function, pe_semaphore }
 #if (SENSOR_SSSS_RECOG_ENABLED)
     /* processing element descriptor for SensiML AI for SSSS sensor */
-    { SENSOR_SSSS_ISR_PID, SENSOR_SSSS_AI_PID, true, false, true, &sensor_ssss_sensiml_ai_outq_processor, &sensor_ssss_sensiml_ai_funcs, NULL, NULL},   
+    { SENSOR_SSSS_ISR_PID, SENSOR_SSSS_AI_PID, true, false, true, &sensor_ssss_sensiml_ai_outq_processor, &sensor_ssss_sensiml_ai_funcs, NULL, NULL},
 #endif
 
 #if (SENSOR_SSSS_LIVESTREAM_ENABLED)
     /* processing element descriptor for SSSS sesnsor livestream */
-    { SENSOR_SSSS_ISR_PID, SENSOR_SSSS_LIVESTREAM_PID, true, false, true, &sensor_ssss_livestream_outq_processor, &sensor_ssss_livestream_funcs, NULL, NULL},   
-#endif 
+    { SENSOR_SSSS_ISR_PID, SENSOR_SSSS_LIVESTREAM_PID, true, false, true, &sensor_ssss_livestream_outq_processor, &sensor_ssss_livestream_funcs, NULL, NULL},
+#endif
 };
 
-datablk_processor_params_t sensor_ssss_datablk_processor_params[] = { 
-    { SENSOR_SSSS_DBP_THREAD_PRIORITY, 
-      &sensor_ssss_dbp_thread_q, 
-      sizeof(sensor_ssss_datablk_pe_descr)/sizeof(sensor_ssss_datablk_pe_descr[0]), 
+datablk_processor_params_t sensor_ssss_datablk_processor_params[] = {
+    { SENSOR_SSSS_DBP_THREAD_PRIORITY,
+      &sensor_ssss_dbp_thread_q,
+      sizeof(sensor_ssss_datablk_pe_descr)/sizeof(sensor_ssss_datablk_pe_descr[0]),
       sensor_ssss_datablk_pe_descr,
-      256, 
-      "SENSOR_SSSS_DBP_THREAD", 
+      256,
+      "SENSOR_SSSS_DBP_THREAD",
       NULL
     }
 };
@@ -271,26 +272,26 @@ void sensor_ssss_block_processor(void)
 {
   /* Initialize datablock manager */
    datablk_mgr_init( &sensor_ssssBuffDataBlkMgr,
-                      sensor_ssss_data_blocks, 
-                      sizeof(sensor_ssss_data_blocks), 
-                      (SENSOR_SSSS_SAMPLES_PER_BLOCK), 
+                      sensor_ssss_data_blocks,
+                      sizeof(sensor_ssss_data_blocks),
+                      (SENSOR_SSSS_SAMPLES_PER_BLOCK),
                       ((SENSOR_SSSS_BIT_DEPTH)/8)
                     );
 
   /** SSSS datablock processor thread : Create SSSS Queues */
   sensor_ssss_dbp_thread_q = xQueueCreate(SENSOR_SSSS_DBP_THREAD_Q_SIZE, sizeof(QAI_DataBlock_t *));
   vQueueAddToRegistry( sensor_ssss_dbp_thread_q, "SENSOR_SSSSPipelineExampleQ" );
-  
+
   /** SSSS datablock processor thread : Setup SSSS Thread Handler Processing Elements */
   datablk_processor_task_setup(&sensor_ssss_datablk_processor_params[0]);
-  
+
   /** Set the first data block for the ISR or callback function */
   sensor_ssss_set_first_data_block();
 
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
   sensor_ssss_add();
   sensor_ssss_configure();
-  
+
   printf("Sensor Name:                   %s\n", "SENSOR_SSSS_NAME");
   printf("Sensor Memory:                 %d\n", SENSOR_SSSS_MEMSIZE_MAX);
   printf("Sensor Sampling rate:          %d Hz\n", (int)SENSOR_SSSS_SAMPLE_RATE_HZ);
@@ -401,7 +402,7 @@ outQ_processor_t sensor_ssss_isr_outq_processor =
 void sensor_ssss_set_first_data_block()
 {
   /* Acquire a datablock buffer */
-  if (NULL == psensor_ssss_data_block_prev) 
+  if (NULL == psensor_ssss_data_block_prev)
   {
     datablk_mgr_acquire(sensor_ssss_isr_outq_processor.p_dbm, &psensor_ssss_data_block_prev, 0);
   }
@@ -419,7 +420,7 @@ void sensor_ssss_acquisition_read_callback(void)
 {
     int gotNewBlock = 0;
     QAI_DataBlock_t  *pdata_block = NULL;
-  
+
     if (!sensor_ssss_acquisition_buffer_ready())
     {
       return;
@@ -432,7 +433,7 @@ void sensor_ssss_acquisition_read_callback(void)
     }
     else
     {
-        // send error message 
+        // send error message
         // xQueueSendFromISR( error_queue, ... )
         if (sensor_ssss_isr_outq_processor.p_event_notifier)
           (*sensor_ssss_isr_outq_processor.p_event_notifier)(sensor_ssss_isr_outq_processor.in_pid, SENSOR_SSSS_ISR_EVENT_NO_BUFFER, NULL, 0);
@@ -443,7 +444,7 @@ void sensor_ssss_acquisition_read_callback(void)
 
     if (gotNewBlock)
     {
-        /* send the previously filled ssss data to specified output Queues */     
+        /* send the previously filled ssss data to specified output Queues */
         psensor_ssss_data_block_prev->dbHeader.Tend = pdata_block->dbHeader.Tstart;
         datablk_mgr_WriteDataBufferToQueues(&sensor_ssss_isr_outq_processor, NULL, psensor_ssss_data_block_prev);
         psensor_ssss_data_block_prev = pdata_block;
