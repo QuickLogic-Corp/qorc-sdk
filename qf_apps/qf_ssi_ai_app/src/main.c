@@ -79,7 +79,7 @@ int main(void)
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(axFPGABitStream_length,axFPGABitStream);
     // Use 0x6141 as USB serial product ID (USB PID)
-    HAL_usbserial_init2(false, false, 0x6141);        // Start USB serial not using interrupts
+    HAL_usbserial_init2(false, true, 0x6141);        // Start USB serial not using interrupts
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     
     dbg_str("\n\n");
