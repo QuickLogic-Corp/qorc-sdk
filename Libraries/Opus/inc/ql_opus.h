@@ -1,8 +1,9 @@
 #ifndef QL_OPUS__H
 #define QL_OPUS__H
 
+#include <stdint.h>
 
-#if 0 //need it compiling from Opus source
+#if 0 //need it for compiling from Opus source
 typedef int int32_t;
 typedef unsigned int uint32_t;
 typedef short int16_t;

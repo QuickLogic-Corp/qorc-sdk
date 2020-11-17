@@ -1,0 +1,11 @@
+
+CELT_SRCS:=$(wildcard $(CELT_DIR)/*.c)
+
+filters=celt_decoder.c celt_lpc.c mathops.c opus_custom_demo.c pitch.c 
+
+SRCS:=$(filter-out $(filters), $(notdir $(CELT_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(CELT_DIR)
+
+include $(COMMON_STUB)
+

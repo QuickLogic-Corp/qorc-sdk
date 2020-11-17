@@ -1,0 +1,13 @@
+
+OPUS_SRCS:=$(wildcard $(OPUSSRC_DIR)/*.c)
+
+filters=mapping_matrix.c opus_compare.c opus_decoder.c opus_demo.c opus_multistream.c \
+        opus_multistream_decoder.c opus_multistream_encoder.c opus_projection_decoder.c \
+        opus_projection_encoder.c repacketizer_demo.c
+
+SRCS:=$(filter-out $(filters), $(notdir $(OPUS_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(OPUSSRC_DIR)
+
+include $(COMMON_STUB)
+

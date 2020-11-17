@@ -31,12 +31,33 @@ export MACROS=-D__FPU_USED=1 \
         -DconfigUSE_TRACE_FACILITY \
         -D$(TOOLCHAIN) \
         -DNDEBUG\
-        -DGCC_MAKE
+        -DGCC_MAKE \
+        -DSMALL_FOOTPRINT_NO\
+        -DSUPPORT_CTX_SPLIT\
+        -DQL_OPUS_ENC_COMPLEXITY=4\
+        -DQL_FFT_480\
+        -DUSE_KISS_FFT_NO\
+        -DPRE_EMPHASIS_OPT\
+        -DFLOOR_OPT\
+        -DFLOAT_APPROX\
+        -DCMSIS_OPT\
+        -DBASIC_OPS_ASM\
+        -DS132\
+        -DSOFTDEVICE_PRESENT\
+        -DSWI_DISABLE0\
+        -DUSE_APP_CONFIG\
+        -DVAR_ARRAYS_NO\
+        -DUSE_ALLOCA\
+        -DENABLE_SILK_NO\
+        -DDISABLE_UPDATE_DRAFT\
+        -DPOOL_ALLOC\
+        -DDISABLE_FLOAT_API
+
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)DSP$(DIR_SEP)Lib$(DIR_SEP)GCC
 export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)lib
-export LIBOPUS_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)Opus$(DIR_SEP)lib$(DIR_SEP)GCC
+# export LIBOPUS_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)Opus$(DIR_SEP)lib$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
@@ -58,7 +79,11 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/Opus/inc" \
                  -I"$(PROJ_ROOT)/Tasks/Control/inc" \
                  -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
-
+                 -I"$(PROJ_ROOT)/Libraries/Opus/libopus" \
+                 -I"$(PROJ_ROOT)/Libraries/Opus/src" \
+                 -I"$(PROJ_ROOT)/Libraries/Opus/src/opus/include" \
+                 -I"$(PROJ_ROOT)/Libraries/Opus/src/opus/celt" \
+                 -I"$(PROJ_ROOT)/Libraries/Opus/src/opus/src" 
 
 
 
@@ -76,8 +101,11 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
     -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
-    -L$(LIBOPUS_DIR) -lopus \
     -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math 
+
+#    -L$(LIBOPUS_DIR) -lopus \
+#    -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math 
+
 #   To enable pryon_lite-PRL1000 library, delete the top line, uncomment the following two lines \
 #   Order of the lines is important, first include pryon_lite library, then math library \
 #   Additionally, enable the AMAZON_DIR symbol export defined below
@@ -113,3 +141,7 @@ export CMSIS_DIR        = $(LIB_DIR)$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)NN
 
 export DBP_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor$(DIR_SEP)src
 export CONTROL_DIR      = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)Control$(DIR_SEP)src
+
+export LIBOPUS_DIR       = $(LIB_DIR)$(DIR_SEP)Opus$(DIR_SEP)src
+export CELT_DIR          = $(LIB_DIR)$(DIR_SEP)Opus$(DIR_SEP)src$(DIR_SEP)opus$(DIR_SEP)celt
+export OPUSSRC_DIR       = $(LIB_DIR)$(DIR_SEP)Opus$(DIR_SEP)src$(DIR_SEP)opus$(DIR_SEP)src

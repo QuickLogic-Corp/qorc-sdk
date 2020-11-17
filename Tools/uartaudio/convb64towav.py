@@ -84,7 +84,7 @@ def decode_base64_file(input_file, output_file):
             #if (count == 10):
             #    break
     #encode_raw_data(output_array)
-        
+
     print()
     print(f'Extracted {count} lines')
     
@@ -93,19 +93,18 @@ def decode_base64_file(input_file, output_file):
     if(encode_type == 'opus_audio'):
         dot_index = input_file.find('.')
         opus_file = input_file[:dot_index] + '.opus'
+        dec_opus_file = input_file[:dot_index] + '.pcm'
         with open(opus_file, 'wb') as w:
             w.write(output_array)
         
         #call the opus decoder from command line
-        subprocess.call(['opusdec.exe', '--rate 16000', opus_file, output_file])
+        subprocess.call(['opus_demo.exe', '-d', '16000', '1', opus_file, dec_opus_file])
+        print('Decoded opus data as pcm samples')
         
-        #get the wav file size and subtract header bytes
-        file_length = os.stat(output_file).st_size
-        if (file_length > 44):
-            file_length = file_length - 44
-        
-        return (file_length/2) #return the number of samples saved in wav file
-    
+        #read the binary data into an array to save it as wav file
+        with open(dec_opus_file, 'rb') as r:
+            output_array = r.read()
+
     # It is raw data stream. Save directly into wav file
     if(len(output_array) > 0):
         
