@@ -211,20 +211,43 @@ Phase 1
 
 1. **TinyFPGAProgrammer**
 
-- add support for --appfpga in the programmer
-- ensure to set the metadata(size,crc) of M4APP to 0xFFFF in this case
-- in case of --m4app option, ensure to the set the metadata (size,crc) of APPFPGA to 0xFFFF
+- add support for :code:`--appfpga` in the programmer
+- ensure to set the metadata(size,crc) of M4APP to 0xFFFFFFFF in this case
+- in case of :code:`--m4app` option, ensure to the set the metadata (size,crc) of APPFPGA to 0xFFFFFFFF
+- PR : branch :code:`fpga-bootloading-changes-phase-1`
 
-2. **qorc-sdk Bootloader**
+2. **qorc-sdk bootloader/bootloader_uart/loadflash/loadflash_uart**
 
-- add logic, which will decide looking at the metadata to load the M4APP -OR- APPFPGA only!
-- flash memory map changes will not be done here, we continue with current format as is
+- add logic, which will decide looking at the metadata to load *one of* M4APP -OR- APPFPGA only!
 - FPGA load process will include the configuration of bitstream, mem init, and iomux init.
+- no flash memory map changes
+- PR : branch :code:`fpga-bootloading-changes-phase-1`
+
 
 3. **Symbiflow scripts (multiple repos possibly)**
 
-- add "binary" option to generate fpga bin (bitstream + meminit + iomux)
-- add iomux generation in the "header" generation as well
+- add :code:`-dump binary` option to generate fpga bin (header + bitstream bin + meminit bin + iomux bin)
+- add iomux generation with the :code:`-dump header` option (bitstream and meminit array is already being generated)
+- files changed/added :
+
+  - bitstream_to_header.py
+  - eos_s3_iomux_config.py
+  - (new) bitstream_to_binary.py
+  - ql_symbiflow
+  - symbiflow_generate_constraints
+  - (new) symbiflow_write_binary
+
+- PR : branch :code:`fpga-bootloading-changes-phase-1`
+
+The order of changes should preferaby be:
+
+1. Symbiflow toolchain update, do a minor release (1.3.1?)
+2. TinyFPGAProgrammer update, require - specific Symbiflow toolchain version or above 
+3. qorc-sdk update, require specific Symbiflow toolchain version and TinyFPGAProgrammer version
+
+Easiest way to ensure this is to make both the Symbiflow and TinyFPGAProgrammer repos submodules of the qorc-sdk.
+This would mean that each qorc-sdk version has a specific relation/requirement of specific version of the submodules.
+This would also have it easier to bundle the codebase and the interdependencies.
 
 With these, the current operation can continue as is, and there will not be breaking changes, at the same time we support the FPGA standalone loading.
 
@@ -232,7 +255,7 @@ With these, the current operation can continue as is, and there will not be brea
 Phase 2
 ~~~~~~~
 
-Here we will introduce the major changes to support multiple scenarios of usage (and the --mode)
+Here we will introduce the major changes to support multiple scenarios of usage (and the --mode), including M4App + (independent)AppFPGA, M4App only, AppFPGA only, and others in the future.
 
 The Flash Memory Map changes will also be brought in.
 
@@ -241,8 +264,11 @@ This will bring a change in the TinyFPGAProgrammer and the qorc-sdk Bootloader r
 1. **TinyFPGAProgrammer**
 
 - add --mode flag for operation (m4, m4+fpga, others)
-- add logic to parse and update the mode into the new Flash Memory Map (active partition)
+- add logic to parse and update the mode into the new Flash Memory Map (active partition info)
+- PR : branch :code:`fpga-bootloading-changes-phase-2`
 
-2. **qorc-sdk Bootloader**
+2. **qorc-sdk bootloader/bootloader_uart/loadflash/loadflash_uart**
 
 - add support for new Flash Memory Map, and use the "active partition" info to load the images in predefined order.
+- the preferred order is FFE(future), AppFPGA, M4App in any combination.
+- PR : branch :code:`fpga-bootloading-changes-phase-2`

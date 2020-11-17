@@ -1,1 +1,241 @@
-<mxfile host="app.diagrams.net" modified="2020-11-12T19:49:28.149Z" agent="5.0 (X11)" etag="DSLFTtaRqnx2SX49gVNf" version="13.9.7" type="device" pages="4"><diagram id="zs6TifJFR34dfvWJ820B" name="header">1Vlbc6IwGP01PrYTCBd99IKts2PbUbpb+8ZKCplFwoR466/fIIlcbetWltYHJzm5QM455CMfHThc7W6oE/lT4qKgowJ314Gjjqp2DZ3/J8A+BXQAU8Cj2E0hJQPm+BUJEAh0jV0UFzoyQgKGoyK4JGGIlqyAOZSSbbHbCwmKV40cD1WA+dIJqugv7DJfLEsHGX6LsOfLKytAtKwc2VkAse+4ZJuDoNWBQ0oIS0ur3RAFCXeSl3Tc+ETr8cYoCtlHBtw9Q9P/8TrQ7WgxHmv2YnvlXIlZNk6wFgvuqEbA5xu4eMOLXlIcP9z0eafB5I7/31r9kTWTvfjlch3FQtleskfJOnRRcgMKb976mKF55CyT1i23C8d8tgpE8wsOgiEJCD2MhabVNyxwnDW/UHnXiDK0y0Fi4TeIrBCje95FtGrChcKEipRvm0mqGgLzc3JqAnOEi7zjzBnRvCC4PoN39Sze7bk9s/pTqUHa8TfNaG9cjJ45AqbZjBi9D4qhqE2pAc9QY3I/fXxqUQn+VAwMoxElNNi6EtoZSkyt6eRuYreoxXg86jWkBVRa10KvaFEIBD+t2Xxyn5S0L7zxgyKtx2jc2s5vVFit7O9gPnm2Ls/rRffwMq9G27yaH+B1OBt+L1ohaJvWboXW0rbbkFkvurWWWdXaZrX3LquNWLVRUrttkyojZo7VwstaQ0696AtZiVSt9XClVE+I357U1mOVUnf8K7GHQref5C94bRk4cYyXRcLQDrOnXHnBy+BaF7VRsnYgK3tZCfndP+Uri3wlG3SoyVEnJYjJmi7RW+tM+zGHeoi9/6aJ3EIupipoTjC9Ri+JURQ4DG+KGZw6EcUVHgjmK8v8YpYOqN2SD9J1i1H5jEtpIl0tTQRLE6XEVCY6eOq47E/YrO5c25rNlNZtJveyr+IzvWgP/Z99Vtrg9P/ts9Ondl+pJhH7s0USN+zZ49B+nFlvntyz8RKMJFBMRNaOjk6e+nnoYEWjx4ySP0iGoJCEqBSVBBTzEIZDjwN6VrMJD2ejKxWcCHSER6uX4PCU+dh1UcixLDw2k+SsecmFsMbNZdddLspVEwg1yRywA+lPOZWwqQzZgGulpXxP8ruMWkb3/czEMbfzybcSXs2+M6RPffaxBlp/AQ==</diagram><diagram id="0i4zK8VX27Sp79aWL-fW" name="bitstream">5VjblpowFP0aH3UFIqiPqDjjrOJYL1UfKWQkbSSsEG/z9Y0S5DoXp1XXTH3QnJ2b2XvDOVCBndXujtmBZ1EXkYoK3F0Fdiuq2tQ18X0A9hGgARgBS4bdCFISYIyfkQSBRNfYRWFmIKeUcBxkQYf6PnJ4BrMZo9vssCdKsrsG9hIVgLFjkyI6wy735LE0kOD3CC+9eGcFyJ6VHQ+WQOjZLt2mIGhWYIdRyqPWatdB5MBdzItG2i2Ipk22C37x75vpXN2b1Wix3jlTTkdgyOcfXrppOoL4xaj5MDMGz35/XLV/yClgY5O15Kui6kRs0nbxRjSXh2ZveGeIQe3+QHzfm0bXHMWjxHapgZInvo/JZ3Ttu+jwBxTRvfUwR+PAdg69W+E2gXl8RWT3EyakQwllx7mwYRq6CU6rvnl6ydIGMY52Ke0lG3eIrhBnezFE9tals6WxldgS28Qmqi4xL2WRusRs6czlaeWEfdGQApwhhnKWGJPxZGQaVixMNPAnS7S4uEKtRhc0GldUqPVOhRT1UhKpZ0jUf7Sm8xvKI66ftq5fT546vLk88Ax5LNPqD/qTGwrU63Vb1xQIKjcXSCsIlL6RzR5HAgLiUKD+2W5VIMv1idebZRP9PVSrX4BqCG5NtVKWuXOUIt81DuWsiBxihyF2siyiHebzVHsh2qCmyah7ODuIg30c+OLfz9PBIh0kk45RPOs8XUK6Zg56u2pBbqYOL6qXUkcrESfGGCI2x5ts9V6mmNxhSLE4RmKORq5maOZEj84jZ6XL5fxC+QtaadVa6U92WW6zJeKFZY92OpHwFw4rKzxu5jDlv3aYljWG9q8cpgFwXU+9XC15SvHZzxgtREMkkGlnMh2Zr1ZMyfwYDGIglYReWSB4seASSYJnfR1yRn+jOAP51Ee5pCShUGQw7C8FoCXRhIps1q2q4IU8R0VeeiLHi8rDrot8gSXZ8YqPp/VikoOwxOV5N34kyVW334Z9nWN90bQebM8aDddGyauCknoCfIF64vTC5xr1RCnVxXIiT3Uofmu12ucmGpZ4+nLPI6VMF9NqiakHX8DU9Qs+j4gweQsaZafkVTI0/wA=</diagram><diagram id="zCNZDx2-F9tS3jyGKbsN" name="meminit">5VnbdqIwFP0aH+vijj6iYEun1i7Eae3LLCopMIPEwXjr10+QRK622FVFO32wySY5mL13OCfY4LvT9XVozdw+tIHf4Bh73eDVBse1JBF/RsAmBkSGjwEn9OwYYhNg6L0BAjIEXXg2mGcGIgh95M2y4AQGAZigDGaFIVxlh71CP3vXmeWAAjCcWH4RffRs5JJliUyC3wDPcemdWYZcmVp0MAHmrmXDVQritQbfDSFEcWu67gI/4o7y8suRbm/czXisXP3QWrfPq4G9uIqD9Q6ZsltCCAL06dDu3XD69rJaP/52Z62B/nfQ6QMyhVla/oLw1eAkH9+kY3tL3HSiZu/hWsGDOvo9/rzRFFUz6Ch8u9RAwhPaUPJDuAhsEH0BFl9euR4Cw5k1ia6usNsw5qKpTy6/er7fhT4Mt3N5WVMkjdlF/XD1hKUlCBFYp7QnbFwDOAUo3OAh5KpAnE2MzVJLrBKbcBLB3JRFBIJZxJnOLnLCPm4QAQ4Qgz1IDHNoGprSp8LEA1/CRIujK9SWVUaWT6hQu6JCLHcsibgDJNIH/dFTjfLg/dORpNPJI/C1y8MfIE9f6+v3ulmjQL2e2j6lQDxbu0BCQaBEhqHWNfVBlGOYqKc/a/ifcGGUS/QZRTmX6s4qYpU9sU+Fn8rdKJLhcWCow31bohCtIXaIfLipfoedlJdVYOqWVSqRNccoCGwlqqBxb+Jb87k3yZII1h56SrXHuM00RdJTo6UztLOhnQB/+ad0Z5zuJJO2PTrrMFnmcBFOwMePeWSFDkDvFVTkcQPszBmhqHJKRbFERIqFwLeQt8yeLMqUJXd4gB5eb/I4lnP1TCtnjnjhZFa6lM8HYrKBcGXUbKf/smFjngpht7bbkfB5J8rn5ET2TJ0on5cTxayBxK9yosjkAh3Ze629yc1li8dXxRhHGc40Rl1zZGjvFn3JfArOCsnynemzvXkOZxyUdf8chfAPoOksgAHIZTgCzXE69AIHA2LSMyFOjeoVx+xJmhAnuVd/u/Vcz7ZBgLEk1Z7wfC0UMybPl1g8b8Uvy5jt6rWnqRgRqqiq8R1qUK7uYoWtXPdfEs+72p6m4arvJ47Hc7HYL+OZvWye+aovGo7Hc7H6LuO52WxeONNy7UwXq8sypu8vm2eh6puZ4/FcVkn9L+dJmp4+LONJCXEmVTwvZl20y/uHV/G5QHmbHbmKp/XJeZjvxEfIyuYTz8p8Ep/zjPxJ8+WrVZH9KvPhbvLrbDw8+Ymb1/4B</diagram><diagram id="0VLfFM8AdqEgVoO2ezs3" name="iomux">3VlZV+IwGP01PMpJmy7wWGlBjoN6WFQeK400M6HBELb59RNoQjdQ8Qh18KEmt1nIvTf5vkAFNiarFvOnYYcGiFR0EKwq0K3oes0yxXMDrGPABDAGxgwHMaQlQA//RRIEEp3jAM0yDTmlhONpFhzRKEIjnsF8xugy2+yVkuysU3+MCkBv5JMi+oQDHsplmSDBbxAeh2pmDcg3E181lsAs9AO6TEHQq8AGo5THpcmqgciGO8VL71Z7sqP7t2n08Nu5v20E8AVdxYM1j+myWwJDEf/y0DborK3V8OYtHNw+kkmzjTuR7AIWPplLviq6RcQk1wFeiOJ4U2w+tBzR6Lp9J543nuN6XdVKTJdqKHnia0U+o/MoQJsPoInXyxBz1Jv6o83bpXCbwEI+IfL1KyakQQll277Q9hzLA7tRP1y9ZGmBGEerlPaSjRaiE8TZWjSRbw3pbGlsTVlimdhEtyQWpixiSMyXzhzvRk7YFwUpwBFiaEeJ0e/1u57TUcLEDV9YosXJFarbLrDtMypU/6RCmn4qifQjJGrfdwbPJcoj9s+1ZZ1PHgOWLg88Qp6O12nftfslCtRsuvVzCgS10gUyCgKpXSJmBF2vJZ6Pzq+BJ/4b/9t2AFm6d9SWFlCsPdshxyiKAmeTZYnaiPizGR5lSUQrzJ9T5aEog6opa+5m6UBV1qoSiQ//nK4M05Wk07ameh0ny4zO2Qh9fFKjIJMeFsVLiWPu0UZhDBGf40U2qdwnmJzhgWKxjMQbdi6U1XKax+uRvdJZXH6gvMm0erWe/ssOy302Rrww7NZNOxK+bjD7RxmsapuleCwm+b3EzvpZZjSzHjK/y4wmyA10YvvVDob7UCteXpzuUBRE1jxo9Add792Qn/RX4FQBMmC903l6MFsQkYRn7T/jjP5BKkxFNEK5yCWhmQhzOBoLwExqfSpCnnulgwPBkIrg9Uq2ey/EQYAigSUh9Ix3K6MYCSHcY/C8Eb8tEtY/kXc4rtu9hLRDLzvt0Iq3JMW2dnFZHtzj7TPTXbz1FOm+EHNDUDrbh68wWWNXq9ULINwo/zQxPyBcWvsy+Ia10vku3hoV33cXd3qb5Z8nxTtUke4LOb2NE34jIqrJTzHxBSP5PQt6/wA=</diagram></mxfile>
+<mxfile host="65bd71144e" modified="2020-11-17T07:38:54.460Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.2 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="GAoVcgMEqF-ROpRbPiff" version="13.6.5" pages="4">
+    <diagram id="zs6TifJFR34dfvWJ820B" name="header">
+        <mxGraphModel dx="1026" dy="968" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-1" value="&lt;div&gt;FPGA BIN HEADER&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7EA6E0;" parent="1" vertex="1">
+                    <mxGeometry x="45" y="150" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-2" value="&lt;div&gt;FPGA BITSTREAM BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="1" vertex="1">
+                    <mxGeometry x="45" y="190" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-3" value="&lt;div&gt;FPGA IOMUX BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="1" vertex="1">
+                    <mxGeometry x="45" y="430" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-4" value="&lt;div&gt;FPGA MEMINIT BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="1" vertex="1">
+                    <mxGeometry x="45" y="310" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-5" value="FPGA BIN VERSION 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7EA6E0;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="220" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-6" value="BITSTREAM BIN SIZE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="260" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-7" value="BITSTREAM BIN CRC 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="300" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-8" value="MEMINIT BIN SIZE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="340" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-9" value="MEMINIT BIN CRC 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="380" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-10" value="IOMUX BIN SIZE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="420" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-11" value="RESERVED 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3B3B3;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="500" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-12" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="NZ37hKzB5TpYFF4TYw-a-1" target="NZ37hKzB5TpYFF4TYw-a-5" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="475" y="180" as="sourcePoint"/>
+                        <mxPoint x="405" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-13" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="1" source="NZ37hKzB5TpYFF4TYw-a-1" target="NZ37hKzB5TpYFF4TYw-a-11" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="455" y="580" as="sourcePoint"/>
+                        <mxPoint x="505" y="530" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-14" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;HEADER&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-15" value="&lt;div&gt;0x0000 0001&lt;/div&gt;&lt;div&gt;v0.1&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="685" y="220" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="YljPpI7rPf85vw6zAqOv-1" value="IOMUX BIN CRC 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="460" width="260" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="0i4zK8VX27Sp79aWL-fW" name="bitstream">
+        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="5lB93eU8rxpjtQvUX2yE-0"/>
+                <mxCell id="5lB93eU8rxpjtQvUX2yE-1" parent="5lB93eU8rxpjtQvUX2yE-0"/>
+                <mxCell id="8EctooYR8JWANznIS-aV-0" value="&lt;div&gt;FPGA BIN HEADER&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7EA6E0;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="45" y="150" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-1" value="&lt;div&gt;FPGA BITSTREAM BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="45" y="190" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-2" value="&lt;div&gt;FPGA IOMUX BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="45" y="430" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-3" value="&lt;div&gt;FPGA MEMINIT BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="45" y="310" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-5" value="BITSTREAM WORD 1 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="405" y="260" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-6" value="BITSTREAM WORD 2 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="405" y="300" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-11" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="5lB93eU8rxpjtQvUX2yE-1" source="8EctooYR8JWANznIS-aV-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="475" y="180" as="sourcePoint"/>
+                        <mxPoint x="405" y="219.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-12" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="5lB93eU8rxpjtQvUX2yE-1" source="8EctooYR8JWANznIS-aV-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="455" y="580" as="sourcePoint"/>
+                        <mxPoint x="405" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8EctooYR8JWANznIS-aV-13" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;BITSTREAM&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="-wLPI6ti6Y8MJahMRPuA-0" value="BITSTREAM WORD 0 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="405" y="220" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="-wLPI6ti6Y8MJahMRPuA-1" value="BITSTREAM WORDs ..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="405" y="340" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="-wLPI6ti6Y8MJahMRPuA-2" value="BITSTREAM WORD N 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                    <mxGeometry x="405" y="460" width="260" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="zCNZDx2-F9tS3jyGKbsN" name="meminit">
+        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="_g6JHhyYYA-KE8JZwOdu-0"/>
+                <mxCell id="_g6JHhyYYA-KE8JZwOdu-1" parent="_g6JHhyYYA-KE8JZwOdu-0"/>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-0" value="&lt;div&gt;FPGA BIN HEADER&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7EA6E0;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="45" y="150" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-1" value="&lt;div&gt;FPGA BITSTREAM BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="45" y="190" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-2" value="&lt;div&gt;FPGA IOMUX BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="45" y="430" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-3" value="&lt;div&gt;FPGA MEMINIT BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="45" y="310" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-4" value="MEMINIT SECTION 0 SIZE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="690" y="360" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-5" value="&lt;div&gt;MEMINIT SECTION 0 VALUE WORDS&lt;/div&gt;&lt;div&gt;[SIZE B]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="690" y="400" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-6" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" source="hLSmzbwxWjhp8OIqOBMe-3" target="hLSmzbwxWjhp8OIqOBMe-14" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="475" y="180" as="sourcePoint"/>
+                        <mxPoint x="405" y="219.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-7" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" source="hLSmzbwxWjhp8OIqOBMe-3" target="hLSmzbwxWjhp8OIqOBMe-17" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="455" y="580" as="sourcePoint"/>
+                        <mxPoint x="405" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;MEMINIT&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-9" value="MEMINIT SECTION 0 START ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="690" y="320" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-14" value="MEMINIT SECTION 0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="360" y="290" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-15" value="MEMINIT SECTION 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="360" y="330" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-16" value="MEMINIT SECTION ..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="360" y="370" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-17" value="MEMINIT SECTION N" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                    <mxGeometry x="360" y="410" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-18" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" source="hLSmzbwxWjhp8OIqOBMe-14" target="hLSmzbwxWjhp8OIqOBMe-9" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="690" as="sourcePoint"/>
+                        <mxPoint x="400" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-20" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" source="hLSmzbwxWjhp8OIqOBMe-14" target="hLSmzbwxWjhp8OIqOBMe-5" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="630" y="670" as="sourcePoint"/>
+                        <mxPoint x="690" y="510" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="0VLfFM8AdqEgVoO2ezs3" name="iomux">
+        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="SK1W7nOqpnPjAOKCd3be-0"/>
+                <mxCell id="SK1W7nOqpnPjAOKCd3be-1" parent="SK1W7nOqpnPjAOKCd3be-0"/>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-0" value="&lt;div&gt;FPGA BIN HEADER&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7EA6E0;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="45" y="150" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-1" value="&lt;div&gt;FPGA BITSTREAM BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="45" y="190" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-2" value="&lt;div&gt;FPGA IOMUX BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="45" y="430" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-3" value="&lt;div&gt;FPGA MEMINIT BIN&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="45" y="310" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-4" value="IOMUX 0 REG VALUE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="260" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-6" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="SK1W7nOqpnPjAOKCd3be-1" source="70My6xYHqhUKVlmFIiMn-2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="475" y="180" as="sourcePoint"/>
+                        <mxPoint x="405" y="219.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-7" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="SK1W7nOqpnPjAOKCd3be-1" source="70My6xYHqhUKVlmFIiMn-2" target="70My6xYHqhUKVlmFIiMn-16" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="455" y="580" as="sourcePoint"/>
+                        <mxPoint x="405" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;IOMUX&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-9" value="IOMUX 0 REG ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="220" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-12" value="IOMUX 1 REG VALUE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="340" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-13" value="IOMUX 1 REG ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="300" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-14" value="IOMUX REG VALUE ... 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="420" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-15" value="IOMUX REG ADDR ... 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="380" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-16" value="IOMUX N REG VALUE 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="500" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="70My6xYHqhUKVlmFIiMn-17" value="IOMUX N REG ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                    <mxGeometry x="405" y="460" width="260" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
