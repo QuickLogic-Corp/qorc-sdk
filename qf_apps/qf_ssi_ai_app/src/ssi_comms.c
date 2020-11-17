@@ -34,7 +34,7 @@
 
 xTaskHandle     xHandleTaskSSI;
 bool is_ssi_connected = false;
-const char ssi_connect_string[] = "connected";
+const char ssi_connect_string[] = "connect";
 int ssi_connect_string_len = sizeof(ssi_connect_string)-1;
 
 /* Control  task */
@@ -80,11 +80,7 @@ void ssi_publish_sensor_data( uint8_t *p_source, int ilen )
 {
 	if (is_ssi_connected)
 	{
-	  for (int k = 0; k < ilen; k++)
-	  {
-	  	dbg_hex8(p_source[k]);
-	  }
-	  dbg_nl();
+		uart_tx_raw_buf(DEBUG_UART, p_source, ilen);
 	}
 }
 

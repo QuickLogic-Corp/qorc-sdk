@@ -1,6 +1,6 @@
 # -*- mode: Makefile -*-
 
-all:  POWER SYSFLASH UTILS FPGA CLI DATABLOCKMANAGER
+all:  POWER SYSFLASH UTILS FPGA CLI DATABLOCKMANAGER SENSOR_DRIVERS
 
 .PHONY: SENSOR_FRAMEWORK
 SENSOR_FRAMEWORK:
@@ -9,8 +9,8 @@ SENSOR_FRAMEWORK:
 
 .PHONY: SENSOR_DRIVERS
 SENSOR_DRIVERS:
-	make -f makefiles/Makefile_FFE
-	make -f makefiles/Makefile_Hybrid
+#	make -f makefiles/Makefile_FFE
+#	make -f makefiles/Makefile_Hybrid
 	make -f makefiles/Makefile_M4
 
 

@@ -1,6 +1,6 @@
 {
-    "name": "QuickFeather Simple Stream",
-    "uuid": "10b1db20-48a5-4442-a40e-fc530b456c88",
+    "name": "QuickFeather SimpleStream",
+    "uuid": "10b1db20-48a5-4442-a40e-fc530b456c89",
     "collection_methods": [
         {
             "name": "live",

@@ -55,14 +55,14 @@ const char *SOFTWARE_VERSION_STR;
 /*
  * Global variable definition
  */
-
+#if 0
 I2C_Config i2c0config =
 {
   .eI2CFreq = I2C_400KHZ,    // 400kHz
   .eI2CInt = I2C_DISABLE,    // enabled interrupt
   .ucI2Cn = 0
 };
-
+#endif
 extern void qf_hardwareSetup();
 static void nvic_init(void);
 
@@ -92,8 +92,11 @@ int main(void)
     dbg_str( "##########################\n\n");
 	
 	dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+    HAL_Delay_Init();
 
-    HAL_I2C_Init(i2c0config);
+    // Initialize mCube MC3635 Accelerometer sensor device
+    //mc3635_init();
+    //HAL_I2C_Init(i2c0config);
     //CLI_start_task( my_main_menu );
     sensor_ssss_block_processor();
     StartSimpleStreamingInterfaceTask();

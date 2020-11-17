@@ -30,20 +30,27 @@
 #include "micro_tick64.h"
 #include "dbg_uart.h"
 #include "ssi_comms.h"
+#include "mc3635.h"
 
 /* User settable MACROs */
 
 /* This section defines MACROs that may be user modified */
 #define ADS1015_I2C_ADDR     (0x48)
 
+#define MC3635_I2C_ADDR      (0x4C)
+#define MC3635_XYZ_REG       (0x02)
+
 /* User modifiable sensor descriptor in JSON format */
 /* BEGIN JSON descriptor for the sensor configuration */
+//	"  \"ADS1015_CH3\":1"
+
 const char json_string_sensor_config[] = \
 "{"\
    "\"sample_rate\":100,"\
    "\"column_location\":{"\
-	"  \"NAU7802_Weight\":0,"\
-	"  \"ADS1015_CH3\":1"
+	"  \"AccelerometerX\":0,"\
+	"  \"AccelerometerY\":1,"\
+	"  \"AccelerometerZ\":2"\
    "}"\
 "}" ;
 /* END JSON descriptor for the sensor data */
@@ -59,6 +66,9 @@ void sensor_ssss_configure(void)
   static int sensor_ssss_configured = false;
 
   /*--- BEGIN User modifiable section ---*/
+  mc3635_init();
+  mc3635_set_sample_rate(sensor_ssss_config.rate_hz);
+  mc3635_set_mode(MC3635_MODE_CWAKE);
 
   NAU7802_begin(1, sensor_ssss_config.rate_hz);
   ADS1015_begin(ADS1015_I2C_ADDR);
@@ -90,6 +100,10 @@ int  sensor_ssss_acquisition_buffer_ready()
 
     /*--- BEGIN User modifiable section ---*/
 
+    /* Read accel data from MC3635 */
+    HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_XYZ_REG, (uint8_t *)p_dest, 6);
+    p_dest += 6;
+#if 0
     sensorValue = NAU7802_getReading();
     // Copy read sensor value to the data block in little-endian format
     // Sensor Value will be the 24-bit value
@@ -107,7 +121,7 @@ int  sensor_ssss_acquisition_buffer_ready()
     p_dest[1] = (adcValue>> 8) & 0xff;
     p_dest += 2;
     /*--- END of User modifiable section ---*/
-
+#endif
     int bytes_to_read = SENSOR_SSSS_CHANNELS_PER_SAMPLE * (SENSOR_SSSS_BIT_DEPTH/8) ;
 
     sensor_ssss_samples_collected += SENSOR_SSSS_CHANNELS_PER_SAMPLE;

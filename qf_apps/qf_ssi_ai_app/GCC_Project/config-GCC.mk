@@ -53,7 +53,8 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
                  -I"$(PROJ_ROOT)/Libraries/FPGA/inc"\
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" \
-                 -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" 
+                 -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635"
     
 
 # C compiler flags
@@ -96,3 +97,4 @@ export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial
 export S3GW_DRIVERS_DIR     = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 export DBP_DIR         = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor$(DIR_SEP)src
 export DBM_DIR        = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
+export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
