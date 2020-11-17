@@ -21,6 +21,7 @@
  *                                                          
  *=========================================================*/
 #include "Fw_global_config.h"
+#if (FEATURE_FLL_I2S_DEVICE == 1)
 
 #include <FreeRTOS.h>
 #include <semphr.h>
@@ -35,17 +36,39 @@
 
 //define the local clk  (i2s bit clock) only if not defined
 #ifndef FLL_I2S_LOCAL_CLK
-#define FLL_I2S_LOCAL_CLK  (1*1024*1000 + 4*32768) //for 16K sample rate = 2*32*16K = 1024000
+#define FLL_I2S_LOCAL_CLK  (1*1024*1000) //for 16K sample rate = 2*32*16K = 1024000
 #endif
 
+#ifndef FLL_SAMPLE_TIME
+#define FLL_SAMPLE_TIME  (10*1024) //=10ms at 16K sample rate
+#endif
+#ifndef FLL_SAMPLE_TIME
+#define FLL_GAP_TIME     (20*1024) //=10ms  at 16K sample rate
+#endif
+
+void enable_hsosc_dac_debug(void);
+void disable_hsosc_dac_debug(void);
+#if 0 //just for debug
+void HAL_FB_FLL_Enable(void) { return; }
+void HAL_FB_FLL_Disable(void) { return; }
+#else
 //Enable the FLL
 void HAL_FB_FLL_Enable(void) {
+  enable_hsosc_dac_debug();
+  S3x_Clk_Enable(S3X_FB_21_CLK);
+  S3x_Clk_Enable(S3X_FB_16_CLK);
   FB_FLL->CNTRL_REG = 1;
+  return;
 }
 //Disable the FLL
 void HAL_FB_FLL_Disable(void) {
   FB_FLL->CNTRL_REG = 0;
+  S3x_Clk_Disable(S3X_FB_21_CLK);
+  S3x_Clk_Disable(S3X_FB_16_CLK);
+  disable_hsosc_dac_debug();
+  return;
 }
+#endif
 //Set the Time in local clks to compare external and local clks
 void HAL_FB_FLL_Set_Sample_Time( int sample_count) {
   FB_FLL->SAMPLE_TIMER = sample_count;
@@ -73,10 +96,10 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
   
   // set the Local clk rate and wishbone clock rate
   S3x_Clk_Set_Rate(S3X_FB_21_CLK, FLL_I2S_LOCAL_CLK); //for 16K sample rate = 2*32*16K = 1024000
-  S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*1024*1000); //since no data transfer, keep it low
+  S3x_Clk_Set_Rate(S3X_FB_16_CLK, FLL_I2S_LOCAL_CLK); //since no data transfer, keep it low
 
-  S3x_Clk_Enable(S3X_FB_21_CLK);
-  S3x_Clk_Enable(S3X_FB_16_CLK);
+  //S3x_Clk_Enable(S3X_FB_21_CLK);
+  //S3x_Clk_Enable(S3X_FB_16_CLK);
 
   //Clear any pending interrupt of FPGA 
   NVIC_ClearPendingIRQ(FbMsg_IRQn);
@@ -96,7 +119,7 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
   NVIC_EnableIRQ(FbMsg_IRQn);
 
   //Enable the FLL by default
-  HAL_FB_FLL_Enable();
+  //HAL_FB_FLL_Enable();
   
   return;
 }
@@ -145,30 +168,30 @@ int get_hsosc_dac(void)
   //printf("OSC_DAC = 0x%8x \n", bits);
   return bits & 0x1ff;
 }
-inline void enable_hsosc_dac_debug(void)
+void enable_hsosc_dac_debug(void)
 {
   AIP->OSC_CTRL_3 = 0; //monitor disable, refok = 0
   AIP->RTC_CTRL_1 = 0x1F;//1K divider
 }
-inline void disable_hsosc_dac_debug(int rate)
+void disable_hsosc_dac_debug(void)
 {
+  int rate = 0x1F; // ???
   AIP->OSC_CTRL_3 = 0x8; //monitor enable, refok = 0
   AIP->RTC_CTRL_1 = rate;//1K divider
-  
 }
 
 void slow_down_ISR(void)
 {
     int bits, bits2;
-    enable_hsosc_dac_debug();
+    //enable_hsosc_dac_debug();
     bits = get_hsosc_dac();
     bits2 = (bits - 1) & 0x1FF;
     if(bits2 < bits)
     {
       set_hsosc_dac(bits2);
     }
-    int rate = 0x1F; // ???
-    disable_hsosc_dac_debug( rate);
+    //int rate = 0x1F; // ???
+    //disable_hsosc_dac_debug( rate);
     
     return;
 }
@@ -176,15 +199,17 @@ void slow_down_ISR(void)
 void speed_up_ISR(void)
 {
     int bits, bits2;
-    enable_hsosc_dac_debug();
+    //enable_hsosc_dac_debug();
     bits = get_hsosc_dac();
     bits2 = (bits + 1) & 0x1FF;
     if(bits2 > bits)
     {
       set_hsosc_dac(bits2);
     }
-    int rate = 0x1F; // ???
-    disable_hsosc_dac_debug( rate);
+    //int rate = 0x1F; // ???
+    //disable_hsosc_dac_debug();
     
     return;
 }
+
+#endif // FEATURE_FLL_I2S_DEVICE

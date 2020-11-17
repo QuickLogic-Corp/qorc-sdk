@@ -166,29 +166,39 @@ extern int FPGA_FFE_LOADED;
 
 #define EN_STEREO_DUAL_BUF 1 //0= use stereo data interleaved
 
-#define ENABLE_I2S_TX_SLAVE 0
+#define ENABLE_I2S_TX_SLAVE (1) //Audio data is streamed on I2S interface also
+
+//These are for I2S stream options used by the I2S Task
+#define ENABLE_I2S_STEREO_TRANSMIT 0 //0 = mono channel transmit, 1 =stereo
+#define ENABLE_I2S_48K_TRANSMIT    0 //0 = 16K samples, 1 = 48K 
+#define I2S_DMA_BUFFER_COUNT      (4)//must be >=2 for continuous I2S stream
+
+
 #define QL_XPORT_INCLUDE_HEADER (0) //(1)
 
-#define ENABLE_HOST_IF (1)
-
-#if (ENABLE_I2S_TX_SLAVE == 1)
-#undef ENABLE_HOST_IF
-#endif
-
-
-#if (ENABLE_HOST_IF == 1)
-#define VM1010_MIC_BOARD    (0)
-#define ENABLE_OPUS_TX (1)
-
-#if (ENABLE_OPUS_TX == 0)
 #define ENABLE_RAW_TX_SPI   (1)
 #define ENABLE_OPUS_ENCODER (0)
-#else
-#define ENABLE_RAW_TX_SPI   (1)
-#define ENABLE_OPUS_ENCODER (0)
-#endif
 
-#endif  // ENABLE_HOST_IF
+//#define ENABLE_HOST_IF (1)
+
+//#if (ENABLE_I2S_TX_SLAVE == 1)
+//#undef ENABLE_HOST_IF
+//#endif
+
+
+//#if (ENABLE_HOST_IF == 1)
+//#define VM1010_MIC_BOARD    (0)
+//#define ENABLE_OPUS_TX (1)
+
+//#if (ENABLE_OPUS_TX == 0)
+//#define ENABLE_RAW_TX_SPI   (1)
+//#define ENABLE_OPUS_ENCODER (0)
+//#else
+//#define ENABLE_RAW_TX_SPI   (1)
+//#define ENABLE_OPUS_ENCODER (0)
+//#endif
+
+//#endif  // ENABLE_HOST_IF
 
 
 /* Fs = Audio sampling rate */

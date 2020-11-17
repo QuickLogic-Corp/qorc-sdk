@@ -43,6 +43,12 @@
 #include <eoss3_hal_audio.h>
 #include "ql_controlTask.h"
 #include "ww_metadata.h"
+#if (ENABLE_I2S_TX_SLAVE == 1)
+#include "ql_i2sTxTask.h"
+#endif
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+#include "eoss3_hal_fpga_FLL.h"
+#endif
 ///////////// Debug Trace ////////////////////////////////
 #include "dbgtrace.h"
 #define     K_DBGTRACE_HIF  200
@@ -271,8 +277,11 @@ static void SendEventKPDetected(hif_channel_info_t* p_hif_channel_info, uint8_t 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
+#if (ENABLE_I2S_TX_SLAVE == 1)
+int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info);
+  
+#endif
+////////////////////////////////////////////////////////////////////////////////////////
 static void stop_audio_streaming(hif_channel_info_t *p_hif_channel_info)
 {
   if (isStreamingOn())
@@ -312,6 +321,10 @@ void hostIfTaskHandler(void *pParameter)
   int  payload_address ;
   memset(&receivedMsg,0,sizeof(struct xQ_Packet));
 
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+   HAL_FB_FLL_Init((HAL_FBISRfunction )NULL, (HAL_FBISRfunction)NULL);
+#endif
+  
   //////////////////////////////////////////////////////////////////
   /* Start of while loop */
   while(1)
@@ -352,6 +365,12 @@ void hostIfTaskHandler(void *pParameter)
           /* Parse input message and process the request */
           switch( receivedMsg.ucCommand ) {
           case MESSAGE_STOP_TX:
+#if (ENABLE_I2S_TX_SLAVE == 1)
+            stop_i2sTx();
+#endif
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+            HAL_FB_FLL_Disable();
+#endif
             stop_audio_streaming(p_hif_channel_info);
             handle_led_for_audio_stop();
             ControlEventSend(CEVENT_HIF_EOT);
@@ -439,7 +458,16 @@ printf("Recd %d command\n",icommand);
       hif_command_table[k].pcommand_func(&rx_pkt_info, sizeof(rx_pkt_info));
     }
     if(icommand == CMD_HOST_READY_TO_RECEIVE)
+    {
       streamingOn = true;
+#if (ENABLE_I2S_TX_SLAVE == 1)
+      start_i2sTx(0); //0=use default value for start blk count
+#endif
+#if (FEATURE_FLL_I2S_DEVICE == 1)
+      HAL_FB_FLL_Enable();
+#endif
+      
+    }
 
     stTemp.data_read_req = 0;
     return stTemp;
@@ -753,6 +781,12 @@ void    hif_release_inputQ(void) {
 void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
     BaseType_t  xResult;
     uint16_t     kbytes = 0;
+#if (ENABLE_I2S_TX_SLAVE == 1)
+     //send the data to stream on I2S interface
+     kbytes = send_to_i2s_task(p_hif_channel_info);
+     //timeout_count_bytes += kbytes;
+     
+#else //send the data over SPI interface 
 
     //send 4 blocks
     if (uxQueueMessagesWaiting(q_id_inQ_hif) >= D2H_NUM_AUDIO_BLOCKS_TO_SEND) {
@@ -779,6 +813,8 @@ void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
             timeout_count_bytes += kbytes;
         }
     }
+#endif //ENABLE_I2S_TX_SLAVE    
+    
 #if (STREAM_KP_DETECT_ENABLE == 1) //after ~2sec of data streamed, re-enable VR
 extern void enable_stream_VR(void);
     if(timeout_count_bytes >= (2*16000*2))
@@ -801,8 +837,46 @@ extern void enable_stream_VR(void);
       hifcb_cmd_host_process_off((void *)0, 0);
 
     }
-#endif    
+#endif
+    
 }
+#if (ENABLE_I2S_TX_SLAVE == 1)
+int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
+    BaseType_t  xResult;
+    int waiting_blocks = 0;
+    int kbytes = 0;
+    hif_channel_info_t* p_ci = p_hif_channel_info;
+    
+    //need to take the g_host_ready_lock, will be given in 
+    // hifcb_cmd_host_ready_to_receive() every time Host is ready
+    if (p_ci->firstTime == 0){
+      p_ci->firstTime = 1;
+      dbgtrace(__LINE__, 0, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
+      if (xSemaphoreTake(g_host_ready_lock, portMAX_DELAY) != pdTRUE){
+        dbgtracePrint(adbgtraceHIF, K_DBGTRACE_HIF, idbgtraceHIF);
+        dbg_fatal_error("[host interface] : Error unable to take lock to g_host_ready_lock\n");
+      }
+    }
+
+    //send the block to i2s queue
+    waiting_blocks = uxQueueMessagesWaiting(q_id_inQ_hif);
+    while (waiting_blocks >= 1) {
+        // Check i2s queue availability
+        if (check_i2s_space_available() > 0) {
+            QAI_DataBlock_t* pdatablk;
+            xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
+            configASSERT(xResult != pdFAIL);
+            addDatablkToQueue_I2S(pdatablk); //will be released by i2s task after use
+            waiting_blocks--;
+            kbytes += (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize);
+        } else {
+          break; //if no space stop
+        }
+    }
+
+    return kbytes;
+}
+#endif
 
 
 void hif_msg_sendOpusBlockReady(QAI_DataBlock_t *pdata_block)

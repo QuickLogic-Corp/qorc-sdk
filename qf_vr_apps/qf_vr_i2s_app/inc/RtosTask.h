@@ -114,4 +114,10 @@ extern signed portBASE_TYPE StartRtosTaskADC( void);
 #define STACK_SIZE_TASK_D2H_RX            (256)
 extern xTaskHandle xHandleTaskD2HRx;
 extern QueueHandle_t D2HRx_MsgQ;
+
+#define PRIORITY_TASK_I2S     PRIORITY_HIGH
+#define STACK_SIZE_TASK_I2S  (256)
+extern xTaskHandle xHandleTaskI2S;
+extern QueueHandle_t I2SDataQ;
+
 #endif /* __RTOSTASK_H__ */

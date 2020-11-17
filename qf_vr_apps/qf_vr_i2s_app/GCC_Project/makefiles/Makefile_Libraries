@@ -1,6 +1,6 @@
 # -*- mode: Makefile -*-
 
-all: POWER CMSIS UTILS DATABLOCKMANAGER D2HPROTOCOL AUDIO
+all: POWER CMSIS UTILS DATABLOCKMANAGER D2HPROTOCOL AUDIO FPGA
 
 
 .PHONY: POWER
@@ -29,6 +29,10 @@ D2HPROTOCOL:
 AUDIO:
 	make -f makefiles/Makefile_Audio
 
+.PHONY: FPGA
+FPGA:
+	make -f makefiles/Makefile_FPGA
+
 clean:
 	make -f makefiles/Makefile_Power clean
 	make -f makefiles/Makefile_Utils clean
@@ -38,4 +42,4 @@ clean:
 	make -f makefiles/Makefile_DatablockManager clean
 	make -f makefiles/Makefile_D2HProtocol clean
 	make -f makefiles/Makefile_Audio clean
-
+	make -f makefiles/Makefile_FPGA clean

@@ -24,7 +24,7 @@ _makedirs_:
 	@echo Starting Build ...
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control
+external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control I2S s3gw_drivers
 	@echo "External sources built"
 
 .PHONY: Appdir
@@ -121,6 +121,22 @@ clean_Control:
 	make -f makefiles/Makefile_Control clean
 
 CLEAN_TARGET += Control
+
+.PHONY:I2S
+I2S:
+	make -f makefiles/Makefile_I2S
+clean_I2S:
+	make -f makefiles/Makefile_I2S clean
+
+CLEAN_TARGET += I2S
+
+.PHONY:s3gw_drivers
+s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers
+clean_s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers clean
+
+CLEAN_TARGET += s3gw_drivers
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

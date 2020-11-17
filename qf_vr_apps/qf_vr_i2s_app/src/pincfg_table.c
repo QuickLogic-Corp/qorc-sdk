@@ -250,36 +250,36 @@ PadConfig pincfg_table[] =
 #if (ENABLE_I2S_TX_SLAVE == 1)
   { 
     /* WD_CLK left/right sync clock */
-    .ucPin = PAD_23;
-    .ucFunc = PAD23_FUNC_SEL_AP_I2S_WD_CLK_IN;
-    .ucCtrl = PAD_CTRL_SRC_A0;
-    .ucMode = PAD_MODE_INPUT_EN;
-    .ucPull = PAD_PULLUP;
-    .ucDrv = PAD_DRV_STRENGHT_4MA;
-    .ucSpeed = PAD_SLEW_RATE_SLOW;
-    .ucSmtTrg = PAD_SMT_TRIG_DIS;
+    .ucPin = PAD_23,
+    .ucFunc = PAD23_FUNC_SEL_AP_I2S_WD_CLK_IN,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_PULLUP,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
   {
     /* I2S DOUT for Tx */
-    .ucPin = PAD_24;
-    .ucFunc = PAD24_FUNC_SEL_AP_I2S_DOUT;
-    .ucCtrl = PAD_CTRL_SRC_A0;
-    .ucMode = PAD_MODE_OUTPUT_EN;
-    .ucPull = PAD_PULLUP;
-    .ucDrv = PAD_DRV_STRENGHT_4MA;
-    .ucSpeed = PAD_SLEW_RATE_SLOW;
-    .ucSmtTrg = PAD_SMT_TRIG_DIS;
+    .ucPin = PAD_24,
+    .ucFunc = PAD24_FUNC_SEL_AP_I2S_DOUT,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_PULLUP,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
   {
     /* I2S CLK IN from master */
-    .ucPin = PAD_31;
-    .ucFunc = PAD31_FUNC_SEL_AP_I2S_CLK_IN;
-    .ucCtrl = PAD_CTRL_SRC_A0;
-    .ucMode = PAD_MODE_INPUT_EN;
-    .ucPull = PAD_PULLUP;
-    .ucDrv = PAD_DRV_STRENGHT_4MA;
-    .ucSpeed = PAD_SLEW_RATE_SLOW;
-    .ucSmtTrg = PAD_SMT_TRIG_DIS;
+    .ucPin = PAD_31,
+    .ucFunc = PAD31_FUNC_SEL_AP_I2S_CLK_IN,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_PULLUP,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
 #if (FEATURE_D2HPROTOCOL_DEVICE == 1)  
@@ -324,7 +324,7 @@ PadConfig pincfg_table[] =
   },
 #endif
 #if (FEATURE_FLL_I2S_DEVICE == 1)
-#if 1  
+#if 1
   { // Pad 10 -- I2S master-in clk
     .ucPin = PAD_10,
     .ucFunc = PAD10_FUNC_SEL_FBIO_10,
