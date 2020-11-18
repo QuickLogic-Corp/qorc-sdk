@@ -51,7 +51,7 @@ void ssiTaskHandler(void *pParameter)
 	while (is_ssi_connected == false)
 	{
 		// Send the JSON string
-		vTaskDelay(100);
+		vTaskDelay(1000);
 		uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
 	    //dbg_nl();
 		while (uart_rx_available(UART_ID_SSI))

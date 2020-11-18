@@ -44,7 +44,7 @@
 #define uartHandlerUpdate(id,x)
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
-#define FEATURE_USBSERIAL   1       // USBSERIAL port is present
+#define FEATURE_USBSERIAL   0       // USBSERIAL port is present
 
 // Options for debug output -- use to set DEBUG_UART below
 // #define UART_ID_DISABLED     0   // /dev/null */
@@ -54,7 +54,7 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART  UART_ID_USBSERIAL  // Write data to USB serial port
+#define DEBUG_UART  UART_ID_BUFFER  // Write data to USB serial port
      
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
