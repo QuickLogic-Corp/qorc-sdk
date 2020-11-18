@@ -112,6 +112,10 @@ void print_kp_detect_info(int count) {
   char kp_count_buf[10];
   int count_size = sprintf(kp_count_buf, "%d. ",count);
   
+  //USB serial might have disconnected
+  if(disable_usb_prints)
+    return;
+  
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_info_buf, sizeof(kp_info_buf)); 
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_count_buf, count_size);
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_info_buf2, sizeof(kp_info_buf2));
@@ -123,6 +127,10 @@ void print_kp_end_info(int count) {
   int count_size = sprintf(sample_count_buf, "%d. ",count);
   sample_count_buf[count_size++] = '\n';
   sample_count_buf[count_size++] = '\n';
+
+  //USB serial might have disconnected
+  if(disable_usb_prints)
+    return;
   
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_info_buf3, sizeof(kp_info_buf3)); 
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)sample_count_buf, count_size);
