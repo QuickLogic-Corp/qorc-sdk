@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e" modified="2020-11-17T07:38:54.460Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.2 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="GAoVcgMEqF-ROpRbPiff" version="13.6.5" pages="4">
+<mxfile host="65bd71144e" modified="2020-11-20T15:38:42.436Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.2 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="k9tupLmSiBLrVlj1GhCk" version="13.6.5" pages="4">
     <diagram id="zs6TifJFR34dfvWJ820B" name="header">
-        <mxGraphModel dx="1026" dy="968" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="1026" dy="968" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="1">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -49,7 +49,7 @@
                         <mxPoint x="505" y="530" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="NZ37hKzB5TpYFF4TYw-a-14" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;HEADER&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                <mxCell id="NZ37hKzB5TpYFF4TYw-a-14" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;&lt;font style=&quot;font-size: 18px&quot;&gt;HEADER&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="NZ37hKzB5TpYFF4TYw-a-15" value="&lt;div&gt;0x0000 0001&lt;/div&gt;&lt;div&gt;v0.1&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" parent="1" vertex="1">
@@ -62,7 +62,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="0i4zK8VX27Sp79aWL-fW" name="bitstream">
-        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="989" dy="613" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="5lB93eU8rxpjtQvUX2yE-0"/>
                 <mxCell id="5lB93eU8rxpjtQvUX2yE-1" parent="5lB93eU8rxpjtQvUX2yE-0"/>
@@ -96,7 +96,7 @@
                         <mxPoint x="405" y="500" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="8EctooYR8JWANznIS-aV-13" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;BITSTREAM&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
+                <mxCell id="8EctooYR8JWANznIS-aV-13" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;&lt;font style=&quot;font-size: 18px&quot;&gt;BITSTREAM&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
                     <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="-wLPI6ti6Y8MJahMRPuA-0" value="BITSTREAM WORD 0 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#97D077;" parent="5lB93eU8rxpjtQvUX2yE-1" vertex="1">
@@ -112,7 +112,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="zCNZDx2-F9tS3jyGKbsN" name="meminit">
-        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="989" dy="613" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="_g6JHhyYYA-KE8JZwOdu-0"/>
                 <mxCell id="_g6JHhyYYA-KE8JZwOdu-1" parent="_g6JHhyYYA-KE8JZwOdu-0"/>
@@ -146,7 +146,7 @@
                         <mxPoint x="405" y="500" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="hLSmzbwxWjhp8OIqOBMe-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;MEMINIT&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
+                <mxCell id="hLSmzbwxWjhp8OIqOBMe-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;&lt;font style=&quot;font-size: 18px&quot;&gt;MEMINIT&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
                     <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="hLSmzbwxWjhp8OIqOBMe-9" value="MEMINIT SECTION 0 START ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD966;" parent="_g6JHhyYYA-KE8JZwOdu-1" vertex="1">
@@ -180,7 +180,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="0VLfFM8AdqEgVoO2ezs3" name="iomux">
-        <mxGraphModel dx="513" dy="484" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="989" dy="613" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="SK1W7nOqpnPjAOKCd3be-0"/>
                 <mxCell id="SK1W7nOqpnPjAOKCd3be-1" parent="SK1W7nOqpnPjAOKCd3be-0"/>
@@ -211,7 +211,7 @@
                         <mxPoint x="405" y="500" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="70My6xYHqhUKVlmFIiMn-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;IOMUX&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
+                <mxCell id="70My6xYHqhUKVlmFIiMn-8" value="&lt;h1&gt;FPGA BINARY STRUCTURE&lt;br&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;&lt;font style=&quot;font-size: 18px&quot;&gt;IOMUX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">
                     <mxGeometry x="45" y="40" width="330" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="70My6xYHqhUKVlmFIiMn-9" value="IOMUX 0 REG ADDR 4B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EA6B66;" parent="SK1W7nOqpnPjAOKCd3be-1" vertex="1">

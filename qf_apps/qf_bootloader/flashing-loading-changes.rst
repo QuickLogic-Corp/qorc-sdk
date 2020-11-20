@@ -231,13 +231,34 @@ Phase 1
 - files changed/added :
 
   - bitstream_to_header.py
-  - eos_s3_iomux_config.py
-  - (new) bitstream_to_binary.py
-  - ql_symbiflow
-  - symbiflow_generate_constraints
-  - (new) symbiflow_write_binary
+    [https://github.com/QuickLogic-Corp/quicklogic-fasm]
+    && update submodule version inside
+    [https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/utils]
 
-- PR : branch :code:`fpga-bootloading-changes-phase-1`
+  - eos_s3_iomux_config.py
+    [https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/utils]
+
+  - (new) bitstream_to_binary.py
+    [https://github.com/QuickLogic-Corp/quicklogic-fasm]
+    && update submodule version inside
+    [https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/utils]
+
+  - ql_symbiflow
+    [https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/toolchain_wrappers]
+
+  - symbiflow_generate_constraints
+    [https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/toolchain_wrappers]
+
+  - (new) symbiflow_write_binary
+    [will go into https://github.com/QuickLogic-Corp/symbiflow-arch-defs/tree/quicklogic-upstream-rebase/quicklogic/common/toolchain_wrappers]
+
+- PRs :
+
+  - checkin changes to https://github.com/QuickLogic-Corp/quicklogic-fasm branch :code:`fpga-bootloading-changes-phase-1`
+  - raise PR 1 to merge to master
+  - once that is merged into master, checkin changes to https://github.com/QuickLogic-Corp/symbiflow-arch-defs branch :code:`fpga-bootloading-changes-phase-1` (includes quicklogic-fasm submodule update)
+  - raise PR 2 to merge to quicklogic-upstream-rebase
+  - once the PR 2 is merged, then Symbiflow minor version revision should ideally have a release?
 
 The order of changes should preferaby be:
 
