@@ -16,9 +16,9 @@
 
 /*==========================================================
 *                                                          
-*    File   : usb_fpga_loader.c 
-*    Purpose: This file has function to load USB FPGA image 
-*             from the Flash and wait for reset 
+*    File   : appfpga_loader.c 
+*    Purpose: This file has function to load App FPGA image 
+*             from the Flash
 *                                                          
 *=========================================================*/
 
@@ -101,7 +101,7 @@ int load_appfpga(void)
   read_flash((unsigned char *)FLASH_APPFPGA_ADDRESS, image_size, bufPtr);
   
   //check crc
-  if(check_fpga_crc(image_size, image_crc) == BL_ERROR)
+  if(check_appfpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
 
   S3x_Clk_Disable(S3X_FB_21_CLK);
@@ -112,7 +112,7 @@ int load_appfpga(void)
 
   // The FPGA bin now contains HEADER + BITSTREAM + MEMINIT + IOMUX
   // HEADER = 8 x 4B
-  fpga_bin_header = bufPtr;
+  fpga_bin_header = (uint32_t*)bufPtr;
   fpga_bin_header_size = 8*4; // 32B
 
   fpga_bin_version = *(fpga_bin_header);
