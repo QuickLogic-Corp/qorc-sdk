@@ -38,6 +38,7 @@
 extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
 extern int load_m4app(void);
 extern int load_usb_flasher(void);
+extern int load_appfpga(void);
 int check_appfpga_m4app_metadata(void);
 
 #define MAX_BOOTLOADER_WAIT_MSEC  (5*1000)
@@ -222,6 +223,7 @@ static void BLTaskHandler(void *pvParameters)
         int metadata_state = check_appfpga_m4app_metadata();
         if(metadata_state == METADATA_M4APP_IS_FLASHED)
         {
+            dbg_str("Loading M4 Application...\r\n");
             int error = load_m4app(); //this should never return
             //if the M4 image is corrupted it needs to be re-flashed. wait indefinitely
             while(1)
@@ -236,6 +238,7 @@ static void BLTaskHandler(void *pvParameters)
         }
         else if(metadata_state == METADATA_APPFPGA_IS_FLASHED)
         {
+            dbg_str("Loading Application FPGA...\r\n");
             int error = load_appfpga(); // this should never return
 
             while(1)
@@ -243,7 +246,7 @@ static void BLTaskHandler(void *pvParameters)
                 //set red LED for error and turn off green LED
                 set_boot_error_led(1);
                 set_downloading_led(0);
-                dbg_str("ERROR loading M4 APP. Waiting for re-flashing .. \n");
+                dbg_str("ERROR loading App FPGA. Waiting for re-flashing .. \n");
                 dbg_str("Press Reset then User Button and start Flash script .. \n\n");
                 vTaskDelay(5*1000);
             }
@@ -253,7 +256,7 @@ static void BLTaskHandler(void *pvParameters)
             //set red LED for error and turn off green LED
             set_boot_error_led(1);
             set_downloading_led(0);
-            dbg_str("ERROR No M4 APP or APPFPGA found. Waiting for re-flashing .. \n");
+            dbg_str("ERROR No M4 APP or App FPGA found! Waiting for re-flashing .. \n");
             dbg_str("Press Reset then User Button and start Flash script .. \n\n");
             vTaskDelay(5*1000);
         }
@@ -273,6 +276,10 @@ int check_appfpga_m4app_metadata()
     image_crc = image_metadata[0];
     image_size = image_metadata[1];
 
+    //dbg_str("app FPGA META\r\n");
+    //dbg_hex32(image_crc);dbg_str("\r\n");
+    //dbg_hex32(image_size);dbg_str("\r\n");
+
     if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
     {
         return METADATA_APPFPGA_IS_FLASHED;
@@ -281,6 +288,10 @@ int check_appfpga_m4app_metadata()
     read_flash((unsigned char *)FLASH_APP_META_ADDRESS, FLASH_APP_META_SIZE, bufPtr);
     image_crc = image_metadata[0];
     image_size = image_metadata[1];
+
+    //dbg_str("M4 App META\r\n");
+    //dbg_hex32(image_crc);dbg_str("\r\n");
+    //dbg_hex32(image_size);dbg_str("\r\n");
     
     if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
     {

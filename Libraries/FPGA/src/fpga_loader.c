@@ -214,7 +214,8 @@ int load_fpga_with_mem_init(uint32_t image_size, uint32_t* image_ptr, uint32_t m
 	// set IO_19 back to POR configuration
 	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
 
-	//printf("FPGA is programmed\r\n");	
+	//printf("FPGA is programmed\r\n");
+    	
 
 	return 1;
 }
@@ -272,6 +273,9 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
     // process all mem blocks
     while(1)
     {
+        //dbg_int(current_index);dbg_str("\r\n");
+        //dbg_hex32((uint32_t *)mem_content_ptr[current_index]);dbg_str("\r\n");
+        
         // read block_addr and block_size_in_words
         current_block_addr = (uint32_t *)mem_content_ptr[current_index++];
         current_block_size_in_words = mem_content_ptr[current_index++];
@@ -287,9 +291,9 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
             // readback-verify
             if(*current_block_addr != mem_content_ptr[current_index + current_block_iterator])
             {
-                printf("MISMATCH! addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
-                                                                        *current_block_addr,
-                                                                        mem_content_ptr[current_index + current_block_iterator]);
+                //printf("MISMATCH! addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
+                //                                                        *current_block_addr,
+                //                                                        mem_content_ptr[current_index + current_block_iterator]);
                 return -1;
                                                                         
             }
@@ -345,7 +349,7 @@ int fpga_iomux_init(uint32_t iomux_size, uint32_t* iomux_ptr)
         reg_val = (*iomux_ptr);
         iomux_ptr++;
 
-        printf("setting 0x%08x = 0x%08x\r\n", (uint32_t)reg_addr, reg_val);
+        //printf("setting 0x%08x = 0x%08x\r\n", (uint32_t)reg_addr, reg_val);
 
         *reg_addr = reg_val;
     }
