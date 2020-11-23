@@ -35,12 +35,14 @@
 #include "eoss3_hal_rtc.h"
 #include "eoss3_hal_fpga_usbserial.h"
 #include "eoss3_hal_i2c.h"
+#include "eoss3_hal_timer.h"
 #include "ql_time.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
 #include "s3x_pi.h"
 #include "dbg_uart.h"
-
+#include "sensor_ssss.h"
+#include "ssi_comms.h"
 #include "cli.h"
 
 #include "fpga_loader.h"    // API for loading FPGA
