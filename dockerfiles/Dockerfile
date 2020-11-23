@@ -1,4 +1,4 @@
-ARG PARENT_IMAGE="symbiflow-ql:latest"
+ARG PARENT_IMAGE="docker.pkg.github.com/quicklogic-corp/quicklogic-fpga-toolchain/symbiflow-ql:1.3.0"
 FROM ${PARENT_IMAGE}
 
 WORKDIR /opt
@@ -19,6 +19,21 @@ ENV PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux:$PATH
 #
 # The above will execute bash within the running container.  Any
 # tools called thru bash will run within the container.
+#
+# Test the container in the /root/qf_apps directory
+#
+# source ${INSTALL_DIR}/conda/etc/profile.d/conda.sh
+# conda activate
+# 
+# cd /root/qf_apps
+# make
+#
+# When you are finished, you may want to clean the qf_apps directory
+# because this container runs as root, which means files are created
+# as the root user, and they are difficult to remove as an ordinary user.
+#
+# make clean
+# exit
 #
 # This container image intentionally does not add a user or entrypoint.
 # This allows easy use of this container as a parent image for adapting

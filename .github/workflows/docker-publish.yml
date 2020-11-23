@@ -22,7 +22,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
   
       - name: Build image
-        run: docker build --build-arg PARENT_IMAGE=docker.pkg.github.com/thirsty2/quicklogic-fpga-toolchain/symbiflow-ql:1.3.0 ./dockerfiles --file ./dockerfiles/Dockerfile --tag $IMAGE_NAME
+        run: docker build --build-arg PARENT_IMAGE=docker.pkg.github.com/quicklogic-corp/quicklogic-fpga-toolchain/symbiflow-ql:1.3.0 ./dockerfiles --file ./dockerfiles/Dockerfile --tag $IMAGE_NAME
 
       - name: Push image
         run: |
