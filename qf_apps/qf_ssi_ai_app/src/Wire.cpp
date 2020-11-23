@@ -57,7 +57,7 @@ void TwoWire::beginTransmission(int device_address)
 
 uint8_t TwoWire::endTransmission(void)
 {
-	endTransmission(true);
+	return endTransmission(true);
 }
 
 uint8_t TwoWire::endTransmission(int stop)
@@ -79,11 +79,12 @@ int TwoWire::requestFrom(int address, int size, bool sendStop)
 		recv_buf_length = size;
 		recv_buf_index = 0;
 	}
+	return size;
 }
 
 int TwoWire::requestFrom(int address, int size)
 {
-    requestFrom(address, size, true);
+    return requestFrom(address, size, true);
 }
 
 int TwoWire::write(const uint8_t *p_source, int size)
