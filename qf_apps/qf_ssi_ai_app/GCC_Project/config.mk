@@ -114,9 +114,10 @@ exit
 endif
 
 export NM="$(TC_PATH)\arm-none-eabi-nm"
-export LD="$(TC_PATH)\arm-none-eabi-gcc"
+export LD="$(TC_PATH)\arm-none-eabi-g++"
 export AS="$(TC_PATH)\arm-none-eabi-gcc" -c
 export CC="$(TC_PATH)\arm-none-eabi-gcc" -c
+export CPLUSPLUS="$(TC_PATH)\arm-none-eabi-g++" -c
 export ELF2BIN="$(TC_PATH)\arm-none-eabi-objcopy"
 ################
 else
@@ -162,9 +163,10 @@ $(info ######  ERROR - TC_PATH is not defined in config.mk #########)
 exit
 endif
 export NM="$(TC_PATH)/arm-none-eabi-nm"
-export LD="$(TC_PATH)/arm-none-eabi-gcc"
+export LD="$(TC_PATH)/arm-none-eabi-g++"
 export AS="$(TC_PATH)/arm-none-eabi-gcc" -c
 export CC="$(TC_PATH)/arm-none-eabi-gcc" -c
+export CPLUSPLUS="$(TC_PATH)\arm-none-eabi-g++" -c
 export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
 ################
 endif

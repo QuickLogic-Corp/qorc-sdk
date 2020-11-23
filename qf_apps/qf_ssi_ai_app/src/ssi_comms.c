@@ -48,12 +48,13 @@ void ssiTaskHandler(void *pParameter)
 
 	memset(ssi_rxbuf, 0, sizeof(ssi_rxbuf));
     json_len = strlen(json_string_sensor_config);
-	while (is_ssi_connected == false)
+	while (1)
 	{
 		// Send the JSON string
 		vTaskDelay(1000);
+		if (is_ssi_connected == true)
+			continue;
 		uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
-	    //dbg_nl();
 		while (uart_rx_available(UART_ID_SSI))
 		{
 			char ch = uart_rx(UART_ID_SSI);
@@ -65,14 +66,12 @@ void ssiTaskHandler(void *pParameter)
 			if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
 			{
 				is_ssi_connected = true;
-				break;
+				// Simple Streaming Interface is connected to DCL
+				// this task may now be deleted
+				sensor_ssss_startstop(1);
 			}
 		}
 	}
-
-	// Simple Streaming Interface is connected to DCL
-	// this task may now be deleted
-	sensor_ssss_startstop(1);
 
 	vTaskDelete(NULL);
 }

@@ -194,7 +194,7 @@ header file. */
 	extern void save_assert_info(char* file, int line);\
 	extern void invoke_soft_fault(void);\
 	taskDISABLE_INTERRUPTS();\
-	save_assert_info(__FILE__,__LINE__);\
+	save_assert_info((char*)__FILE__,__LINE__);\
 	invoke_soft_fault();\
 };
 

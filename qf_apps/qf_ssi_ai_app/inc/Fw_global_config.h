@@ -25,6 +25,7 @@
 #define FW_GLOBAL_CONFIG_H_INCLUDED
 
 #include <stdint.h>
+#include "sec_debug.h"
 
 #define ENABLE_VOICE_SOLUTION   1
 
@@ -153,7 +154,7 @@ extern int FPGA_FFE_LOADED;
 /* stringize value */
 #define VALUE2STRING(value)    TOSTRING(value)
 #define TOSTRING(value)        #value
-#define SOURCE_LOCATION        __FILE__":"VALUE2STRING(__LINE__)
+#define SOURCE_LOCATION        __FILE__ ":" VALUE2STRING(__LINE__)
 
 /********************/
 

@@ -45,3 +45,5 @@ clean:
 	make -f makefiles/Makefile_FPGA clean
 	make -f makefiles/Makefile_cli clean
 	make -f makefiles/Makefile_DatablockManager clean
+	make -f makefiles/Makefile_M4 clean
+	

@@ -55,8 +55,8 @@ const char *SOFTWARE_VERSION_STR;
 /*
  * Global variable definition
  */
-#if 0
-I2C_Config i2c0config =
+#if 1
+static I2C_Config i2c0config =
 {
   .eI2CFreq = I2C_400KHZ,    // 400kHz
   .eI2CInt = I2C_DISABLE,    // enabled interrupt
@@ -73,6 +73,7 @@ int main(void)
     
     qf_hardwareSetup();
     nvic_init();
+#if (FEATURE_USBSERIAL == 1)
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
@@ -81,7 +82,7 @@ int main(void)
     // Use 0x6141 as USB serial product ID (USB PID)
     HAL_usbserial_init2(false, true, 0x6141);        // Start USB serial not using interrupts
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
-    
+#endif
     dbg_str("\n\n");
     dbg_str( "##########################\n");
     dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
@@ -96,7 +97,7 @@ int main(void)
 
     // Initialize mCube MC3635 Accelerometer sensor device
     //mc3635_init();
-    //HAL_I2C_Init(i2c0config);
+    HAL_I2C_Init(i2c0config);
     //CLI_start_task( my_main_menu );
     sensor_ssss_block_processor();
     StartSimpleStreamingInterfaceTask();

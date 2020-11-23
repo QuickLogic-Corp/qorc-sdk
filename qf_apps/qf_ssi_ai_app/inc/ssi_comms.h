@@ -16,6 +16,13 @@
  * limitations under the License.
  *==========================================================*/
 
+#ifndef SSI_COMMS_H
+#define SSI_COMMS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "Fw_global_config.h"
 #include "FreeRTOS.h"
 
@@ -23,3 +30,8 @@ extern bool is_ssi_connected;
 extern signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void);
 void ssi_publish_sensor_data( uint8_t *p_source, int ilen );
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* SSI_COMMS_H */

@@ -31,6 +31,10 @@
 #ifndef __DATABLK_PROCESSOR_H__
 #define __DATABLK_PROCESSOR_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "Fw_global_config.h"
@@ -164,5 +168,9 @@ int datablk_processor_task_setup(datablk_processor_params_t *p_dbp_params);
 void datablk_set_factive(datablk_processor_params_t* pdatablk_processor_params, int outqid, bool factive);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DATABLK_PROCESSOR_H__ */

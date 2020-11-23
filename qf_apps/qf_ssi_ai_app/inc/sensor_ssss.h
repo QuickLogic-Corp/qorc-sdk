@@ -19,6 +19,10 @@
 #ifndef SENSOR_SSSS_H
 #define SENSOR_SSSS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "Fw_global_config.h"
 #include "sensor_generic.h"
 #include "datablk_mgr.h"
@@ -107,5 +111,9 @@ extern QAI_DataBlockMgr_t    sensor_ssssBuffDataBlkMgr;
 extern QueueHandle_t         sensor_ssss_dbp_thread_q;
 
 extern void sensor_ssss_block_processor(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SENSOR_SSSS_H */

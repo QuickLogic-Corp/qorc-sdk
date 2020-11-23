@@ -30,19 +30,22 @@
 #include "micro_tick64.h"
 #include "dbg_uart.h"
 #include "ssi_comms.h"
-#include "mc3635.h"
+#include "eoss3_hal_i2c.h"
+
+#include "mc3635_wire.h"
+
+/* BEGIN user include files
+ * Add header files needed for accessing the sensor APIs
+ */
 
 /* User settable MACROs */
 
 /* This section defines MACROs that may be user modified */
-#define ADS1015_I2C_ADDR     (0x48)
 
-#define MC3635_I2C_ADDR      (0x4C)
-#define MC3635_XYZ_REG       (0x02)
+MC3635  qorc_ssi_accel;
 
 /* User modifiable sensor descriptor in JSON format */
 /* BEGIN JSON descriptor for the sensor configuration */
-//	"  \"ADS1015_CH3\":1"
 
 const char json_string_sensor_config[] = \
 "{"\
@@ -67,20 +70,16 @@ void sensor_ssss_configure(void)
   static int sensor_ssss_configured = false;
 
   /*--- BEGIN User modifiable section ---*/
-  mc3635_init();
-  mc3635_set_sample_rate(sensor_ssss_config.rate_hz);
-  mc3635_set_mode(MC3635_MODE_CWAKE);
+  qorc_ssi_accel.begin();
+  qorc_ssi_accel.set_sample_rate(sensor_ssss_config.rate_hz);
+  qorc_ssi_accel.set_mode(MC3635_MODE_CWAKE);
 
-  NAU7802_begin(1, sensor_ssss_config.rate_hz);
-  ADS1015_begin(ADS1015_I2C_ADDR);
-  //ADS1015_reset();
   /*--- END of User modifiable section ---*/
 
   if (sensor_ssss_configured == false)
   {
     sensor_ssss_configured = true;
   }
-  //sensor_ssss_startstop(1);
 
 }
 
@@ -97,32 +96,20 @@ int  sensor_ssss_acquisition_buffer_ready()
     p_dest += sizeof(int8_t)*sensor_ssss_samples_collected*dataElementSize;
 
     /* Read 1 sample per channel, Fill the sample data to p_dest buffer */
-    int32_t sensorValue;
 
     /*--- BEGIN User modifiable section ---*/
+    xyz_t accel_data = qorc_ssi_accel.read();  /* Read accelerometer data from MC3635 */
 
-    /* Read accel data from MC3635 */
-    HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_XYZ_REG, (uint8_t *)p_dest, 6);
-    p_dest += 6;
-#if 0
-    sensorValue = NAU7802_getReading();
-    // Copy read sensor value to the data block in little-endian format
-    // Sensor Value will be the 24-bit value
-    // (sensorValue[0] << 16) + (sensorValue[1] << 8) + (sensorValue[2])
-    p_dest[0] = (sensorValue>> 8) & 0xff;
-    p_dest[1] = (sensorValue>>16) & 0xff;
-    p_dest += 2;
+    /* Fill this accelerometer data into the current data block */
+    int16_t *p_accel_data = (int16_t *)p_dest;
 
-    int16_t adcValue;
-    adcValue = ADS1015_getSingleEnded(3); // get channel 3 data
-    // Copy read sensor value to the data block in little-endian format
-    // Sensor Value will be the 24-bit value
-    // (sensorValue[1] << 8) + (sensorValue[2])
-    p_dest[0] = (adcValue>> 0) & 0xff;
-    p_dest[1] = (adcValue>> 8) & 0xff;
-    p_dest += 2;
-    /*--- END of User modifiable section ---*/
-#endif
+    *p_accel_data++ = accel_data.x;
+    *p_accel_data++ = accel_data.y;
+    *p_accel_data++ = accel_data.z;
+
+    p_dest += 6; // advance datablock pointer to retrieve and store next sensor data
+
+    /* Read data from other sensors */
     int bytes_to_read = SENSOR_SSSS_CHANNELS_PER_SAMPLE * (SENSOR_SSSS_BIT_DEPTH/8) ;
 
     sensor_ssss_samples_collected += SENSOR_SSSS_CHANNELS_PER_SAMPLE;
@@ -263,7 +250,7 @@ datablk_processor_params_t sensor_ssss_datablk_processor_params[] = {
       sizeof(sensor_ssss_datablk_pe_descr)/sizeof(sensor_ssss_datablk_pe_descr[0]),
       sensor_ssss_datablk_pe_descr,
       256,
-      "SENSOR_SSSS_DBP_THREAD",
+      (char*)"SENSOR_SSSS_DBP_THREAD",
       NULL
     }
 };
@@ -305,6 +292,7 @@ void sensor_ssss_block_processor(void)
 
 /* BEGIN timer task related functions */
 TimerHandle_t sensor_ssss_TimId ;
+extern "C" void sensor_ssss_dataTimer_Callback(TimerHandle_t hdl);
 void sensor_ssss_dataTimer_Callback(TimerHandle_t hdl)
 {
   // Warning: must not call vTaskDelay(), vTaskDelayUntil(), or specify a non zero
@@ -314,6 +302,7 @@ void sensor_ssss_dataTimer_Callback(TimerHandle_t hdl)
 void sensor_ssss_dataTimerStart(void)
 {
   BaseType_t status;
+  TimerCallbackFunction_t xCallback = sensor_ssss_dataTimer_Callback;
 #if (USE_SENSOR_SSSS_FIFO_MODE)
   // setup FIFO mode
 #else
@@ -322,7 +311,7 @@ void sensor_ssss_dataTimerStart(void)
 
   // Create periodic timer
   if (!sensor_ssss_TimId) {
-    sensor_ssss_TimId = xTimerCreate("SensorSSSSTimer", pdMS_TO_TICKS(milli_secs), pdTRUE, (void *)0, sensor_ssss_dataTimer_Callback);
+    sensor_ssss_TimId = xTimerCreate("SensorSSSSTimer", pdMS_TO_TICKS(milli_secs), pdTRUE, (void *)0, xCallback);
     configASSERT(sensor_ssss_TimId != NULL);
   }
 
