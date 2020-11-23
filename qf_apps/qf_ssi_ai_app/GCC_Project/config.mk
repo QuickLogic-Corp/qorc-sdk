@@ -166,7 +166,7 @@ export NM="$(TC_PATH)/arm-none-eabi-nm"
 export LD="$(TC_PATH)/arm-none-eabi-g++"
 export AS="$(TC_PATH)/arm-none-eabi-gcc" -c
 export CC="$(TC_PATH)/arm-none-eabi-gcc" -c
-export CPLUSPLUS="$(TC_PATH)\arm-none-eabi-g++" -c
+export CPLUSPLUS="$(TC_PATH)/arm-none-eabi-g++" -c
 export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
 ################
 endif
