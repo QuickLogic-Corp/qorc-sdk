@@ -33,13 +33,14 @@
 #include "eoss3_hal_gpio.h"
 #include "dbg_uart.h"
 #include "flash_defines.h"
+#include "bootloader_defines.h"
 
 
 extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
 extern int load_m4app(void);
 extern int load_usb_flasher(void);
 extern int load_appfpga(void);
-int check_appfpga_m4app_metadata(void);
+int check_active_images(void);
 
 #define MAX_BOOTLOADER_WAIT_MSEC  (5*1000)
 #define MIN_USER_BTN_PRESS_WAIT_MSEC  (200)
@@ -49,10 +50,11 @@ int check_appfpga_m4app_metadata(void);
 #define RED_LED_GPIO_NUM          (6) //PAD 22, GPIO is connected to Red LED
 
 
-#define METADATA_UNKNOWN_FLASH_STATE    (0x0)
-#define METADATA_APPFPGA_IS_FLASHED     (0x1)
-#define METADATA_M4APP_IS_FLASHED       (0x2)
-
+#define METADATA_UNKNOWN_FLASH_STATE        (0x0)
+#define METADATA_APPFPGA_IS_FLASHED         (0x1)
+#define METADATA_M4APP_IS_FLASHED           (0x2)
+#define METADATA_APPFFE_IS_FLASHED          (0x3)
+#define METADATA_VALID_IMAGE_IS_FLASHED     (METADATA_APPFPGA_IS_FLASHED|METADATA_M4APP_IS_FLASHED) // ffe not supported yet
 
 TaskHandle_t 	BLTaskHandle;
 static int user_button_pressed = 0;
@@ -218,10 +220,45 @@ static void BLTaskHandler(void *pvParameters)
       {
         dbg_str("User button not pressed: proceeding to load application\n");
         set_waiting_led(0);
-        // check appfpga and m4app partitions to check which one has been flased with an image.
-        // load the m4app or appfpga accordingly.
-        int metadata_state = check_appfpga_m4app_metadata();
-        if(metadata_state == METADATA_M4APP_IS_FLASHED)
+
+        // check the image_info of appfpga, m4app and load the images accordingly
+        uint8_t current_active_images = check_active_images();
+
+        if((current_active_images & METADATA_VALID_IMAGE_IS_FLASHED) == 0)
+        {
+            while(1)
+            {
+                //set red LED for error and turn off green LED
+                set_boot_error_led(1);
+                set_downloading_led(0);
+                dbg_str("ERROR: No Valid Image Found To Load! Waiting for re-flashing .. \n");
+                dbg_str("Press Reset then User Button and start Flash script .. \n\n");
+                vTaskDelay(5*1000);
+            }
+        }
+
+        if(current_active_images & METADATA_APPFPGA_IS_FLASHED)
+        {
+            dbg_str("Loading Application FPGA...\r\n");
+            int error = load_appfpga();
+
+            if(error != BL_NO_ERROR) // error occurred?
+            {
+                while(1)
+                {
+                    //set red LED for error and turn off green LED
+                    set_boot_error_led(1);
+                    set_downloading_led(0);
+                    dbg_str("ERROR loading App FPGA. Waiting for re-flashing .. \n");
+                    dbg_str("Press Reset then User Button and start Flash script .. \n\n");
+                    vTaskDelay(5*1000);
+                }
+            }
+        }
+
+        // ffe loader in the future
+
+        if(current_active_images & METADATA_M4APP_IS_FLASHED)
         {
             dbg_str("Loading M4 Application...\r\n");
             int error = load_m4app(); //this should never return
@@ -236,70 +273,98 @@ static void BLTaskHandler(void *pvParameters)
                 vTaskDelay(5*1000);
             }
         }
-        else if(metadata_state == METADATA_APPFPGA_IS_FLASHED)
-        {
-            dbg_str("Loading Application FPGA...\r\n");
-            int error = load_appfpga(); // this should never return
-
-            while(1)
-            {
-                //set red LED for error and turn off green LED
-                set_boot_error_led(1);
-                set_downloading_led(0);
-                dbg_str("ERROR loading App FPGA. Waiting for re-flashing .. \n");
-                dbg_str("Press Reset then User Button and start Flash script .. \n\n");
-                vTaskDelay(5*1000);
-            }
-        }
-        else
-        {
-            //set red LED for error and turn off green LED
-            set_boot_error_led(1);
-            set_downloading_led(0);
-            dbg_str("ERROR No M4 APP or App FPGA found! Waiting for re-flashing .. \n");
-            dbg_str("Press Reset then User Button and start Flash script .. \n\n");
-            vTaskDelay(5*1000);
-        }
         
+        // if we reach here, then probably the m4app image is not active, we sit tight.
+        while(1);        
       }
 	}
 }
 
-int check_appfpga_m4app_metadata()
+int check_active_images()
 {
+    uint8_t active_images = 0x0;
     unsigned char* bufPtr;
     uint32_t image_crc;
     uint32_t image_size;
+    uint32_t image_info;
+    uint8_t* image_info_ptr8;
 
+    // check the image_info metadata and see which images are marked as active
+    // return a value indicating this
+    // TODO do we want to do a better image integrity check here?
+    // perhaps we can move the crc check here itself, rather than in the loaders?
+    // for now, I think our organization is ok.
+
+    // read the fpga metadata
     bufPtr = (unsigned char *)image_metadata; 
     read_flash((unsigned char *)FLASH_APPFPGA_META_ADDRESS, FLASH_APPFPGA_META_SIZE, bufPtr);
     image_crc = image_metadata[0];
     image_size = image_metadata[1];
-
-    //dbg_str("app FPGA META\r\n");
-    //dbg_hex32(image_crc);dbg_str("\r\n");
-    //dbg_hex32(image_size);dbg_str("\r\n");
-
-    if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
+    image_info = image_metadata[2];
+    image_info_ptr8 = (uint8_t*)(&image_info);
+    dbg_str("fpga");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    if(image_info_ptr8[0] == 0x03)
     {
-        return METADATA_APPFPGA_IS_FLASHED;
+        if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
+        {
+            // error, image is marked active, but doesn't seem to have image flashed!
+            dbg_str("warning: appfpga image marked active, but seems to have invalid image\r\n");
+        }
+        else
+        {
+            // ok, active image, and looks to have a proper image
+            active_images |= METADATA_APPFPGA_IS_FLASHED;
+        }
+        
     }
 
+    // read the ffe metadata
+    bufPtr = (unsigned char *)image_metadata; 
+    read_flash((unsigned char *)FLASH_APPFFE_META_ADDRESS, FLASH_APPFFE_META_SIZE, bufPtr);
+    image_crc = image_metadata[0];
+    image_size = image_metadata[1];
+    image_info = image_metadata[2];
+    image_info_ptr8 = (uint8_t*)(&image_info);
+    dbg_str("ffe");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    if(image_info_ptr8[0] == 0x03)
+    {
+        if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
+        {
+            // error, image is marked active, but doesn't seem to have image flashed!
+            dbg_str("warning: appffe image marked active, but seems to have invalid image\r\n");
+        }
+        else
+        {
+            // ok, active image, and looks to have a proper image
+            active_images |= METADATA_APPFFE_IS_FLASHED;
+        }
+        
+    }
+
+    // read the m4 metadata
+    bufPtr = (unsigned char *)image_metadata; 
     read_flash((unsigned char *)FLASH_APP_META_ADDRESS, FLASH_APP_META_SIZE, bufPtr);
     image_crc = image_metadata[0];
     image_size = image_metadata[1];
-
-    //dbg_str("M4 App META\r\n");
-    //dbg_hex32(image_crc);dbg_str("\r\n");
-    //dbg_hex32(image_size);dbg_str("\r\n");
-    
-    if(image_size != 0xFFFFFFFF && image_crc != 0xFFFFFFFF)
+    image_info = image_metadata[2];
+    image_info_ptr8 = (uint8_t*)(&image_info);
+    dbg_str("m4");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    if(image_info_ptr8[0] == 0x03)
     {
-        return METADATA_M4APP_IS_FLASHED;
+        if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
+        {
+            // error, image is marked active, but doesn't seem to have image flashed!
+            dbg_str("warning: m4app image marked active, but seems to have invalid image\r\n");
+        }
+        else
+        {
+            // ok, active image, and looks to have a proper image
+            active_images |= METADATA_M4APP_IS_FLASHED;
+        }
+        
     }
 
-    // if we reach here, then images are not flashed or we have a corrupt state.
-    return METADATA_UNKNOWN_FLASH_STATE;
+    return active_images;
 }
 
 /*!

@@ -149,6 +149,5 @@ int load_appfpga(void)
 
   dbg_str("Application FPGA Loaded\r\n");
 
-  // BL is done, no M4 code to load, so sit tight.
-  while(1);
+  return BL_NO_ERROR;
 }
