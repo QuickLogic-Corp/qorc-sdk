@@ -1,9 +1,11 @@
-#ifndef __MC3635_H__
-#define __MC3635_H__
+#ifndef __MC3635_WIRE_H__
+#define __MC3635_WIRE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* C++ Interface for mCube MC3635 accelerometer
+ * Uses Wire interface for communicating with I2C device
+ */
+#include <stdint.h>
+#include "Wire.h"
 
 typedef struct {
   int16_t x;
@@ -56,31 +58,24 @@ typedef enum {
 #define MC3635_DEFAULT_SAMPLE_RATE       (400)      // 400 Hz sampling rate
 #define MC3635_DEFAULT_SAMPLE_RESOLUTION (1 << (MC3635_DEFAULT_SAMPLE_BIT_DEPTH-1))
 
-/** Initialize mCube MC3635 device */
-void mc3635_init(void);
+class MC3635
+{
+public:
+	MC3635();
+	void begin(void); // initialize the sensor
+	xyz_t read(void);              // get Accelerometer (X,Y,Z) values
+	void set_mode(uint8_t mode);
+	void set_mode(mc3635_modes_t mode);
+    void set_sample_rate(int rate_hz);
+    void set_sample_resolution(int bits);
+    void set_sample_range(mc3635_range_t range);
+    int  get_sample_rate(void);
+    int  get_sample_resolution(void);
+    int  get_sample_range();
+    void write_reg(uint8_t reg, uint8_t *p_data, int size);
+    void read_reg(uint8_t reg, uint8_t *p_data, int size);
+private:
+    uint8_t _deviceAddress;
+};
 
-/** Read Accel data if available
- *  @return 1 indicates new data is available
- *          0 indicates no new data available 
- */
-int mc3635_read_data(xyz_t *pdata);
-
-void mc3635_set_mode(mc3635_modes_t mode);
-void mc3635_set_sample_rate(int sample_rate_in_hz);
-int mc3635_get_sample_rate(void);
-void mc3635_set_sample_range(mc3635_range_t range);
-int mc3635_get_sample_range(void);
-void mc3635_set_sample_resolution(int bit_depth);
-int mc3635_get_sample_resolution(void);
-void mc3635_interrupt_enable(void);
-void mc3635_interrupt_disable(void);
-void mc3635_fifo_enable(void);
-int mc3635_read_fifo_data(xyz_t *pdata);
-int mc3635_read_fifo_burst(xyz_t *pdata, int num_samples);
-void mc3635_fifo_reset(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __MC3635_H__ */
+#endif /* __MC3635_WIRE_H__ */

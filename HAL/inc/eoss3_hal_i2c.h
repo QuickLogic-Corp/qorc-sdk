@@ -16,6 +16,11 @@
 
 #ifndef __EOSS3_HAL_I2C_H_
 #define __EOSS3_HAL_I2C_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!	\file eoss3_hal_i2c.h
  *
  *  \brief This file contains API declaration for UART read/write
@@ -179,5 +184,12 @@ HAL_StatusTypeDef HAL_I2C_Write16(UINT8_t ucDevAddress, UINT16_t ucAddress, UINT
  *  @param[in] uiLength     read `uiLength` bytes of data
  */
 HAL_StatusTypeDef HAL_I2C_Read_UsingRestart(UINT8_t ucDevAddress, UINT8_t ucAddress, UINT8_t *pucDataBuf, UINT32_t uiLength);
+
+HAL_StatusTypeDef HAL_I2C_WriteRawData(UINT8_t ucDevAddress, UINT8_t *pucDataBuf, UINT32_t uiLength, int stop);
+HAL_StatusTypeDef HAL_I2C_ReadRawData(UINT8_t ucDevAddress, UINT8_t *pucDataBuf, UINT32_t uiLength);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !__EOSS3_HAL_I2C_H_ */

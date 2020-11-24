@@ -1,0 +1,11 @@
+
+FREERTOS_FAT_SRCS:=$(wildcard $(FREERTOS_FAT_DIR)/*.c )
+FREERTOS_FAT_SRCS:=$(filter-out $(FREERTOS_FAT_DIR)/ff_app.c, $(FREERTOS_FAT_SRCS))
+FREERTOS_FAT_SRCS:=$(filter-out $(FREERTOS_FAT_DIR)/ff_dev_support.c, $(FREERTOS_FAT_SRCS))
+
+SRCS:=$(notdir $(FREERTOS_FAT_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FREERTOS_FAT_DIR)
+
+include $(COMMON_STUB)
+
