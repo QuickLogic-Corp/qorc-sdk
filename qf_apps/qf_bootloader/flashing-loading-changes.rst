@@ -231,10 +231,10 @@ This will bring a change in the TinyFPGAProgrammer and the qorc-sdk Bootloader r
 
 - add --mode flag for operation (m4, m4+fpga, others)
 - add logic to parse and update the mode into the new Flash Memory Map (active partition info)
-- PR : branch :code:`fpga-bootloading-changes-phase-2`
+- PR : https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application/pull/8
 
 2. **qorc-sdk bootloader/bootloader_uart**
 
 - add support for new Flash Memory Map, and use the "active partition" info to load the images in predefined order.
 - the preferred order is AppFPGA, FFE(future), M4App (in any combination)
-- PR : branch :code:`fpga-bootloading-changes-phase-2`
+- PR : https://github.com/QuickLogic-Corp/qorc-sdk/pull/75
