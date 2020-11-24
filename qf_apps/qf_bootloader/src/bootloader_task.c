@@ -302,7 +302,7 @@ int check_active_images()
     image_size = image_metadata[1];
     image_info = image_metadata[2];
     image_info_ptr8 = (uint8_t*)(&image_info);
-    dbg_str("fpga");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    //dbg_str("fpga: 0x");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
     if(image_info_ptr8[0] == 0x03)
     {
         if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
@@ -325,7 +325,7 @@ int check_active_images()
     image_size = image_metadata[1];
     image_info = image_metadata[2];
     image_info_ptr8 = (uint8_t*)(&image_info);
-    dbg_str("ffe");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    //dbg_str("ffe: 0x");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
     if(image_info_ptr8[0] == 0x03)
     {
         if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
@@ -348,7 +348,7 @@ int check_active_images()
     image_size = image_metadata[1];
     image_info = image_metadata[2];
     image_info_ptr8 = (uint8_t*)(&image_info);
-    dbg_str("m4");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
+    //dbg_str("m4: 0x");dbg_hex8(image_info_ptr8[0]);dbg_str("\r\n");
     if(image_info_ptr8[0] == 0x03)
     {
         if(image_size == 0xFFFFFFFF || image_crc == 0xFFFFFFFF)
