@@ -119,4 +119,5 @@ TODO
 
 # Notes on Doxygen + Breathe + ReadTheDocs Integration
 
-TODO   
+- https://breathe.readthedocs.io/en/latest/readthedocs.html#generating-doxygen-xml-files
+- https://breathe.readthedocs.io/en/latest/quickstart.html
