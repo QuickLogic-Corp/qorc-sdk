@@ -346,14 +346,18 @@ void Ffe0_Handler(void) {
 }
 HAL_FBISRfunction FB_ISR [MAX_FB_INTERRUPTS]={NULL,NULL,NULL,NULL};
 
+int fb_raw = 0;
+int fb_intr = 0;
 void FbMsg_Handler(void) {
 
 #if ( configSAVE_IRQ_HISTORY==1 )
         sec_save_irq_history("FbMsg\0", xTaskGetTickCountFromISR());
 #endif
-
+fb_raw = INTR_CTRL->FB_INTR_RAW;
+fb_intr = INTR_CTRL->FB_INTR;
 // detect which one of the FB generators inetrrupted
-  if ( INTR_CTRL->FB_INTR_RAW & FB_0_INTR_RAW)
+//  if ( INTR_CTRL->FB_INTR_RAW & FB_0_INTR_RAW)
+  if ( INTR_CTRL->FB_INTR & FB_0_INTR_RAW)
   {
     // call that particualr ISR
     if (FB_ISR[FB_INTERRUPT_0])
@@ -361,7 +365,8 @@ void FbMsg_Handler(void) {
     // clear that interrupt at FB level
     INTR_CTRL->FB_INTR = (FB_0_INTR_DETECT);
   }
-  if ( INTR_CTRL->FB_INTR_RAW & FB_1_INTR_RAW)
+//  if ( INTR_CTRL->FB_INTR_RAW & FB_1_INTR_RAW)
+  if ( INTR_CTRL->FB_INTR & FB_1_INTR_RAW)
   {
     // call that particualr ISR
    if (FB_ISR[FB_INTERRUPT_1])
@@ -369,7 +374,8 @@ void FbMsg_Handler(void) {
     // clear that interrupt at FB level
     INTR_CTRL->FB_INTR = (FB_1_INTR_DETECT);
   }
-  if ( INTR_CTRL->FB_INTR_RAW & FB_2_INTR_RAW)
+//  if ( INTR_CTRL->FB_INTR_RAW & FB_2_INTR_RAW)
+  if ( INTR_CTRL->FB_INTR & FB_2_INTR_RAW)
   {
     // call that particualr ISR
     if (FB_ISR[FB_INTERRUPT_2])
@@ -377,7 +383,8 @@ void FbMsg_Handler(void) {
     // clear that interrupt at FB level
     INTR_CTRL->FB_INTR = (FB_2_INTR_DETECT);
   }
- if ( INTR_CTRL->FB_INTR_RAW & FB_3_INTR_RAW)
+// if ( INTR_CTRL->FB_INTR_RAW & FB_3_INTR_RAW)
+  if ( INTR_CTRL->FB_INTR & FB_3_INTR_RAW)
   {
     // call that particualr ISR
     if (FB_ISR[FB_INTERRUPT_3])

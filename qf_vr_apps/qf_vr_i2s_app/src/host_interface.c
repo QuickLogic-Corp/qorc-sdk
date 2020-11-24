@@ -322,6 +322,7 @@ void hostIfTaskHandler(void *pParameter)
   memset(&receivedMsg,0,sizeof(struct xQ_Packet));
 
 #if (FEATURE_FLL_I2S_DEVICE == 1)
+   //init FLL using default ISR functions
    HAL_FB_FLL_Init((HAL_FBISRfunction )NULL, (HAL_FBISRfunction)NULL);
 #endif
   
@@ -365,11 +366,12 @@ void hostIfTaskHandler(void *pParameter)
           /* Parse input message and process the request */
           switch( receivedMsg.ucCommand ) {
           case MESSAGE_STOP_TX:
-#if (ENABLE_I2S_TX_SLAVE == 1)
-            stop_i2sTx();
-#endif
 #if (FEATURE_FLL_I2S_DEVICE == 1)
             HAL_FB_FLL_Disable();
+#endif
+
+#if (ENABLE_I2S_TX_SLAVE == 1)
+            stop_i2sTx();
 #endif
             stop_audio_streaming(p_hif_channel_info);
             handle_led_for_audio_stop();

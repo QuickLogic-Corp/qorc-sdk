@@ -36,39 +36,86 @@
 
 //define the local clk  (i2s bit clock) only if not defined
 #ifndef FLL_I2S_LOCAL_CLK
-#define FLL_I2S_LOCAL_CLK  (1*1024*1000) //for 16K sample rate = 2*32*16K = 1024000
+#define FLL_I2S_LOCAL_CLK  (1*1024*1000 - 0*32768) //for 16K sample rate = 2*32*16K = 1024000
 #endif
 
-#ifndef FLL_SAMPLE_TIME
-#define FLL_SAMPLE_TIME  (10*1024) //=10ms at 16K sample rate
+/* Note: The Sample Time is used only to take a decision whether to generate
+* an interrupt or not. But the interrupt may not be generated every Sample Time.
+* Only if both the Word Counts and Sample Counts indicate that the Clk is fast or
+* slow then only the interrupt is generated.
+* The Gap Time is used to just reduce the number of times the Sample Timer is counted
+* down there by reducing the number if instances that the interrupt generator compares
+* the Word counts and Sample Counts internally.
+* Too large a Sample Time will force interrupts to appear every time.
+* Too small a Sample Time may never lead to generation of interruption, even of Word
+* differ. So, the Word Counts may drift.
+*/
+#ifndef FLL_SAMPLE_TIME_DEFAULT
+#define FLL_SAMPLE_TIME_DEFAULT  (10*1024) //=10ms at 16K sample rate
 #endif
-#ifndef FLL_SAMPLE_TIME
-#define FLL_GAP_TIME     (20*1024) //=10ms  at 16K sample rate
+#ifndef FLL_GAP_TIME_DEFAULT
+#define FLL_GAP_TIME_DEFAULT     (90*1024) //=90ms  at 16K sample rate
 #endif
 
 void enable_hsosc_dac_debug(void);
 void disable_hsosc_dac_debug(void);
-#if 0 //just for debug
-void HAL_FB_FLL_Enable(void) { return; }
-void HAL_FB_FLL_Disable(void) { return; }
-#else
+int get_hsosc_dac(void);
+
+int slow_count =0;
+int speed_count =0;
+int dac_start = 0;
+int dac_end = 0;
+
 //Enable the FLL
 void HAL_FB_FLL_Enable(void) {
+  
   enable_hsosc_dac_debug();
   S3x_Clk_Enable(S3X_FB_21_CLK);
   S3x_Clk_Enable(S3X_FB_16_CLK);
   FB_FLL->CNTRL_REG = 1;
+
+  slow_count =0;
+  speed_count =0;
+  dac_start = get_hsosc_dac();
+  dac_end = dac_start;
+  
   return;
 }
 //Disable the FLL
 void HAL_FB_FLL_Disable(void) {
+
+#if 0 //enable for debug only  
+
+  int local = FB_FLL->LOCAL_WORD_COUNT;
+  int master = FB_FLL->MASTER_WORD_COUNT;
+  printf("FLL DBG word counts: Local = %d, Master = %d, diff = %d \n",local, master, local-master);
+  printf("FLL DBG diff counts: Diff = %d, LSBs = %d \n",FB_FLL->WORD_COUNT_DIFF,FB_FLL->LSB_WORD_COUNTS);
+
+#endif
+
   FB_FLL->CNTRL_REG = 0;
   S3x_Clk_Disable(S3X_FB_21_CLK);
   S3x_Clk_Disable(S3X_FB_16_CLK);
+  
+  dac_end = get_hsosc_dac();
   disable_hsosc_dac_debug();
+  
+#if 1 //enable for debug 
+  //convert to KHz(1024Hz)
+  int dac_start_hz = (dac_start +3)*32;
+  int dac_end_hz = (dac_end +3)*32;
+  int clk_change = (speed_count - slow_count)*32;//this the total HSOSC change in KHz(1024)
+  int i2s_clk_change = clk_change/12; //this is change in I2S clk assuming Streaming QoS Clk is 12MHz
+  
+  printf(" FLL ISR counts: Slow = %d, Speed = %d, total clk change = %d KHz, i2s clk change = %d KHz \n",
+          slow_count,speed_count, clk_change, i2s_clk_change); 
+  printf(" HSOSC DAC: Start = %d (%d KHz), End = %d (%d KHz), diff = %d (%d KHz) \n", 
+          dac_start,dac_start_hz, dac_end, dac_end_hz, dac_end - dac_start, dac_end_hz - dac_start_hz);
+#endif
+  
   return;
 }
-#endif
+
 //Set the Time in local clks to compare external and local clks
 void HAL_FB_FLL_Set_Sample_Time( int sample_count) {
   FB_FLL->SAMPLE_TIMER = sample_count;
@@ -98,6 +145,11 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
   S3x_Clk_Set_Rate(S3X_FB_21_CLK, FLL_I2S_LOCAL_CLK); //for 16K sample rate = 2*32*16K = 1024000
   S3x_Clk_Set_Rate(S3X_FB_16_CLK, FLL_I2S_LOCAL_CLK); //since no data transfer, keep it low
 
+  // set the time counts to default
+  HAL_FB_FLL_Set_Sample_Time(FLL_SAMPLE_TIME_DEFAULT);
+  HAL_FB_FLL_Set_Gap_Time(FLL_GAP_TIME_DEFAULT);
+  //HAL_FB_FLL_Set_Gap_Time(FLL_SAMPLE_TIME_DEFAULT);
+  
   //S3x_Clk_Enable(S3X_FB_21_CLK);
   //S3x_Clk_Enable(S3X_FB_16_CLK);
 
@@ -106,12 +158,12 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
 
   //Register FPGA ISR callbacks FPGA Slow Down and Speed up interrupts 
   FB_RegisterISR(FB_INTERRUPT_0, slow_down_fn);
-  FB_ConfigureInterrupt(FB_INTERRUPT_0, FB_INTERRUPT_TYPE_LEVEL,
+  FB_ConfigureInterrupt(FB_INTERRUPT_0, FB_INTERRUPT_TYPE_EDGE,
                         FB_INTERRUPT_POL_LEVEL_HIGH,
                         FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
   
   FB_RegisterISR(FB_INTERRUPT_1, speed_up_fn);
-  FB_ConfigureInterrupt(FB_INTERRUPT_0, FB_INTERRUPT_TYPE_LEVEL,
+  FB_ConfigureInterrupt(FB_INTERRUPT_1, FB_INTERRUPT_TYPE_EDGE,
                         FB_INTERRUPT_POL_LEVEL_HIGH,
                         FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
 
@@ -148,7 +200,7 @@ void set_hsosc_dac(int bits)
 int get_hsosc_dac(void)
 {
   int bits = 0;
-  int dummy;
+  //int dummy;
   //AIP->OSC_CTRL_0 
   AIP->OSC_CTRL_4 = 0x00; //reset 
   AIP->OSC_CTRL_4 = 0x10; //enable read
@@ -158,7 +210,7 @@ int get_hsosc_dac(void)
     bits = bits << 1;
     AIP->OSC_CTRL_6 = 0x1; //clk high
     AIP->OSC_CTRL_6 = 0x0; //clk low
-    dummy = AIP->OSC_STA_1;
+    //dummy = AIP->OSC_STA_1;
     bits |= (AIP->OSC_STA_1 & 0x1); //sdo bit
     count++;
   }
@@ -192,7 +244,7 @@ void slow_down_ISR(void)
     }
     //int rate = 0x1F; // ???
     //disable_hsosc_dac_debug( rate);
-    
+    slow_count++;
     return;
 }
 
@@ -208,7 +260,7 @@ void speed_up_ISR(void)
     }
     //int rate = 0x1F; // ???
     //disable_hsosc_dac_debug();
-    
+    speed_count++;
     return;
 }
 

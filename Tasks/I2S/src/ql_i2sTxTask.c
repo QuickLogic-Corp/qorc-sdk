@@ -96,6 +96,41 @@ static uint8_t i2s_buf_rd_index;
 static uint8_t i2s_buf_wr_index;
 static uint8_t i2s_sdma_start;
 
+#define DBG_BUF_ENABLE (0)
+#if (DBG_BUF_ENABLE == 1)
+static uint32_t i2s_test_Buffer[I2S_SINGLE_DMA_SIZE]; 
+
+static uint8_t dbg_buf[100][4];
+static int dbg_buf_count = 0;
+
+static uint8_t dbg_buf2[100][4];
+static int dbg_buf_count2 = 0;
+
+void set_dbg_buf(int buf_num)
+{
+  if(buf_num == 1)
+  {
+    if(dbg_buf_count < 100) {
+      dbg_buf[dbg_buf_count][0] = i2s_buf_rd_index;
+      dbg_buf[dbg_buf_count][1] = i2s_buf_wr_index;
+      dbg_buf[dbg_buf_count][2] = i2sBuffValids[i2s_buf_rd_index];
+      dbg_buf[dbg_buf_count][3] = i2sBuffValids[i2s_buf_wr_index];
+      dbg_buf_count++;
+    }
+  }
+  if(buf_num == 2)
+  {
+    if(dbg_buf_count2 < 100) {
+      dbg_buf2[dbg_buf_count2][0] = i2s_buf_rd_index;
+      dbg_buf2[dbg_buf_count2][1] = i2s_buf_wr_index;
+      dbg_buf2[dbg_buf_count2][2] = i2sBuffValids[i2s_buf_rd_index];
+      dbg_buf2[dbg_buf_count2][3] = i2sBuffValids[i2s_buf_wr_index];
+      dbg_buf_count2++;
+    }
+  }
+
+}
+#endif
 /*  Add a Data Blk to the I2S Data Queue */
 int addDatablkToQueue_I2S(QAI_DataBlock_t *pIn)
 {
@@ -123,8 +158,12 @@ static void set_i2s_buf_state(uint8_t buf_index)
 /* called by I2S SDMA ISR */
 void I2S_SDMA_callback(uint8_t i2s_id_sel, uint32_t const * p_data_received, uint32_t *p_data_to_send, uint16_t buffer_size)
 {
+#if (DBG_BUF_ENABLE == 1)  
+set_dbg_buf(1);
+#endif
   /* first set current buffer to emptied state */
-  i2sBuffValids[i2s_buf_rd_index++] = 0;
+  if(i2s_buf_rd_index < I2S_DMA_BUFFER_COUNT)
+    i2sBuffValids[i2s_buf_rd_index++] = 0;
   if(i2s_buf_rd_index >= I2S_DMA_BUFFER_COUNT)
     i2s_buf_rd_index = 0;
   
@@ -137,6 +176,7 @@ void I2S_SDMA_callback(uint8_t i2s_id_sel, uint32_t const * p_data_received, uin
     src = i2sSilenceBuffer;
     I2S_ISR_ErrCount++;
   }
+//src = i2s_test_Buffer;  
   HAL_I2S_TX_RX_Buffer(I2S_SLAVE_ASSP_TX, NULL, src, I2S_SINGLE_DMA_SIZE * sizeof(uint32_t));
 
   return;
@@ -334,6 +374,10 @@ static void init_i2s_buffers(void)
   
   i2s_sdma_start = 0;
   
+#if (DBG_BUF_ENABLE == 1)
+  memset(i2s_test_Buffer,  0xAA, sizeof(i2s_test_Buffer));
+#endif
+  
   return;
 }
 /* when i2s transmission is disabled, release all the datablocks held */
@@ -432,7 +476,8 @@ void i2sTaskHandler(void *pParameter)
         /* program the first buffer */
         if(i2s_sdma_start == 0) {
             /* This will start I2S Transmission */
-           HAL_I2S_TX_RX_Buffer(I2S_SLAVE_ASSP_TX, NULL, i2sDMABuffers, I2S_SINGLE_DMA_SIZE * sizeof(uint32_t));
+           //HAL_I2S_TX_RX_Buffer(I2S_SLAVE_ASSP_TX, NULL, i2sDMABuffers, I2S_SINGLE_DMA_SIZE * sizeof(uint32_t));
+            HAL_I2S_TX_RX_Buffer(I2S_SLAVE_ASSP_TX, NULL, i2sSilenceBuffer, I2S_SINGLE_DMA_SIZE * sizeof(uint32_t));
         }
         i2s_sdma_start = 1;
       }
@@ -440,7 +485,7 @@ void i2sTaskHandler(void *pParameter)
 
         I2S_ISR_ErrCount = 0;
         i2s_buf_wr_index = 0;
-        i2s_buf_rd_index = I2S_DMA_BUFFER_COUNT -1; //make first buffer silence
+        i2s_buf_rd_index = I2S_DMA_BUFFER_COUNT; //make first buffer silence
         
         vTaskDelay(3); // Give PE a chance to run
         continue;
@@ -469,7 +514,9 @@ void i2sTaskHandler(void *pParameter)
       set_i2s_buf_state(i2s_buf_wr_index++);
       if(i2s_buf_wr_index >= I2S_DMA_BUFFER_COUNT)
         i2s_buf_wr_index = 0;
-
+#if (DBG_BUF_ENABLE == 1)
+set_dbg_buf(2);
+#endif
     }
 
     //vTaskDelete(NULL); 

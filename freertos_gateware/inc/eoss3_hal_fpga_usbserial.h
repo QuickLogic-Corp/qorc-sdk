@@ -83,5 +83,5 @@ void        HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usb
 int         HAL_usbserial_tx_is_fifo_half_empty(void);
 int         HAL_usbserial_tx_get_fifo_status(void);
 int         HAL_usbserial_tx_get_fifo_space_available(void);
-
+void HAL_usbserial_i2s_init(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid,uint32_t usb_ipid );
 #endif // EOSS3_HAL_USBSERIAL_H_

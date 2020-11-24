@@ -34,10 +34,19 @@
 //See the FLL IP Documentation for register and address definitions
 typedef struct
 {
-  __IO uint32_t CNTRL_REG;     /* FLL Control - enable (1) or disable(0) */
-  __IO uint32_t SAMPLE_TIMER;  /* #of Local Clks used to compare against input clk */
-  __IO uint32_t GAP_TIMER;     /* #of Local Clks to wait before starting next comparision */
-
+  __IO uint32_t CNTRL_REG;     /* 0x00 = FLL Control - enable (1) or disable(0) */
+  __IO uint32_t SAMPLE_TIMER;  /* 0x04 = #of Local Clks used to compare against input clk */
+  __IO uint32_t GAP_TIMER;     /* 0x08 = #of Local Clks to wait before starting next comparision */
+  
+  /* Note : These are added for Debug purposes only. Code should not depend on 
+   *        them, since they may be removed any time
+  */
+  __IO uint32_t WORD_COUNT_DIFF;     /* 0x0C = difference between local and master word counts */
+  __IO uint32_t LSB_WORD_COUNTS;     /* 0x10 = LSB bits of {Local[15:0]:Master[15:0]} word counts */
+  __IO uint32_t LOCAL_WORD_COUNT;    /* 0x14 = Continuos count of Local Clks divided byt 64 = Local Word Count*/  
+  __IO uint32_t MASTER_WORD_COUNT;   /* 0x18 = Continuos count of Master Clks divided byt 64 = Master Word Count*/  
+  __IO uint32_t MASTER_SAMPLE_COUNT; /* 0x1C = Master sample count at the given instance */    
+  
 } FPGA_FLL_TypeDef;
 
 #define FB_FLL_BASE  (FPGA_PERIPH_BASE+0x1000)

@@ -324,18 +324,7 @@ PadConfig pincfg_table[] =
   },
 #endif
 #if (FEATURE_FLL_I2S_DEVICE == 1)
-#if 1
-  { // Pad 10 -- I2S master-in clk
-    .ucPin = PAD_10,
-    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-#else
+
   { // Pad 4 -- I2S master-in clk
     .ucPin = PAD_4,
     .ucFunc = PAD4_FUNC_SEL_FBIO_4,
@@ -346,7 +335,6 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-#endif
   { // Pad 2 -- FLL Speedup interrupt
     .ucPin = PAD_2,
     .ucFunc = PAD2_FUNC_SEL_FBIO_2,

@@ -62,9 +62,7 @@
 #include "eoss3_hal_pad_config.h"
 #if (FEATURE_FLL_I2S_DEVICE == 1)
 #include "fpga_loader.h"
-//#include "FLL_top_bit_11_09_2020.h"
-//#include "FLL_top_bit_Tim.h"
-#include "FLL_top_bit_IO_10.h"
+#include "FLL_top_bit_11_21_2020.h"
 #include "eoss3_hal_fpga_FLL.h"
 #endif
 
@@ -194,8 +192,8 @@ int main(void)
     int axFPGABitStream_FLL_length = sizeof(axFPGABitStream_FLL);
 
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 1*1024*1000 - 2*32768); //for 16K sample rate = 2*32*16K = 1024000
-    //S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*1024*1000); //for 16K sample rate = 2*32*16K = 1024000    
-S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24*1000*1000); 
+    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*1024*1000); //for 16K sample rate = 2*32*16K = 1024000    
+//S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24*1000*1000); 
 
     S3x_Clk_Enable(S3X_FB_21_CLK);
     S3x_Clk_Enable(S3X_FB_16_CLK);
