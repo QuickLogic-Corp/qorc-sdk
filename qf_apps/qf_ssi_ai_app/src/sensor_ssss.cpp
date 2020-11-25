@@ -33,6 +33,7 @@
 #include "eoss3_hal_i2c.h"
 
 #include "mc3635_wire.h"
+#include "kb.h"
 
 /* BEGIN user include files
  * Add header files needed for accessing the sensor APIs
@@ -67,6 +68,7 @@ void sensor_ssss_configure(void)
   sensor_ssss_config.rate_hz = SENSOR_SSSS_SAMPLE_RATE_HZ;
   sensor_ssss_config.n_channels = SENSOR_SSSS_CHANNELS_PER_SAMPLE;
   sensor_ssss_config.bit_depth = SENSOR_SSSS_BIT_DEPTH;
+  sensor_ssss_config.sensor_id = SENSOR_SSSS_ID;
   static int sensor_ssss_configured = false;
 
   /*--- BEGIN User modifiable section ---*/
@@ -80,7 +82,7 @@ void sensor_ssss_configure(void)
   {
     sensor_ssss_configured = true;
   }
-
+  sensor_ssss_startstop(1);
 }
 
 /* User modifiable function. Update the below function
@@ -442,6 +444,11 @@ void sensor_ssss_acquisition_read_callback(void)
 /* END SSSS Acquisition */
 
 /* SSSS AI processing element functions */
+#define SENSOR_SSSS_RESULT_BUFLEN    (512)
+uint8_t sensor_ssss_ai_fv_arr[MAX_VECTOR_SIZE];
+uint8_t sensor_ssss_ai_fv_len;
+char    sensor_ssss_ai_result_buf[SENSOR_SSSS_RESULT_BUFLEN];
+
 void sensor_ssss_ai_data_processor(
        QAI_DataBlock_t *pIn,
        QAI_DataBlock_t *pOut,
@@ -455,7 +462,35 @@ void sensor_ssss_ai_data_processor(
     int nSamples = pIn->dbHeader.numDataElements;
     int nChannels = pIn->dbHeader.numDataChannels;
 
-    //recog_data_using_dbp(p_data, (nSamples/nChannels), nChannels, SENSOR_SSSS_ID);
+    int batch_sz = nSamples / nChannels;
+    //sml_recognition_run_batch(p_data, batch_sz, nChannels, sensor_ssss_config.sensor_id);
+
+    int model = KB_MODEL_slide_rank_0_INDEX;
+    int classification;
+    int count;
+    int wbytes = 0;
+    int buflen = sizeof(sensor_ssss_ai_result_buf)-1;
+	int ret;
+	ret = kb_run_model((SENSOR_DATA_T *)p_data, nChannels, model);
+	if (ret >= 0) {
+		classification = ret;
+	    kb_get_feature_vector(model, sensor_ssss_ai_fv_arr, &sensor_ssss_ai_fv_len);
+	    count = snprintf(sensor_ssss_ai_result_buf, buflen,
+	             "{\"ModelNumber\":%d,\"Classification\":%d,\"FeatureLength\":%d,\"FeatureVector\":[",model,classification, sensor_ssss_ai_fv_len);
+        wbytes += count;
+	    buflen -= count;
+	    for(int j=0; j < sensor_ssss_ai_fv_len-1; j++)
+	    {
+	    	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d,", sensor_ssss_ai_fv_arr[j]);
+	        wbytes += count;
+		    buflen -= count;
+	    }
+    	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d]}", sensor_ssss_ai_fv_arr[sensor_ssss_ai_fv_len-1]);
+        wbytes += count;
+	    buflen -= count;
+	    ssi_publish_sensor_results((uint8_t *)sensor_ssss_ai_result_buf, wbytes);
+		kb_reset_model(0);
+	}
 
     *pRet = NULL;
     return;

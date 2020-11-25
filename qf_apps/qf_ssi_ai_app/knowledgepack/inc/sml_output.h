@@ -1,5 +1,3 @@
-/** @file ssi_comms.h */
-
 /*==========================================================
  * Copyright 2020 QuickLogic Corporation
  *
@@ -16,23 +14,17 @@
  * limitations under the License.
  *==========================================================*/
 
-#ifndef SSI_COMMS_H
-#define SSI_COMMS_H
+#ifndef __SML_OUTPUT_H_
+#define __SML_OUTPUT_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
-#include "Fw_global_config.h"
-#include "FreeRTOS.h"
 
-extern bool is_ssi_connected;
-extern signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void);
-void ssi_publish_sensor_data( uint8_t *p_source, int ilen );
-void ssi_publish_sensor_results( uint8_t *p_source, int ilen );
+uint32_t sml_output_results(uint16_t model, uint16_t classification);
 
-#ifdef __cplusplus
-}
-#endif
+uint32_t sml_output_init(void * p_module);
 
-#endif /* SSI_COMMS_H */
+
+#endif //__SML_OUTPUT_H_

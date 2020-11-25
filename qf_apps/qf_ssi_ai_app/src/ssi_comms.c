@@ -27,6 +27,7 @@
 #include "dbg_uart.h"
 #include "sensor_ssss.h"
 #include "RtosTask.h"
+#include "ssi_comms.h"
 
 #define STACK_SIZE_TASK_SSI   (256)
 #define PRIORITY_TASK_SSI     (PRIORITY_NORMAL)
@@ -79,6 +80,14 @@ void ssiTaskHandler(void *pParameter)
 void ssi_publish_sensor_data( uint8_t *p_source, int ilen )
 {
 	if (is_ssi_connected)
+	{
+		uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
+	}
+}
+
+void ssi_publish_sensor_results( uint8_t *p_source, int ilen )
+{
+	if (is_ssi_connected == false)
 	{
 		uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
 	}

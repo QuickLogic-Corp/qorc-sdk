@@ -47,7 +47,7 @@
 
 #include "fpga_loader.h"    // API for loading FPGA
 #include "gateware.h"           // FPGA bitstream to load into FPGA
-
+#include "kb.h"
 extern const struct cli_cmd_entry my_main_menu[];
 
 
@@ -101,6 +101,7 @@ int main(void)
     //mc3635_init();
     HAL_I2C_Init(i2c0config);
     //CLI_start_task( my_main_menu );
+    kb_model_init(); /* initialize the knowledgepack */
     sensor_ssss_block_processor();
     StartSimpleStreamingInterfaceTask();
 
