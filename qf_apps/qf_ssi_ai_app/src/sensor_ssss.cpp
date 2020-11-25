@@ -74,6 +74,7 @@ void sensor_ssss_configure(void)
   /*--- BEGIN User modifiable section ---*/
   qorc_ssi_accel.begin();
   qorc_ssi_accel.set_sample_rate(sensor_ssss_config.rate_hz);
+  qorc_ssi_accel.set_sample_resolution(sensor_ssss_config.bit_depth);
   qorc_ssi_accel.set_mode(MC3635_MODE_CWAKE);
 
   /*--- END of User modifiable section ---*/
