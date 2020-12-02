@@ -97,13 +97,15 @@ int main(void)
 	dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
     HAL_Delay_Init();
 
-    // Initialize mCube MC3635 Accelerometer sensor device
-    //mc3635_init();
     HAL_I2C_Init(i2c0config);
-    //CLI_start_task( my_main_menu );
+
     kb_model_init(); /* initialize the knowledgepack */
+
     sensor_ssss_block_processor();
+
+#if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)
     StartSimpleStreamingInterfaceTask();
+#endif
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();

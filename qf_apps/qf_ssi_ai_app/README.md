@@ -1,24 +1,53 @@
 Quickfeather [Simple Streaming Interface] AI Application Project
 =================================
 
-This project demonstrates data collection for using [Simple Streaming Interface] 
-and SensiML's [Data Capture Lab]. Adding external sensors to collect data, 
+This project performs either data collection or recognition based on the 
+build mode. Data collection uses [Simple Streaming Interface] to connect and 
+stream sensor data to SensiML's [Data Capture Lab]. Adding external sensors to collect data, 
 analyze and build models is made simple requiring only a sensor configuration
 API function and data reading function API to be supplied for the new sensor.
 This project provides an Arduino friendly Wire interface for easily integrating
 Arduino sensor code.
 
-Building and running the project:
+Building and running the project for data collection mode:
 ---------------------
 
-1. Use the provided Makefile in qf_ssi_ai_app/GCC_Project folder
-and appropriate ARM GCC toolchain to build the project
+1. Verify that the following macros are set for data collection mode in the 
+   source file [sensor\_ssss.h](inc/sensor\_ssss.h).
+```
+#define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
+#define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
+```
+2. Use the provided [Makefile](GCC_Project/Makefile) and an appropriate ARM GCC 
+toolchain to build the project
 
 2. Use the flash programming procedure to flash the binary to Quickfeather board.
 
-3. Reset the board to start running the qf_ssi_ai_app application.
+3. Reset the board to start running the qf\_ssi\_ai\_app application.
 
-For data collection, building an AI model, and recognition please refer to [SensiML Getting Started]
+4. Use [Data Capture Lab] to connect, stream and capture the sensor data.
+
+Building and running the project for recognition mode:
+---------------------
+
+1. Verify that the following macros are set for recognition mode in the 
+   source file [sensor\_ssss.h](inc/sensor\_ssss.h).
+```
+#define SENSOR_SSSS_RECOG_ENABLED      1    /* Enable SensiML recognition */
+#define SENSOR_SSSS_LIVESTREAM_ENABLED 0    /* Enable live-streaming for data collection */
+```
+2. Use the provided [Makefile](GCC_Project/Makefile) and an appropriate ARM GCC
+toolchain to build the project
+
+2. Use the flash programming procedure to flash the binary to Quickfeather board.
+
+3. Reset the board to start running the qf\_ssi\_ai\_app application.
+
+4. Connect a UART to the Quickfeather board. Open a terminal application, 
+   set its baud to 4608000 bps to get the recognition results from the
+   running application.
+
+For details on data collection, building an AI model, and recognition please refer to [SensiML Getting Started]
 
 ## Adding a sensor
 
@@ -141,3 +170,4 @@ to send these samples over UART using [Simple Streaming Interface].
 [Data Capture Lab]: https://sensiml.com/products/data-capture-lab/
 [Qwiic Scale Hookup Guide]: https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.193267885.1228472612.1605042107-1202899191.1566946929
 [Simple Streaming Interface]: https://sensiml.com/documentation/simple-streaming-specification/introduction.html
+[sensor\_ssss.h]: inc/sensor_ssss.h
