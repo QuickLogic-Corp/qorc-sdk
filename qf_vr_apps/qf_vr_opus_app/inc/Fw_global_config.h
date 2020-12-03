@@ -32,48 +32,28 @@
 #define ENABLE_VOICE_SOLUTION   1
 #define PDM2DEC_FACT  48
 
-#define FEATURE_CLI_DEBUG_INTERFACE  1
+#define FEATURE_CLI_DEBUG_INTERFACE  0
 #define FEATURE_CLI_FILESYSTEM       0
 
-#define FEATURE_USBSERIAL   (1)       // USBSERIAL port is present
+#define FEATURE_D2HPROTOCOL_DEVICE (1)
 
-#define FEATURE_D2HPROTOCOL_HOST (1)
-
-#define FEATURE_OPUS_ENCODER    (0)
-
-/* Device firmware image selection */
-#define DEVICE_FIRMWARE_IMAGE_VR_RAW_APP    (1)
-#define DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP   (2)
-#define DEVICE_FIRMWARE_IMAGE_VR_I2S_APP    (3)
-
-// Select raw streaming app or opus streaming app as the device firmware image
-#if (FEATURE_OPUS_ENCODER == 0)
-#define DEVICE_FIRMWARE_IMAGE               (DEVICE_FIRMWARE_IMAGE_VR_RAW_APP)
-#else
-#define DEVICE_FIRMWARE_IMAGE               (DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
-#endif
+#define FEATURE_OPUS_ENCODER    (1)
 
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
 #define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem
-
-/* use this flag to check the data block header */
-/* can be used only iff the QL_XPORT_INCLUDE_HEADER is defined for Device */
-#define TST_HEADER_VERIFY (0)
-
 
 #define uartHandlerUpdate(id,x)
 
 // Options for debug output -- use to set DEBUG_UART below
 // #define UART_ID_DISABLED  0 /* /dev/null */
 // #define UART_ID_HW        1 /* the hard UART on the S3 */
-// #define UART_ID_SEMIHOST  2  // Write debug data to semihost
+// #define UART_ID_SEMIHOST  2
 // #define UART_ID_FPGA      3 /* second uart if part of FPGA */
 // #define UART_ID_BUFFER    4 // Write data to buffer
 // #define UART_ID_SEMBUF    5 // Write datat to semihost and buffer
-// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART UART_ID_HW   // Write debug data to buffer (bufferprinttask can be used to print)
-#define UART_ID_CONSOLE    UART_ID_HW
+#define DEBUG_UART UART_ID_BUFFER   // Write debug data to buffer (bufferprinttask can be used to print)
+     
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
 #define SIZEOF_DBGBUFFER    2048    // Number of characters in circular debug buffer
@@ -93,9 +73,11 @@ extern int FPGA_FFE_LOADED;
 
 #define ENABLE_PRINTF 1
 
+#define ENABLE_LOAD_FROM_FLASH (0)
+
 /** Enable Host mode for Voice application, This standalone S3 mode */
 
-#define HOST_VOICE  0
+#define HOST_VOICE  1
 
 
 /** Define COMPANION_SENSOR macro to configure system in CO-PROCESSOR mode for double tap application */
@@ -119,12 +101,12 @@ extern int FPGA_FFE_LOADED;
 /* enable via sw the FFE or disable it, TODO: Make this real instead of a hack */
 #define SW_ENABLE_FFE   0
 /* enable via sw the AUDIO or disable it, TODO: Make this real instead of a hack */
-#define SW_ENABLE_AUDIO 0
+#define SW_ENABLE_AUDIO 1
 /* enable the FFE or not, see SW_ENABLE_FFE only 1 should exist */
 #define FFE_DRIVERS	0 // 1
 
 /* do or do not perform dynamic frequency scaling */
-#define CONST_FREQ (1)
+#define CONST_FREQ (0)
 /* used to enable CPU load calculation for DFS */
 #define CPU_LOAD_CALC_ENABLE 0
 
@@ -132,7 +114,7 @@ extern int FPGA_FFE_LOADED;
 #define LTC1859_DRIVER  0 // 1
 
 /* enable the AUDIO driver */
-#define AUDIO_DRIVER    0    // Set 1 to enable audio sampling
+#define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
 
 
 /* if 0 load from SPI, if 1 load FFE/FPGA from SD card */
@@ -157,7 +139,7 @@ extern int FPGA_FFE_LOADED;
 #endif
 
 /* Define this flag to Enable Internal LDO. If undefined, internal LDO will be disabled.*/
-#define ENABLE_INTERNAL_LDO   1  // set to 0 for power measurement
+#define ENABLE_INTERNAL_LDO   0  // set to 0 for power measurement
 
 /* select one of the following for Audio PDM  block */
 #define PDM_PAD_28_29 1
@@ -178,16 +160,77 @@ extern int FPGA_FFE_LOADED;
 #define PDM_MIC_LEFT_CH 1
 #define PDM_MIC_RIGHT_CH 0
 
-#define EN_STEREO_DUAL_BUF 0
+#define EN_STEREO_DUAL_BUF 1 //0= use stereo data interleaved
 
-//#define AEC_ENABLED 1
+#define ENABLE_I2S_TX_SLAVE 0
+#define QL_XPORT_INCLUDE_HEADER (0) //(1)
 
-#define AUDIO_LED_TEST 1 //Valid only in Chandalar BSP specific apps
+#define ENABLE_HOST_IF (1)
 
-/* stringize value */
-#define VALUE2STRING(value)    TOSTRING(value)
-#define TOSTRING(value)        #value
-#define SOURCE_LOCATION        __FILE__":"VALUE2STRING(__LINE__)
+#if (ENABLE_I2S_TX_SLAVE == 1)
+#undef ENABLE_HOST_IF
+#endif
+
+
+#if (ENABLE_HOST_IF == 1)
+#define VM1010_MIC_BOARD    (0)
+#define ENABLE_OPUS_TX (1)
+
+#if (ENABLE_OPUS_TX == 0)
+#define ENABLE_RAW_TX_SPI   (1)
+#define ENABLE_OPUS_ENCODER (0)
+#else
+#define ENABLE_RAW_TX_SPI   (1)
+#define ENABLE_OPUS_ENCODER (0)
+#endif
+
+#endif  // ENABLE_HOST_IF
+
+
+/* Fs = Audio sampling rate */
+#define AUDIO_SAMPLING_RATE             (16000)
+#define AUDIO_BLOCK_SIZE_IN_SAMPLES     (240)
+#define AUDIO_BLOCK_SIZE_IN_MS          (15)
+#if QL_XPORT_INCLUDE_HEADER == 1
+#define QL_XPORT_BLCOK_HDR_SZ           (8)
+#else
+#define QL_XPORT_BLCOK_HDR_SZ           (0)
+#endif
+
+
+//#if ENABLE_RAW_TX_SPI == 1
+
+#define TX_SPI_AUDIO_BLOCK_COUNT   (8)
+
+/* examlpe ~100ms = 6 blocks*AUDIO_BLOCK_SIZE_IN_SAMPLES = 1440  pcm samples mono */
+/* OR       120ms = 8 blocks*AUDIO_BLOCK_SIZE_IN_SAMPLES = 1920  pcm samples mono */
+/* 960 samples = 4 block of 15 mS each = 60mSec and 960 block sz pcm samples mono */
+/* 1200 samples = 5 block of 15 mS each = 75mSec and 1200 block sz pcm samples mono */
+#define TX_SPI_AUDIO_RAW_BLOCK_SZ (TX_SPI_AUDIO_BLOCK_COUNT*(AUDIO_BLOCK_SIZE_IN_SAMPLES + QL_XPORT_BLCOK_HDR_SZ))
+
+/* 50ms Timer - to check enough raw pcm samples available */
+#define TX_SPI_AUDIO_RAW_MSG_PERIOD (40)
+/* chalil - guess - shall be little lesser than time for TX_SPI_AUDIO_RAW_BLOCK_SZ ?,
+   todo -test with more than one values {50, 90, 100} */
+//#define TX_SPI_AUDIO_RAW_MSG_PERIOD (AUDIO_BLOCK_SIZE_IN_MS*(TX_SPI_AUDIO_BLOCK_COUNT-2))
+
+// assume all the blocks are 15ms.
+// for example, if this value is 10, a maximum of 150ms is held for instant streaming
+// Note: set it to at least 2 times the buffer required
+#define MAX_AUDIO_RAW_STREAM_QUEUE_SIZE  (TX_SPI_AUDIO_BLOCK_COUNT*8)
+
+//#endif
+
+#define AUDIO_LED_TEST  0 // Valid only in Chandalar BSP specific apps
+#define DFS_LED_TEST    1 // Used to track DFS states (N0 = none, N1 = green, N2 = blue, N3 = orange, N4 = all
+#define D2H_LED_TEST    0 // Blue means D2H line is high
+
+#define MIN_AUDIO_SAVE_BLOCKS_SPARE_SIZE (30)
+#define PRE_TEXT_BEFORE_KEY_PHRASE       (0)
+/*Set this flag to 1 to enabled forced streaming enable/disable command through CLI.
+Setting it to 1 will remove uart in lpm feature (since uart cli will be now used to send the start/stop cmd.)
+(Will increase power consumption)*/
+#define FORCED_STREAMING_ENABLED (0)
 
 /********************/
 

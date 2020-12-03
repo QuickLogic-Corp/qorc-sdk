@@ -17,12 +17,13 @@ import sys
 import struct
 import wave
 import argparse
+import subprocess
 
-#Note: These definitions are based on QF Application to auto detect whether it
-# Raw Audio data or Opus Encoded Audio data. So change the values if the QF 
-# Application prints different line sizes
+#Note: These definitions are based on QF Application to auto detect whether
+# it is Raw Audio data or Opus Encoded Audio data. So change the values if 
+# the QF Application prints different line sizes
 RAW_AUDIO_LINE_LENGTH=81
-OPUS_AUDIO_LINE_LENGTH=21
+OPUS_AUDIO_LINE_LENGTH=89
 
 #just for test re-encode and compare
 def encode_raw_data(output_data):
@@ -47,6 +48,7 @@ def decode_line_raw(line):
     #print('enc and dec')
     #print(line.decode())
     #print(out.decode())
+    print('.',end='')
     
     return dec_line
 
@@ -65,6 +67,11 @@ def decode_base64_file(input_file, output_file):
                     start_found = 1
                     encode_type = 'raw_audio'
                 output_array.extend(decode_line_raw(bytearray(line, 'ascii')))
+            elif (line_length == OPUS_AUDIO_LINE_LENGTH):
+                if (start_found == 0):
+                    start_found = 1
+                    encode_type = 'opus_audio'
+                output_array.extend(decode_line_raw(bytearray(line, 'ascii')))
             else:
                 if(start_found == 1):
                     break
@@ -77,7 +84,31 @@ def decode_base64_file(input_file, output_file):
             #if (count == 10):
             #    break
     #encode_raw_data(output_array)
+
+    print()
+    print(f'Extracted {count} lines')
+    
+    # if opus stream, first save it with .opus extension and call the opus decoder
+    # Opus decoder saves the decoded data as a wav file
+    if(encode_type == 'opus_audio'):
+        dot_index = input_file.find('.')
+        opus_file = input_file[:dot_index] + '.opus'
+        dec_opus_file = input_file[:dot_index] + '.pcm'
+        with open(opus_file, 'wb') as w:
+            w.write(output_array)
         
+        source_dir, source_file = os.path.split(sys.argv[0])
+        opus_demo_exe = os.path.join(source_dir, 'opus_demo.exe')
+        print('program name = ', opus_demo_exe)
+        #call the opus decoder from command line
+        subprocess.call([opus_demo_exe, '-d', '16000', '1', opus_file, dec_opus_file])
+        print('Decoded opus data as pcm samples')
+        
+        #read the binary data into an array to save it as wav file
+        with open(dec_opus_file, 'rb') as r:
+            output_array = r.read()
+
+    # It is raw data stream. Save directly into wav file
     if(len(output_array) > 0):
         
         #just for test save as bin file
