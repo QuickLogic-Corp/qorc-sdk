@@ -32,7 +32,7 @@ extern "C" {
 
 #define SENSOR_SSSS_SAMPLE_RATE_HZ       (100) // sensor sample rate per channel in Hz
 #define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 3)  // Number of channels
-#define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms 
+#define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms
 #define SENSOR_SSSS_BIT_DEPTH            (16)  // bit-depth per sample, must be 16
 #define SENSOR_SSSS_MAX_DATA_BLOCKS      (20)  // number of data blocks to allocate
 
@@ -75,7 +75,7 @@ extern "C" {
 #define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
 
-#if (((SENSOR_SSSS_RECOG_ENABLED) ^ (SENSOR_SSSS_LIVESTREAM_ENABLED)) == 0)
+#if (((SENSOR_SSSS_RECOG_ENABLED) + (SENSOR_SSSS_LIVESTREAM_ENABLED)) > 1)
 #error "Enable only one of the modes SENSOR_SSSS_RECOG_ENABLED or SENSOR_SSSS_LIVESTREAM_ENABLED"
 #endif
 

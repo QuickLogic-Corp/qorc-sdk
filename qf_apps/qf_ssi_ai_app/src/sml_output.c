@@ -18,7 +18,6 @@
 #include <stdint.h>
 #include "sml_output.h"
 #include "kb.h"
-#include "ble_pme_defs.h"
 #include "eoss3_hal_uart.h"
 #include "ql_time.h"
 #include <stdio.h>
@@ -28,15 +27,8 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
 #endif
 
-static ble_pme_result_w_fv_t recent_fv_result;
 
 static char serial_out_buf[SERIAL_OUT_CHARS_MAX];
-
-void SendLastRecognition()
-{
-    send_recognition_results(&recent_fv_result);
-}
-
 
 static void sml_output_led(uint16_t model, uint16_t classification)
 {
@@ -75,8 +67,6 @@ static intptr_t last_output;
 
 uint32_t sml_output_results(uint16_t model, uint16_t classification)
 {
-    recent_fv_result.context = model;
-    recent_fv_result.classification = classification;
 
     //kb_get_feature_vector(model, recent_fv_result.feature_vector, &recent_fv_result.fv_len);
 
