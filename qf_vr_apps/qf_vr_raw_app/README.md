@@ -20,8 +20,8 @@ Refer [VR raw streaming Hardware Setup] for details on hardware setup
 1. Use the Makefile provided in qf_vr_apps/qf_vr_raw_app/GCC_Project folder and 
    an appropriate ARM GCC toolchain to build the project
 
-2. Convert the resulting binary to "C" source file named firmware_raw_image.h.
-   Copy this firmware_raw_image.h source file to the qf_apps/qf_host_app/inc folder
+2. Convert the resulting binary to "C" source file named firmware_image_vr_raw_app.h.
+   Copy this firmware_image_vr_raw_app.h source file to the qf_apps/qf_host_app/inc folder
 
 3. Use the Makefile provided in qf_vr_apps/qf_host_app/GCC_Project folder and 
    an appropriate ARM GCC toolchain to build the project
@@ -43,8 +43,8 @@ follow these steps:
 2. Update the build system in qf_vr_apps/qf_vr_raw_app/GCC_Project to add the
    implemented source files.
 
-3. Convert the resulting binary to "C" source file named firmware_raw_image.h.
-   Copy this firmware_raw_image.h source file to the qf_apps/qf_host_app/inc folder
+3. Convert the resulting binary to "C" source file named firmware_image_vr_raw_app.h.
+   Copy this firmware_image_vr_raw_app.h source file to the qf_apps/qf_host_app/inc folder
 
 4. Use the Makefile provided in qf_vr_apps/qf_host_app/GCC_Project folder and 
    an appropriate ARM GCC toolchain to build the project

@@ -100,7 +100,7 @@ Demonstrate host/companion command protocol and raw audio streaming over SPI.
 - PC to receive and analyze audio packets
   
 
-## qf_VR_opus_app: [coming soon] companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.
+## qf_VR_opus_app: companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.
 ![qf_VR_opus_app](./images/qf_VR_opus_app.png)
 ### Purpose
 Demonstrate host/companion command protocol, opus compression and audio streaming over SPI.
