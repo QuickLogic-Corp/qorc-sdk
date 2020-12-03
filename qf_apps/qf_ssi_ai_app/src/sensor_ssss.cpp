@@ -33,7 +33,7 @@
 #include "eoss3_hal_i2c.h"
 
 #include "mc3635_wire.h"
-#include "kb.h"
+#include "sml_recognition_run.h"
 
 /* BEGIN user include files
  * Add header files needed for accessing the sensor APIs
@@ -252,7 +252,7 @@ datablk_processor_params_t sensor_ssss_datablk_processor_params[] = {
       &sensor_ssss_dbp_thread_q,
       sizeof(sensor_ssss_datablk_pe_descr)/sizeof(sensor_ssss_datablk_pe_descr[0]),
       sensor_ssss_datablk_pe_descr,
-      256,
+      256*2,
       (char*)"SENSOR_SSSS_DBP_THREAD",
       NULL
     }
@@ -281,15 +281,16 @@ void sensor_ssss_block_processor(void)
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
   sensor_ssss_add();
   sensor_ssss_configure();
-
+#if 0
   printf("Sensor Name:                   %s\n", "SENSOR_SSSS_NAME");
-  printf("Sensor Memory:                 %d\n", SENSOR_SSSS_MEMSIZE_MAX);
+  printf("Sensor Memory:                 %d\n", (int)SENSOR_SSSS_MEMSIZE_MAX);
   printf("Sensor Sampling rate:          %d Hz\n", (int)SENSOR_SSSS_SAMPLE_RATE_HZ);
-  printf("Sensor Number of channels:     %d\n", SENSOR_SSSS_CHANNELS_PER_SAMPLE);
-  printf("Sensor frame size per channel: %d\n", SENSOR_SSSS_SAMPLES_PER_CHANNEL);
-  printf("Sensor frame size:             %d\n", SENSOR_SSSS_SAMPLES_PER_BLOCK);
-  printf("Sensor sample bit-depth:       %d\n", SENSOR_SSSS_BIT_DEPTH);
-  printf("Sensor datablock count:        %d\n", SENSOR_SSSS_NUM_DATA_BLOCKS);
+  printf("Sensor Number of channels:     %d\n", (int)SENSOR_SSSS_CHANNELS_PER_SAMPLE);
+  printf("Sensor frame size per channel: %d\n", (int)SENSOR_SSSS_SAMPLES_PER_CHANNEL);
+  printf("Sensor frame size:             %d\n", (int)SENSOR_SSSS_SAMPLES_PER_BLOCK);
+  printf("Sensor sample bit-depth:       %d\n", (int)SENSOR_SSSS_BIT_DEPTH);
+  printf("Sensor datablock count:        %d\n", (int)SENSOR_SSSS_NUM_DATA_BLOCKS);
+#endif
 }
 /*========== END: SSSS SENSOR Datablock processor definitions =============*/
 
@@ -445,11 +446,6 @@ void sensor_ssss_acquisition_read_callback(void)
 /* END SSSS Acquisition */
 
 /* SSSS AI processing element functions */
-#define SENSOR_SSSS_RESULT_BUFLEN    (512)
-uint8_t sensor_ssss_ai_fv_arr[MAX_VECTOR_SIZE];
-uint8_t sensor_ssss_ai_fv_len;
-char    sensor_ssss_ai_result_buf[SENSOR_SSSS_RESULT_BUFLEN];
-
 void sensor_ssss_ai_data_processor(
        QAI_DataBlock_t *pIn,
        QAI_DataBlock_t *pOut,
@@ -464,35 +460,7 @@ void sensor_ssss_ai_data_processor(
     int nChannels = pIn->dbHeader.numDataChannels;
 
     int batch_sz = nSamples / nChannels;
-    //sml_recognition_run_batch(p_data, batch_sz, nChannels, sensor_ssss_config.sensor_id);
-
-    int model = KB_MODEL_slide_rank_0_INDEX;
-    int classification;
-    int count;
-    int wbytes = 0;
-    int buflen = sizeof(sensor_ssss_ai_result_buf)-1;
-	int ret;
-	ret = kb_run_model((SENSOR_DATA_T *)p_data, nChannels, model);
-	if (ret >= 0) {
-		classification = ret;
-	    kb_get_feature_vector(model, sensor_ssss_ai_fv_arr, &sensor_ssss_ai_fv_len);
-	    count = snprintf(sensor_ssss_ai_result_buf, buflen,
-	             "{\"ModelNumber\":%d,\"Classification\":%d,\"FeatureLength\":%d,\"FeatureVector\":[",model,classification, sensor_ssss_ai_fv_len);
-        wbytes += count;
-	    buflen -= count;
-	    for(int j=0; j < sensor_ssss_ai_fv_len-1; j++)
-	    {
-	    	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d,", sensor_ssss_ai_fv_arr[j]);
-	        wbytes += count;
-		    buflen -= count;
-	    }
-    	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d]}", sensor_ssss_ai_fv_arr[sensor_ssss_ai_fv_len-1]);
-        wbytes += count;
-	    buflen -= count;
-	    ssi_publish_sensor_results((uint8_t *)sensor_ssss_ai_result_buf, wbytes);
-		kb_reset_model(0);
-	}
-
+    sml_recognition_run_batch(p_data, batch_sz, nChannels, sensor_ssss_config.sensor_id);
     *pRet = NULL;
     return;
 }

@@ -21,10 +21,16 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 uint32_t sml_output_results(uint16_t model, uint16_t classification);
 
 uint32_t sml_output_init(void * p_module);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__SML_OUTPUT_H_

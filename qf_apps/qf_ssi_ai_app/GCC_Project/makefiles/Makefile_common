@@ -4,6 +4,8 @@
 D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
 O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
 R_FILES:=$(addprefix $(MAIN_FPGA_RTL_DIR)$(DIR_SEP),$(FPGA_RTL_SRCS))
+D_FILES+=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS_CPP:.cpp=.d))
+O_FILES+=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS_CPP:.cpp=.o))
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.d
 
@@ -37,7 +39,7 @@ clean:
 	@echo Cleaning ...
 ifneq (,${DELETEME})
 	-$(HIDE)$(RM) $(D_FILES)
-	-$(HIDE)$(RM) $(O_FILES) 
+	-$(HIDE)$(RM) $(O_FILES)
 ifneq (,$(FPGA_RTL_OBJ))
 	-$(HIDE)$(RM) $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ)
 endif

@@ -71,11 +71,11 @@ int sml_recognition_run_single(signed short *data, uint32_t sensor_id)
 	switch(sensor_id)
 	{
 		case SENSOR_SSSS_ID:
-					ret = kb_run_model((SENSOR_DATA_T *)data, num_sensors, KB_MODEL_slide_rank_0_INDEX);
-		if (ret >= 0){
-			sml_output_results(KB_MODEL_slide_rank_0_INDEX, ret);
-			kb_reset_model(0);
-		};
+			ret = kb_run_model((SENSOR_DATA_T *)data, num_sensors, KB_MODEL_slide_rank_0_INDEX);
+			if (ret >= 0){
+				sml_output_results(KB_MODEL_slide_rank_0_INDEX, ret);
+				kb_reset_model(0);
+			};
 			break;
 		default:
 			break;
