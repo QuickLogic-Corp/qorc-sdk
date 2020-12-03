@@ -100,7 +100,6 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
-    -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
     -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math 
 
 #    -L$(LIBOPUS_DIR) -lopus \
@@ -130,7 +129,7 @@ export FREERTOS_DIR     = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 
 export LIB_DIR          = $(PROJ_ROOT)$(DIR_SEP)Libraries
 # Enable the below line to link with pryon_lite
-export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
+#export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
 export AUDIO_DIR        = $(LIB_DIR)$(DIR_SEP)Audio$(DIR_SEP)src
 export CLI_DIR          = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
 export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src

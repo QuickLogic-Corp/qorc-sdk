@@ -97,8 +97,11 @@ def decode_base64_file(input_file, output_file):
         with open(opus_file, 'wb') as w:
             w.write(output_array)
         
+        source_dir, source_file = os.path.split(sys.argv[0])
+        opus_demo_exe = os.path.join(source_dir, 'opus_demo.exe')
+        print('program name = ', opus_demo_exe)
         #call the opus decoder from command line
-        subprocess.call(['opus_demo.exe', '-d', '16000', '1', opus_file, dec_opus_file])
+        subprocess.call([opus_demo_exe, '-d', '16000', '1', opus_file, dec_opus_file])
         print('Decoded opus data as pcm samples')
         
         #read the binary data into an array to save it as wav file

@@ -1,6 +1,6 @@
 # -*- mode: Makefile -*-
 
-all: POWER CMSIS UTILS DATABLOCKMANAGER D2HPROTOCOL AUDIO AMAZON LIBOPUS CELT OPUSSRC
+all: POWER CMSIS UTILS DATABLOCKMANAGER D2HPROTOCOL AUDIO LIBOPUS CELT OPUSSRC
 
 
 .PHONY: POWER
@@ -29,10 +29,6 @@ D2HPROTOCOL:
 AUDIO:
 	make -f makefiles/Makefile_Audio
 
-.PHONY: AMAZON
-AMAZON:
-	make -f makefiles/Makefile_Amazon
-
 .PHONY: LIBOPUS
 LIBOPUS:
 	make -f makefiles/Makefile_libopus
@@ -55,7 +51,6 @@ clean:
 	make -f makefiles/Makefile_DatablockManager clean
 	make -f makefiles/Makefile_D2HProtocol clean
 	make -f makefiles/Makefile_Audio clean
-	make -f makefiles/Makefile_Amazon clean
 
 	make -f makefiles/Makefile_libopus clean
 	make -f makefiles/Makefile_celt clean

@@ -31,7 +31,15 @@
 #include "dbg_uart.h"
 #include "qlspi_s3.h"
 #include "qlspi_fw_loader.h"
-#include "firmware_raw_image.h" 
+#if (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_RAW_APP)
+#include "firmware_image_vr_raw_app.h"
+#elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
+#include "firmware_image_vr_opus_app.h"
+#elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
+#include "firmware_image_vr_i2s_app.h"
+#else
+#error "Unknown Device Firmware Imge selection"
+#endif
 #include "h2d_protocol.h"
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_spi.h"

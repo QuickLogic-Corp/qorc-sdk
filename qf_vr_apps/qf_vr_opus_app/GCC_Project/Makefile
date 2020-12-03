@@ -66,6 +66,14 @@ clean_BSP:
 
 CLEAN_TARGET += BSP
 
+.PHONY: AMAZON
+AMAZON:
+	make -f makefiles/Makefile_Amazon
+clean_AMAZON:
+	make -f makefiles/Makefile_Amazon clean
+
+CLEAN_TARGET += AMAZON
+
 .PHONY:DSPC
 DSPC:
 	make -f makefiles/Makefile_DSPC
