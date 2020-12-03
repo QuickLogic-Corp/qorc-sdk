@@ -7,7 +7,8 @@ BINS = qf_helloworldsw/GCC_Project/output/bin/qf_helloworldsw.bin\
 	qf_bootloader_uart/GCC_Project/output/bin/qf_bootloader_uart.bin\
 	qf_loadflash_uart/GCC_Project/output/bin/qf_loadflash_uart.bin\
 	qf_fpgauart_app/GCC_Project/output/bin/qf_fpgauart_app.bin\
-	qf_gwtestharness/GCC_Project/output/bin/qf_gwtestharness.bin
+	qf_gwtestharness/GCC_Project/output/bin/qf_gwtestharness.bin\
+	qf_ssi_ai_app/GCC_Project/output/bin/qf_ssi_ai_app.bin
 
 MFGBINS = qf_bootloader/GCC_Project/output/bin/qf_bootloader.bin\
 		qf_loadflash/GCC_Project/output/bin/qf_loadflash.bin\
@@ -23,6 +24,8 @@ clean:
 	cd qf_bootloader_uart/GCC_Project/ && make clean
 	cd qf_loadflash_uart/GCC_Project/ && make clean
 	cd qf_fpgauart_app/GCC_Project/ && make clean
+	cd qf_gwtestharness/GCC_Project/ && make clean
+	cd qf_ssi_ai_app/GCC_Project/ && make clean
 
 
 
@@ -60,3 +63,6 @@ qf_fpgauart_app/GCC_Project/output/bin/qf_fpgauart_app.bin:
 
 qf_gwtestharness/GCC_Project/output/bin/qf_gwtestharness.bin:
 	cd qf_gwtestharness/GCC_Project/ && make
+
+qf_ssi_ai_app/GCC_Project/output/bin/qf_ssi_ai_app.bin:
+	cd qf_ssi_ai_app/GCC_Project/ && make

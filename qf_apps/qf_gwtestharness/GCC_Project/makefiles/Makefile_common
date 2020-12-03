@@ -20,8 +20,10 @@ $(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
 	
 SYMBIFLOW_WARN_PATTERN="^Warning [0-9]\{1,\}:.*no timing specification"
 $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ): $(R_FILES)
+ifneq (,${R_FILES})
 	time ql_symbiflow  -compile -src $(MAIN_FPGA_RTL_DIR) -d ql-eos-s3 -t $(RTL_TOP_MODULE) -v $(FPGA_RTL_SRCS) -p quickfeather.pcf -P PU64 -dump header | grep -v $(SYMBIFLOW_WARN_PATTERN)
-
+endif
+	
 -include $(D_FILES))
 	
 
