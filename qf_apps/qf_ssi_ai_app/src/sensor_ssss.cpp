@@ -35,6 +35,14 @@
 #include "mc3635_wire.h"
 #include "sml_recognition_run.h"
 
+// When enabled, GPIO (configured in pincfg_table.c) is toggled whenever a
+// datablock is dispacthed for writing to the UART. Datablocks are dispatched
+// every (SENSOR_SSSS_LATENCY) ms
+#if (SENSOR_SSSS_RATE_DEBUG_GPIO == 1)
+#include "eoss3_hal_gpio.h"
+uint8_t sensor_rate_debug_gpio_val = 1;
+#endif
+
 /* BEGIN user include files
  * Add header files needed for accessing the sensor APIs
  */
@@ -503,6 +511,12 @@ void sensor_ssss_livestream_data_processor(
       // Live-stream data to the host
       uint8_t *p_source = pIn->p_data ;
       int ilen = pIn->dbHeader.numDataElements * pIn->dbHeader.dataElementSize ;
+#if (SENSOR_SSSS_RATE_DEBUG_GPIO == 1)
+      // Toggle GPIO to indicate that a new datablock buffer is dispatched to UART
+      // for transmission for data collection
+      HAL_GPIO_Write(GPIO_2, sensor_rate_debug_gpio_val);
+      sensor_rate_debug_gpio_val ^= 1;
+#endif
       ssi_publish_sensor_data(p_source, ilen);
     }
     *pRet = NULL;

@@ -71,7 +71,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldsw";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_ssi_app";
     
     qf_hardwareSetup();
     nvic_init();
@@ -87,7 +87,7 @@ int main(void)
 #endif
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
+    dbg_str( "Quicklogic QuickFeather SensiML AI Data Collection/Recognition App\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
