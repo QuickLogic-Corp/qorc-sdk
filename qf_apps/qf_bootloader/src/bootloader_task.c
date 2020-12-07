@@ -53,7 +53,7 @@ int check_active_images(void);
 #define METADATA_UNKNOWN_FLASH_STATE        (0x0)
 #define METADATA_APPFPGA_IS_FLASHED         (0x1)
 #define METADATA_M4APP_IS_FLASHED           (0x2)
-#define METADATA_APPFFE_IS_FLASHED          (0x3)
+#define METADATA_APPFFE_IS_FLASHED          (0x4)
 #define METADATA_VALID_IMAGE_IS_FLASHED     (METADATA_APPFPGA_IS_FLASHED|METADATA_M4APP_IS_FLASHED) // ffe not supported yet
 
 TaskHandle_t 	BLTaskHandle;
