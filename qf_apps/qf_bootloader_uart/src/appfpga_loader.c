@@ -16,9 +16,9 @@
 
 /*==========================================================
 *                                                          
-*    File   : usb_fpga_loader.c 
-*    Purpose: This file has function to load USB FPGA image 
-*             from the Flash and wait for reset 
+*    File   : appfpga_loader.c 
+*    Purpose: This file has function to load App FPGA image 
+*             from the Flash
 *                                                          
 *=========================================================*/
 
@@ -45,7 +45,7 @@ extern void toggle_downloading_led(int toggle_time_msec);
 * This computes the CRC32 on the USB FPGA code loaded into RAM.
 * checks against stored CRC32 in the USB FPGA Metadata sector.
 */
-int check_fpga_crc(int image_size, uint32_t expected_crc)
+int check_appfpga_crc(int image_size, uint32_t expected_crc)
 {
   uint32_t image_crc32 = 0xFFFFFFFF;
   int size = image_size;
@@ -57,7 +57,7 @@ int check_fpga_crc(int image_size, uint32_t expected_crc)
   
   if(image_crc32 != expected_crc)
   {
-    dbg_str("USB FPGA image CRC mismatch \n");
+    dbg_str("Application FPGA image CRC mismatch \n");
     return BL_ERROR;
   }
   return BL_NO_ERROR;
@@ -67,29 +67,41 @@ int check_fpga_crc(int image_size, uint32_t expected_crc)
 * The Size and CRC32 are checked using the image Metadata sector values
 * If they pass, the FPGA is loaded and wait for reset button to be pressed. 
 */
-int load_usb_flasher(void)
+int load_appfpga(void)
 {
-#if (UART_ID_BOOTLOADER == UART_ID_USBSERIAL)
   unsigned char *bufPtr;
   uint32_t image_crc, image_size;
+
+  uint32_t* fpga_bin_header;
+  uint32_t fpga_bin_header_size;
+  uint32_t fpga_bin_version;
+  uint32_t* fpga_bitstream_ptr;
+  uint32_t fpga_bitstream_size;
+  uint32_t fpga_bitstream_crc;
+  uint32_t* fpga_meminit_ptr;
+  uint32_t fpga_meminit_size;
+  uint32_t fpga_meminit_crc;
+  uint32_t* fpga_iomux_ptr;
+  uint32_t fpga_iomux_size;
+  uint32_t fpga_iomux_crc;
   
   //get the meta data sector for USB FPGA 
   bufPtr = (unsigned char *)image_metadata; 
-  read_flash((unsigned char *)FLASH_USBFPGA_META_ADDRESS, FLASH_USBFPGA_META_SIZE, bufPtr);
+  read_flash((unsigned char *)FLASH_APPFPGA_META_ADDRESS, FLASH_APPFPGA_META_SIZE, bufPtr);
   image_crc = image_metadata[0];
   image_size = image_metadata[1];
-  if(image_size > FLASH_USBFPGA_SIZE)
+  if(image_size > FLASH_APPFPGA_SIZE)
   {
-    dbg_str("USB FPGA Image size exceeded bootable size \n");
+    dbg_str("App FPGA Image size exceeded bootable size \n");
     return BL_ERROR;
   }
   
   //FPGA image is loaded immediately after the 64K Bootloader
   bufPtr = APP_AFTER_64K_RAM_START;
-  read_flash((unsigned char *)FLASH_USBFPGA_ADDRESS, image_size, bufPtr);
+  read_flash((unsigned char *)FLASH_APPFPGA_ADDRESS, image_size, bufPtr);
   
   //check crc
-  if(check_fpga_crc(image_size, image_crc) == BL_ERROR)
+  if(check_appfpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
 
   S3x_Clk_Disable(S3X_FB_21_CLK);
@@ -98,19 +110,44 @@ int load_usb_flasher(void)
   S3x_Clk_Enable(S3X_A1_CLK);
   S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
 
-  //load the FPGA from RAM
-  load_fpga(image_size, (uint32_t *)bufPtr);
-  // Use 0x6140 as USB serial product ID (USB PID)
-  HAL_usbserial_init2(false, false, 0x6140);         // Start USB serial not using interrupts
-  for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+  // The FPGA bin now contains HEADER + BITSTREAM + MEMINIT + IOMUX
+  // HEADER = 8 x 4B
+  fpga_bin_header = (uint32_t*)bufPtr;
+  fpga_bin_header_size = 8*4; // 32B
 
-  // remind what to do when done programming
-  dbg_str("FPGA Programmed\n");
-#endif
-  dbg_str("Press Reset button after flashing ..\n");
-  //wait for the reset button to be pressed
-  program_flash();
-  NVIC_SystemReset();
+  fpga_bin_version = *(fpga_bin_header);
+  
+  fpga_bitstream_size = *(fpga_bin_header + 1);
+  fpga_bitstream_crc = *(fpga_bin_header + 2);
+  
+  fpga_meminit_size = *(fpga_bin_header + 3);
+  fpga_meminit_crc = *(fpga_bin_header + 4);
 
-  //return BL_ERROR;
+  fpga_iomux_size = *(fpga_bin_header + 5);
+  fpga_iomux_crc = *(fpga_bin_header + 6);
+
+  // word 7 of the fpga bin header is reserved for future use.
+
+  fpga_bitstream_ptr = fpga_bin_header + 8;
+  fpga_meminit_ptr = fpga_bitstream_ptr + (fpga_bitstream_size/4);
+  fpga_iomux_ptr = fpga_meminit_ptr + (fpga_meminit_size/4);
+
+//   dbg_str("\r\n");
+//   dbg_hex32(fpga_bin_version);dbg_str("\r\n");
+//   dbg_int(fpga_bitstream_size);dbg_str("\r\n");
+//   dbg_hex32(fpga_bitstream_crc);dbg_str("\r\n");
+//   dbg_int(fpga_meminit_size);dbg_str("\r\n");
+//   dbg_hex32(fpga_meminit_crc);dbg_str("\r\n");
+//   dbg_int(fpga_iomux_size);dbg_str("\r\n");
+//   dbg_hex32(fpga_iomux_crc);dbg_str("\r\n");dbg_str("\r\n");
+  
+  load_fpga_with_mem_init(fpga_bitstream_size, fpga_bitstream_ptr, fpga_meminit_size, fpga_meminit_ptr);
+  fpga_iomux_init(fpga_iomux_size, fpga_iomux_ptr);
+
+  S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
+  S3x_Clk_Enable(S3X_FB_16_CLK);
+
+  dbg_str("Application FPGA Loaded\r\n");
+
+  return BL_NO_ERROR;
 }

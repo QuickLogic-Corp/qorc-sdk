@@ -27,6 +27,7 @@
 #include "eoss3_dev.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
+#include "dbg_uart.h"
 
 
 #define REG1                            (*(volatile uint32_t *)(0x40004610))
@@ -214,7 +215,8 @@ int load_fpga_with_mem_init(uint32_t image_size, uint32_t* image_ptr, uint32_t m
 	// set IO_19 back to POR configuration
 	*((volatile unsigned int*) 0x40004c4c) = 0x000009a0;
 
-	//printf("FPGA is programmed\r\n");	
+	//printf("FPGA is programmed\r\n");
+    	
 
 	return 1;
 }
@@ -246,8 +248,8 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
     // check if we have reached end of the array, then done.
     // othewise, we process the next mem block in the same way as above.
     
-    // check if there is any mem blocks to init
-    if (mem_content_size == 0) 
+    // check if there is any mem block to init
+    if ((mem_content_ptr == NULL) || (mem_content_size == 0))
     {
         //printf("no content to init mem blocks\r\n");
         return 0;
@@ -272,6 +274,9 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
     // process all mem blocks
     while(1)
     {
+        //dbg_int(current_index);dbg_str("\r\n");
+        //dbg_hex32((uint32_t *)mem_content_ptr[current_index]);dbg_str("\r\n");
+
         // read block_addr and block_size_in_words
         current_block_addr = (uint32_t *)mem_content_ptr[current_index++];
         current_block_size_in_words = mem_content_ptr[current_index++];
@@ -287,9 +292,13 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
             // readback-verify
             if(*current_block_addr != mem_content_ptr[current_index + current_block_iterator])
             {
-                printf("MISMATCH! addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
-                                                                        *current_block_addr,
-                                                                        mem_content_ptr[current_index + current_block_iterator]);
+                dbg_str("MISMATCH! addr: 0x");dbg_hex32((uint32_t)current_block_addr);
+                dbg_str(", read: ");dbg_hex32(*current_block_addr);
+                dbg_str(", write: ");dbg_hex32(mem_content_ptr[current_index + current_block_iterator]);
+                dbg_str("\r\n");
+                //printf("MISMATCH! addr: 0x%08x, read: 0x%08x, write: 0x%08x\r\n", current_block_addr,
+                //                                                        *current_block_addr,
+                //                                                        mem_content_ptr[current_index + current_block_iterator]);
                 return -1;
                                                                         
             }
@@ -322,3 +331,35 @@ int init_fpga_mem(uint32_t mem_content_size, uint32_t* mem_content_ptr)
     return 1;
 }
 
+
+int fpga_iomux_init(uint32_t iomux_size, uint32_t* iomux_ptr)
+{
+    // the iomux is a simple array of 4B uint32_t values, with consecutive sets of
+    // reg address - reg value pairs, where all the reg addresses are of the IO_MUX block.
+    // loop through the array, take the first 4B as reg address, and take the next 4B
+    // as the value to be written into that reg and repeat.
+    // iomux_size = size of array in bytes
+    // so number of elements = iomux_size/4 and number of reg addr-val pairs = iomux_size/8
+
+    uint32_t num_iomux_registers = iomux_size/8;
+    uint32_t reg_index = 0;
+    volatile uint32_t* reg_addr = 0;
+    uint32_t reg_val = 0;
+
+    for(reg_index = 0; reg_index < num_iomux_registers; reg_index++)
+    {
+        reg_addr = (volatile uint32_t*)(*iomux_ptr);
+        iomux_ptr++;
+
+        reg_val = (*iomux_ptr);
+        iomux_ptr++;
+
+        //printf("setting 0x%08x = 0x%08x\r\n", (uint32_t)reg_addr, reg_val);
+        //dbg_str("setting 0x");dbg_hex32((uint32_t)reg_addr);dbg_str(" = 0x");dbg_hex32(reg_val);dbg_str("\r\n");
+
+        *reg_addr = reg_val;
+    }
+
+    // ok
+    return 1;
+}
