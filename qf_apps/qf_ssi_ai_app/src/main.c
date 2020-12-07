@@ -47,7 +47,7 @@
 
 #include "fpga_loader.h"    // API for loading FPGA
 #include "gateware.h"           // FPGA bitstream to load into FPGA
-
+#include "kb.h"
 extern const struct cli_cmd_entry my_main_menu[];
 
 
@@ -71,7 +71,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldsw";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_ssi_app";
     
     qf_hardwareSetup();
     nvic_init();
@@ -87,7 +87,7 @@ int main(void)
 #endif
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
+    dbg_str( "Quicklogic QuickFeather SensiML AI Data Collection/Recognition App\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
@@ -97,12 +97,15 @@ int main(void)
 	dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
     HAL_Delay_Init();
 
-    // Initialize mCube MC3635 Accelerometer sensor device
-    //mc3635_init();
     HAL_I2C_Init(i2c0config);
-    //CLI_start_task( my_main_menu );
+
+    kb_model_init(); /* initialize the knowledgepack */
+
     sensor_ssss_block_processor();
+
+#if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)
     StartSimpleStreamingInterfaceTask();
+#endif
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();

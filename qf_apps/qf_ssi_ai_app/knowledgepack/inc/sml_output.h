@@ -14,18 +14,23 @@
  * limitations under the License.
  *==========================================================*/
 
-/** @file sensor_config_ssss_user.h
- *  Sensor configuration user settings
- */
+#ifndef __SML_OUTPUT_H_
+#define __SML_OUTPUT_H_
 
-#ifndef SENSOR_SSSS_CONFIG_USER_H
-#define SENSOR_SSSS_CONFIG_USER_H
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
-/* This file is a placeholder. 
- * User or auto-generation tools may replace this file.
- * to override the default settings for the following MACROs
- * SENSOR_SSSS_RECOG_ENABLED
- * SENSOR_SSSS_DATASAVE_ENABLED
- */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif /* SENSOR_SSSS_CONFIG_USER_H */
+uint32_t sml_output_results(uint16_t model, uint16_t classification);
+
+uint32_t sml_output_init(void * p_module);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //__SML_OUTPUT_H_

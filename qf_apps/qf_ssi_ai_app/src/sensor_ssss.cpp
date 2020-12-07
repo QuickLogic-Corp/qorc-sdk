@@ -33,6 +33,15 @@
 #include "eoss3_hal_i2c.h"
 
 #include "mc3635_wire.h"
+#include "sml_recognition_run.h"
+
+// When enabled, GPIO (configured in pincfg_table.c) is toggled whenever a
+// datablock is dispacthed for writing to the UART. Datablocks are dispatched
+// every (SENSOR_SSSS_LATENCY) ms
+#if (SENSOR_SSSS_RATE_DEBUG_GPIO == 1)
+#include "eoss3_hal_gpio.h"
+uint8_t sensor_rate_debug_gpio_val = 1;
+#endif
 
 /* BEGIN user include files
  * Add header files needed for accessing the sensor APIs
@@ -67,11 +76,13 @@ void sensor_ssss_configure(void)
   sensor_ssss_config.rate_hz = SENSOR_SSSS_SAMPLE_RATE_HZ;
   sensor_ssss_config.n_channels = SENSOR_SSSS_CHANNELS_PER_SAMPLE;
   sensor_ssss_config.bit_depth = SENSOR_SSSS_BIT_DEPTH;
+  sensor_ssss_config.sensor_id = SENSOR_SSSS_ID;
   static int sensor_ssss_configured = false;
 
   /*--- BEGIN User modifiable section ---*/
   qorc_ssi_accel.begin();
   qorc_ssi_accel.set_sample_rate(sensor_ssss_config.rate_hz);
+  qorc_ssi_accel.set_sample_resolution(sensor_ssss_config.bit_depth);
   qorc_ssi_accel.set_mode(MC3635_MODE_CWAKE);
 
   /*--- END of User modifiable section ---*/
@@ -80,7 +91,7 @@ void sensor_ssss_configure(void)
   {
     sensor_ssss_configured = true;
   }
-
+  sensor_ssss_startstop(1);
 }
 
 /* User modifiable function. Update the below function
@@ -249,7 +260,7 @@ datablk_processor_params_t sensor_ssss_datablk_processor_params[] = {
       &sensor_ssss_dbp_thread_q,
       sizeof(sensor_ssss_datablk_pe_descr)/sizeof(sensor_ssss_datablk_pe_descr[0]),
       sensor_ssss_datablk_pe_descr,
-      256,
+      256*2,
       (char*)"SENSOR_SSSS_DBP_THREAD",
       NULL
     }
@@ -278,15 +289,16 @@ void sensor_ssss_block_processor(void)
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
   sensor_ssss_add();
   sensor_ssss_configure();
-
+#if 0
   printf("Sensor Name:                   %s\n", "SENSOR_SSSS_NAME");
-  printf("Sensor Memory:                 %d\n", SENSOR_SSSS_MEMSIZE_MAX);
+  printf("Sensor Memory:                 %d\n", (int)SENSOR_SSSS_MEMSIZE_MAX);
   printf("Sensor Sampling rate:          %d Hz\n", (int)SENSOR_SSSS_SAMPLE_RATE_HZ);
-  printf("Sensor Number of channels:     %d\n", SENSOR_SSSS_CHANNELS_PER_SAMPLE);
-  printf("Sensor frame size per channel: %d\n", SENSOR_SSSS_SAMPLES_PER_CHANNEL);
-  printf("Sensor frame size:             %d\n", SENSOR_SSSS_SAMPLES_PER_BLOCK);
-  printf("Sensor sample bit-depth:       %d\n", SENSOR_SSSS_BIT_DEPTH);
-  printf("Sensor datablock count:        %d\n", SENSOR_SSSS_NUM_DATA_BLOCKS);
+  printf("Sensor Number of channels:     %d\n", (int)SENSOR_SSSS_CHANNELS_PER_SAMPLE);
+  printf("Sensor frame size per channel: %d\n", (int)SENSOR_SSSS_SAMPLES_PER_CHANNEL);
+  printf("Sensor frame size:             %d\n", (int)SENSOR_SSSS_SAMPLES_PER_BLOCK);
+  printf("Sensor sample bit-depth:       %d\n", (int)SENSOR_SSSS_BIT_DEPTH);
+  printf("Sensor datablock count:        %d\n", (int)SENSOR_SSSS_NUM_DATA_BLOCKS);
+#endif
 }
 /*========== END: SSSS SENSOR Datablock processor definitions =============*/
 
@@ -455,8 +467,8 @@ void sensor_ssss_ai_data_processor(
     int nSamples = pIn->dbHeader.numDataElements;
     int nChannels = pIn->dbHeader.numDataChannels;
 
-    //recog_data_using_dbp(p_data, (nSamples/nChannels), nChannels, SENSOR_SSSS_ID);
-
+    int batch_sz = nSamples / nChannels;
+    sml_recognition_run_batch(p_data, batch_sz, nChannels, sensor_ssss_config.sensor_id);
     *pRet = NULL;
     return;
 }
@@ -499,6 +511,12 @@ void sensor_ssss_livestream_data_processor(
       // Live-stream data to the host
       uint8_t *p_source = pIn->p_data ;
       int ilen = pIn->dbHeader.numDataElements * pIn->dbHeader.dataElementSize ;
+#if (SENSOR_SSSS_RATE_DEBUG_GPIO == 1)
+      // Toggle GPIO to indicate that a new datablock buffer is dispatched to UART
+      // for transmission for data collection
+      HAL_GPIO_Write(GPIO_2, sensor_rate_debug_gpio_val);
+      sensor_rate_debug_gpio_val ^= 1;
+#endif
       ssi_publish_sensor_data(p_source, ilen);
     }
     *pRet = NULL;

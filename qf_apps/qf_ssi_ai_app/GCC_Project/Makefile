@@ -24,7 +24,7 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor
+external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -105,6 +105,14 @@ clean_DatablockProcessor:
 	make -f makefiles/Makefile_DatablockProcessor clean
 
 CLEAN_TARGET += DatablockProcessor
+
+.PHONY: GENERATED
+GENERATED:
+	make -f makefiles/Makefile_generated
+clean_GENERATED:
+	make -f makefiles/Makefile_generated clean
+
+CLEAN_TARGET += GENERATED
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

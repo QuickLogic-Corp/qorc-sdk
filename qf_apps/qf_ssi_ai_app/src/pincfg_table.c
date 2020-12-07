@@ -223,6 +223,19 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 
+#if (SENSOR_SSSS_RATE_DEBUG_GPIO)
+  { // setup GPIO for toggling whenever a datablock is dispatched to UART
+    .ucPin = PAD_11,
+    .ucFunc = PAD11_FUNC_SEL_GPIO_2,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGTH_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  }
+#endif
+
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =

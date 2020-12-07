@@ -32,7 +32,7 @@ extern "C" {
 
 #define SENSOR_SSSS_SAMPLE_RATE_HZ       (100) // sensor sample rate per channel in Hz
 #define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 3)  // Number of channels
-#define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms 
+#define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms
 #define SENSOR_SSSS_BIT_DEPTH            (16)  // bit-depth per sample, must be 16
 #define SENSOR_SSSS_MAX_DATA_BLOCKS      (20)  // number of data blocks to allocate
 
@@ -71,17 +71,13 @@ extern "C" {
 #define SENSOR_SSSS_MEMSIZE_MAX          ((SENSOR_SSSS_MAX_DATA_BLOCKS) * ((SENSOR_SSSS_BYTES_PER_BLOCK)+32))
 
 
-/* Default settings for the sensor processing configurations.
- * These may be overridden by user settings in the
- * sensor_ssss_config_user.h
- */
-#ifndef SENSOR_SSSS_RECOG_ENABLED
-#define SENSOR_SSSS_RECOG_ENABLED 1    /* Enable SensiML recognition */
-#endif /* SENSOR_SSSS_RECOG_ENABLED */
+/* Settings for the sensor processing modes, Enable only one of these mode */
+#define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
+#define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
 
-#ifndef SENSOR_SSSS_LIVESTREAM_ENABLED
-#define SENSOR_SSSS_LIVESTREAM_ENABLED 1 /* Enable live-streaming */
-#endif /* SENSOR_SSSS_LIVESTREAM_ENABLED */
+#if (((SENSOR_SSSS_RECOG_ENABLED) + (SENSOR_SSSS_LIVESTREAM_ENABLED)) > 1)
+#error "Enable only one of the modes SENSOR_SSSS_RECOG_ENABLED or SENSOR_SSSS_LIVESTREAM_ENABLED"
+#endif
 
 extern const char json_string_sensor_config[];
 extern sensor_generic_config_t sensor_ssss_config;

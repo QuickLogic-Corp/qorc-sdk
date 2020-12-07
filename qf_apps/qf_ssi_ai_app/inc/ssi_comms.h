@@ -29,6 +29,7 @@ extern "C" {
 extern bool is_ssi_connected;
 extern signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void);
 void ssi_publish_sensor_data( uint8_t *p_source, int ilen );
+void ssi_publish_sensor_results( uint8_t *p_source, int ilen );
 
 #ifdef __cplusplus
 }

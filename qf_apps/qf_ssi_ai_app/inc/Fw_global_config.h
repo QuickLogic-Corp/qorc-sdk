@@ -64,6 +64,10 @@
 /* Select the UART ID for Simple Streaming Interface */
 #define UART_ID_SSI             (UART_ID_HW)
 
+// Toggle GPIO whenever a datablock buffer is dispatched to the UART
+// Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
+#define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
+
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
 #if !DBG_FLAGS_ENABLE
