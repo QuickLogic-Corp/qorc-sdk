@@ -110,6 +110,26 @@ datablocks are held in the array sensor\_ssss\_data_blocks\[\].
   qorc_ssi_accel.set_mode(MC3635_MODE_CWAKE);
   ```
 
+## Output data description
+
+Update the string value definition of json\_string\_sensor\_config in sensor\_ssss.cpp
+for the new sensor added to this project. The example project which uses 3-channel
+onboard accelerometer is described using the following string:
+
+```
+	{
+	   sample_rate:100,
+	   samples_per_packet:6,
+	   column_location:{
+		  AccelerometerX:0,
+		  AccelerometerY:1,
+		  AccelerometerZ:2
+	   }
+	}
+```
+
+Refer the SensiML [Data Capture Lab] for details
+
 ## Acquring and processing sensor samples
 
 Based on the sensor sample rate, a FreeRTOS soft timer triggers requesting 
@@ -124,18 +144,18 @@ Based on the sensor sample rate, a FreeRTOS soft timer triggers requesting
   The example code uses the following code snippet to configure the onboard 
   accelerometer sensor.
 
-  ```
-xyz_t accel_data = qorc_ssi_accel.read();  /* Read accelerometer data from MC3635 */
-
-/* Fill this accelerometer data into the current data block */
-int16_t *p_accel_data = (int16_t *)p_dest;
-
-*p_accel_data++ = accel_data.x;
-*p_accel_data++ = accel_data.y;
-*p_accel_data++ = accel_data.z;
-
-p_dest += 6; // advance datablock pointer to retrieve and store next sensor data
-  ```
+```c++
+	xyz_t accel_data = qorc_ssi_accel.read();  /* Read accelerometer data from MC3635 */
+	
+	/* Fill this accelerometer data into the current data block */
+	int16_t *p_accel_data = (int16_t *)p_dest;
+	
+	*p_accel_data++ = accel_data.x;
+	*p_accel_data++ = accel_data.y;
+	*p_accel_data++ = accel_data.z;
+	
+	p_dest += 6; // advance datablock pointer to retrieve and store next sensor data
+```
 
 ## Capturing the sensor samples
 
@@ -143,7 +163,7 @@ p_dest += 6; // advance datablock pointer to retrieve and store next sensor data
   little-endian data format is used for sending each channel's sample data.
   Quickfeather uses either an S3 UART or the USB serial to transmit these data.
   Sensor samples may be captured using [Data Capture Lab] 
-  
+
 ## Accelerometer sensor example
 
 An example accelerometer (mCube's MC3635) sensor available onboard is provided 
@@ -160,6 +180,55 @@ current data block. When 20ms (= SENSOR\_SSSS\_LATENCY) samples are filled in th
 data block, these samples are processed by the function sensor\_ssss\_livestream\_data_processor() 
 to send these samples over UART using [Simple Streaming Interface].
 
+## SparkFun ADS1015 Example
+
+This section describes the steps to add [SparkFun Qwiic 12-bit ADC] sensor (ADS1015) 
+to this project.
+
+Obtain the [SparkFun ADS1015 Arduino Library] code and add these source files 
+to the qf\_ssi\_ai\_app/src folder. Update the SparkFun\_ADS1015\_Arduino\_Library.cpp 
+to resolve the missing function delay(), and provide definitions for the following
+data types
+
+- boolean
+- byte
+
+Update sensor\_ssss.h and sensor\_ssss.cpp as described in the above sections. 
+For example, to replace the accelerometer with only the [SparkFun Qwiic 12-bit ADC] sensor
+update following macro definition for SENSOR\_SSSS\_CHANNELS\_PER\_SAMPLE in sensor\_ssss.h 
+with the following code snippet:
+
+```
+#define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 1)  // Number of channels
+```
+
+Update the function sensor_ssss_configure in sensor\_ssss.cpp to replace the 
+accelerometer initialization and sample readings with following code snippet:
+
+```
+  qorc\_ssi\_adc.begin();
+  qorc_ssi_adc.setSampleRate(sensor_ssss_config.rate_hz);
+```
+
+Update the sensor\_ssss\_acquisition\_buffer\_ready function in sensor\_ssss.cpp 
+to replace the accelerometer sensor reading with the following code snippet
+to read Channel 3 of the ADS1015 sensor.
+
+```
+    int16_t adc_data = qorc_ssi_adc.getSingleEnded(3);
+```
+
+Build and load the project to the Quickfeather.
+
+Connect a [SparkFun Qwiic 12-bit ADC] sensor to the Quickfeather using the following pinouts
+
+| ADS1015 module  | Quickfeather |
+| --------------- | ------------ |
+| SCL             | J2.7         |
+| SDA             | J2.8         |
+| GND             | J8.16        |
+| Vcc             | J8.15        |
+
 
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
 [SensiML QF]: https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html
@@ -171,3 +240,5 @@ to send these samples over UART using [Simple Streaming Interface].
 [Qwiic Scale Hookup Guide]: https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.193267885.1228472612.1605042107-1202899191.1566946929
 [Simple Streaming Interface]: https://sensiml.com/documentation/simple-streaming-specification/introduction.html
 [sensor\_ssss.h]: inc/sensor_ssss.h
+[SparkFun Qwiic 12-bit ADC]: https://www.sparkfun.com/products/15334
+[SparkFun ADS1015 Arduino Library]: https://github.com/sparkfun/SparkFun_ADS1015_Arduino_Library/tree/master/src
