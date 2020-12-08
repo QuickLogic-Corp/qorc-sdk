@@ -202,11 +202,17 @@ with the following code snippet:
 #define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 1)  // Number of channels
 ```
 
+Add a class instance of the ADS1015 to the source file sensor\_ssss.cpp as shown below:
+
+```
+	ADS1015 qorc_ssi_adc ;
+```
+
 Update the function sensor_ssss_configure in sensor\_ssss.cpp to replace the 
 accelerometer initialization and sample readings with following code snippet:
 
 ```
-  qorc\_ssi\_adc.begin();
+  qorc_ssi_adc.begin();
   qorc_ssi_adc.setSampleRate(sensor_ssss_config.rate_hz);
 ```
 
@@ -216,7 +222,12 @@ to read Channel 3 of the ADS1015 sensor.
 
 ```
     int16_t adc_data = qorc_ssi_adc.getSingleEnded(3);
+    *p_dest = adc_data;
+    p_dest += 1; // advance datablock pointer to retrieve and store next sensor data    
 ```
+
+Update the string value definition of json\_string\_sensor\_config in sensor\_ssss.cpp 
+as described in above section.
 
 Build and load the project to the Quickfeather.
 
@@ -229,6 +240,67 @@ Connect a [SparkFun Qwiic 12-bit ADC] sensor to the Quickfeather using the follo
 | GND             | J8.16        |
 | Vcc             | J8.15        |
 
+## SparkFun Qwiic Scale NAU7802 Example
+
+This section describes the steps to add [SparkFun Qwiic Scale - NAU7802] sensor 
+to this project.
+
+Obtain the [SparkFun Qwiic Scale NAU7802 Arduino Library] code and add these source files 
+to the qf\_ssi\_ai\_app/src folder. Update the SparkFun\_Qwiic\_Scale\_NAU7802\_Arduino\_Library.cpp 
+to resolve the missing functions delay(), and millis()
+
+Add a class instance of the ADS1015 to the source file sensor\_ssss.cpp as shown below:
+
+```
+	NAU7802 qorc_ssi_scale;
+```
+
+Update sensor\_ssss.h and sensor\_ssss.cpp as described in the above sections. 
+For example, to replace the accelerometer with only the [SparkFun Qwiic Scale - NAU7802] sensor
+update following macro definition for SENSOR\_SSSS\_CHANNELS\_PER\_SAMPLE in sensor\_ssss.h 
+with the following code snippet:
+
+```c++
+#define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 1)  // Number of channels
+```
+
+Update the function sensor_ssss_configure in sensor\_ssss.cpp to replace the 
+accelerometer initialization and sample readings with following code snippet:
+
+```c++
+  qorc_ssi_scale.begin();
+  qorc_ssi_scale.setSampleRate(sensor_ssss_config.rate_hz);
+```
+
+Update the sensor\_ssss\_acquisition\_buffer\_ready function in sensor\_ssss.cpp 
+to replace the accelerometer sensor reading with the following code snippet
+to read a sample from the scale. Qwiic scale outputs a 24-bit value where as the
+data capture is only capable of 16-bit sensor readings. So, adjust the returned
+reading to write 16-bit value into the datablock buffer as shown in the code 
+snippet below.
+
+```c++
+    int16_t scale_data = qorc_ssi_scale.getReading() >> 8;
+    *p_dest = scale_data;
+    p_dest += 1; // advance datablock pointer to retrieve and store next sensor data    
+```
+
+Update the string value definition of json\_string\_sensor\_config in sensor\_ssss.cpp 
+as described in above section.
+
+Build and load the project to the Quickfeather.
+
+Connect a [SparkFun Qwiic Scale - NAU7802] sensor to the Quickfeather using the following pinouts
+
+| ADS1015 module  | Quickfeather |
+| --------------- | ------------ |
+| SCL             | J2.7         |
+| SDA             | J2.8         |
+| GND             | J8.16        |
+| Vcc             | J8.15        |
+
+Refer [Qwiic Scale Hookup Guide] for details. Quickfeather is now ready to stream data
+to [Data Capture Lab]
 
 [s3-gateware]: https://github.com/QuickLogic-Corp/s3-gateware
 [SensiML QF]: https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html
@@ -242,3 +314,6 @@ Connect a [SparkFun Qwiic 12-bit ADC] sensor to the Quickfeather using the follo
 [sensor\_ssss.h]: inc/sensor_ssss.h
 [SparkFun Qwiic 12-bit ADC]: https://www.sparkfun.com/products/15334
 [SparkFun ADS1015 Arduino Library]: https://github.com/sparkfun/SparkFun_ADS1015_Arduino_Library/tree/master/src
+[SparkFun Qwiic Scale - NAU7802]: https://www.sparkfun.com/products/15242
+[SparkFun Qwiic Scale NAU7802 Arduino Library]: https://github.com/sparkfun/SparkFun_Qwiic_Scale_NAU7802_Arduino_Library
+[Qwiic Scale Hookup Guide]: https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.267750089.614684343.1607376760-1202899191.1566946929
