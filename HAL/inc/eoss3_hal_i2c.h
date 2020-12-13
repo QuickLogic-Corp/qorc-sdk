@@ -23,8 +23,8 @@ extern "C" {
 
 /*!	\file eoss3_hal_i2c.h
  *
- *  \brief This file contains API declaration for UART read/write
- *         implmented in fpga
+ *  \brief This file contains API declaration for the I2C
+ *         Controller(s) in the EOS S3
  */
 #include <stdint.h>
 #include <stddef.h>

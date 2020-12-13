@@ -14,12 +14,11 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *                                                          
- *    File   : eoss3_hal_i2s.c
- *    Purpose: This file contains HAL API for I2S
- *                                                          
- *=========================================================*/
+/*!	\file eoss3_hal_i2s.c
+ *
+ *  \brief This file contains API implemenation for I2S Peripheral(s)
+ * 
+ */
 #include "Fw_global_config.h"
 
 /* Standard includes. */

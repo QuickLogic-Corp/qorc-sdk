@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>QORC-SDK I2C HAL &mdash; QORC-SDK  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="QORC-SDK I2S HAL" href="qorc-sdk-hal-i2s.html" />
+    <link rel="prev" title="QORC-SDK HAL" href="qorc-sdk-hal.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/qorc_whitebg.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../qorc-setup/qorc-setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../qorc-sdk.html">QORC-SDK</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="qorc-sdk-hal.html">QORC-SDK HAL</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">QORC-SDK I2C HAL</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="qorc-sdk-hal-i2s.html">QORC-SDK I2S HAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qorc-sdk-hal-gpio.html">QORC-SDK GPIO HAL</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-libraries/qorc-sdk-libraries.html">QORC-SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-s3-gateware/qorc-sdk-s3-gateware.html">QORC-SDK EOS S3 FPGA Designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qf-apps/qorc-sdk-qf-apps.html">QuickFeather Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qf-vr-apps/qorc-sdk-qf-vr-apps.html">QORC Voice Recognition apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qorc-test-apps/qorc-sdk-qorc-test-apps.html">QORC Test Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-example-apps/qorc-example-apps.html">QORC Example Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-symbiflow/ql-symbiflow.html">QuickLogic FPGA Toolchain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-development-boards/ql-development-boards.html">QuickLogic Development Boards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-eos-s3/ql-eos-s3.html">QuickLogic EOS S3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-faq/ql-faq.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QORC-SDK</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../qorc-sdk.html">QORC-SDK</a> &raquo;</li>
+        
+          <li><a href="qorc-sdk-hal.html">QORC-SDK HAL</a> &raquo;</li>
+        
+      <li>QORC-SDK I2C HAL</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/qorc-sdk/qorc-sdk-hal/qorc-sdk-hal-i2c.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="qorc-sdk-i2c-hal">
+<h1>QORC-SDK I2C HAL<a class="headerlink" href="#qorc-sdk-i2c-hal" title="Permalink to this headline">¶</a></h1>
+<p>This file contains API declaration for the I2C Controller(s) in the EOS S3. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="cpp macro">
+<dt id="c.I2C_PRELO">
+<span class="target" id="eoss3__hal__i2c_8h_1a2968ec40e56c563983a8155c47763f11"></span><code class="sig-name descname">I2C_PRELO</code><a class="headerlink" href="#c.I2C_PRELO" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_PREHI">
+<span class="target" id="eoss3__hal__i2c_8h_1ab331dbe8035bde6befcd4be426f27d4d"></span><code class="sig-name descname">I2C_PREHI</code><a class="headerlink" href="#c.I2C_PREHI" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_MCR">
+<span class="target" id="eoss3__hal__i2c_8h_1acd9590a90be79f6b2c4a9e7f816a8237"></span><code class="sig-name descname">I2C_MCR</code><a class="headerlink" href="#c.I2C_MCR" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_TXRX_DR">
+<span class="target" id="eoss3__hal__i2c_8h_1a0937bec2e82d1738349465b7cf34ea6d"></span><code class="sig-name descname">I2C_TXRX_DR</code><a class="headerlink" href="#c.I2C_TXRX_DR" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_CMD_SR">
+<span class="target" id="eoss3__hal__i2c_8h_1aee51a83dc4af6eef561b2ccaa60669c9"></span><code class="sig-name descname">I2C_CMD_SR</code><a class="headerlink" href="#c.I2C_CMD_SR" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_WRITE_PRESCALE">
+<span class="target" id="eoss3__hal__i2c_8h_1ab7974e266b73868fde6cc02ed3c760f8"></span><code class="sig-name descname">HAL_I2C_WRITE_PRESCALE</code><span class="sig-paren">(</span><em>PRESCALE</em><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_WRITE_PRESCALE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_CR_EN_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1aae22487edb1b642ead5bc2146a3e0024"></span><code class="sig-name descname">I2C_CR_EN_BIT</code><a class="headerlink" href="#c.I2C_CR_EN_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.I2C_CR_IEN_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a8b309e1739805f9a6392a319712c0936"></span><code class="sig-name descname">I2C_CR_IEN_BIT</code><a class="headerlink" href="#c.I2C_CR_IEN_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_ENABLE">
+<span class="target" id="eoss3__hal__i2c_8h_1a2ef7a484526fe5e475f00f09c6b53b47"></span><code class="sig-name descname">HAL_I2C_ENABLE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_ENABLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_DISABLE">
+<span class="target" id="eoss3__hal__i2c_8h_1adfe6374288a965e28d2dbf2ba07f1a08"></span><code class="sig-name descname">HAL_I2C_DISABLE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_DISABLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_INT_ENABLE">
+<span class="target" id="eoss3__hal__i2c_8h_1aa62d497add4be40754b4ca38244ae0f3"></span><code class="sig-name descname">HAL_I2C_INT_ENABLE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_INT_ENABLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_INT_DISABLE">
+<span class="target" id="eoss3__hal__i2c_8h_1af1d676e1f846d663007da3e991bba0d5"></span><code class="sig-name descname">HAL_I2C_INT_DISABLE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_INT_DISABLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_WRITE_REQ">
+<span class="target" id="eoss3__hal__i2c_8h_1a528bc99dda9dceeaaf6779c3821caa6e"></span><code class="sig-name descname">HAL_I2C_WRITE_REQ</code><span class="sig-paren">(</span><em>DEV_ADR</em><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_WRITE_REQ" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_READ_REQ">
+<span class="target" id="eoss3__hal__i2c_8h_1aef78c43dcc12fc92aa7fc483714d7a14"></span><code class="sig-name descname">HAL_I2C_READ_REQ</code><span class="sig-paren">(</span><em>DEV_ADR</em><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_READ_REQ" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_START_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a19bc8e16cc8d4e9640dc4613140a9984"></span><code class="sig-name descname">CMD_START_BIT</code><a class="headerlink" href="#c.CMD_START_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_STOP_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a7885ad84bd1c75301e30ffabab67de4b"></span><code class="sig-name descname">CMD_STOP_BIT</code><a class="headerlink" href="#c.CMD_STOP_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_READ_SLAVE_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1adec6879d1c98cc5dd0b17a7620fcd925"></span><code class="sig-name descname">CMD_READ_SLAVE_BIT</code><a class="headerlink" href="#c.CMD_READ_SLAVE_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_WRITE_SLAVE_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1ae73c671a2a6e5b90bdb509d55335d3dd"></span><code class="sig-name descname">CMD_WRITE_SLAVE_BIT</code><a class="headerlink" href="#c.CMD_WRITE_SLAVE_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_NACK_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a22c48445db8bd3f9154a40d9886a7672"></span><code class="sig-name descname">CMD_NACK_BIT</code><a class="headerlink" href="#c.CMD_NACK_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.CMD_IACK_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a94119b04194862b4cc82443969558a50"></span><code class="sig-name descname">CMD_IACK_BIT</code><a class="headerlink" href="#c.CMD_IACK_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_SET_CMD">
+<span class="target" id="eoss3__hal__i2c_8h_1a0a6b7eec37d52e0a8d9e88f0035651d4"></span><code class="sig-name descname">HAL_I2C_SET_CMD</code><span class="sig-paren">(</span><em>CMD_VAL</em><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_SET_CMD" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.SR_RXACK_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a3a52991159b290c46a7090f2ac6f825b"></span><code class="sig-name descname">SR_RXACK_BIT</code><a class="headerlink" href="#c.SR_RXACK_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.SR_BUSY_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1addd710437d5b4b1aaf326237d940eaf7"></span><code class="sig-name descname">SR_BUSY_BIT</code><a class="headerlink" href="#c.SR_BUSY_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.SR_AL_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1ab0b47e1599ca4dbe1cb0711711c4a647"></span><code class="sig-name descname">SR_AL_BIT</code><a class="headerlink" href="#c.SR_AL_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.SR_TIP_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a39ee91ede438373343d735ead077e3ad"></span><code class="sig-name descname">SR_TIP_BIT</code><a class="headerlink" href="#c.SR_TIP_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.SR_IF_BIT">
+<span class="target" id="eoss3__hal__i2c_8h_1a540d01ef9fab9bd3a01bfd9956e2fc79"></span><code class="sig-name descname">SR_IF_BIT</code><a class="headerlink" href="#c.SR_IF_BIT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_IS_RXACK_SET">
+<span class="target" id="eoss3__hal__i2c_8h_1aadca72f43f5d48a81ff00e8624bc4429"></span><code class="sig-name descname">HAL_I2C_IS_RXACK_SET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_IS_RXACK_SET" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_IS_BUSY_SET">
+<span class="target" id="eoss3__hal__i2c_8h_1a67cc47ffa1dc2f8f310d399b9f147c4b"></span><code class="sig-name descname">HAL_I2C_IS_BUSY_SET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_IS_BUSY_SET" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_IS_AL_SET">
+<span class="target" id="eoss3__hal__i2c_8h_1ac0859b58b16ce28c377d395b8c4fa210"></span><code class="sig-name descname">HAL_I2C_IS_AL_SET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_IS_AL_SET" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_IS_TIP_SET">
+<span class="target" id="eoss3__hal__i2c_8h_1ac80c3581fcab978277039cf2c5c7aef5"></span><code class="sig-name descname">HAL_I2C_IS_TIP_SET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_IS_TIP_SET" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt id="c.HAL_I2C_IS_IF_SET">
+<span class="target" id="eoss3__hal__i2c_8h_1a7664a4997959dab8fa14fcf2814a1106"></span><code class="sig-name descname">HAL_I2C_IS_IF_SET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.HAL_I2C_IS_IF_SET" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Enums</p>
+<dl class="cpp enum">
+<dt id="_CPPv49I2C_State">
+<span id="_CPPv39I2C_State"></span><span id="_CPPv29I2C_State"></span><span class="target" id="eoss3__hal__i2c_8h_1ac55fe1dcc0d046afad34a56c705872d8"></span><em class="property">enum </em><code class="sig-name descname">I2C_State</code><a class="headerlink" href="#_CPPv49I2C_State" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N9I2C_State9I2C_RESETE">
+<span id="_CPPv3N9I2C_State9I2C_RESETE"></span><span id="_CPPv2N9I2C_State9I2C_RESETE"></span><span class="target" id="eoss3__hal__i2c_8h_1ac55fe1dcc0d046afad34a56c705872d8aa5b090d241d318f41eb0b6513ae8e280"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_RESET</code><a class="headerlink" href="#_CPPv4N9I2C_State9I2C_RESETE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N9I2C_State9I2C_READYE">
+<span id="_CPPv3N9I2C_State9I2C_READYE"></span><span id="_CPPv2N9I2C_State9I2C_READYE"></span><span class="target" id="eoss3__hal__i2c_8h_1ac55fe1dcc0d046afad34a56c705872d8ab8ef8d8e35c5eb95b7836c556105b919"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_READY</code><a class="headerlink" href="#_CPPv4N9I2C_State9I2C_READYE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N9I2C_State8I2C_BUSYE">
+<span id="_CPPv3N9I2C_State8I2C_BUSYE"></span><span id="_CPPv2N9I2C_State8I2C_BUSYE"></span><span class="target" id="eoss3__hal__i2c_8h_1ac55fe1dcc0d046afad34a56c705872d8a49e65f3960437d80b8328e7898cc90de"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_BUSY</code><a class="headerlink" href="#_CPPv4N9I2C_State8I2C_BUSYE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N9I2C_State11I2C_TIMEOUTE">
+<span id="_CPPv3N9I2C_State11I2C_TIMEOUTE"></span><span id="_CPPv2N9I2C_State11I2C_TIMEOUTE"></span><span class="target" id="eoss3__hal__i2c_8h_1ac55fe1dcc0d046afad34a56c705872d8a1056d6a4b037e383132309c2898a2fc8"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_TIMEOUT</code><a class="headerlink" href="#_CPPv4N9I2C_State11I2C_TIMEOUTE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt id="_CPPv48I2C_FREQ">
+<span id="_CPPv38I2C_FREQ"></span><span id="_CPPv28I2C_FREQ"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974c"></span><em class="property">enum </em><code class="sig-name descname">I2C_FREQ</code><a class="headerlink" href="#_CPPv48I2C_FREQ" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N8I2C_FREQ10I2C_100KHZE">
+<span id="_CPPv3N8I2C_FREQ10I2C_100KHZE"></span><span id="_CPPv2N8I2C_FREQ10I2C_100KHZE"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974cab8ebf24d02ae91613827f8c996edaf17"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_100KHZ</code><a class="headerlink" href="#_CPPv4N8I2C_FREQ10I2C_100KHZE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N8I2C_FREQ10I2C_200KHZE">
+<span id="_CPPv3N8I2C_FREQ10I2C_200KHZE"></span><span id="_CPPv2N8I2C_FREQ10I2C_200KHZE"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974ca2570670a3d62c926e2907ec698d86e00"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_200KHZ</code><a class="headerlink" href="#_CPPv4N8I2C_FREQ10I2C_200KHZE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N8I2C_FREQ10I2C_300KhzE">
+<span id="_CPPv3N8I2C_FREQ10I2C_300KhzE"></span><span id="_CPPv2N8I2C_FREQ10I2C_300KhzE"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974ca8002b859a3be7b91d52721bc9126306a"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_300Khz</code><a class="headerlink" href="#_CPPv4N8I2C_FREQ10I2C_300KhzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N8I2C_FREQ10I2C_400KHZE">
+<span id="_CPPv3N8I2C_FREQ10I2C_400KHZE"></span><span id="_CPPv2N8I2C_FREQ10I2C_400KHZE"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974ca60e57c35b1950340e80637438cd879e7"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_400KHZ</code><a class="headerlink" href="#_CPPv4N8I2C_FREQ10I2C_400KHZE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N8I2C_FREQ11I2C_INVALIDE">
+<span id="_CPPv3N8I2C_FREQ11I2C_INVALIDE"></span><span id="_CPPv2N8I2C_FREQ11I2C_INVALIDE"></span><span class="target" id="eoss3__hal__i2c_8h_1abcf2084bbaadc28b0c2da25952c4974caa4e25a9429cf374590d8367ab1cd6d28"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_INVALID</code><a class="headerlink" href="#_CPPv4N8I2C_FREQ11I2C_INVALIDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt id="_CPPv411I2C_IntMode">
+<span id="_CPPv311I2C_IntMode"></span><span id="_CPPv211I2C_IntMode"></span><span class="target" id="eoss3__hal__i2c_8h_1aa4767e83d67446b8b93c51891587df12"></span><em class="property">enum </em><code class="sig-name descname">I2C_IntMode</code><a class="headerlink" href="#_CPPv411I2C_IntMode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N11I2C_IntMode11I2C_DISABLEE">
+<span id="_CPPv3N11I2C_IntMode11I2C_DISABLEE"></span><span id="_CPPv2N11I2C_IntMode11I2C_DISABLEE"></span><span class="target" id="eoss3__hal__i2c_8h_1aa4767e83d67446b8b93c51891587df12a24e1b190c36724278fc6d50895a1fcd4"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_DISABLE</code><a class="headerlink" href="#_CPPv4N11I2C_IntMode11I2C_DISABLEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N11I2C_IntMode10I2C_ENABLEE">
+<span id="_CPPv3N11I2C_IntMode10I2C_ENABLEE"></span><span id="_CPPv2N11I2C_IntMode10I2C_ENABLEE"></span><span class="target" id="eoss3__hal__i2c_8h_1aa4767e83d67446b8b93c51891587df12a6676945d8a159e90debd5563f209f5d1"></span><em class="property">enumerator </em><code class="sig-name descname">I2C_ENABLE</code><a class="headerlink" href="#_CPPv4N11I2C_IntMode10I2C_ENABLEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv415HAL_I2C0_Selectv">
+<span id="_CPPv315HAL_I2C0_Selectv"></span><span id="_CPPv215HAL_I2C0_Selectv"></span><span id="HAL_I2C0_Select__void"></span><span class="target" id="eoss3__hal__i2c_8h_1a99251416a522cc89cca4049a26c38c0f"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C0_Select</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415HAL_I2C0_Selectv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Select I2C0 device to use for all I2C init/read/write operation. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of device. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv415HAL_I2C1_Selectv">
+<span id="_CPPv315HAL_I2C1_Selectv"></span><span id="_CPPv215HAL_I2C1_Selectv"></span><span id="HAL_I2C1_Select__void"></span><span class="target" id="eoss3__hal__i2c_8h_1a3ac204cdabc52fa74a32037be1462fce"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C1_Select</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415HAL_I2C1_Selectv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Select I2C1 device to use for all I2C init/read/write operation. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of device. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv412HAL_I2C_Init10I2C_Config">
+<span id="_CPPv312HAL_I2C_Init10I2C_Config"></span><span id="_CPPv212HAL_I2C_Init10I2C_Config"></span><span id="HAL_I2C_Init__I2C_Config"></span><span class="target" id="eoss3__hal__i2c_8h_1aaeafe735e71760c06a45759b6b89dbda"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Init</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv410I2C_Config" title="I2C_Config">I2C_Config</a> <em>xI2CConfig</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412HAL_I2C_Init10I2C_Config" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Select I2C1 device to use for all I2C init/read/write operation. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of device Init operation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xI2CConfig</span></code>: I2C configuration structure </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv420HAL_I2C_SetClockFreq8UINT32_t">
+<span id="_CPPv320HAL_I2C_SetClockFreq8UINT32_t"></span><span id="_CPPv220HAL_I2C_SetClockFreq8UINT32_t"></span><span id="HAL_I2C_SetClockFreq__UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1a2aa922d1c42a0e15f1a608dd4a049e89"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_SetClockFreq</code><span class="sig-paren">(</span>UINT32_t <em>uiClkFreq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420HAL_I2C_SetClockFreq8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set clock frequency for I2C device. It may not be exact frequency when set. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of frequency set operation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">uiClkFreq</span></code>: I2C clock frequency to set. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv413HAL_I2C_Write7UINT8_t7UINT8_tP7UINT8_t8UINT32_t">
+<span id="_CPPv313HAL_I2C_Write7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="_CPPv213HAL_I2C_Write7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_Write__UINT8_t.UINT8_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1a3c7d111807d6cd4484808f83a4059d82"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Write</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT8_t <em>ucAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413HAL_I2C_Write7UINT8_t7UINT8_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write data to I2C device. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of I2C write operation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ucDevAddress</span></code>: I2C device address. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ucAddress</span></code>: offset address in device to write. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pucDataBuf</span></code>: pointer to data array to write. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uiLength</span></code>: Length of data to write (in bytes) </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv412HAL_I2C_Read7UINT8_t7UINT8_tP7UINT8_t8UINT32_t">
+<span id="_CPPv312HAL_I2C_Read7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="_CPPv212HAL_I2C_Read7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_Read__UINT8_t.UINT8_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1afb57a5d82a6d4d642083fe0d816c985d"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Read</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT8_t <em>ucAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412HAL_I2C_Read7UINT8_t7UINT8_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read data from I2C device. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>HAL_StatusTypeDef status of I2C read operation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ucDevAddress</span></code>: I2C device address. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ucAddress</span></code>: offset address in device to read. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pucDataBuf</span></code>: pointer to data array to read. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uiLength</span></code>: Length of data to read (in bytes) </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv414HAL_I2C_Read167UINT8_t8UINT16_tP7UINT8_t8UINT32_t">
+<span id="_CPPv314HAL_I2C_Read167UINT8_t8UINT16_tP7UINT8_t8UINT32_t"></span><span id="_CPPv214HAL_I2C_Read167UINT8_t8UINT16_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_Read16__UINT8_t.UINT16_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1afde54c2fca516788b71b2479083d54d4"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Read16</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT16_t <em>ucAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414HAL_I2C_Read167UINT8_t8UINT16_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv415HAL_I2C_Write167UINT8_t8UINT16_tP7UINT8_t8UINT32_t">
+<span id="_CPPv315HAL_I2C_Write167UINT8_t8UINT16_tP7UINT8_t8UINT32_t"></span><span id="_CPPv215HAL_I2C_Write167UINT8_t8UINT16_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_Write16__UINT8_t.UINT16_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1aa42de9d0078c1cf71d74c4d1400866c9"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Write16</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT16_t <em>ucAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415HAL_I2C_Write167UINT8_t8UINT16_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv425HAL_I2C_Read_UsingRestart7UINT8_t7UINT8_tP7UINT8_t8UINT32_t">
+<span id="_CPPv325HAL_I2C_Read_UsingRestart7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="_CPPv225HAL_I2C_Read_UsingRestart7UINT8_t7UINT8_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_Read_UsingRestart__UINT8_t.UINT8_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1a72b6a8919d46c20942b5e60ec472d97d"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_Read_UsingRestart</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT8_t <em>ucAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425HAL_I2C_Read_UsingRestart7UINT8_t7UINT8_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read data from I2C device using Restart <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">ucDevAddress</span></code>: I2C device 7-bit address </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">ucAddress</span></code>: register index to read data from </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">pucDataBuf</span></code>: address of the buffer to store register data </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">uiLength</span></code>: read <code class="docutils literal notranslate"><span class="pre">uiLength</span></code> bytes of data </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv420HAL_I2C_WriteRawData7UINT8_tP7UINT8_t8UINT32_ti">
+<span id="_CPPv320HAL_I2C_WriteRawData7UINT8_tP7UINT8_t8UINT32_ti"></span><span id="_CPPv220HAL_I2C_WriteRawData7UINT8_tP7UINT8_t8UINT32_ti"></span><span id="HAL_I2C_WriteRawData__UINT8_t.UINT8_tP.UINT32_t.i"></span><span class="target" id="eoss3__hal__i2c_8h_1a2b40e4a0d16d52b61756109eb3ae7316"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_WriteRawData</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em>, int <em>stop</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420HAL_I2C_WriteRawData7UINT8_tP7UINT8_t8UINT32_ti" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv419HAL_I2C_ReadRawData7UINT8_tP7UINT8_t8UINT32_t">
+<span id="_CPPv319HAL_I2C_ReadRawData7UINT8_tP7UINT8_t8UINT32_t"></span><span id="_CPPv219HAL_I2C_ReadRawData7UINT8_tP7UINT8_t8UINT32_t"></span><span id="HAL_I2C_ReadRawData__UINT8_t.UINT8_tP.UINT32_t"></span><span class="target" id="eoss3__hal__i2c_8h_1a6cffd33d7bb2b7b4ac72e38db136c466"></span>HAL_StatusTypeDef <code class="sig-name descname">HAL_I2C_ReadRawData</code><span class="sig-paren">(</span>UINT8_t <em>ucDevAddress</em>, UINT8_t *<em>pucDataBuf</em>, UINT32_t <em>uiLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419HAL_I2C_ReadRawData7UINT8_tP7UINT8_t8UINT32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt id="_CPPv410I2C_Config">
+<span id="_CPPv310I2C_Config"></span><span id="_CPPv210I2C_Config"></span><span id="I2C_Config"></span><span class="target" id="structI2C__Config"></span><em class="property">struct </em><code class="sig-name descname">I2C_Config</code><a class="headerlink" href="#_CPPv410I2C_Config" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N10I2C_Config8eI2CFreqE">
+<span id="_CPPv3N10I2C_Config8eI2CFreqE"></span><span id="_CPPv2N10I2C_Config8eI2CFreqE"></span><span id="I2C_Config::eI2CFreq__I2C_FREQ"></span><span class="target" id="structI2C__Config_1ae93318aa9b343b94615e863b2f996b34"></span><a class="reference internal" href="#_CPPv48I2C_FREQ" title="I2C_FREQ">I2C_FREQ</a> <code class="sig-name descname">eI2CFreq</code><a class="headerlink" href="#_CPPv4N10I2C_Config8eI2CFreqE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>I2C Frequency </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10I2C_Config7eI2CIntE">
+<span id="_CPPv3N10I2C_Config7eI2CIntE"></span><span id="_CPPv2N10I2C_Config7eI2CIntE"></span><span id="I2C_Config::eI2CInt__I2C_IntMode"></span><span class="target" id="structI2C__Config_1af3b5603c29ef4da3953e8eae05405b19"></span><a class="reference internal" href="#_CPPv411I2C_IntMode" title="I2C_IntMode">I2C_IntMode</a> <code class="sig-name descname">eI2CInt</code><a class="headerlink" href="#_CPPv4N10I2C_Config7eI2CIntE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Interrupt enable </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10I2C_Config6ucI2CnE">
+<span id="_CPPv3N10I2C_Config6ucI2CnE"></span><span id="_CPPv2N10I2C_Config6ucI2CnE"></span><span id="I2C_Config::ucI2Cn__UINT8_t"></span><span class="target" id="structI2C__Config_1a8b26437bda1f474d8b3f771b47f65f8e"></span>UINT8_t <code class="sig-name descname">ucI2Cn</code><a class="headerlink" href="#_CPPv4N10I2C_Config6ucI2CnE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="qorc-sdk-hal-i2s.html" class="btn btn-neutral float-right" title="QORC-SDK I2S HAL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="qorc-sdk-hal.html" class="btn btn-neutral float-left" title="QORC-SDK HAL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, QuickLogic Corp
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

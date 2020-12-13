@@ -14,16 +14,14 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *                                                          
- *    File   : eoss3_hal_gpio.h
- *    Purpose: This file contains macros, structures and APIs to
- *             read/write GPIO 
- *                                                          
- *=========================================================*/
-
 #ifndef __EOSS3_HAL_GPIO_H
 #define __EOSS3_HAL_GPIO_H
+
+/*!	\file eoss3_hal_gpio.h
+ *
+ *  \brief This file contains macros, structures and APIs to
+ *         mainpulate the GPIOs in the EOS S3.
+ */
 
 //#include "test_types.h"
 #include <eoss3_dev.h>

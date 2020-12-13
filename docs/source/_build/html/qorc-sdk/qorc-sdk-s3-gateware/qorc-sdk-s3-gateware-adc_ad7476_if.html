@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ADC_7476_IF - S3 Gateware &mdash; QORC-SDK  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="USBserialport_S3B" href="qorc-sdk-s3-gateware-usb2serial.html" />
+    <link rel="prev" title="QORC-SDK EOS S3 FPGA Designs" href="qorc-sdk-s3-gateware.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/qorc_whitebg.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../qorc-setup/qorc-setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../qorc-sdk.html">QORC-SDK</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-hal/qorc-sdk-hal.html">QORC-SDK HAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-libraries/qorc-sdk-libraries.html">QORC-SDK Libraries</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="qorc-sdk-s3-gateware.html">QORC-SDK EOS S3 FPGA Designs</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ADC_7476_IF - S3 Gateware</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synthesis-and-place-route">Synthesis and Place &amp; Route</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="qorc-sdk-s3-gateware-usb2serial.html">USBserialport_S3B</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qf-apps/qorc-sdk-qf-apps.html">QuickFeather Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qf-vr-apps/qorc-sdk-qf-vr-apps.html">QORC Voice Recognition apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qorc-test-apps/qorc-sdk-qorc-test-apps.html">QORC Test Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-example-apps/qorc-example-apps.html">QORC Example Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-symbiflow/ql-symbiflow.html">QuickLogic FPGA Toolchain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-development-boards/ql-development-boards.html">QuickLogic Development Boards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-eos-s3/ql-eos-s3.html">QuickLogic EOS S3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-faq/ql-faq.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QORC-SDK</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../qorc-sdk.html">QORC-SDK</a> &raquo;</li>
+        
+          <li><a href="qorc-sdk-s3-gateware.html">QORC-SDK EOS S3 FPGA Designs</a> &raquo;</li>
+        
+      <li>ADC_7476_IF - S3 Gateware</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/qorc-sdk/qorc-sdk-s3-gateware/qorc-sdk-s3-gateware-adc_ad7476_if.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adc-7476-if-s3-gateware">
+<h1>ADC_7476_IF - S3 Gateware<a class="headerlink" href="#adc-7476-if-s3-gateware" title="Permalink to this headline">¶</a></h1>
+<p>Contains the Verilog RTL source for an ADC interface design, for the
+Analog Devices 7476 ADC. This design is targeted for the QuickLogic S3B
+device in the 64-pin QFN package, on the QuickFeather development board.
+The design interfaces to an eternal ADC, connected to the QuickFeather
+board via a Pmod connector (connector J8 on the QuickFeather board).</p>
+<p>The QuickFeather board schematic can be found here in the /doc/
+directory: <a class="reference external" href="https://github.com/QuickLogic-Corp/quick-feather-dev-board">QuickFeather github
+repo</a></p>
+<p>This design is intended to be connected to an external board containing
+the ADC, such as the Pmod AD1 from Digilent: <a class="reference external" href="https://store.digilentinc.com/pmod-ad1-two-12-bit-a-d-inputs/">Digilent Pmod
+AD1</a></p>
+<p>Documentation for this design, including the device pinout and the FPGA
+register map can be found in the /doc/ directory of this repo.</p>
+<p>This s3-gateware repo is used in the following app in the qorc-sdk repo:
+<a class="reference external" href="https://github.com/QuickLogic-Corp/qorc-sdk/tree/master/qf_apps/qf_mqttsn_ai_app">qorc-sdk/qf_apps/qf_mqttsn_ai_app/</a>
+This FPGA design will be compiled automatically when the above project
+is compiled (assuming the QuickLogic Symbiflow tools have been
+installed, and this repo from s3-gateware has been pulled). If you would
+like to compile just the FPGA design alone, using the QuickLogic
+Symbiflow tools, follow the instructions below.</p>
+<div class="section" id="synthesis-and-place-route">
+<span id="id1"></span><h2>Synthesis and Place &amp; Route<a class="headerlink" href="#synthesis-and-place-route" title="Permalink to this headline">¶</a></h2>
+<p>This FPGA design may be compiled with the QuickLogic Symbiflow
+open-source FPGA toolchain running under Linux/Ubuntu. <a class="reference external" href="https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain">QuickLogic FPGA
+toolchain</a>
+To install the QuickLogic FPGA toolchain, please follow the instructions
+in the above repo.</p>
+<p>Once the above toolchain has been installed, go into the /rtl/ directory
+of this repo, and execute the following command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ql_symbiflow -compile -d ql-eos-s3 -P pu64 -v *.v -t top -p quickfeather.pcf
+</pre></div>
+</div>
+<p>The output and log files will be placed into the /build/ sub-directory.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="qorc-sdk-s3-gateware-usb2serial.html" class="btn btn-neutral float-right" title="USBserialport_S3B" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="qorc-sdk-s3-gateware.html" class="btn btn-neutral float-left" title="QORC-SDK EOS S3 FPGA Designs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, QuickLogic Corp
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

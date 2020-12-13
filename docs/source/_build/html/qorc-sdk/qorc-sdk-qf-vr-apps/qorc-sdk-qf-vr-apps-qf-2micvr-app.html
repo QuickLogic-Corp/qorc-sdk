@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2-Mic Voice recognition keyword detection example application &mdash; QORC-SDK  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Host communication example application" href="qorc-sdk-qf-vr-apps-qf-host-app.html" />
+    <link rel="prev" title="1-Mic Voice recognition keyword detection example application" href="qorc-sdk-qf-vr-apps-qf-1micvr-app.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/qorc_whitebg.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../qorc-setup/qorc-setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../qorc-sdk.html">QORC-SDK</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-hal/qorc-sdk-hal.html">QORC-SDK HAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-libraries/qorc-sdk-libraries.html">QORC-SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-s3-gateware/qorc-sdk-s3-gateware.html">QORC-SDK EOS S3 FPGA Designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qf-apps/qorc-sdk-qf-apps.html">QuickFeather Applications</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html">QORC Voice Recognition apps</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#key-concepts">Key concepts</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#vr-example-apps">VR Example Apps</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#qf-1micvr-app-standalone-app-using-a-single-microphone">qf_1micVR_app: standalone app using a single microphone</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#qf-2micvr-app-standalone-app-using-two-microphones-with-stub-for-beamforming">qf_2micVR_app: standalone app using two microphones with stub for beamforming</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#qf-vr-raw-app-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spi-r">qf_VR_raw_app: companion app implementing VR, host communications over SPI, packetizing raw audio with and streaming the audio packets over SPI.r</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#qf-vr-opus-app-coming-soon-companion-app-implementing-vr-host-communications-over-spi-compressing-and-packetizing-audio-with-opus-and-streaming-the-audio-packets-over-spi">qf_VR_opus_app: [coming soon] companion app implementing VR, host communications over SPI, compressing and packetizing audio with opus and streaming the audio packets over SPI.</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="qorc-sdk-qf-vr-apps.html#qf-vr-i2s-app-coming-soon-companion-app-implementing-vr-host-communications-over-spi-and-streaming-audio-over-i2s">qf_VR_I2S_app: [coming soon] companion app implementing VR, host communications over SPI and streaming audio over I2S</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-sdk-qorc-test-apps/qorc-sdk-qorc-test-apps.html">QORC Test Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qorc-example-apps/qorc-example-apps.html">QORC Example Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-symbiflow/ql-symbiflow.html">QuickLogic FPGA Toolchain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-development-boards/ql-development-boards.html">QuickLogic Development Boards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-eos-s3/ql-eos-s3.html">QuickLogic EOS S3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-faq/ql-faq.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QORC-SDK</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../qorc-sdk.html">QORC-SDK</a> &raquo;</li>
+        
+          <li><a href="qorc-sdk-qf-vr-apps.html">QORC Voice Recognition apps</a> &raquo;</li>
+        
+      <li>2-Mic Voice recognition keyword detection example application</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/qorc-sdk/qorc-sdk-qf-vr-apps/qorc-sdk-qf-vr-apps-qf-2micvr-app.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mic-voice-recognition-keyword-detection-example-application">
+<h1>2-Mic Voice recognition keyword detection example application<a class="headerlink" href="#mic-voice-recognition-keyword-detection-example-application" title="Permalink to this headline">¶</a></h1>
+<p>The purpose of this application is to provide a software framework to
+easily plug-in a 3rd party voice recognition engine for keyword
+detection applications and plug-in a 3rd party noise suppression
+algorithm (for example beamforming) using stereo input. The example
+application waits for an LPSD event indicating a valid speech signal
+(WAIT_ON_LPSD event). The example application then enters Keyword
+detection state. Audio data is preprocess first using simple mix of left
+and right channels and the resulting mono output is processed by the VR
+engine to scan for the keyword.</p>
+<div class="section" id="building-and-running-the-project">
+<h2>Building and running the project<a class="headerlink" href="#building-and-running-the-project" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Use the Makefile provided in qf_vr_apps/qf_2micvr_app/GCC_Project
+folder and an appropriate ARM GCC toolchain to build the project</p></li>
+<li><p>Use the flash programming procedure to flash the binary to
+Quickfeather board.</p></li>
+<li><p>Reset the board to start running the 2-Mic VR application.</p></li>
+</ol>
+</div>
+<div class="section" id="building-using-a-3rd-party-vr-engine">
+<h2>Building using a 3rd party VR engine<a class="headerlink" href="#building-using-a-3rd-party-vr-engine" title="Permalink to this headline">¶</a></h2>
+<p>The default project does not provide any voice recognition engine,
+consequently no keyword detection will be performed. To plug-in the
+desired 3rd party engine follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Implement the functions specified in the
+qf_vr_apps/qf_2micvr_app/inc/vr_engine_api.h</p></li>
+<li><p>Update the build system in qf_vr_apps/qf_2micvr_app/GCC_Project to
+add the implemented source files.</p></li>
+<li><p>Build the projectand flash the generated application to the
+Quickfeather board.</p></li>
+<li><p>Use the flash programming procedure to flash the binary to
+Quickfeather board.</p></li>
+<li><p>Reset the board to start running the 2-Mic VR application.</p></li>
+</ol>
+</div>
+<div class="section" id="adding-a-3rd-party-noise-suppression">
+<h2>Adding a 3rd party noise suppression<a class="headerlink" href="#adding-a-3rd-party-noise-suppression" title="Permalink to this headline">¶</a></h2>
+<p>The default project provides a simple mix of left and right channels as
+the noise suppression in the Library file ql_audio_preproc.c. To replace
+this, implement datablk_pe_config_ql_pre_process and
+datablk_pe_process_ql_pre_process functions and exclude
+Libraries/Audio/src/ql_audio_preproc.c from the build system (See
+comments in GCC_Project/makefiles/Makefile_Audio)</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="qorc-sdk-qf-vr-apps-qf-host-app.html" class="btn btn-neutral float-right" title="Host communication example application" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="qorc-sdk-qf-vr-apps-qf-1micvr-app.html" class="btn btn-neutral float-left" title="1-Mic Voice recognition keyword detection example application" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, QuickLogic Corp
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

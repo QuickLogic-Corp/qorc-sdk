@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>QuickFeather Development Board &mdash; QORC-SDK  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="USB-UART cable (3.3 V)" href="../../qorc-setup/setup-hw-usbuart.html" />
+    <link rel="prev" title="QuickLogic Development Boards" href="../ql-development-boards.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/qorc_whitebg.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../qorc-setup/qorc-setup.html">Setup</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../ql-development-boards.html">QuickLogic Development Boards</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">QuickFeather Development Board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#key-features">Key features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#layout-and-dimensions">Layout and dimensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#development-ecosystem">Development ecosystem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simulation">Simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simple">Simple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced">Advanced</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../qorc-setup/setup-hw-usbuart.html">USB-UART cable (3.3 V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../qorc-setup/setup-sw-qorcsdk.html">QORC SDK Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../qorc-setup/setup-sw-gccarmembedded.html">GCC Arm Embedded Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../qorc-setup/setup-sw-serialportapp.html">Serial Port Terminal Application</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../qorc-sdk/qorc-sdk.html">QORC-SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-symbiflow/ql-symbiflow.html">QuickLogic FPGA Toolchain</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../ql-development-boards.html">QuickLogic Development Boards</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">QuickFeather Development Board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-features">Key features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layout-and-dimensions">Layout and dimensions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-ecosystem">Development ecosystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulation">Simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple">Simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced">Advanced</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-eos-s3/ql-eos-s3.html">QuickLogic EOS S3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ql-faq/ql-faq.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QORC-SDK</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../qorc-setup/qorc-setup.html">Setup</a> &raquo;</li>
+        
+          <li><a href="../ql-development-boards.html">QuickLogic Development Boards</a> &raquo;</li>
+        
+      <li>QuickFeather Development Board</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/ql-development-boards/quickfeather/development-board-quickfeather.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quickfeather-development-board">
+<h1>QuickFeather Development Board<a class="headerlink" href="#quickfeather-development-board" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default">
+<img alt="../../_images/feather-board.png" src="../../_images/feather-board.png" />
+</div>
+</div>
+<div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>This repository contains open hardware design files for the <a class="reference external" href="https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/">QuickFeather development board</a> based on the QuickLogic <a class="reference external" href="https://www.quicklogic.com/products/eos-s3/">EOS S3 Sensor Processing Platform</a>.
+The design files were created by <a class="reference external" href="https://www.antmicro.com">Antmicro</a> in cooperation with <a class="reference external" href="https://www.quicklogic.com/">QuickLogic</a>.
+The board has been designed to keep compatibility with the <a class="reference external" href="https://learn.adafruit.com/adafruit-feather/feather-specification">Adafruit Feather</a> ecosystem of evaluation boards.
+This allows the user to explore functionalities of the EOS S3 platform.</p>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>The  <a class="reference external" href="https://github.com/QuickLogic-Corp/quick-feather-dev-board/blob/master/doc/QuickFeather_UserGuide.pdf">QuickFeather_UserGuide</a> contains instructions for running the pre-installed example program.</p>
+</div>
+<div class="section" id="key-features">
+<h2>Key features<a class="headerlink" href="#key-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>QuickLogic EOS S3 Processing Platform</p></li>
+<li><p><a class="reference external" href="https://mcubemems.com/wp-content/uploads/2019/06/MC3635-Datasheet-APS-048-0044v1.6.pdf">mCube MC3635</a> accelerometer</p></li>
+<li><p><a class="reference external" href="https://www.infineon.com/dgdl/Infineon-DPS310-DataSheet-v01_01-EN.pdf?fileId=5546d462576f34750157750826c42242">Infineon DPS310</a> pressure sensor</p></li>
+<li><p><a class="reference external" href="https://www.infineon.com/dgdl/Infineon-IM69D130-DS-v01_00-EN.pdf?fileId=5546d462602a9dc801607a0e46511a2e">Infineon IM69D130</a> MEMS microphone</p></li>
+<li><p>16Mbit of on-board <a class="reference external" href="http://www.gigadevice.com/datasheet/gd25q16c/">flash memory</a></p></li>
+<li><p>User button and RGB LED</p></li>
+<li><p>Powered from USB or a single Li-Po battery</p></li>
+<li><p>Integrated <a class="reference external" href="http://ww1.microchip.com/downloads/en/DeviceDoc/20001984g.pdf">battery charger</a></p></li>
+<li><p>USB data signals tied to programmable logic</p></li>
+<li><p>IO signals break-routed into general purpose pinheads</p></li>
+<li><p>Compatible with standard 0.1” breadboards</p></li>
+</ul>
+</div>
+<div class="section" id="layout-and-dimensions">
+<h2>Layout and dimensions<a class="headerlink" href="#layout-and-dimensions" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-default">
+<img alt="../../_images/feather-layout.png" src="../../_images/feather-layout.png" />
+</div>
+</div>
+</div>
+<div class="section" id="development-ecosystem">
+<h1>Development ecosystem<a class="headerlink" href="#development-ecosystem" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this headline">¶</a></h2>
+<p>The board is supported in <a class="reference external" href="https://renode.io/">Renode</a>, the open source simulation framework by Antmicro - you can run a virtual copy of this hardware for software development purposes on your PC. A link to the relevant demo script is provided in Renode’s <a class="reference external" href="https://renode.readthedocs.io/en/latest/introduction/supported-boards.html">supported boards section</a>.</p>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simple">
+<h2>Simple<a class="headerlink" href="#simple" title="Permalink to this headline">¶</a></h2>
+<p>Connect the micro-usb port of the board to the PC, which will both provide power to the board as well as offer a virtual USB-CDC UART port out of the box.</p>
+</div>
+<div class="section" id="advanced">
+<h2>Advanced<a class="headerlink" href="#advanced" title="Permalink to this headline">¶</a></h2>
+<p>For using the board with advanced scenarios, such as loading a custom FPGA image, an additional dedicated USB-UART board (for example based on the PL2303, FT232 etc.) needs to be connected to the QuickFeather UART pins, as shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+--------------------------+</span>         <span class="o">+--------------+</span>
+<span class="o">|</span> <span class="n">QF</span> <span class="n">UART</span> <span class="n">RX</span><span class="p">(</span><span class="n">IO_45</span><span class="p">)</span> <span class="p">[</span><span class="n">J3</span><span class="o">.</span><span class="mi">3</span><span class="p">]</span> <span class="o">+--------&gt;+</span> <span class="n">USB</span><span class="o">-</span><span class="n">UART</span> <span class="n">TX</span>  <span class="o">|</span>
+<span class="o">|</span>                          <span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span>
+<span class="o">|</span>                          <span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span>
+<span class="o">|</span> <span class="n">QF</span> <span class="n">UART</span> <span class="n">TX</span><span class="p">(</span><span class="n">IO_44</span><span class="p">)</span> <span class="p">[</span><span class="n">J3</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="o">+--------&gt;+</span> <span class="n">USB</span><span class="o">-</span><span class="n">UART</span> <span class="n">RX</span>  <span class="o">|</span>
+<span class="o">|</span>                          <span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span>
+<span class="o">|</span>                          <span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span>
+<span class="o">|</span> <span class="n">QF</span> <span class="n">GND</span>      <span class="p">(</span><span class="n">GND</span><span class="p">)</span> <span class="p">[</span><span class="n">J3</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="o">+--------&gt;+</span> <span class="n">USB</span><span class="o">-</span><span class="n">UART</span> <span class="n">GND</span> <span class="o">|</span>
+<span class="o">+--------------------------+</span>         <span class="o">+--------------+</span>
+</pre></div>
+</div>
+<p>Refer to <a class="reference external" href="https://github.com/QuickLogic-Corp/quick-feather-dev-board/blob/master/doc/QuickFeather_UserGuide.pdf">QuickFeather_UserGuide</a> for further details</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../qorc-setup/setup-hw-usbuart.html" class="btn btn-neutral float-right" title="USB-UART cable (3.3 V)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../ql-development-boards.html" class="btn btn-neutral float-left" title="QuickLogic Development Boards" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, QuickLogic Corp
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
