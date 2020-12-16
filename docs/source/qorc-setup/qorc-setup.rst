@@ -1,26 +1,24 @@
-QuickStart With QORC SDK
-========================
-
-.. contents::
+Setup
+=====
 
 
 1. Hardware
 
-- QuickFeather Development Board + Micro-USB cable
+- Development Board: :doc:`/ql-development-boards/ql-development-boards` 
 
-- 3.3v USB-UART cable
+- UART cable: :doc:`setup-hw-usbuart`
 
 2. Software
 
-- QORC SDK : 
+- QORC SDK: :doc:`setup-sw-qorcsdk`
 
-- ARM Cortex M4 Build Environment
+- ARM Cortex M4 Build Environment: :doc:`setup-sw-gccarmembedded`
 
-- FPGA Build Environment
+- FPGA Build Environment: :doc:`setup-sw-qlsymbiflow`
 
-- QuickLogic TinyFPGAProgrammer-Application
+- QuickLogic TinyFPGAProgrammer: :doc:`setup-sw-tinyfpgaprogrammer`:
 
-- Serial Terminal Application
+- :doc:`setup-sw-serialportapp`
 
 
 
