@@ -375,7 +375,17 @@ static void init_i2s_buffers(void)
   i2s_sdma_start = 0;
   
 #if (DBG_BUF_ENABLE == 1)
-  memset(i2s_test_Buffer,  0xAA, sizeof(i2s_test_Buffer));
+  //memset(i2s_test_Buffer,  0xAA, sizeof(i2s_test_Buffer));
+  int16_t *p16 = (int16_t *)i2s_test_Buffer;
+  int count = (sizeof(i2s_test_Buffer)/2);
+  for(int i=0; i < count;)
+  {
+    *p16++ =  0x5555;
+    *p16++ =  0x5555;
+    *p16++ =  0xAAAA;
+    *p16++ =  0xAAAA;
+    i += 4;
+  }
 #endif
   
   return;

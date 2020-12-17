@@ -56,9 +56,6 @@
 // length of axFPGABitStream array in bytes
 int   axFPGABitStream_length = sizeof(axFPGABitStream);
 #endif
-#if 0 //(FEATURE_I2S_MASTER_CLKS == 1)
-#include "I2S_masterclk_2020_10_28a.h"
-#endif
 #include "eoss3_hal_uart.h"
 
 #ifndef USBSERIAL_PRODUCTID
@@ -208,30 +205,6 @@ char info_usbserial[] =  "\nUSB Serial init done \nThis is used for debugging Au
 uart_tx_raw_buf( UART_ID_USBSERIAL,info_usbserial, sizeof(info_usbserial)); 
     
 #endif
-
-#if 0 //(FEATURE_I2S_MASTER_CLKS == 1)
-
-    // length of axFPGABitStream array in bytes
-    int axFPGABitStream_I2S_length = sizeof(axFPGABitStream_I2S);
-
-    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 1*1024*1000); //for 16K sample rate = 2*32*16K = 1024000
-    
-    //S3x_Clk_Disable(S3X_FB_21_CLK);
-    //S3x_Clk_Disable(S3X_FB_16_CLK);
-
-    S3x_Clk_Enable(S3X_FB_21_CLK);
-    //S3x_Clk_Enable(S3X_FB_16_CLK);
-    
-    S3x_Clk_Enable(S3X_A1_CLK);
-    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    
-    load_fpga(axFPGABitStream_I2S_length,axFPGABitStream_I2S);
-    
-    S3x_Clk_Enable(S3X_FB_21_CLK);
-    S3x_Clk_Enable(S3X_FB_16_CLK);
-    
-#endif
-
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");

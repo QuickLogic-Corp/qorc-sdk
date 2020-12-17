@@ -21,6 +21,10 @@
 #error "Include Fw_global_config.h first"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include "stdint.h"
 #include "FreeRTOS.h"
@@ -187,5 +191,10 @@ void dbg_memdump8( intptr_t addr, const void *pData, size_t n );
 #define dbgmemdump8( ADDR,  DATA, COUNT )
 
 #endif /* feature debug uart */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* double file inclusion */
 

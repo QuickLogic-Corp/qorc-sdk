@@ -221,7 +221,7 @@ void mc3635_set_sample_range(mc3635_range_t range)
    HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_RANGE_C, &range_c_val, 1);
 
    range_c_val &= 0x8F;
-   range_c_val |= range;
+   range_c_val |= (range << 4);
    // Now write to the range and resolution register
    HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_RANGE_C, &range_c_val, 1);
 }
@@ -263,6 +263,7 @@ void mc3635_set_sample_resolution(int bit_depth)
     HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_RANGE_C, &range_c_val, 1); // mode control register
     range_c_val &= 0xF8;
  
+    bit_depth = (bit_depth > MC3635_RESOLUTION_14BITS) ? MC3635_RESOLUTION_14BITS : bit_depth;
     bit_depth &= 15;
     bit_depth = mc3635_bit_depth_index[bit_depth];
     range_c_val |= bit_depth;
@@ -274,7 +275,7 @@ void mc3635_set_sample_resolution(int bit_depth)
 int mc3635_get_sample_resolution(void)
 {
    uint8_t range_c_val ;
-   HAL_I2C_Write(MC3635_I2C_ADDR, MC3635_RANGE_C, &range_c_val, 1); // mode control register
+   HAL_I2C_Read_UsingRestart(MC3635_I2C_ADDR, MC3635_RANGE_C, &range_c_val, 1); // mode control register
    return mc3635_bit_depths[range_c_val & 0x07];
 }
 
