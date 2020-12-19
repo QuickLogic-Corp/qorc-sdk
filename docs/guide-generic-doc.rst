@@ -198,6 +198,22 @@ Details specific to how we use all these tools in the qorc-sdk project can be fo
 That document assumes familiarity with rst, sphinx, RTD, Doxygen, Breathe, which we attempt to cover in this more generic guide document.
 
 
+Converting Markdown to reStructuredText
+=======================================
+
+A good tool to convert Github READMEs in Markdown to reStructuredText is pandoc.
+
+https://pandoc.org/
+
+On Ubuntu, it can be installed from the apt repository.
+
+To convert from Github Flavored Markdown to reStructuredText, use :
+
+::
+
+  pandoc <MARKDOWN_FILE.md> -f gfm -t rst -o <RST_FILE.rst>
+
+
 Diagrams In Documentation
 =========================
 
