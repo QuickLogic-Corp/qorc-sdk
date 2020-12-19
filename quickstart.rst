@@ -41,37 +41,39 @@ Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository r
 
   git clone --recursive https://github.com/QuickLogic-Corp/qorc-sdk.git
 
+**NOTE:** All the next steps below should be executed from the qorc-sdk directory.
+
+::
+
+  cd qorc-sdk
+
 
 ARM Cortex M4 Build Toolchain
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Download tarball according to the system configuration from: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+1. Download archive according to the system configuration from: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
    Current stable version tested with qorc-sdk is :code:`9-2020-q2-update`
 
-2. Extract the tarball to a preferred path(/BASEPATH/TO/TOOLCHAIN/)
+   For Linux systems, you can use:
 
    ::
 
-     sudo tar xvjf gcc-arm-none-eabi-your-version.tar.bz2 -C /BASEPATH/TO/TOOLCHAIN/
+     wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
 
-   The usual preferred path is for example /usr/share
-
-   ::
-
-     sudo tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /usr/share/
-
-3. Add the /BASEPATH/TO/TOOLCHAIN/gcc-arm-none-eabi-your-version/bin/ to PATH (only for current terminal session)
+2. Extract the archive to :code:`arm_toolchain_install` dir inside qorc-sdk
 
    ::
 
-     export PATH=/BASEPATH/TO/TOOLCHAIN/gcc-arm-none-eabi-your-version/bin/:$PATH
+     mkdir arm_toolchain_install
+     tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${PWD}/arm_toolchain_install
 
-   For the preferred path of /usr/share and current tested stable version 9-2020-q2-update for example:
+3. Add the toolchain to PATH (only for current terminal session)
 
    ::
 
-     export PATH=/usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH
+     export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+
 
 4. Test the toolchain installation:
 
@@ -83,10 +85,10 @@ ARM Cortex M4 Build Toolchain
 
    ::
 
-     /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+     "current directory path"/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
 
 
-5. If the path settings need to be permanent, it can be added to the ~/.bashrc or ~/.bash_profile.
+5. If the path settings need to be permanent, it can be added to the :code:`~/.bashrc` or :code:`~/.bash_profile`.
 
    Examples and illustrations are for example here: https://stackabuse.com/how-to-permanently-set-path-in-linux/
 
@@ -98,21 +100,19 @@ The recommended way to install the toolchain is using the latest prebuilt releas
 
 1. Download the installation script. For :code:`v1.3.1` for example, download : `v1.3.1 installer script <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run>`_
 
-2. Set the directory path where you want the toolchain installed (/BASEPATH/TO/TOOLCHAIN/)
+   You can use for download:
 
    ::
 
-     export INSTALL_DIR=/BASEPATH/TO/TOOLCHAIN/
-   
-   The usual preferred path is inside :code:`/usr/share/quicklogic-fpga-toolchain`.
-   
-   For :code:`v1.3.1` for example:
+     wget -O Symbiflow_v1.3.1.gz.run -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
+
+2. Set the directory path where the toolchain should be installed to :code:`fpga_toolchain_install/v1.3.1` dir inside the qorc-sdk
 
    ::
 
-     export INSTALL_DIR=/usr/share/quicklogic-fpga-toolchain/v1.3.1/
-
-3. Run the installation script, from wherever it was downloaded, for example:
+     export INSTALL_DIR=${PWD}/fpga_toolchain_install/v1.3.1
+   
+3. Run the installation script:
 
    ::
 
@@ -155,8 +155,6 @@ QuickLogic TinyFPGA-Programmer-Application
 
 1. Clone the `TinyFPGA-Programmer <https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application>`_ repository recursively:
    
-   It is preferred to clone this inside the qorc-sdk directory.
-
    ::
 
      git clone https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
@@ -174,13 +172,13 @@ QuickLogic TinyFPGA-Programmer-Application
      pip3 install apio
      apio drivers --serial-enable
 
-4. Setup an alias to the programmer, from where you cloned the repo:
+4. Setup an alias to the programmer:
 
    ::
 
-     alias qfprog="python3 /PATH/TO/BASE/DIR/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
+     alias qfprog="python3 ${PWD}/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
 
-   This can be added to :code:`.bashrc` or `.bash_profile` to make it permanent as well. 
+   This can be added to :code:`.bashrc` or :code:`.bash_profile` to make it permanent as well. 
 
 5. Test the QuickFeather USB port:
 
@@ -241,7 +239,7 @@ QuickLogic TinyFPGA-Programmer-Application
 Serial Terminal Application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use your favorite serial terminal applications, common ones include:
+Use your favorite serial terminal application, common ones include:
 
 - `GTKTerm <https://github.com/Jeija/gtkterm>`_
 
@@ -425,6 +423,27 @@ You should see an output like below, and nothing else will follow:
   Sep 20 2020 14:24:43
   ##########################
 
+
+Running Examples In A New Terminal
+----------------------------------
+
+Anytime a new terminal is opened, the already installed tools need to be initialized before any of the apps can be used.
+
+The sequence that can be followed is:
+
+::
+
+  cd "path to qorc-sdk"
+  export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+  export INSTALL_DIR=${PWD}/fpga_toolchain_install/v1.3.1
+  export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
+  source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
+  conda activate
+  alias qfprog="python3 ${PWD}/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
+
+Once the sequence is executed, the environment is ready to be used for build/flash/run of any qorc-sdk application.
+
+You can open a new terminal, execute the initialization sequence as above, and try the "Hello World" applications
 
 
 Epilogue
