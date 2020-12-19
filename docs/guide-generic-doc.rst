@@ -14,6 +14,8 @@ While looking at both, we will also see how to write the Github oriented doc to 
 
 For other documentation related stuff, we will look at good tools to use, such as for flowcharts, diagrams, waveforms etc.
 
+.. contents::
+
 Terminology
 ===========
 
@@ -108,6 +110,8 @@ While writing doc in rst, the following points would be useful:
     .. contents::
 
   is itself enough to create a table of contents automatically using the headers in the page!
+  
+  This is also used in the current document.
 
 - Use inline code markup to make it simpler to indicate a command in the explanation
 
@@ -233,7 +237,7 @@ rst documentation allows us to write neat tables, and reference for it is below:
 https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#tables
 
 | If the table is complex enough, then writing the rst table is also pretty tedious.
-| A better WYSIWYG way is to use the online too for visually creating the table, and getting the rst code equivalent:
+| A better WYSIWYG way is to use the online tool for visually creating the table, and getting the rst code equivalent:
 
 https://www.tablesgenerator.com/text_tables
 
