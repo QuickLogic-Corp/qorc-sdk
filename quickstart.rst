@@ -5,7 +5,7 @@ This one-page guide should get you quickly setup and running with the QORC SDK.
 
 
 .. contents::
-   :depth: 2
+   :depth: 4
 
 
 
@@ -48,8 +48,36 @@ Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository r
   cd qorc-sdk
 
 
+Automated Setup
+~~~~~~~~~~~~~~~
+
+The rest of the components can be automatically installed, and initialized using the helper script in the qorc-sdk:
+
+This is the recommended method for new users.
+
+::
+
+  source envsetup.sh
+
+This will setup the following components within the :code:`qorc-sdk` directory (on first run) and on subsequent run, initialize the tools to ready the development setup.
+
+- ARM Cortex M4 Build Toolchain
+
+- QuickLogic FPGA Build Toolchain
+
+- QuickLogic TinyFPGA-Programmer-Application
+
+Alternatively, each of the components can be setup manually using the **"Manual Setup"** below.
+
+
+
+.. _qorc-sdk-components-manual-setup:
+
+Manual Setup
+~~~~~~~~~~~~
+
 ARM Cortex M4 Build Toolchain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Download archive according to the system configuration from: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
@@ -94,11 +122,11 @@ ARM Cortex M4 Build Toolchain
 
 
 QuickLogic FPGA Build Toolchain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The recommended way to install the toolchain is using the latest prebuilt release here: `quicklogic-fpga-toolchain releases <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases>`_
 
-1. Download the installation script. For :code:`v1.3.1` for example, download : `v1.3.1 installer script <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run>`_
+1. Download the installation script. For :code:`v1.3.1`, download : `v1.3.1 installer script <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run>`_
 
    You can use for download:
 
@@ -151,13 +179,13 @@ The recommended way to install the toolchain is using the latest prebuilt releas
 
 
 QuickLogic TinyFPGA-Programmer-Application
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Clone the `TinyFPGA-Programmer <https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application>`_ repository recursively:
    
    ::
 
-     git clone https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
+     git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
 
 2. Install the :code:`tinyfpgab` dependency:
 
@@ -428,6 +456,21 @@ Running Examples In A New Terminal
 ----------------------------------
 
 Anytime a new terminal is opened, the already installed tools need to be initialized before any of the apps can be used.
+
+Automated Setup
+~~~~~~~~~~~~~~~
+If you had used the automated setup using the helper script, then the same script can be run again to initialize all components.
+
+::
+
+  cd "path to qorc-sdk"
+  source envsetup.sh
+
+
+Manual Setup
+~~~~~~~~~~~~~~~
+
+If you have setup the components manually, then corresponding to the install instructions above, the initialization seqeunce can be followed.
 
 The sequence that can be followed is:
 

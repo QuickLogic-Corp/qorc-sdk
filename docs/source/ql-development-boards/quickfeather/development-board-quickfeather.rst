@@ -2,5 +2,5 @@
 .. include:: /../../quick-feather-dev-board/README.rst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    

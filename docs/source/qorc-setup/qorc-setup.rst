@@ -1,36 +1,8 @@
+=====
 Setup
 =====
 
-
-1. Hardware
-
-- Development Board: :doc:`/ql-development-boards/ql-development-boards` 
-
-- UART cable: :doc:`setup-hw-usbuart`
-
-2. Software
-
-- QORC SDK: :doc:`setup-sw-qorcsdk`
-
-- ARM Cortex M4 Build Environment: :doc:`setup-sw-gccarmembedded`
-
-- FPGA Build Environment: :doc:`setup-sw-qlsymbiflow`
-
-- QuickLogic TinyFPGAProgrammer: :doc:`setup-sw-tinyfpgaprogrammer`:
-
-- :doc:`setup-sw-serialportapp`
+The recommended way to setup the qorc-sdk and the dependencies is to follow the quick start which will allow new users to quickly get up and running with building, flashing and running applications on the QuickFeather Development Kit.
 
 
-
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-
-   /ql-development-boards/ql-development-boards
-   setup-hw-usbuart
-   setup-sw-qorcsdk
-   setup-sw-gccarmembedded
-   setup-sw-qlsymbiflow
-   setup-sw-tinyfpgaprogrammer
-   setup-sw-serialportapp
-   
+.. include:: /../../quickstart.rst
