@@ -213,6 +213,10 @@ To convert from Github Flavored Markdown to reStructuredText, use :
 
   pandoc <MARKDOWN_FILE.md> -f gfm -t rst -o <RST_FILE.rst>
 
+The conversion may result in broken tables, as markdown tables are not guaranteed to be rst compatible.
+
+If so, it is time to create the table by hand, refer to the "Tables In Documentation" section.
+
 
 Diagrams In Documentation
 =========================
