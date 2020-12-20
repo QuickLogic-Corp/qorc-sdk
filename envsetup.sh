@@ -32,7 +32,7 @@ fi
 # remember to add the stuff installed here into gitignore - so we don't have things clouding git status
 
 
-QORC_SDK_QUICKSETUP_VER=1.5.0
+QORC_SDK_ENVSETUP_VER=1.5.0
 
 
 ARM_TOOLCHAIN_ARCHIVE_FILE=gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
@@ -52,19 +52,41 @@ EXPECTED_FLASH_PROGRAMMER_QFPROG_OUTPUT=""
 echo
 echo
 echo "========================="
-echo "qorc-sdk quicksetup "${QORC_SDK_QUICKSETUP_VER}
+echo "qorc-sdk envsetup "${QORC_SDK_ENVSETUP_VER}
 echo "========================="
 echo
 echo
 
 
-echo "PWD --> " ${PWD}
+echo "executing envsetup.sh from:"
+echo ${PWD}
+
 
 #---------------------------------------------------------
 echo
-echo "[1] check qorc-sdk submodules"
-# TODO add required submodules check and init!
-echo "    all ok."
+echo "[0] are we inside qorc-sdk?"
+
+GIT_REPO_URL=`git config --get remote.origin.url`
+if [ ! $GIT_REPO_URL == "https://github.com/QuickLogic-Corp/qorc-sdk.git" ]; then
+
+    echo "This script should be executed from within the qorc-sdk directory!"
+    return
+
+fi
+
+echo "    ok."
+#---------------------------------------------------------
+
+
+#---------------------------------------------------------
+echo
+echo "[1] check (minimal) qorc-sdk submodules"
+
+git submodule update --init qorc-example-apps
+git submodule update --init qorc-testapps
+git submodule update --init s3-gateware
+
+echo "    ok."
 #---------------------------------------------------------
 
 
@@ -99,7 +121,7 @@ ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
 
 if [ $ACTUAL_ARM_TOOLCHAIN_GCC_PATH == $EXPECTED_ARM_TOOLCHAIN_GCC_PATH ]; then
 
-    echo "    all ok."
+    echo "    ok."
 
 else
 
@@ -138,7 +160,7 @@ conda activate
 
 # ql_symbiflow -h
 # TODO check expected output to verify
-echo "    all ok."
+echo "    ok."
 #---------------------------------------------------------
 
 
@@ -178,7 +200,7 @@ alias qfprog="python3 $FLASH_PROGRAMMER_INSTALL_DIR/tinyfpga-programmer-gui.py"
 
 # qfprog --help
 # TODO check expected output to verify
-echo "    all ok."
+echo "    ok."
 #---------------------------------------------------------
 
 
