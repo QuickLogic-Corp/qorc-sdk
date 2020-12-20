@@ -315,7 +315,7 @@ Navigate to :code:`qf_helloworldsw` build folder and run make
 
 ::
 
-  cd qorc-sdk/qf_apps/qf_helloworldsw/GCC_Project
+  cd qf_apps/qf_helloworldsw/GCC_Project
   make 
 
 
@@ -414,7 +414,7 @@ Navigate to :code:`qf_helloworldhw` build folder and run make
 
 ::
 
-  cd qorc-sdk/qf_apps/qf_helloworldhw/GCC_Project
+  cd qf_apps/qf_helloworldhw/GCC_Project
   make 
 
 
@@ -510,5 +510,7 @@ Epilogue
 That's it!
 
 If you have got this far, then the setup is verified, and you can now build and flash any application in the qorc-sdk to the QuickFeather.
+
+The next step would be checkout the :code:`goingfurther.rst` for exploring a few more advanced applications, which can give a feel of the various ways to use the qorc-sdk to build applications **(coming soon)**.
 
 You can look at the applications in :code:`qf_apps`, :code:`qorc-testapps`, :code:`qorc-example-apps` and :code:`qf_vr_apps` for more examples of what can be done with the qorc-sdk.
