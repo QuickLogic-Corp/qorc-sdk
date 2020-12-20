@@ -36,11 +36,11 @@ Software
 QORC SDK
 ~~~~~~~~
 
-Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository recursively :
+Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository :
 
 ::
 
-  git clone --recursive https://github.com/QuickLogic-Corp/qorc-sdk.git
+  git clone https://github.com/QuickLogic-Corp/qorc-sdk.git
 
 **NOTE:** All the next steps below should be executed from the qorc-sdk directory.
 
@@ -67,6 +67,8 @@ This will setup the following components within the :code:`qorc-sdk` directory (
 - QuickLogic FPGA Build Toolchain
 
 - QuickLogic TinyFPGA-Programmer-Application
+
+- Minimal set of submodules in qorc-sdk repo
 
 Alternatively, each of the components can be setup manually using the **"Manual Setup"** below.
 
@@ -263,6 +265,19 @@ QuickLogic TinyFPGA-Programmer-Application
      --checkrev            check if CRC matches (flash is up-to-date)
      --update              program flash only if CRC mismatch (not up-to-date)
      --mfgpkg qf_mfgpkg/   directory containing all necessary binaries
+
+
+QORC SDK Submodules
+^^^^^^^^^^^^^^^^^^^
+
+Init and Update the (minimal) submodules in the qorc-sdk : :code:`s3-gateware`, :code:`qorc-testapps`, :code:`qorc-example-apps`.
+
+::
+  
+  git submodule update --init qorc-example-apps
+  git submodule update --init qorc-testapps
+  git submodule update --init s3-gateware
+
 
 
 Serial Terminal Application
