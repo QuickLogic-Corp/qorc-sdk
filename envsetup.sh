@@ -53,145 +53,101 @@ echo
 
 echo "PWD --> " ${PWD}
 
-echo
-echo "step 1 : update qorc-sdk submodules"
-
-echo
-echo "    done."
-
-
 #---------------------------------------------------------
 echo
-echo "step 2.1 : download arm gcc toolchain archive and verify integrity"
+echo "[1] check qorc-sdk submodules"
 
-if [ ! -f $ARM_TOOLCHAIN_ARCHIVE_FILE ]; then
-    wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
-else
-    echo
-    echo "    arm gcc toolchain archive already exists"
-fi
+echo "    all ok."
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
+# ARM GCC TOOLCHAIN
+#---------------------------------------------------------
 echo
-echo "step 2.2 : extract arm gcc toolchain"
-
+echo "[2] check arm gcc toolchain"
 if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
+    
+    echo "    creating toolchain directory : ${PWD}/arm_toolchain_install"
     mkdir arm_toolchain_install
+
+    if [ ! -f $ARM_TOOLCHAIN_ARCHIVE_FILE ]; then
+        echo "    downloading toolchain archive."
+        wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
+    fi
+
+    echo "    extracting toolchain archive."
     tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${PWD}/arm_toolchain_install
-else
-    echo
-    echo "    arm gcc toolchain dir already exists"
+
 fi
-#---------------------------------------------------------
 
 
-#---------------------------------------------------------
-echo
-echo "step 2.3 : export arm gcc toolchain to PATH"
-
+echo "    initializing toolchain."
 export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
-#---------------------------------------------------------
 
-
-#---------------------------------------------------------
-echo
-echo "step 2.4 : verify arm gcc toolchain"
 
 ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
 
 if [ $ACTUAL_ARM_TOOLCHAIN_GCC_PATH == $EXPECTED_ARM_TOOLCHAIN_GCC_PATH ]; then
-    echo
-    echo "    ok"
+    echo "    all ok."
 else
-    echo
-    echo "    !!GCC path not as expected, are there multiple toolchains on the path?!!"
+    echo "    !!ARM GCC Toolchain path not as expected, are there multiple toolchains on the path?!!"
     return
 fi
 #---------------------------------------------------------
 
 
+
+#---------------------------------------------------------
+# FPGA TOOLCHAIN
 #---------------------------------------------------------
 echo
-echo "step 3.1 : download fpga toolchain installer script"
+echo "[3] check fpga toolchain"
 
-if [ ! -f $ARM_TOOLCHAIN_ARCHIVE ]; then
-    wget -O $FPGA_TOOLCHAIN_INSTALLER  -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
-else
-    echo
-    echo "    fpga toolchain installer already exists"
-fi
-#---------------------------------------------------------
+if [ ! -d $FPGA_TOOLCHAIN_INSTALL_DIR ]; then
 
+    if [ ! -f $FPGA_TOOLCHAIN_INSTALLER ]; then
+        echo "    downloading toolchain installer."
+        wget -O $FPGA_TOOLCHAIN_INSTALLER  -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
+    fi
 
-#---------------------------------------------------------
-echo
-echo "step 3.2 : run the fpga toolchain installer script"
-
-export INSTALL_DIR=$FPGA_TOOLCHAIN_INSTALL_DIR
-if [ ! -d $INSTALL_DIR ]; then
+    export INSTALL_DIR=$FPGA_TOOLCHAIN_INSTALL_DIR
+    echo "    installing toolchain."
     bash Symbiflow_v1.3.1.gz.run
-else
-    echo
-    echo "    fpga toolchain dir already exists"
 fi
-#---------------------------------------------------------
 
-
-#---------------------------------------------------------
-echo
-echo "step 3.3 : initialize fpga toolchain environment"
-
-export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
-source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
+echo "    initializing toolchain."
+export PATH="$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin:$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
+source "$FPGA_TOOLCHAIN_INSTALL_DIR/conda/etc/profile.d/conda.sh"
 conda activate
-#---------------------------------------------------------
-
-
-#---------------------------------------------------------
-echo 
-echo "step 3.4 : verify fpga toolchain"
 
 #ql_symbiflow -h
 # expected output?
-echo
-echo "    ok"
+echo "    all ok."
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
+# TinyFPGA PROGRAMMER APPLICATION
+#---------------------------------------------------------
 echo
-echo "step 4.1 : install flash programmer - TinyFPGA-Programmer-Application"
+echo "[4] check flash programmer - TinyFPGA-Programmer-Application"
 
 if [ ! -d $FLASH_PROGRAMMER_INSTALL_DIR ]; then
-
+    echo "    downloading flash programmer."
     git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
     pip3 install tinyfpgab
+    echo "    setting up drivers."
     pip3 install apio
     apio drivers --serial-enable
-else
-    echo
-    echo "    flash programmer dir already exists"
 fi
-#---------------------------------------------------------
 
-
-#---------------------------------------------------------
-echo
-echo "step 4.2 : initialize flash programmer for use"
-
+echo "    initializing flash programmer."
 alias qfprog="python3 $FLASH_PROGRAMMER_INSTALL_DIR/tinyfpga-programmer-gui.py"
-#---------------------------------------------------------
 
-
-#---------------------------------------------------------
-echo
-echo "step 4.3 : verify flash programmer"
 #qfprog --help
 #expected output ?
-echo
-echo "    ok"
+echo "    all ok."
 #---------------------------------------------------------
 
 

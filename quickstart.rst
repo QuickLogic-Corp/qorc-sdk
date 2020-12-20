@@ -1,3 +1,4 @@
+========================
 QuickStart With QORC SDK
 ========================
 
@@ -51,7 +52,7 @@ Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository r
 Automated Setup
 ~~~~~~~~~~~~~~~
 
-The rest of the components can be automatically installed, and initialized using the helper script in the qorc-sdk:
+The rest of the components can be automatically installed, and initialized using the helper script in the qorc-sdk :code:`envsetup.sh`
 
 This is the recommended method for new users.
 
