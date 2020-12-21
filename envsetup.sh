@@ -66,8 +66,9 @@ echo ${PWD}
 echo
 echo "[0] are we inside qorc-sdk?"
 
+#https://stackoverflow.com/a/2237103/3379867
 GIT_REPO_URL=`git config --get remote.origin.url`
-if [ ! $GIT_REPO_URL == "https://github.com/QuickLogic-Corp/qorc-sdk.git" ]; then
+if [ ! "$GIT_REPO_URL" = "https://github.com/QuickLogic-Corp/qorc-sdk.git" ]; then
 
     echo "This script should be executed from within the qorc-sdk directory!"
     return
