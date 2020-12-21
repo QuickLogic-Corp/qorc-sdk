@@ -297,6 +297,69 @@ Use your favorite serial terminal application, common ones include:
 
 - `picocom <https://github.com/npat-efault/picocom>`_
 
+Linux Note For Serial Ports
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+For accessing serial ports on Linux, the user must be added into the :code:`dialout` group.
+
+::
+
+  sudo usermod -a -G dialout $USER
+
+You may need to logout and back in for the new group to take effect.
+
+
+Bootloader Update
+~~~~~~~~~~~~~~~~~
+
+As this is a developing ecosystem, expect a lot of churn at this time, with changes in the toolchains, flash programmer and bootloader.
+
+To ensure that you are using the bleeding edge of the setup (recommended, unless you are specifically looking for a particular version), it is recommended to update the bootloader.
+
+Bootloader has updates in the following qorc-sdk versions:
+
+- v1.5.0 [https://github.com/QuickLogic-Corp/qorc-sdk/releases/tag/v1.5.0] [08 DEC 2020]
+
+To update the Bootloader on the Development Kit :
+
+
+Build
+^^^^^
+
+Navigate to :code:`qf_bootloader` build folder and run make  
+
+::
+
+  cd qf_apps/qf_bootloader/GCC_Project
+  make 
+
+
+Flash
+^^^^^
+
+Set the QuickFeather in :code:`flash mode`, with the sequence:
+
+- press :code:`RST` button, blue LED should start flashing
+- within 5 seconds, press the :code:`USR` button, green LED should now start flashing/breathing.
+- This indicates that the QuickFeather board is in :code:`flash mode`
+
+Flash the :code:`qf_bootloader` app into QuickFeather with:
+
+::
+
+  qfprog --port <PORTNAME> --bootloader output/bin/qf_bootloader.bin
+
+where the :code:`<PORTNAME>`: is the UART port exposed by the QuickFeather.
+
+This would be of the form:
+
+- :code:`COM##` on PC/Windows
+- :code:`/dev/ttyS##` on PC/wsl1/wsl2/Ubuntu18+ (where the ## is the same as the COM## shown by device manager under Windows)
+- :code:`/dev/ttyACM#` on PC/Ubuntu18+
+
+Run
+^^^
+
+Once flashing is completed, press the :code:`RST` button to reset the QuickFeather, the new bootloader should be executed.
 
 
 A Traditional Hello World Application
