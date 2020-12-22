@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # this script should be sourced, not run, so that all commands run in current shell process.
-# https://unix.stackexchange.com/questions/424492/how-to-define-a-shell-script-to-be-sourced-not-run
 if [ "${BASH_SOURCE[0]}" -ef "$0" ]
 then
-    echo "This script should be sourced, not executed!"
+    printf "This script should be sourced, not executed!\n"
     exit 1
 fi
 
@@ -49,73 +48,64 @@ FLASH_PROGRAMMER_INSTALL_DIR=${PWD}/TinyFPGA-Programmer-Application
 EXPECTED_FLASH_PROGRAMMER_QFPROG_OUTPUT=""
 
 
-echo
-echo
-echo "========================="
-echo "qorc-sdk envsetup "${QORC_SDK_ENVSETUP_VER}
-echo "========================="
-echo
-echo
+printf "\n\n=========================\n"
+printf "qorc-sdk envsetup %s\n" ${QORC_SDK_ENVSETUP_VER}
+printf "=========================\n\n\n"
 
 
-echo "executing envsetup.sh from:"
-echo ${PWD}
+printf "executing envsetup.sh from:\n%s\n" ${PWD}
 
 
 #---------------------------------------------------------
-echo
-echo "[0] are we inside qorc-sdk?"
+printf "\n[0] are we inside qorc-sdk?\n"
 
-#https://stackoverflow.com/a/2237103/3379867
 GIT_REPO_URL=`git config --get remote.origin.url`
 if [ ! "$GIT_REPO_URL" = "https://github.com/QuickLogic-Corp/qorc-sdk.git" ]; then
 
-    echo "This script should be executed from within the qorc-sdk directory!"
+    printf "This script should be executed from within the qorc-sdk directory!\n"
     return
 
 fi
 
-echo "    ok."
+printf "    ok.\n"
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
-echo
-echo "[1] check (minimal) qorc-sdk submodules"
+printf "\n[1] check (minimal) qorc-sdk submodules\n"
 
 git submodule update --init --recursive qorc-example-apps
 git submodule update --init --recursive qorc-testapps
 git submodule update --init --recursive s3-gateware
 #git submodule update --init --recursive TinyFPGA-Programmer-Application
 
-echo "    ok."
+printf "    ok.\n"
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
 # ARM GCC TOOLCHAIN
 #---------------------------------------------------------
-echo
-echo "[2] check arm gcc toolchain"
+printf "\n[2] check arm gcc toolchain\n"
 if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
     
-    echo "    creating toolchain directory : ${PWD}/arm_toolchain_install"
+    printf "    creating toolchain directory : %s\n" "${PWD}/arm_toolchain_install"
     mkdir arm_toolchain_install
 
     if [ ! -f $ARM_TOOLCHAIN_ARCHIVE_FILE ]; then
 
-        echo "    downloading toolchain archive."
+        printf "    downloading toolchain archive.\n"
         wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
     
     fi
 
-    echo "    extracting toolchain archive."
+    printf "    extracting toolchain archive.\n"
     tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${PWD}/arm_toolchain_install
 
 fi
 
 
-echo "    initializing toolchain."
+printf "    initializing toolchain.\n"
 export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
 
 
@@ -123,11 +113,11 @@ ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
 
 if [ $ACTUAL_ARM_TOOLCHAIN_GCC_PATH == $EXPECTED_ARM_TOOLCHAIN_GCC_PATH ]; then
 
-    echo "    ok."
+    printf "    ok.\n"
 
 else
 
-    echo "    !!ARM GCC Toolchain path not as expected, are there multiple toolchains on the path?!!"
+    printf "    !!ARM GCC Toolchain path not as expected, are there multiple toolchains on the path?!!\n"
     return
 
 fi
@@ -137,44 +127,42 @@ fi
 #---------------------------------------------------------
 # FPGA TOOLCHAIN
 #---------------------------------------------------------
-echo
-echo "[3] check fpga toolchain"
+printf "\n[3] check fpga toolchain\n"
 
 if [ ! -d $FPGA_TOOLCHAIN_INSTALL_DIR ]; then
 
     if [ ! -f $FPGA_TOOLCHAIN_INSTALLER ]; then
 
-        echo "    downloading toolchain installer."
+        printf "    downloading toolchain installer.\n"
         wget -O $FPGA_TOOLCHAIN_INSTALLER  -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
     
     fi
 
     export INSTALL_DIR=$FPGA_TOOLCHAIN_INSTALL_DIR
-    echo "    installing toolchain."
+    printf "    installing toolchain.\n"
     bash Symbiflow_v1.3.1.gz.run
 
 fi
 
-echo "    initializing toolchain."
+printf "    initializing toolchain.\n"
 export PATH="$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin:$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
 source "$FPGA_TOOLCHAIN_INSTALL_DIR/conda/etc/profile.d/conda.sh"
 conda activate
 
 # ql_symbiflow -h
 # TODO check expected output to verify
-echo "    ok."
+printf "    ok.\n"
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
 # TinyFPGA PROGRAMMER APPLICATION
 #---------------------------------------------------------
-echo
-echo "[4] check flash programmer"
+printf "\n[4] check flash programmer\n"
 
 if [ ! -d $FLASH_PROGRAMMER_INSTALL_DIR ]; then
 
-    echo "    downloading flash programmer."
+    printf "    downloading flash programmer.\n"
     git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
 
 fi
@@ -183,7 +171,7 @@ fi
 IS_TINYFPGAB_INSTALLED=`python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("tinyfpgab") else 0)'`
 if [ ! $IS_TINYFPGAB_INSTALLED == "1" ]; then
 
-    echo "    setting up tinyfpgab."
+    printf "    setting up tinyfpgab.\n"
     pip3 install tinyfpgab
 
 fi
@@ -191,27 +179,23 @@ fi
 IS_APIO_INSTALLED=`python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("apio") else 0)'`
 if [ ! $IS_APIO_INSTALLED == "1" ]; then
 
-    echo "    setting up drivers."
+    printf "    setting up drivers.\n"
     pip3 install apio
     apio drivers --serial-enable
 
 fi
 
-echo "    initializing flash programmer."
+printf "    initializing flash programmer.\n"
 alias qfprog="python3 $FLASH_PROGRAMMER_INSTALL_DIR/tinyfpga-programmer-gui.py"
 
 # qfprog --help
 # TODO check expected output to verify
-echo "    ok."
+printf "    ok.\n"
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
-echo
-echo
-echo "qorc-sdk env initialized."
-echo
-echo
+printf "\n\nqorc-sdk env initialized.\n\n\n"
 #---------------------------------------------------------
 
 
@@ -267,3 +251,9 @@ echo
 
 # }
 #---------------------------------------------------------
+
+# references for choices made while writing the sh script:
+# https://unix.stackexchange.com/questions/424492/how-to-define-a-shell-script-to-be-sourced-not-run
+# https://stackoverflow.com/a/2237103/3379867
+# https://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo/65819
+# https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_08_02.html
