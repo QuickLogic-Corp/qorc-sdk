@@ -38,7 +38,7 @@ To convert this to an Eclipse Project, the following steps can be followed:
      export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
      source "$INSTALL_DIR/conda/etc/profile.d/conda.sh"
      conda activate
-     make
+     make $2
 
    Save the file, and mark it executable with :code:`chmod +x eclipse_custom_build_command.sh`
 
@@ -139,14 +139,78 @@ Setup Build Configuration For Project
    | Click :code:`Apply and Close`
    |
 
-3. Select :code:`Project -> Build Project`
+3. Right-Click on the project in :code:`Project Explorer`, select :code:`Clean Project`
 
-You should be able to see the project build successfully.
+   You should be able to see the project cleaned successfully.
 
-The :code:`CDT Build Console` output should look to be the same as what you would see while executing :code:`make` from the command line.
+   The :code:`CDT Build Console` output should look to be the same as what you would see while executing :code:`make clean` from the command line.
+
+
+4. Right-Click on the project in :code:`Project Explorer`, select :code:`Build Project`
+
+   You should be able to see the project build successfully.
+
+   The :code:`CDT Build Console` output should look to be the same as what you would see while executing :code:`make` from the command line.
+
+5. Select the :code:`bin` directory in the :code:`File Explorer` from the application's :code:`GCC_Project/output/` directory.
+
+   Drag the selected directory and drop it onto the :code:`App/GCC_Project/output/` Virtual Folder in Eclipse IDE
+
+   This is required for setting up the Debug Configuration in the next section.
+
 
 
 Setup Debug Configuration For Project
 =====================================
 
-(Coming Soon)
+Segger J-Link
+-------------
+
+1. Install the Segger J-Link Software Package for Ubuntu:
+
+   Recommended to use the :code:`tgz` archive (J-Link Software and Documentation pack for Linux, TGZ archive, 32 or 64 bit according to host architecture) from :
+
+   ::
+
+     https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack
+
+   Tested with v6.92 at the time of writing this guide.
+
+   Extract the archive to any preferred location.
+
+2. Ensure the project is selected in Eclipse IDE :code:`Project Explorer`
+
+3. Select :code:`GDB SEGGER J-Link Debugging`, and then click on :code:`New launch configuration` (the top left most icon with only a "+" in the corner)
+
+4. On the :code:`Main` tab :
+   
+   - Select the :code:`Project` (It should show the project you created)
+   
+   - Specify the :code:`C/C++ Application` as :code:`App/GCC_Project/output/bin/"application_name".elf` (Ideally, this should have been automatically selected by Eclipse)
+     Click on :code:`Search Project` and select the correct :code:`elf` file.
+
+5. On the :code:`Debugger` tab :
+
+   - Set the :code:`Executable path` to point to the :code:`JLinkGDBServerCLExe` file in the Segger J-Link Installation above.
+
+   - Set the :code:`Device name` to :code:`Cortex-M4` 
+
+6. On the :code:`Startup` tab :
+
+   - set :code:`Initial Reset and Halt` type to :code:`0`
+
+   - Check the :code:`RAM application (reload after reach reset/restart)` option
+
+   - Uncheck the :code:`Pre-run/Restart reset` option
+
+7. Click on :code:`Debug` button
+
+   The debug session should start launching (Answer :code:`Yes` if Eclipse asks to switch to Debug Perspective)
+
+   You should be able to see the code loaded and debugger halted on :code:`int main()`
+
+
+OpenOCD
+-------
+
+(coming soon!)
