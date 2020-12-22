@@ -112,7 +112,7 @@ Setup Build Configuration For Project
 
 1. Ensure that the newly create project is selected in Eclipse IDE
 
-2.  Select :code:`Project -> Properties`
+2. Select :code:`Project -> Properties`
    
    1. Select C/C++ Build from the left pane
    
