@@ -47,9 +47,11 @@ Clone the `qorc-sdk <https://github.com/QuickLogic-Corp/qorc-sdk>`_ repository :
 
   cd qorc-sdk
 
+Setup Development Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Automated Setup
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 The rest of the components can be automatically installed, and initialized using the helper script in the qorc-sdk :code:`envsetup.sh`
 
@@ -76,10 +78,22 @@ Alternatively, each of the components can be setup manually using the **"Manual 
 .. _qorc-sdk-components-manual-setup:
 
 Manual Setup
-~~~~~~~~~~~~
+^^^^^^^^^^^^
+
+QORC SDK Submodules
+###################
+
+Init and Update the (minimal) submodules in the qorc-sdk : :code:`s3-gateware`, :code:`qorc-testapps`, :code:`qorc-example-apps`.
+
+::
+  
+  git submodule update --init qorc-example-apps
+  git submodule update --init qorc-testapps
+  git submodule update --init s3-gateware
+
 
 ARM Cortex M4 Build Toolchain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#############################
 
 1. Download archive according to the system configuration from: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
@@ -124,7 +138,7 @@ ARM Cortex M4 Build Toolchain
 
 
 QuickLogic FPGA Build Toolchain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+###############################
 
 The recommended way to install the toolchain is using the latest prebuilt release here: `quicklogic-fpga-toolchain releases <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases>`_
 
@@ -181,7 +195,7 @@ The recommended way to install the toolchain is using the latest prebuilt releas
 
 
 QuickLogic TinyFPGA-Programmer-Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+##########################################
 
 1. Clone the `TinyFPGA-Programmer <https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application>`_ repository recursively:
    
@@ -210,25 +224,7 @@ QuickLogic TinyFPGA-Programmer-Application
 
    This can be added to :code:`.bashrc` or :code:`.bash_profile` to make it permanent as well. 
 
-5. Test the QuickFeather USB port:
-
-   Plug in the QuickFeather board and set it to :code:`flash mode`, with the sequence:
-
-   - press :code:`RST` button, blue LED should start flashing
-   - within 5 seconds, press the :code:`USR` button, green LED should now start flashing/breathing.
-   - This indicates that the QuickFeather board is in :code:`flash mode`
-
-   Check the output of :code:`lsusb` like below to see if the QuickFeather USB-CDC is detected correctly:
-
-   ::
-
-     lsusb | grep OpenMoko
-
-   should display one of the IDs :code:`1d50:6140` or :code:`1d50:6130`, like below:
-
-   :code:`Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.` or :code:`Bus 002 Device 029: ID 1d50:6130 OpenMoko, Inc.`
-
-6. Test the programmer application:
+5. Test the programmer application:
 
    ::
 
@@ -266,19 +262,6 @@ QuickLogic TinyFPGA-Programmer-Application
      --mfgpkg qf_mfgpkg/   directory containing all necessary binaries
 
 
-QORC SDK Submodules
-^^^^^^^^^^^^^^^^^^^
-
-Init and Update the (minimal) submodules in the qorc-sdk : :code:`s3-gateware`, :code:`qorc-testapps`, :code:`qorc-example-apps`.
-
-::
-  
-  git submodule update --init qorc-example-apps
-  git submodule update --init qorc-testapps
-  git submodule update --init s3-gateware
-
-
-
 Serial Terminal Application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -295,6 +278,7 @@ Use your favorite serial terminal application, common ones include:
 - `minicom <https://linux.die.net/man/1/minicom>`_
 
 - `picocom <https://github.com/npat-efault/picocom>`_
+
 
 Linux Note For Serial Ports
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -315,6 +299,26 @@ To add current user to :code:`dialout` group:
   sudo usermod -a -G dialout $USER
 
 You may need to logout and back in for the new group to take effect.
+
+
+Test the QuickFeather USB-CDC Port
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Plug in the QuickFeather board and set it to :code:`flash mode`, with the sequence:
+
+   - press :code:`RST` button, blue LED should start flashing
+   - within 5 seconds, press the :code:`USR` button, green LED should now start flashing/breathing.
+   - This indicates that the QuickFeather board is in :code:`flash mode`
+
+   Check the output of :code:`lsusb` like below to see if the QuickFeather USB-CDC is detected correctly:
+
+   ::
+
+     lsusb | grep OpenMoko
+
+   should display one of the IDs :code:`1d50:6140` or :code:`1d50:6130`, like below:
+
+   :code:`Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.` or :code:`Bus 002 Device 029: ID 1d50:6130 OpenMoko, Inc.`
 
 
 Bootloader Update
