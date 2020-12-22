@@ -1,4 +1,3 @@
-========================
 QuickStart With QORC SDK
 ========================
 
@@ -301,6 +300,16 @@ Linux Note For Serial Ports
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 For accessing serial ports on Linux, the user must be added into the :code:`dialout` group.
 
+To check if user is already part of :code:`dialout`:
+
+::
+
+  id -Gn $USER | grep -c "dialout"
+
+will output :code:`1` if already in group or :code:`0` if not.
+
+To add current user to :code:`dialout` group:
+
 ::
 
   sudo usermod -a -G dialout $USER
@@ -311,7 +320,7 @@ You may need to logout and back in for the new group to take effect.
 Bootloader Update
 ~~~~~~~~~~~~~~~~~
 
-As this is a developing ecosystem, expect a lot of churn at this time, with changes in the toolchains, flash programmer and bootloader.
+As this is a developing ecosystem, expect some churn at this time, with changes in the toolchains, flash programmer and bootloader.
 
 To ensure that you are using the bleeding edge of the setup (recommended, unless you are specifically looking for a particular version), it is recommended to update the bootloader.
 
@@ -319,13 +328,13 @@ Bootloader has updates in the following qorc-sdk versions:
 
 - v1.5.0 [https://github.com/QuickLogic-Corp/qorc-sdk/releases/tag/v1.5.0] [08 DEC 2020]
 
-To update the Bootloader on the Development Kit :
+To update the Bootloader on the Development Kit, follow the Build, Flash, Run as below.
 
 
 Build
 ^^^^^
 
-Navigate to :code:`qf_bootloader` build folder and run make  
+Navigate to :code:`qf_bootloader` application build folder and run make  
 
 ::
 
@@ -346,7 +355,7 @@ Flash the :code:`qf_bootloader` app into QuickFeather with:
 
 ::
 
-  qfprog --port <PORTNAME> --bootloader output/bin/qf_bootloader.bin
+  qfprog --port <PORTNAME> --bootloader output/bin/qf_bootloader.bin --mode m4
 
 where the :code:`<PORTNAME>`: is the UART port exposed by the QuickFeather.
 
@@ -395,7 +404,7 @@ Flash the :code:`qf_helloworldsw` app into QuickFeather with:
 
 ::
 
-  qfprog --port <PORTNAME> --m4app output/bin/qf_helloworldsw.bin
+  qfprog --port <PORTNAME> --m4app output/bin/qf_helloworldsw.bin --mode m4
 
 where the :code:`<PORTNAME>`: is the UART port exposed by the QuickFeather.
 
@@ -494,7 +503,7 @@ Flash the :code:`qf_helloworldhw` app into QuickFeather with:
 
 ::
 
-  qfprog --port <PORTNAME> --m4app output/bin/qf_helloworldhw.bin
+  qfprog --port <PORTNAME> --m4app output/bin/qf_helloworldhw.bin --mode m4
 
 where the :code:`<PORTNAME>`: is the UART port exposed by the QuickFeather.
 

@@ -83,9 +83,10 @@ echo "    ok."
 echo
 echo "[1] check (minimal) qorc-sdk submodules"
 
-git submodule update --init qorc-example-apps
-git submodule update --init qorc-testapps
-git submodule update --init s3-gateware
+git submodule update --init --recursive qorc-example-apps
+git submodule update --init --recursive qorc-testapps
+git submodule update --init --recursive s3-gateware
+#git submodule update --init --recursive TinyFPGA-Programmer-Application
 
 echo "    ok."
 #---------------------------------------------------------
