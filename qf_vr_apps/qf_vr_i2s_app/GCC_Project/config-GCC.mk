@@ -2,6 +2,7 @@
 # Symbiflow options for QORC SDK
 #
 export RTL_TOP_MODULE=
+export GATEWARE_DIR=$(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)projects$(DIR_SEP)S3_FLL_I2S
 
 #
 # GCC Configuration options for Quick-AI SDK
@@ -43,6 +44,8 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
+                 -I"$(PROJ_ROOT)/s3-gateware/" \
+                 -I"$(GATEWARE_DIR)/" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
                  -I"$(PROJ_ROOT)/Licensed3rdParty/amazon/inc" \

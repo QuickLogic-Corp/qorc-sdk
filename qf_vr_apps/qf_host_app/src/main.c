@@ -49,12 +49,16 @@
 #include "spi_flash.h"
 #include "h2d_protocol.h"
 #include "ql_hostTask.h"
+
 #if (FEATURE_USBSERIAL == 1)    
 #include "eoss3_hal_fpga_usbserial.h"
-//#include "gateware.h"
+#if (FEATURE_I2S_MASTER_CLKS == 1)
 #include "usb2serial_i2sclk_bit_2020_11_19b.h" //this also has I2s
 // length of axFPGABitStream array in bytes
 int   axFPGABitStream_length = sizeof(axFPGABitStream);
+#else
+#include "gateware.h"
+#endif
 #endif
 #include "eoss3_hal_uart.h"
 

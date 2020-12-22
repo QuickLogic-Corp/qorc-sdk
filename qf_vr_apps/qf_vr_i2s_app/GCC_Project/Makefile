@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs Appdir
+all: _makedirs_ external_srcs appgateware Appdir
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	@echo Copy output files ...
@@ -97,6 +97,14 @@ clean_Libraries:
 	make -f makefiles/Makefile_Libraries clean
 
 CLEAN_TARGET += Libraries
+
+.PHONY:appgateware
+appgateware:
+#	make --directory $(GATEWARE_DIR) all
+clean_appgateware:
+	make --directory $(GATEWARE_DIR) clean
+
+CLEAN_TARGET += appgateware
 
 .PHONY:DatablockProcessor
 DatablockProcessor:
