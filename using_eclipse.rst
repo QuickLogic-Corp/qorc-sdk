@@ -6,7 +6,7 @@ The recommended Eclipse edition for QORC SDK is Eclipse IDE for Embedded C/C++ D
 
 The IDE is available for download from : https://projects.eclipse.org/projects/iot.embed-cdt/downloads
 
-The current test version with QORC SDK is : Eclipse IDE for Embedded C/C++ Developers 2020-09.
+The current tested version with QORC SDK is : Eclipse IDE for Embedded C/C++ Developers 2020-09.
 
 This Eclipse IDE is a continuation of the GNU MCU Eclipse project (https://gnu-mcu-eclipse.github.io/) and is now an Eclipse Incubation Project, and is recommended over the older GNU MCU for new installations.
 
@@ -25,9 +25,9 @@ To convert this to an Eclipse Project, the following steps can be followed:
 
 1. Create a directory :code:`eclipse_make_project` in the application's GCC_Project dir.
 
-2. | Create a file :code:`eclipse_custom_build_command.sh` in the application's GCC_Project dir.
-   |
-   | Copy the below content into the file :
+2. Create a file :code:`eclipse_custom_build_command.sh` in the application's GCC_Project dir.
+   
+   Copy the below content into the file :
 
    ::
 
@@ -44,23 +44,23 @@ To convert this to an Eclipse Project, the following steps can be followed:
 
 3. Open Eclipse and Select Preferred Workspace.
 
-4. | Select :code:`File -> New -> Project`
-   |
-   | From the :code:`New Project` dialog box, 
-   |
-   | Select :code:`Makefile project with existing code` under :code:`C++` and click Next.
-   |
+4. Select :code:`File -> New -> Project`
+   
+   From the :code:`New Project` dialog box, 
+   
+   Select :code:`Makefile project with existing code` under :code:`C++` and click Next.
+   
 
-5. | Specify the Project Name ("Use Your Preferred Name") in the :code:`Project Name` text box.
-   |
-   | Specify the path to :code:`eclipse_make_project` that was created in Step [1] in the :code:`Existing Code Location` text box
-   |
-   | Keep both :code:`C` and :code:`C++` checked in :code:`Languages`
-   |
-   | Select :code:`ARM Cross GCC` in the :code:`Toolchain for Indexer Settings` options
-   |
-   | Click Finish
-   |
+5. Specify the Project Name ("Use Your Preferred Name") in the :code:`Project Name` text box.
+   
+   Specify the path to :code:`eclipse_make_project` that was created in Step [1] in the :code:`Existing Code Location` text box
+   
+   Keep both :code:`C` and :code:`C++` checked in :code:`Languages`
+   
+   Select :code:`ARM Cross GCC` in the :code:`Toolchain for Indexer Settings` options
+   
+   Click Finish
+   
 
 6. | Add files and folder to the Eclipse Virtual Filesystem
    |
@@ -112,39 +112,37 @@ Setup Build Configuration For Project
 
 1. Ensure that the newly create project is selected in Eclipse IDE
 
-2. | Select :code:`Project -> Properties`
-   |
-   | Select C/C++ Build from the left pane
-   |
-   | Select the :code:`Builder Settings` tab
-   |
-   | unselect :code:`Use default build command`
-   |
-   | Enter the following in the :code:`Build command` text box:
+2.  Select :code:`Project -> Properties`
+   
+   1. Select C/C++ Build from the left pane
+   
+      Select the :code:`Builder Settings` tab
+   
+      Deselect :code:`Use default build command`
+   
+      Enter the following in the :code:`Build command` text box:
 
-   ::
+      ::
 
-     ${workspace_loc:/${ProjName}}/../eclipse_custom_build_command.sh ${workspace_loc:/${ProjName}}/../
+        ${workspace_loc:/${ProjName}}/../eclipse_custom_build_command.sh ${workspace_loc:/${ProjName}}/../
 
-   | Select sub option :code:`Settings` under :code:`C/C++ Build`
-   |
-   | Select :code:`Toolchains` tab and pull-down :code:`Name` option and select :code:`GNU Tools for ARM Embedded Processors (arm-none-eabi-gcc)`
-   |
-   | Select sub option :code:`Environment` under :code:`C/C++ Build`
-   |
-   | Click option :code:`Add...`, input :code:`Name` as :code:`INSTALL_DIR` and :code:`Value` as :code:`"Path to the FPGA Toolchain Installation Directory"` (same as in regular setup)
-   |
-   | If Variable :code:`PATH` is not present, Click option :code:`Add...`, input :code:`Name` as :code:`PATH` and :code:`Value` as :code:`"Path to the ARM GCC Toolchain Directory":"$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH`
-   |
-   | Click :code:`Apply and Close`
-   |
+   2. Select sub option :code:`Settings` under :code:`C/C++ Build`
+   
+      Select :code:`Toolchains` tab and pull-down :code:`Name` option and select :code:`GNU Tools for ARM Embedded Processors (arm-none-eabi-gcc)`
+   
+   3. Select sub option :code:`Environment` under :code:`C/C++ Build`
+   
+      Click option :code:`Add`, input :code:`Name` as :code:`INSTALL_DIR` and :code:`Value` as :code:`"Path to the FPGA Toolchain Installation Directory"` (same as in regular setup)
+   
+      Click option :code:`Add`, input :code:`Name` as :code:`PATH` and :code:`Value` as :code:`"Path to the ARM GCC Toolchain Directory":"$INSTALL_DIR/install/bin:$INSTALL_DIR/install/bin/python:$PATH`
+   
+   Click :code:`Apply and Close` the :code:`Project Properties`
 
 3. Right-Click on the project in :code:`Project Explorer`, select :code:`Clean Project`
 
    You should be able to see the project cleaned successfully.
 
    The :code:`CDT Build Console` output should look to be the same as what you would see while executing :code:`make clean` from the command line.
-
 
 4. Right-Click on the project in :code:`Project Explorer`, select :code:`Build Project`
 
@@ -179,6 +177,8 @@ Segger J-Link
    Extract the archive to any preferred location.
 
 2. Ensure the project is selected in Eclipse IDE :code:`Project Explorer`
+
+   Select :code:`Run -> Debug Configurations`
 
 3. Select :code:`GDB SEGGER J-Link Debugging`, and then click on :code:`New launch configuration` (the top left most icon with only a "+" in the corner)
 
