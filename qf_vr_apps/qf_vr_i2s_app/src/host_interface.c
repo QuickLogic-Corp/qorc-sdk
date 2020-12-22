@@ -56,7 +56,7 @@ dbgtrace_t  adbgtraceHIF[K_DBGTRACE_HIF];
 int         idbgtraceHIF = 0;
 
 ///////// define this to enable detection of KP while streaming the data
-#define STREAM_KP_DETECT_ENABLE (0)
+#define STREAM_KP_DETECT_ENABLE   (0)
 static int stream_kp_detect_enable = 0;
 
 ///////////// Queue/Heap Length and audio block drop count monitor ////////////////////////////////
@@ -122,7 +122,7 @@ hif_buffer_info_t o_hif_tx_buffer = {
 
 //TIM
 QueueHandle_t       q_id_inQ_hif = NULL;
-
+QueueHandle_t       q_id_inQ_spi = NULL;
 /*********************************************************************************
  *
  *  HIF-FSM interface
@@ -143,6 +143,12 @@ enum process_state HIF_FSMAction(enum process_action pa, void* pv) {
             //TIM TODO make size appropriate
             q_id_inQ_hif = xQueueCreate(120, sizeof(QAI_DataBlock_t *));
             vQueueAddToRegistry(q_id_inQ_hif, "q_id_inQ_hif");
+        }
+        //this Queue used only if I2S+SPI Transmit both are enabled
+        if (q_id_inQ_spi == NULL) {
+            // Setup input queue
+            q_id_inQ_spi = xQueueCreate(40, sizeof(QAI_DataBlock_t *));
+            vQueueAddToRegistry(q_id_inQ_spi, "q_id_inQ_spi");
         }
         
         HIF_State = PSTATE_STOPPED;
@@ -278,7 +284,7 @@ static void SendEventKPDetected(hif_channel_info_t* p_hif_channel_info, uint8_t 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 #if (ENABLE_I2S_TX_SLAVE == 1)
-int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info);
+void send_to_i2s_task(hif_channel_info_t* p_hif_channel_info);
   
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -780,24 +786,18 @@ void    hif_release_inputQ(void) {
 }
 
 #define D2H_NUM_AUDIO_BLOCKS_TO_SEND    (4)
-void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
+void send_data_over_spi(hif_channel_info_t* p_hif_channel_info, QueueHandle_t data_Q) {
     BaseType_t  xResult;
     uint16_t     kbytes = 0;
-#if (ENABLE_I2S_TX_SLAVE == 1)
-     //send the data to stream on I2S interface
-     kbytes = send_to_i2s_task(p_hif_channel_info);
-     //timeout_count_bytes += kbytes;
-     
-#else //send the data over SPI interface 
-
+  
     //send 4 blocks
-    if (uxQueueMessagesWaiting(q_id_inQ_hif) >= D2H_NUM_AUDIO_BLOCKS_TO_SEND) {
+    if (uxQueueMessagesWaiting(data_Q) >= D2H_NUM_AUDIO_BLOCKS_TO_SEND) {
         // Check buffer availability
         if (xSemaphoreTake(p_hif_channel_info->xSemaphore, 0) == pdTRUE) {
             QAI_DataBlock_t* pdatablk;
             for (int num_blocks = 0; num_blocks < D2H_NUM_AUDIO_BLOCKS_TO_SEND; num_blocks++)
             {
-                xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
+                xResult = xQueueReceive(data_Q, &pdatablk, 0);
                 configASSERT(xResult != pdFAIL);
                 int block_size = (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize);
                 configASSERT( (block_size+kbytes) <= D2H_MAX_DATA_SIZE ) ;
@@ -815,6 +815,19 @@ void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
             timeout_count_bytes += kbytes;
         }
     }
+    return;
+}
+void    hif_SendData(hif_channel_info_t* p_hif_channel_info) {
+
+#if (ENABLE_I2S_TX_SLAVE == 1)
+  
+     //send the data to stream on I2S interface
+     send_to_i2s_task(p_hif_channel_info);
+     
+#else //send the data over SPI interface only
+     
+     send_data_over_spi(p_hif_channel_info,q_id_inQ_hif);
+     
 #endif //ENABLE_I2S_TX_SLAVE    
     
 #if (STREAM_KP_DETECT_ENABLE == 1) //after ~2sec of data streamed, re-enable VR
@@ -830,7 +843,7 @@ extern void enable_stream_VR(void);
     
 #endif
     
-#if 1 //have a built in 10 sec data timeout to stop streaming    
+#if 0 //have a built in 10 sec data timeout to stop streaming    
     if(timeout_count_bytes >= (12*16000*2))
     {
       timeout_count_bytes = 0;
@@ -842,13 +855,30 @@ extern void enable_stream_VR(void);
 #endif
     
 }
+//add the datablock to own queue and send the data over SPI interface 
+void hif_SendData_spi(hif_channel_info_t* p_hif_channel_info, QAI_DataBlock_t* pIn ) {
+    BaseType_t  xResult;
+
+    //first add the datablock to spi output queue
+    datablk_mgr_usecount_increment(pIn,1);
+    xResult = xQueueSendToBack( q_id_inQ_spi, ( void * )&pIn, 0 );
+    configASSERT(xResult == pdTRUE);
+
+
+    //then check if enough and send over spi
+    send_data_over_spi(p_hif_channel_info,q_id_inQ_spi);
+    
+    return;
+}
+
 #if (ENABLE_I2S_TX_SLAVE == 1)
-int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
+void send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
     BaseType_t  xResult;
     int waiting_blocks = 0;
     int kbytes = 0;
+
+#if (ENABLE_I2S_AND_SPI_DATA_TRANSMIT == 0)
     hif_channel_info_t* p_ci = p_hif_channel_info;
-    
     //need to take the g_host_ready_lock, will be given in 
     // hifcb_cmd_host_ready_to_receive() every time Host is ready
     if (p_ci->firstTime == 0){
@@ -859,7 +889,7 @@ int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
         dbg_fatal_error("[host interface] : Error unable to take lock to g_host_ready_lock\n");
       }
     }
-
+#endif
     //send the block to i2s queue
     waiting_blocks = uxQueueMessagesWaiting(q_id_inQ_hif);
     while (waiting_blocks >= 1) {
@@ -868,6 +898,10 @@ int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
             QAI_DataBlock_t* pdatablk;
             xResult = xQueueReceive(q_id_inQ_hif, &pdatablk, 0);
             configASSERT(xResult != pdFAIL);
+#if (ENABLE_I2S_AND_SPI_DATA_TRANSMIT == 1)
+            //also send the data over SPI
+            hif_SendData_spi(p_hif_channel_info, pdatablk);
+#endif
             addDatablkToQueue_I2S(pdatablk); //will be released by i2s task after use
             waiting_blocks--;
             kbytes += (pdatablk->dbHeader.numDataElements*pdatablk->dbHeader.dataElementSize);
@@ -876,7 +910,10 @@ int send_to_i2s_task(hif_channel_info_t* p_hif_channel_info) {
         }
     }
 
-    return kbytes;
+#if (ENABLE_I2S_AND_SPI_DATA_TRANSMIT == 0)
+    timeout_count_bytes += kbytes;
+#endif
+    return ;
 }
 #endif
 

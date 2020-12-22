@@ -776,7 +776,7 @@ void hostTaskHandler(void * parameter)
             dbg_str("EVT_EOT\n");
 
 #if (FEATURE_USBSERIAL == 1)
-            //At the end print the numbe of samples received. 
+            //At the end print the number of samples received. 
             //Note: The number of samples printed may not match the number received
 #if (FEATURE_OPUS_ENCODER == 1)
             print_kp_end_info(storage_write_bufcount * MAX_RX_STORAGE_BUFF_SIZE_OPUS);

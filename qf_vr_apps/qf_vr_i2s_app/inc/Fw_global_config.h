@@ -166,8 +166,10 @@ extern int FPGA_FFE_LOADED;
 
 #define EN_STEREO_DUAL_BUF 1 //0= use stereo data interleaved
 
-#define ENABLE_I2S_TX_SLAVE (1) //Audio data is streamed on I2S interface also
-
+#define ENABLE_I2S_TX_SLAVE (1) //Audio data is streamed on I2S interface
+#if (ENABLE_I2S_TX_SLAVE == 1 )
+#define ENABLE_I2S_AND_SPI_DATA_TRANSMIT   (1) //Audio data is streamed on SPI interface also
+#endif
 //These are for I2S stream options used by the I2S Task
 #define ENABLE_I2S_STEREO_TRANSMIT 0 //0 = mono channel transmit, 1 =stereo
 #define ENABLE_I2S_48K_TRANSMIT    0 //0 = 16K samples, 1 = 48K 

@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include "eoss3_dev.h"
 #include "eoss3_hal_fpga_FLL.h"
 #include "s3x_clock_hal.h"
@@ -36,7 +37,7 @@
 
 //define the local clk  (i2s bit clock) only if not defined
 #ifndef FLL_I2S_LOCAL_CLK
-#define FLL_I2S_LOCAL_CLK  (1*1024*1000 - 0*32768) //for 16K sample rate = 2*32*16K = 1024000
+#define FLL_I2S_LOCAL_CLK  (1*1024*1000) //for 16K sample rate = 2*32*16K = 1024000
 #endif
 
 /* Note: The Sample Time is used only to take a decision whether to generate
@@ -56,6 +57,9 @@
 #ifndef FLL_GAP_TIME_DEFAULT
 #define FLL_GAP_TIME_DEFAULT     (90*1024) //=90ms  at 16K sample rate
 #endif
+#ifndef MAX_FLL_DAC_DRIFT
+#define MAX_FLL_DAC_DRIFT    (30)  // >= 30*32768Hz. Note: 1 DAC count is more than 32768Hz
+#endif
 
 void enable_hsosc_dac_debug(void);
 void disable_hsosc_dac_debug(void);
@@ -65,6 +69,9 @@ int slow_count =0;
 int speed_count =0;
 int dac_start = 0;
 int dac_end = 0;
+
+int slow_drift = 0;
+int speed_drift = 0;
 
 //Enable the FLL
 void HAL_FB_FLL_Enable(void) {
@@ -78,6 +85,9 @@ void HAL_FB_FLL_Enable(void) {
   speed_count =0;
   dac_start = get_hsosc_dac();
   dac_end = dac_start;
+  slow_drift = 0;
+  speed_drift = 0;
+
   
   return;
 }
@@ -109,6 +119,8 @@ void HAL_FB_FLL_Disable(void) {
   
   printf(" FLL ISR counts: Slow = %d, Speed = %d, total clk change = %d KHz, i2s clk change = %d KHz \n",
           slow_count,speed_count, clk_change, i2s_clk_change); 
+  printf(" FLL Drift counts: Slow drift = %d, Speed drift = %d, total Slow = %d, total Speed = %d \n",
+          slow_drift,speed_drift,slow_count+slow_drift,speed_count+speed_drift); 
   printf(" HSOSC DAC: Start = %d (%d KHz), End = %d (%d KHz), diff = %d (%d KHz) \n", 
           dac_start,dac_start_hz, dac_end, dac_end_hz, dac_end - dac_start, dac_end_hz - dac_start_hz);
 #endif
@@ -231,12 +243,27 @@ void disable_hsosc_dac_debug(void)
   AIP->OSC_CTRL_3 = 0x8; //monitor enable, refok = 0
   AIP->RTC_CTRL_1 = rate;//1K divider
 }
-
+//returns 0 if DAC value change is with in a max value
+int check_fll_drift(int dac_bits)
+{
+  int drift = abs(dac_bits - dac_start);
+  if(drift < MAX_FLL_DAC_DRIFT)
+    return 0;
+  else
+    return 1; //drift is over the limit
+}
 void slow_down_ISR(void)
 {
     int bits, bits2;
     //enable_hsosc_dac_debug();
     bits = get_hsosc_dac();
+
+    //check if the DAC value changed above a limit
+    if(check_fll_drift(bits)) {
+      slow_drift++;
+      return;
+    }
+    
     bits2 = (bits - 1) & 0x1FF;
     if(bits2 < bits)
     {
@@ -253,6 +280,13 @@ void speed_up_ISR(void)
     int bits, bits2;
     //enable_hsosc_dac_debug();
     bits = get_hsosc_dac();
+
+    //check if the DAC value changed above a limit
+    if(check_fll_drift(bits)) {
+      speed_drift++;
+      return;
+    }
+
     bits2 = (bits + 1) & 0x1FF;
     if(bits2 > bits)
     {
