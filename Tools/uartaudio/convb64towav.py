@@ -83,6 +83,11 @@ def decode_base64_file(input_file, output_file):
             count +=1
             #if (count == 10):
             #    break
+
+    total_lines = sum(1 for line in open(input_file))
+    print(f'total number of lines = { total_lines } ')
+    print(f'lines processed = { count +1 } ')
+
     #encode_raw_data(output_array)
 
     print()

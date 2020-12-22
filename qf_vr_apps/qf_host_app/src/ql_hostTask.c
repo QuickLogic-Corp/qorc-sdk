@@ -619,9 +619,10 @@ static inline uint8_t increment_seq(void)
     }
     return ((uint8_t)(seq & 0xFF));
 }
+#define DEFAULT_HOST_STREAM_TIMEOUT  ((5*1000))
 static TimerHandle_t StreamTimerHandle = NULL;
 static void StreamTimerCB(TimerHandle_t StreamTimerHandle);
-/* Host task andler*/
+/* Host task handler*/
 void hostTaskHandler(void * parameter)
 {
     BaseType_t qret;
@@ -635,7 +636,7 @@ void hostTaskHandler(void * parameter)
         test_write_buf[i] = i;
     }
 #endif
-    StreamTimerHandle = xTimerCreate("StreamTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, StreamTimerCB);
+    StreamTimerHandle = xTimerCreate("StreamTimer", DEFAULT_HOST_STREAM_TIMEOUT, pdFALSE, (void*)0, StreamTimerCB);
     if(StreamTimerHandle == NULL)
     {
         configASSERT(0);
@@ -662,7 +663,7 @@ void hostTaskHandler(void * parameter)
             HAL_GPIO_Write(GPIO_0, 0);
             
             /*set GPIO19/20 of device */
-#if 0 // do we need this?
+#if 0 // We configure jumpers on the Device to boot from host
             config_set_pad_for_device_bootstrap();
 #endif
             vTaskDelay((1/portTICK_PERIOD_MS));
@@ -672,10 +673,10 @@ void hostTaskHandler(void * parameter)
             HAL_GPIO_Write(GPIO_0, 1);
             
             vTaskDelay((2/portTICK_PERIOD_MS));
-            
+#if 0 // We configure jumpers on the Device to boot from host
             /*re configure host pads to be used for spi transaction*/
             spi_master_pad_setup();
-            
+#endif            
             SLAVE_DEV_FW_LOAD_T slave_fw_image_info;
             /*
 				Set, slave device firmware image information structure to zero.
@@ -687,7 +688,7 @@ void hostTaskHandler(void * parameter)
             slave_fw_image_info.m4_fw_addr = (uint8_t *)rawData;
             slave_fw_image_info.m4_fw_size = sizeof(rawData);
             
-            
+            //spi_master_init(SPI_BAUDRATE_5MHZ);
             if (QL_STATUS_OK != QLSPI_fw_download(&slave_fw_image_info))
             {
                 printf("Device Firmware Download Failed \n");
@@ -731,9 +732,10 @@ void hostTaskHandler(void * parameter)
             
             // Start timer that will trigger a stop
             xTimerStart(StreamTimerHandle, 0);
-            printf("Started timer\n");
+            printf("Started %d Second timer\n", (int)(DEFAULT_HOST_STREAM_TIMEOUT/1000));
 
 #if (FEATURE_USBSERIAL == 1)
+            //At the start of the session print the number of the phrase
             print_kp_detect_info(pwwinfo->n_keyphrase_count);
 #endif             
             
@@ -774,7 +776,7 @@ void hostTaskHandler(void * parameter)
             dbg_str("EVT_EOT\n");
 
 #if (FEATURE_USBSERIAL == 1)
-            //At the print the numbe of samples received. 
+            //At the end print the number of samples received. 
             //Note: The number of samples printed may not match the number received
 #if (FEATURE_OPUS_ENCODER == 1)
             print_kp_end_info(storage_write_bufcount * MAX_RX_STORAGE_BUFF_SIZE_OPUS);
