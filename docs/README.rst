@@ -1,22 +1,11 @@
 
-SPHINX rST Docs Sources
-=======================
+Documentation
+=============
 
+All of the :code:`Sphinx` docs and configuration are contained within :code:`source` directory.
 
-The doc rST source files are in `source`.
+Refer to the following documents :
 
-Dependencies:
+- :code:`guide-generic-doc.rst` : This talks about all the general aspects of the documentation and resources to make this an easier process.
 
-- install python3
-- install sphinx :code:`pip3 install sphinx`
-- install the sphinx RTD theme :code:`pip3 install sphinx_rtd_theme`
-
-Build HTML:
-
-- navigate to the :code:`docs` directory
-- invoke :code:`make html`
-- the compiled HTML files will be generated in :code:`docs/build` directory
-
-
-.. note:: work-in-progress
-
+- :code:`guide-qorc-sdk-doc.rst` : This talks specifically about the Sphinx documentation configuration here, and the techniques to leverage Github rst READMEs into Sphinx Documentation.
