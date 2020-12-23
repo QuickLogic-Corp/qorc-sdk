@@ -1,4 +1,3 @@
-===========================
 Generic Documentation Guide
 ===========================
 
@@ -17,7 +16,7 @@ For other documentation related stuff, we will look at good tools to use, such a
 .. contents::
 
 Terminology
-===========
+-----------
 
 It can be confusing to read about many different tools/standards while reading about documentation in general, and rst in particular.
 
@@ -39,7 +38,7 @@ This will attempt to simplify the jargon that we may come across and provide a b
 
 
 Generic rst Guide
-=================
+-----------------
 
 As seen above, there are (generally) 2 usage scenarios for rst documentation.
 
@@ -68,7 +67,7 @@ The links below can serve as an introduction to rst, docutils and sphinx:
 
 
 Github rst Documentation
-========================
+------------------------
 
 It is recommended to write the documentation that is visible in Github, for say, a Library component or Application etc. in the reStructuredText (rst) format rather than the Markdown (MD) format(which is the Github default).
 
@@ -85,23 +84,24 @@ While writing doc in rst, the following points would be useful:
   
   ::
     
-    ===========
     PAGE HEADER
     ===========
 
     SECTION HEADER
-    ==============
+    --------------
 
     SUBSECTION HEADER
-    -----------------
+    ~~~~~~~~~~~~~~~~~
 
     SUB-SUBSECTION HEADER
-    ~~~~~~~~~~~~~~~~~~~~~
+    ^^^^^^^^^^^^^^^^^^^^^
 
     SUB-SUB-SUBSECTION HEADER
-    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    #########################
 
-  so it makes it a common structure to follow, as coding conventions do for code.
+  So that we have a common structure to follow, as coding conventions do for code.
+
+  If we are actually using sub-sub-subsections or further, then it would probably mean that we are trying to cover too much in one page, and it would be a good idea to split it across multiple pages.
 
 - Use a :code:`contents` directive to make an automatic table of contents for the page, especially for longer pages.
 
@@ -138,7 +138,7 @@ Useful Quick Reference Links:
 
 
 Sphinx/ReadTheDocs rst Documentation
-====================================
+------------------------------------
 
 While writing or adding documentation to the existing documentation set, we can use :code:`directive` to include existing rst files from the Github README docs into the content.
 
@@ -171,7 +171,7 @@ This is reflected in a few places :
 
 
 Integrating Doxygen Generated API With Sphinx
-=============================================
+---------------------------------------------
 
 For C/C++ code, the most reliable method to automatically generate API documentation is Doxygen.
 
@@ -199,7 +199,7 @@ That document assumes familiarity with rst, sphinx, RTD, Doxygen, Breathe, which
 
 
 Converting Markdown to reStructuredText
-=======================================
+---------------------------------------
 
 A good tool to convert Github READMEs in Markdown to reStructuredText is pandoc.
 
@@ -219,7 +219,7 @@ If so, it is time to create the table by hand, refer to the "Tables In Documenta
 
 
 Diagrams In Documentation
-=========================
+-------------------------
 
 This is one of the areas where having a flexible, easy to use tool saves a lot of grief and time.
 
@@ -249,7 +249,7 @@ This is the preferred workflow with this tool.
 
 
 Tables in Documentation
-=======================
+-----------------------
 
 Tables are one of the pain points in writing documentation - getting the formatting right is a nightmare.
 rst documentation allows us to write neat tables, and reference for it is below:
@@ -273,7 +273,7 @@ This is the recommended way for more complex tables or where visual impact is im
 
 
 Waveforms In Documentation
-==========================
+--------------------------
 
 Waveforms are generally obtained from simulations or actual hardware.
 

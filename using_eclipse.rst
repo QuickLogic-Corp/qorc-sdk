@@ -1,12 +1,11 @@
-===========================
 Using Eclipse With QORC SDK
 ===========================
 
-The recommended Eclipse edition for QORC SDK is Eclipse IDE for Embedded C/C++ Developers.
+The recommended Eclipse for QORC SDK is :code:`Eclipse IDE for Embedded C/C++ Developers`.
 
 The IDE is available for download from : https://projects.eclipse.org/projects/iot.embed-cdt/downloads
 
-The current tested version with QORC SDK is : Eclipse IDE for Embedded C/C++ Developers 2020-09.
+The current tested version with QORC SDK is :code:`Eclipse IDE for Embedded C/C++ Developers 2020-09`.
 
 This Eclipse IDE is a continuation of the GNU MCU Eclipse project (https://gnu-mcu-eclipse.github.io/) and is now an Eclipse Incubation Project, and is recommended over the older GNU MCU for new installations.
 
@@ -17,15 +16,15 @@ This guide assumes that all the pre-requisites for the QORC SDK applications are
 It is recommended to keep a separate workspace for the QORC SDK applications, but it is not mandatory.
 
 Convert Existing Makefile GCC_Project to an Eclipse Project
-===========================================================
+-----------------------------------------------------------
 
 All QORC SDK applications have Makefile support, and the :code:`application_dir/GCC_Project/` contains the necessary Makefiles.
 
 To convert this to an Eclipse Project, the following steps can be followed:
 
-1. Create a directory :code:`eclipse_make_project` in the application's GCC_Project dir.
+1. Create a directory :code:`eclipse_make_project` in the application's :code:`GCC_Project dir`.
 
-2. Create a file :code:`eclipse_custom_build_command.sh` in the application's GCC_Project dir.
+2. Create a file :code:`eclipse_custom_build_command.sh` in the application's :code:`GCC_Project dir`.
    
    Copy the below content into the file :
 
@@ -62,9 +61,9 @@ To convert this to an Eclipse Project, the following steps can be followed:
    Click Finish
    
 
-6. | Add files and folder to the Eclipse Virtual Filesystem
-   |
-   | Select the following directories in the :code:`File Explorer` from the QORC SDK repo directory:
+6. Add files and folder to the Eclipse Virtual Filesystem
+   
+   Select the following directories in the :code:`File Explorer` from the QORC SDK repo directory:
    
    - BSP
    - HAL
@@ -72,43 +71,43 @@ To convert this to an Eclipse Project, the following steps can be followed:
    - Libraries
    - Tasks
 
-   | Drag the selected directories and drop them onto the newly created project in Eclipse IDE
-   |
-   | Once dropped, a :code:`File and Folder Operation` dialog pops up.
-   |
-   | Choose :code:`Link to files and recreate folder structure with virtual folders` option.
-   | 
-   | Ensure that the option :code:`Check the Create link locations relative to PROJECT_LOC` is checked.
-   |
-   | Click OK.
-   |
-   | Any other QORC SDK directories can be added to the eclipse project in the same way.
-   |
+   Drag the selected directories and drop them onto the newly created project in Eclipse IDE
+   
+   Once dropped, a :code:`File and Folder Operation` dialog pops up.
+   
+   Choose :code:`Link to files and recreate folder structure with virtual folders` option.
+    
+   Ensure that the option :code:`Check the Create link locations relative to PROJECT_LOC` is checked.
+   
+   Click OK.
+   
+   Any other QORC SDK directories can be added to the eclipse project in the same way.
+   
 
-7. | Create Virtual Folder named "App". 
-   |
-   | Ensure that the newly create project is selected in Eclipse IDE
-   |
-   | Select :code:`File -> New -> Folder`
-   |
-   | Specify folder name as :code:`App`
-   |
-   | Click the :code:`Advanced` tab and ensure to select the option :code:`Folder is not located in the file system (Virtual Folder)`
-   |
-   | Click :code:`Finish`
-   |
-   | Select the following directories in the :code:`File Explorer` from the application directory:
+7. Create Virtual Folder named "App". 
+   
+   Ensure that the newly create project is selected in Eclipse IDE
+   
+   Select :code:`File -> New -> Folder`
+   
+   Specify folder name as :code:`App`
+   
+   Click the :code:`Advanced` tab and ensure to select the option :code:`Folder is not located in the file system (Virtual Folder)`
+   
+   Click :code:`Finish`
+   
+   Select the following directories in the :code:`File Explorer` from the application directory:
 
    - GCC_Project
    - src
    - inc
 
-   | Drag the selected directories and drop them onto the newly :code:`App` Virtual Folder in Eclipse IDE
+   Drag the selected directories and drop them onto the newly :code:`App` Virtual Folder in Eclipse IDE
 
 Now, the project structure is ready.
 
 Setup Build Configuration For Project
-=====================================
+-------------------------------------
 
 1. Ensure that the newly create project is selected in Eclipse IDE
 
@@ -159,10 +158,10 @@ Setup Build Configuration For Project
 
 
 Setup Debug Configuration For Project
-=====================================
+-------------------------------------
 
 Segger J-Link
--------------
+~~~~~~~~~~~~~
 
 1. Install the Segger J-Link Software Package for Ubuntu:
 
@@ -187,6 +186,7 @@ Segger J-Link
    - Select the :code:`Project` (It should show the project you created)
    
    - Specify the :code:`C/C++ Application` as :code:`App/GCC_Project/output/bin/"application_name".elf` (Ideally, this should have been automatically selected by Eclipse)
+   
      Click on :code:`Search Project` and select the correct :code:`elf` file.
 
 5. On the :code:`Debugger` tab :
@@ -211,6 +211,6 @@ Segger J-Link
 
 
 OpenOCD
--------
+~~~~~~~
 
-(coming soon!)
+:code:`coming soon!`

@@ -304,21 +304,21 @@ You may need to logout and back in for the new group to take effect.
 Test the QuickFeather USB-CDC Port
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Plug in the QuickFeather board and set it to :code:`flash mode`, with the sequence:
+Plug in the QuickFeather board and set it to :code:`flash mode`, with the sequence:
 
-   - press :code:`RST` button, blue LED should start flashing
-   - within 5 seconds, press the :code:`USR` button, green LED should now start flashing/breathing.
-   - This indicates that the QuickFeather board is in :code:`flash mode`
+- press :code:`RST` button, blue LED should start flashing
+- within 5 seconds, press the :code:`USR` button, green LED should now start flashing/breathing.
+- This indicates that the QuickFeather board is in :code:`flash mode`
 
-   Check the output of :code:`lsusb` like below to see if the QuickFeather USB-CDC is detected correctly:
+Check the output of :code:`lsusb` like below to see if the QuickFeather USB-CDC is detected correctly:
 
-   ::
+::
 
-     lsusb | grep OpenMoko
+  lsusb | grep OpenMoko
 
-   should display one of the IDs :code:`1d50:6140` or :code:`1d50:6130`, like below:
+should display one of the IDs :code:`1d50:6140` or :code:`1d50:6130`, like below:
 
-   :code:`Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.` or :code:`Bus 002 Device 029: ID 1d50:6130 OpenMoko, Inc.`
+:code:`Bus 002 Device 029: ID 1d50:6140 OpenMoko, Inc.` or :code:`Bus 002 Device 029: ID 1d50:6130 OpenMoko, Inc.`
 
 
 Bootloader Update
