@@ -48,8 +48,7 @@ S3x_ClkD S3clk [] = {
         .cru_ctrl = CRU_CTRL (0x8, 0x1fe, 9, 0x130, 0x44, 0x7, 1),
         .def_max_rate = (F_40MHZ),             
         //.init_state = INIT_STATE(F_40MHZ, 7, INIT_GATE_OFF),     //for SD card
-        //.init_state = INIT_STATE(F_6MHZ, 7, INIT_GATE_OFF),
-        .init_state = INIT_STATE(F_1MHZ, 7, INIT_GATE_OFF),
+        .init_state = INIT_STATE(F_12MHZ, 7, INIT_GATE_OFF),
     },
     [CLK_C08X4] = {
         .name = "C8X4",

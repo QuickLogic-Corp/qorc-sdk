@@ -41,6 +41,7 @@
 #include "datablk_mgr.h"
 #include "eoss3_hal_uart.h"
 #include "ql_base64.h"
+#include "ql_stackwatermark.h"
 
 void    h2d_config(void);
 void    h2d_start(void);
@@ -89,6 +90,10 @@ void set_usb_print_disable(void) {
 void print_kp_detect_info(int count) {
   char kp_count_buf[10];
   int count_size = sprintf(kp_count_buf, "%d. ",count);
+
+  //if USB is not working or disabled return
+  if(disable_usb_prints)
+    return;
   
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_info_buf, sizeof(kp_info_buf)); 
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_count_buf, count_size);
@@ -101,6 +106,10 @@ void print_kp_end_info(int count) {
   int count_size = sprintf(sample_count_buf, "%d. ",count);
   sample_count_buf[count_size++] = '\n';
   sample_count_buf[count_size++] = '\n';
+
+  //if USB is not working or disabled return
+  if(disable_usb_prints)
+    return;
   
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)kp_info_buf3, sizeof(kp_info_buf3)); 
   uart_tx_raw_buf( UART_ID_USBSERIAL, (uint8_t const *)sample_count_buf, count_size);
@@ -562,6 +571,9 @@ void hostTaskHandler(void * parameter)
     unsigned int hostTaskStop = 0;
     struct xQ_Packet hostMsg = {0};
     s3_mon_info_t  *ps3info ;
+    char tmp_sprintf_buf[20];
+    int start_ticks = 0;
+    
 #if DEBUG_H2D_PROTOCOL
     int i = 0;
     for(i=0;i<DATA_READ_WRITE_SIZE; ++i)
@@ -579,6 +591,9 @@ void hostTaskHandler(void * parameter)
     // send msg to host task to load device firmware
     hostMsg.ucCommand = HOST_LOAD_DEVICE_FW;
     addPktToQueue_Host(&hostMsg, CTXT_TASK);
+
+    //enable this to fine tune stack usage
+    //set_task_stack_watermark_monitor(1,0); //1 = use timer, 0 = no assert
     
     while(!hostTaskStop)
     {
@@ -670,14 +685,18 @@ void hostTaskHandler(void * parameter)
 #if (FEATURE_USBSERIAL == 1)
             print_kp_detect_info(pwwinfo->n_keyphrase_count);
 #endif             
-            
+            start_ticks = xTaskGetTickCount();
           break;
           }
         case EVT_OPUS_PKT_READY:
         case EVT_RAW_PKT_READY :
           {
             /* receive callback will send this msg only after reading the opus data in the buffer*/
-          dbg_str(".");
+            int clk_diff = xTaskGetTickCount() - start_ticks;
+            start_ticks = xTaskGetTickCount();
+            int n_count = sprintf(tmp_sprintf_buf,".%d",clk_diff);
+            dbg_str(tmp_sprintf_buf);
+            //dbg_str(".");
 #if (FEATURE_USBSERIAL == 1)
           
           int recvd_length = (hostMsg.ucData[0]) | (hostMsg.ucData[1] << 8 );
