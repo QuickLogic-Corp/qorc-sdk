@@ -1,0 +1,11 @@
+#S3GW_DRIVERS_SRCS:=$(wildcard $(S3GW_DRIVERS_DIR)/*.c )
+S3GW_DRIVERS_SRCS:=$(S3GW_DRIVERS_DIR)/eoss3_hal_fpga_FLL.c 
+filters=
+SRCS:=$(filter-out $(filters),$(notdir $(S3GW_DRIVERS_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(S3GW_DRIVERS_DIR)
+$(info $(SRCS) $(SRC_PATH))
+include $(COMMON_STUB)
+
+
+

@@ -49,7 +49,17 @@
 #include "spi_flash.h"
 #include "h2d_protocol.h"
 #include "ql_hostTask.h"
+
+#if (FEATURE_USBSERIAL == 1)    
+#include "eoss3_hal_fpga_usbserial.h"
+#if (FEATURE_I2S_MASTER_CLKS == 1)
+#include "usb2serial_i2sclk_bit_2020_11_19b.h" //this also has I2s
+// length of axFPGABitStream array in bytes
+int   axFPGABitStream_length = sizeof(axFPGABitStream);
+#else
 #include "gateware.h"
+#endif
+#endif
 #include "eoss3_hal_uart.h"
 
 #ifndef USBSERIAL_PRODUCTID
@@ -184,7 +194,11 @@ int main(void)
     
     load_fpga(axFPGABitStream_length,axFPGABitStream);
     // Use 0x6141 as the USB serial product ID (USB PID)
-    HAL_usbserial_init2(false, false, USBSERIAL_PRODUCTID);          // Start USB serial not using interrupts
+#if (FEATURE_I2S_MASTER_CLKS == 1)
+    HAL_usbserial_i2s_init(false, false, USBSERIAL_PRODUCTID, 0x1A5BD); // Start USB serial not using interrupts
+#else
+    HAL_usbserial_init2(false, false, USBSERIAL_PRODUCTID);          // Start USB serial not using interrupts    
+#endif    
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     
     /* Use the following APIs to send and receive data from USB-serial 

@@ -1,0 +1,9 @@
+
+I2S_SRCS:=$(wildcard $(I2S_DIR)/*.c)
+
+SRCS:=$(notdir $(I2S_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(I2S_DIR)
+
+include $(COMMON_STUB)
+

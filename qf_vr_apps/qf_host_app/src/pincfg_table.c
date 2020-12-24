@@ -168,7 +168,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 39 -- SPI Master SSn1
+  { // Pad 27 -- SPI Master SSn1
     .ucPin = PAD_27,
     .ucFunc = PAD27_FUNC_SEL_SPIm_SSn2,
     .ucCtrl = PAD_CTRL_SRC_A0,
@@ -320,6 +320,42 @@ PadConfig pincfg_table[] =
     .ucDrv = PAD_DRV_STRENGHT_4MA;
     .ucSpeed = PAD_SLEW_RATE_SLOW;
     .ucSmtTrg = PAD_SMT_TRIG_DIS;
+  },
+#endif
+#if (FEATURE_I2S_MASTER_CLKS == 1)
+  {
+    //I2S Master Bit Clk is output
+    .ucPin = PAD_4,
+    .ucFunc = PAD4_FUNC_SEL_FBIO_4,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  {
+    //I2S Master Word Clk is output
+    .ucPin = PAD_5,
+    .ucFunc = PAD5_FUNC_SEL_FBIO_5,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+#endif  
+#if 1 //force SSn1  
+    {
+    .ucPin = PAD_39,
+    .ucFunc = PAD39_FUNC_SEL_SPIm_SSn1,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
 };

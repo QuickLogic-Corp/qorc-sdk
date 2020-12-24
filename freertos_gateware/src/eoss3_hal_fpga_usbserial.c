@@ -34,8 +34,8 @@ static bool             fUsingInterrupts;
 void    HAL_usbserial_init(bool fUseInterrupt) {
 	HAL_usbserial_init2(fUseInterrupt, false, 0x6141);
 }
-
-void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid) {
+//This can take product as USB and IP id differnt from it 
+static void HAL_usbserial_init_common(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid, uint32_t usb_ipid ) {
     // Setup FPGA clocks
 
     // Enable 12MHz clock on C16
@@ -60,14 +60,28 @@ void    HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid)
     S3x_Clk_Enable(S3X_FB_21_CLK);
     
     // Confirm expected IP is loaded
-    configASSERT(HAL_usbserial_ipid() == 0xA5BD);
-    configASSERT(pusbserial_regs->rev_num == 0x0200);
+    configASSERT(HAL_usbserial_ipid() == usb_ipid);
+    if(usb_ipid == 0xA5BD) {
+      configASSERT(pusbserial_regs->rev_num == 0x0200);
+    }
     
     // Set to use interrupts if desired
     if (fUseInterrupt) {
         HAL_usbserial_isrinit();
     }
     fUsingInterrupts = fUseInterrupt;
+}
+//This is init (USBserial + I2S). So, the IP id is different
+void HAL_usbserial_i2s_init(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid,uint32_t usb_ipid ) {
+  
+  HAL_usbserial_init_common(fUseInterrupt,fUse72MHz,usbpid, usb_ipid);
+  return;   
+}
+//This is init USBserial only
+void HAL_usbserial_init2(bool fUseInterrupt, bool fUse72MHz, uint32_t usbpid) {
+  
+  HAL_usbserial_init_common(fUseInterrupt,fUse72MHz,usbpid, 0xA5BD);
+  return;   
 }
 
 int     HAL_usbserial_getc(void) {
