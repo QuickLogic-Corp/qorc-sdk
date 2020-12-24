@@ -107,7 +107,7 @@ int load_usb_flasher(void)
   // remind what to do when done programming
   dbg_str("FPGA Programmed\n");
 #endif
-  dbg_str("Presss Reset button after flashing ..\n");
+  dbg_str("Press Reset button after flashing ..\n");
   //wait for the reset button to be pressed
   program_flash();
   NVIC_SystemReset();

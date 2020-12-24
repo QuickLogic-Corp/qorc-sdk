@@ -1,0 +1,9 @@
+
+UTILS_SRCS:=$(wildcard $(UTILS_DIR)/*.c )
+filters=
+SRCS:=$(filter-out $(filters), $(notdir $(UTILS_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(UTILS_DIR)
+
+include $(COMMON_STUB)
+

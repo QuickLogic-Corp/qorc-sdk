@@ -52,9 +52,9 @@ const char *SOFTWARE_VERSION_STR="QF_BL 1.0" ;
 int main(void)
 {
 #if defined(__ICCARM__)
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2) (IAR)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2.1) (IAR)";
 #elif defined(__GNUC__)
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2) (GCC)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2.1) (GCC)";
 #endif
 
     qf_hardwareSetup();

@@ -31,7 +31,15 @@
 #include "dbg_uart.h"
 #include "qlspi_s3.h"
 #include "qlspi_fw_loader.h"
-#include "firmware_raw_image.h" 
+#if (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_RAW_APP)
+#include "firmware_image_vr_raw_app.h"
+#elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
+#include "firmware_image_vr_opus_app.h"
+#elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
+#include "firmware_image_vr_i2s_app.h"
+#else
+#error "Unknown Device Firmware Imge selection"
+#endif
 #include "h2d_protocol.h"
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_spi.h"
@@ -72,6 +80,22 @@ enum process_state H2D_FSMAction(enum process_action pa, void* pv) {
     return(H2D_pstate);
 }        
 
+//This is buffer and chunk definitions for Raw and Opus data chunks received
+//The sizes must match the Device buffer sizes sent
+#define HOST_TRANSPORT_CHUNK_SIZE     (240*2) //one 15ms data block on Device
+#define NUM_TRANSPORT_CHUNKS          (4)     //60ms. Fits exactly 3 opus input size 20ms
+#define MAX_RX_STORAGE_BUFF_SIZE      (HOST_TRANSPORT_CHUNK_SIZE * NUM_TRANSPORT_CHUNKS) 
+//Opus encoding produces 88bytes per 320 samples(=20ms)
+#define MAX_RX_STORAGE_BUFF_SIZE_OPUS (88*3) 
+#define RX_STORAGE_BUFFERS_COUNT      (12) //need enough buffers to take care of initial burst
+
+//use the buffer as an array of fixed size buffers
+uint8_t rx_storage_buf[RX_STORAGE_BUFFERS_COUNT][MAX_RX_STORAGE_BUFF_SIZE];
+volatile int storage_write_bufcount = 0;
+volatile int storage_print_bufcount = 0;
+static int storage_wr_index = 0;
+static int storage_rd_index = 0;
+
 /*********************************************************************************
  *  Print Audio Data to the USB Serial port 
  ********************************************************************************/
@@ -80,9 +104,15 @@ enum process_state H2D_FSMAction(enum process_action pa, void* pv) {
 int disable_usb_prints = 0;
 
 const char kp_info_buf[] =  "\nKP detected. Count = ";
-const char kp_info_buf2[] =  "Base64 encoded data follows ... \n\n\n\n";
-
+#if (FEATURE_OPUS_ENCODER == 1)
+const char kp_info_buf2[] =  "Base64 encoded Opus Compressed data follows ... \n\n\n\n";
+const char kp_info_buf3[] =  "\n\n\n\nEnd of Transmission. Recvd data byte count = ";
+#else
+const char kp_info_buf2[] =  "Base64 encoded Raw PCM data follows ... \n\n\n\n";
 const char kp_info_buf3[] =  "\n\n\n\nEnd of Transmission. Recvd sample count = ";
+#endif
+
+
 
 void set_usb_print_disable(void) {
   disable_usb_prints = 1;
@@ -92,6 +122,10 @@ void print_kp_detect_info(int count) {
   int count_size = sprintf(kp_count_buf, "%d. ",count);
 
   //if USB is not working or disabled return
+  if(disable_usb_prints)
+    return;
+  
+  //USB serial might have disconnected
   if(disable_usb_prints)
     return;
   
@@ -116,9 +150,16 @@ void print_kp_end_info(int count) {
   
   return;
 }
+//These are for Raw Audio prints
 #define BASE64_LINE_SIZE_SAMPLES    (30)  //must be a multiple of 3
 #define BASE64_LINE_SIZE_OUTBYTES   (BASE64_LINE_SIZE_SAMPLES*2*4/3) //30*2*4/3 = 80 bytes
-uint8_t base64_line_buf[BASE64_LINE_SIZE_OUTBYTES +2]; // +2 to add new line
+//uint8_t base64_line_buf[BASE64_LINE_SIZE_OUTBYTES +2]; // +2 to add new line
+
+//These are for Opus Audio prints
+#define BASE64_LINE_SIZE_OPUS_BYTES      (66)  //must be a multiple of 3
+#define BASE64_LINE_SIZE_OPUS_OUTBYTES   (BASE64_LINE_SIZE_OPUS_BYTES*4/3) //66*4/3 = 88 bytes
+//since Opus line size larger (88 vs 80) set aside bigger buffer
+uint8_t base64_line_buf[BASE64_LINE_SIZE_OPUS_OUTBYTES +2]; // +2 to add new line
 
 #if 0
 char test_base64_line_buf[81] = {
@@ -149,25 +190,20 @@ void test_sine_1khz_values(short *buf, int size)
   sine_1khz_index = count;
   return;
 }
-void print_kp_raw_audio_data(uint8_t *input_buf, int input_size)
+void print_base64_lines(int input_bytes_per_line, int input_lines)
 {
-  //test_sine_1khz_values((short *)input_buf, input_size/2);
-    
   //if USB is not working or disabled return
   if(disable_usb_prints)
     return;
 
-  int input_bytes_per_line = (2*BASE64_LINE_SIZE_SAMPLES);
-  int input_size_lines = input_size/input_bytes_per_line;
-  
-  //input must be a multple of number samples per line 
-  if(input_size != (input_size_lines*input_bytes_per_line)) {
-    configASSERT(0);
-  }
-  
+  //get the buffer address from read index
+  uint8_t *input_buf = &rx_storage_buf[storage_rd_index++][0];
+  if(storage_rd_index >= RX_STORAGE_BUFFERS_COUNT)
+    storage_rd_index = 0;
+
   int delay_count = 0;
   //print all the lines, giving time for other tasks
-  for(int i = 0; i< input_size_lines; i++)
+  for(int i = 0; i< input_lines; i++)
   {
     int out_count = base64EncodeLine((char *)(input_buf + i*input_bytes_per_line),
                                      input_bytes_per_line,
@@ -181,7 +217,7 @@ void print_kp_raw_audio_data(uint8_t *input_buf, int input_size)
       if(delay_count > 100)
       {
         disable_usb_prints = 1; 
-        printf("\nError- Not able to get free space in USB FIFO. So disabling USP prints \n");
+        printf("\nError- Not able to get free space in USB FIFO. So disabling USB prints \n");
         return;
       }
     }
@@ -192,10 +228,42 @@ void print_kp_raw_audio_data(uint8_t *input_buf, int input_size)
   
   //set the buffer to 0 to detect problems
   //memset(input_buf, 0, input_size);
+
+  //used for controlling the H2D protocol response
+  storage_print_bufcount++;
   
   return;
 }
 
+void print_kp_raw_audio_data(int input_size)
+{
+  //test_sine_1khz_values((short *)input_buf, input_size/2);
+    
+  int input_bytes_per_line = (2*BASE64_LINE_SIZE_SAMPLES);
+  int input_lines = input_size/input_bytes_per_line;
+  
+  //input must be a multple of number samples per line 
+  if(input_size != (input_lines*input_bytes_per_line)) {
+    configASSERT(0);
+  }
+  
+  print_base64_lines(input_bytes_per_line, input_lines);
+  return;
+}
+
+void print_kp_opus_audio_data(int input_size)
+{
+  int input_bytes_per_line = (BASE64_LINE_SIZE_OPUS_BYTES);
+  int input_lines = input_size/input_bytes_per_line;
+  
+  //input must be a multiple of number bytes per line 
+  if(input_size != (input_lines*input_bytes_per_line)) {
+    configASSERT(0);
+  }
+  
+  print_base64_lines(input_bytes_per_line, input_lines);
+  return;
+}
 
 
 
@@ -215,15 +283,6 @@ uint8_t test_read_buf [DATA_READ_WRITE_SIZE] = {0};
 uint8_t pattern = 0xAC;
 #endif
 
-#define HOST_TRANSPORT_CHUNK_SIZE  (240*2) //one 15ms data block
-#define NUM_TRANSPORT_CHUNKS       (4)  //60ms.Fits 3 opus buffers of size 20ms
-#define MAX_RX_STORAGE_BUFF_SIZE   (HOST_TRANSPORT_CHUNK_SIZE * NUM_TRANSPORT_CHUNKS) 
-#define MAX_RX_STORAGE_BUFF_SIZE_OPUS (MAX_RX_STORAGE_BUFF_SIZE /3) //opus data is compressed by factor
-#define RX_STORAGE_BUFFERS_COUNT   (12) //need enough buffers to take care of initial burst
-
-uint8_t rx_storage_buf[RX_STORAGE_BUFFERS_COUNT][MAX_RX_STORAGE_BUFF_SIZE];
-volatile int storage_write_bufcount = 0;
-volatile int storage_print_bufcount = 0;
 
 uint8_t g_host_device_channel_num = PROTOCOL_CHANNEL_NUMBER_DEFAULT;
 
@@ -251,8 +310,6 @@ extern uint8_t g_data_buf[];
 
 /* static overlay the rawBuff with rx buffer */
 uint8_t *g_p_rx_storage_buffer = (uint8_t *)&rx_storage_buf[0][0];
-static int storage_wr_index = 0;
-static int storage_rd_index = 0;
 //static int unfilled_data_size = MAX_RX_STORAGE_BUFF_SIZE;
 //static int filled_data_size = 0;
 
@@ -367,15 +424,21 @@ int8_t *prn_hdr( QAI_DataBlock_t *pdata_block_in)
 #endif
   return p_in;
 }
-
-void store_raw_transport_chunks(int copy_length)
+/*
+* This stores the global H2D received buffer into one of the array of buffers 
+* of fixed size and increments the Buffer write index.
+* In case USB printing is disabled, only the first buffers will be saved.
+* In case of USB printing, to catch up with initial burst the number of
+* buffers written is counted and compared to the number of printed buffers.
+* (Note: This is a problem only for Raw data, since Opus encoded data is 
+* only 1/4th of the Raw data size.)
+*/
+void store_transport_chunks(int copy_length)
 {
 #if (FEATURE_USBSERIAL == 1)
-  //if USB prints are not disabled, need to do flow control
-  //if USB prints are not catching up with burst data delay the
-  //the H2D protocol response
-  if(disable_usb_prints == 0)
-  {
+  //if USB prints are not disabled, need to do flow control.
+  //if USB prints are not catching up with burst data delay the H2D protocol response
+  if(disable_usb_prints == 0)   {
     while((storage_write_bufcount - storage_print_bufcount) >= (RX_STORAGE_BUFFERS_COUNT-2) ) {
       vTaskDelay(5); //wait until more buffers are printed
     }
@@ -386,20 +449,25 @@ void store_raw_transport_chunks(int copy_length)
     return;
 #endif
 
-  //there should always be a known fixed data size per transport
-  if(copy_length != MAX_RX_STORAGE_BUFF_SIZE) {
-    configASSERT(0);
-  }
- 
   //copy the h2d buffer into a storage buffer
   memcpy(&rx_storage_buf[storage_wr_index][0], g_data_buf, copy_length);
   storage_wr_index++;
   if(storage_wr_index >= RX_STORAGE_BUFFERS_COUNT) {
     storage_wr_index = 0;
   }
+  
   //used for controlling the H2D protocol response
   storage_write_bufcount++;
   
+  return;
+}
+void store_raw_transport_chunks(int copy_length)
+{
+  //there should always be a known fixed data size per transport
+  if(copy_length != MAX_RX_STORAGE_BUFF_SIZE) {
+    configASSERT(0);
+  }
+  store_transport_chunks(copy_length);
   return;
 }
 void store_opus_transport_chunks(int copy_length)
@@ -408,14 +476,8 @@ void store_opus_transport_chunks(int copy_length)
   if(copy_length != MAX_RX_STORAGE_BUFF_SIZE_OPUS) {
     configASSERT(0);
   }
-  
-  memcpy(&rx_storage_buf[storage_wr_index][0], g_data_buf, copy_length);
-  storage_wr_index++;
-  if(storage_wr_index >= RX_STORAGE_BUFFERS_COUNT) {
-    storage_wr_index = 0;
-  }
-  
-  return;
+  store_transport_chunks(copy_length);
+  return;      
 }
 
 /*  Add Msg to the Host task queue */
@@ -470,7 +532,7 @@ Rx_Cb_Ret h2d_receive_callback(H2D_Cmd_Info rx_cmd_info, uint8_t data_buf_ready)
                 // store the data in opus buffer
                 uint16_t length = (rx_cmd_info.data[0]) | (rx_cmd_info.data[1] << 8 );
                 // this copy data from g_data_buf in protocol layer to opus buffer
-                //store_opus_transport_chunks(length);
+                store_opus_transport_chunks(length);
 
             }
             else
@@ -562,9 +624,10 @@ static inline uint8_t increment_seq(void)
     }
     return ((uint8_t)(seq & 0xFF));
 }
+#define DEFAULT_HOST_STREAM_TIMEOUT  ((5*1000))
 static TimerHandle_t StreamTimerHandle = NULL;
 static void StreamTimerCB(TimerHandle_t StreamTimerHandle);
-/* Host task andler*/
+/* Host task handler*/
 void hostTaskHandler(void * parameter)
 {
     BaseType_t qret;
@@ -581,7 +644,7 @@ void hostTaskHandler(void * parameter)
         test_write_buf[i] = i;
     }
 #endif
-    StreamTimerHandle = xTimerCreate("StreamTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, StreamTimerCB);
+    StreamTimerHandle = xTimerCreate("StreamTimer", DEFAULT_HOST_STREAM_TIMEOUT, pdFALSE, (void*)0, StreamTimerCB);
     if(StreamTimerHandle == NULL)
     {
         configASSERT(0);
@@ -601,7 +664,7 @@ void hostTaskHandler(void * parameter)
         memset(&hostMsg, 0, sizeof(hostMsg));
         qret = xQueueReceive(Host_MsgQ, &hostMsg, HOST_MSGQ_WAIT_TIME);
         configASSERT(qret == pdTRUE);
-        
+
         switch(hostMsg.ucCommand)
         {
         case HOST_LOAD_DEVICE_FW:
@@ -611,7 +674,7 @@ void hostTaskHandler(void * parameter)
             HAL_GPIO_Write(GPIO_0, 0);
             
             /*set GPIO19/20 of device */
-#if 0 // do we need this?
+#if 0 // We configure jumpers on the Device to boot from host
             config_set_pad_for_device_bootstrap();
 #endif
             vTaskDelay((1/portTICK_PERIOD_MS));
@@ -621,10 +684,10 @@ void hostTaskHandler(void * parameter)
             HAL_GPIO_Write(GPIO_0, 1);
             
             vTaskDelay((2/portTICK_PERIOD_MS));
-            
+#if 0 // We configure jumpers on the Device to boot from host
             /*re configure host pads to be used for spi transaction*/
             spi_master_pad_setup();
-            
+#endif            
             SLAVE_DEV_FW_LOAD_T slave_fw_image_info;
             /*
 				Set, slave device firmware image information structure to zero.
@@ -636,7 +699,7 @@ void hostTaskHandler(void * parameter)
             slave_fw_image_info.m4_fw_addr = (uint8_t *)rawData;
             slave_fw_image_info.m4_fw_size = sizeof(rawData);
             
-            
+            //spi_master_init(SPI_BAUDRATE_5MHZ);
             if (QL_STATUS_OK != QLSPI_fw_download(&slave_fw_image_info))
             {
                 printf("Device Firmware Download Failed \n");
@@ -680,15 +743,27 @@ void hostTaskHandler(void * parameter)
             
             // Start timer that will trigger a stop
             xTimerStart(StreamTimerHandle, 0);
-            printf("Started timer\n");
+            printf("Started %d Second timer\n", (int)(DEFAULT_HOST_STREAM_TIMEOUT/1000));
 
 #if (FEATURE_USBSERIAL == 1)
+            //At the start of the session print the number of the phrase
             print_kp_detect_info(pwwinfo->n_keyphrase_count);
 #endif             
             start_ticks = xTaskGetTickCount();
           break;
           }
         case EVT_OPUS_PKT_READY:
+          {
+            /* receive callback will send this msg only after reading the opus data in the buffer*/
+            dbg_str("#");
+#if (FEATURE_USBSERIAL == 1)
+          
+            int recvd_length = (hostMsg.ucData[0]) | (hostMsg.ucData[1] << 8 );
+            print_kp_opus_audio_data(recvd_length);
+#endif  
+          }
+          break;
+
         case EVT_RAW_PKT_READY :
           {
             /* receive callback will send this msg only after reading the opus data in the buffer*/
@@ -698,16 +773,11 @@ void hostTaskHandler(void * parameter)
             dbg_str(tmp_sprintf_buf);
             //dbg_str(".");
 #if (FEATURE_USBSERIAL == 1)
-          
-          int recvd_length = (hostMsg.ucData[0]) | (hostMsg.ucData[1] << 8 );
-          print_kp_raw_audio_data(&rx_storage_buf[storage_rd_index++][0], recvd_length);
-          if(storage_rd_index >= RX_STORAGE_BUFFERS_COUNT)
-            storage_rd_index = 0;
 
-          //used for controlling the H2D protocol response
-          storage_print_bufcount++;
+            int recvd_length = (hostMsg.ucData[0]) | (hostMsg.ucData[1] << 8 );
+            print_kp_raw_audio_data(recvd_length);
+
 #endif  
-
           }
           break;
          
@@ -721,9 +791,13 @@ void hostTaskHandler(void * parameter)
             dbg_str("EVT_EOT\n");
 
 #if (FEATURE_USBSERIAL == 1)
-            //At the print the numbe of samples received. 
+            //At the end print the number of samples received. 
             //Note: The number of samples printed may not match the number received
+#if (FEATURE_OPUS_ENCODER == 1)
+            print_kp_end_info(storage_write_bufcount * MAX_RX_STORAGE_BUFF_SIZE_OPUS);
+#else
             print_kp_end_info(storage_write_bufcount * MAX_RX_STORAGE_BUFF_SIZE/2);
+#endif
 #endif
             break;
             

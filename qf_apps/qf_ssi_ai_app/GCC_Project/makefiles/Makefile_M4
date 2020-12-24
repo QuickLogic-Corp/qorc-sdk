@@ -1,0 +1,14 @@
+
+M4_SRCS:=$(wildcard $(M4_DIR)/*.c )
+M4_SRCS_CPP:=$(wildcard $(M4_DIR)/*.cpp)
+
+SRCS:=$(notdir $(M4_SRCS))
+SRCS_CPP:=$(filter-out $(filters),$(notdir $(M4_SRCS_CPP)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+OBJS_CPP:=$(addprefix $(OUTPUT_PATH)/,$(SRCS_CPP:.cpp=.o))
+
+SRC_PATH:= $(M4_DIR)
+
+include $(COMMON_STUB)
+

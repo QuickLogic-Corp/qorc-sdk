@@ -25,7 +25,9 @@
 #include "eoss3_hal_i2s_drv.h"
 #include "ql_util.h"
 
+#ifndef NO_OF_BUFINFOS
 #define NO_OF_BUFINFOS 30
+#endif
 
 #define SILENCE_FRAME_DURATION 15
 short silence_frame[16 * SILENCE_FRAME_DURATION]={0};

@@ -1,0 +1,11 @@
+
+LIBOPUS_SRCS:=$(wildcard $(LIBOPUS_DIR)/*.c)
+
+filters=basicOps.c ql_opus_packet.c
+
+SRCS:=$(filter-out $(filters),$(notdir $(LIBOPUS_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(LIBOPUS_DIR)
+
+include $(COMMON_STUB)
+

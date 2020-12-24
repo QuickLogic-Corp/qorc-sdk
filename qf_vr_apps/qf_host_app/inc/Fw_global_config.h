@@ -36,10 +36,24 @@
 #define FEATURE_CLI_FILESYSTEM       0
 
 #define FEATURE_USBSERIAL   (1)       // USBSERIAL port is present
+#define FEATURE_I2S_MASTER_CLKS   (1) // Generates I2S Master clks
 
 #define FEATURE_D2HPROTOCOL_HOST (1)
 
 #define FEATURE_1WIRE_PROTOCOL_HOST (0) //1 = 1-Pin protocol, 0 = 4-pin protocol
+#define FEATURE_OPUS_ENCODER    (0)
+
+/* Device firmware image selection */
+#define DEVICE_FIRMWARE_IMAGE_VR_RAW_APP    (1)
+#define DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP   (2)
+#define DEVICE_FIRMWARE_IMAGE_VR_I2S_APP    (3)
+#define DEVICE_FIRMWARE_IMAGE_VR_1WIRE_RAW_APP    (4)
+
+// Select raw streaming app or opus streaming app as the device firmware image
+#define DEVICE_FIRMWARE_IMAGE               (DEVICE_FIRMWARE_IMAGE_VR_RAW_APP)
+//#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
+//#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
+//#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_1WIRE_RAW_APP)
 
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)

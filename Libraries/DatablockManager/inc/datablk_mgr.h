@@ -32,6 +32,10 @@
 #ifndef __DATABLK_MGR_H__
 #define __DATABLK_MGR_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "Fw_global_config.h"
 #include "FreeRTOS.h"
@@ -359,5 +363,9 @@ uint8_t datablk_mgr_usecount_incrementFromISR
 int datablk_mgr_reset(QAI_DataBlockMgr_t *pdatablk_mgr_handle);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DATABLK_MGR_H__ */
