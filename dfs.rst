@@ -200,7 +200,7 @@ Set a "request" for QOS with minimum CPU frequency:
 
 ::
 
-  if(S3x_Set_Qos_Req(S3X_FFE_X4_CLK, MIN_CPU_FREQ, min_CPU_FREQ) != STATUS_OK)
+  if(S3x_Set_Qos_Req(S3X_FFE_X4_CLK, MIN_CPU_FREQ, HSOSC_48MHZ) != STATUS_OK)
   {
       // handle error in register QOS node.
   }
