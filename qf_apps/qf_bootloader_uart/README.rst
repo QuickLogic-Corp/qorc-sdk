@@ -21,7 +21,7 @@ requires.
 
 The flash memory map defined for q-series devices is as below:
 
-.. image:: ../qf_bootloader/qorc-flash-memory-map-addresses.svg
+.. image:: qorc-flash-memory-map-addresses.svg
 
 Communication Interface
 -----------------------
