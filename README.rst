@@ -5,7 +5,9 @@ QuickLogic Open Reconfigurable Computing (QORC) SDK provides components
 needed to get started on the QuickLogic's EOSS3 device and open source
 development boards such as Quickfeather.
 
-|travis-ci| |rtd-docs|
+
+|travis-ci|   |rtd-docs|
+
 
 Currently, the following boards are supported:
 
@@ -399,10 +401,11 @@ project directories, for example qorc-sdk/qf_apps/qf_myapp
 .. |qf_helloworld CLI diag| image:: docs/getting-started/images/qf_helloworldsw-cli-diag.png
 .. |qf_helloworld CLI diag sub-menu| image:: docs/getting-started/images/qf_helloworldsw-cli-diag-help.png
 
-.. |rtd-docs| image:: https://readthedocs.org/projects/qorc-sdk/badge/?version=latest
-    :alt: Documentation Status
-    :target: https://qorc-sdk.readthedocs.io/en/latest/?badge=latest
+.. |rtd-docs| image:: https://img.shields.io/readthedocs/qorc-sdk?label=READTHEDOCS&logo=read-the-docs&style=for-the-badge
+    :alt: Read the Docs
+    :target: https://qorc-sdk.readthedocs.io/en/latest
     
-.. |travis-ci| image:: https://travis-ci.com/QuickLogic-Corp/qorc-sdk.svg?branch=master
+.. |travis-ci| image:: https://img.shields.io/travis/com/QuickLogic-Corp/qorc-sdk/master?label=TRAVIS-CI&logo=travis&style=for-the-badge   
+    :alt: Travis (.com) branch
     :target: https://travis-ci.com/QuickLogic-Corp/qorc-sdk
 
