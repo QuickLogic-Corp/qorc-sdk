@@ -4,6 +4,11 @@ QORC SDK DYNAMIC FREQUENCY SCALING
 |WORK IN PROGRESS|
 
 
+.. contents::
+
+Intro
+-----
+
 DFS should be enabled for lowest power consumption.
 
 All the clocks in the EOS S3 use the High Speed Oscillator as the Clock Source.
