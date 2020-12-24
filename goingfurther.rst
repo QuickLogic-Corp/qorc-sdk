@@ -13,15 +13,11 @@ Standalone FPGA Usage
 
 Previous to the v1.5.0 release, the method to use the FPGA always required usage of a M4 application to actually "wrap" the bistream (which is generated as a C Header), and program the FPGA.
 
-This is shown below:
-
 TODO
 
 Now, the FPGA design can be used with the new fpga toolchain (v1.3.1+) to produce a standalone binary.
 
 This binary can then be flashed on the QuickFeather board and run, without needing any M4 application to "bootstrap" the FPGA.
-
-The flow is shown below:
 
 TODO
 
@@ -33,15 +29,11 @@ The most flexibility of the EOS S3 is the ability to have both M4 and FPGA worki
 
 Previous to v1.5.0 release, it was always necessary that the M4 code "contain" the FPGA bitstream as well (Header Inclusion) - which also meant that the M4 Binary always included the entire FPGA image, which would be at least ~75kB.
 
-This is illustrated in the flow below:
-
 TODO
 
 This would not be a problem for smaller code on M4, but for more practical scenarios, this means we cannot use this memory for M4 code (out of a total of 512kB).
 
 Now, with the generation(toolchain) and handling(programmer, bootloader) of separate FPGA binary, the M4 binary will not need to contain the FPGA bitstream, and so the entire memory (512kB) can be utilized.
-
-This is illustrated in the flow below:
 
 TODO
 
