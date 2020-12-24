@@ -1,8 +1,7 @@
 QORC SDK DYNAMIC FREQUENCY SCALING
 ==================================
 
-** work in progress **
-
+|WORK IN PROGRESS|
 
 
 DFS should be enabled for lowest power consumption.
@@ -227,3 +226,9 @@ Notes on the QOS API
    C08_X1 scaling down should not generally be a problem, just that the I2C transactions will take more time due to lower frequency - this needs to be accounted for.
 
    This condition needs to be taken care of while setting the system configuration and DFS configuration.
+
+
+
+
+.. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
+   :target: none
