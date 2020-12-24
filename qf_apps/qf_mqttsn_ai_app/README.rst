@@ -60,6 +60,8 @@ Reset the Quickfeather board to start running the AI application. Refer
 QF <https://sensiml.com/documentation/firmware/quicklogic-quickfeather/quicklogic-quickfeather.html>`__
 to collect data or get inferences from this connected sensor.
 
+.. _mqtt-sn-over-usb-serial-notes:
+
 MQTT-SN over USB-serial Notes
 -----------------------------
 
