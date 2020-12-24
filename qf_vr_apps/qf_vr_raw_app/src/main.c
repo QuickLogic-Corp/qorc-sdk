@@ -216,6 +216,11 @@ int main(void)
     uart_set_lpm_state(UART_ID_HW,1);
     HAL_RTC_Init(0);
     banner(); 
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)
+    dbg_str("Using 1-wire D2H Protocol\n\n");
+#else
+    dbg_str("Using 4-pin  D2H Protocol\n\n");
+#endif
     //ldo_init();     
     nvic_init();
 #if (PDM_PAD_28_29 == 1)

@@ -48,7 +48,7 @@ def decode_line_raw(line):
     #print('enc and dec')
     #print(line.decode())
     #print(out.decode())
-    print('.',end='')
+    #print('.',end='')
     
     return dec_line
 

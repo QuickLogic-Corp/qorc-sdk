@@ -218,7 +218,11 @@ uart_tx_raw_buf( UART_ID_USBSERIAL,info_usbserial, sizeof(info_usbserial));
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
-
+#if (FEATURE_D2HPROTOCOL_HOST == 1)
+    dbg_str("Using 1-wire D2H Protocol\n\n");
+#else
+    dbg_str("Using 4-pin  D2H Protocol\n\n");
+#endif
     //ldo_init();
     nvic_init();
 
