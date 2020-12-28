@@ -97,7 +97,7 @@ printf "\n[1] check (minimal) qorc-sdk submodules\n"
 git submodule update --init --recursive qorc-example-apps
 git submodule update --init --recursive qorc-testapps
 git submodule update --init --recursive s3-gateware
-#git submodule update --init --recursive TinyFPGA-Programmer-Application
+git submodule update --init --recursive TinyFPGA-Programmer-Application
 
 printf "    ok.\n"
 #---------------------------------------------------------
