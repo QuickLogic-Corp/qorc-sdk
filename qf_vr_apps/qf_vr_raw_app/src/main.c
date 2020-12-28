@@ -82,6 +82,8 @@ volatile uint32_t SystemCoreClock = 0;
 
 int D2H_FSMConfigData = 0;
 
+#if (FEATURE_1WIRE_PROTOCOL_DEVICE == 0)
+
 //Using PAD_24 as Ack from S3 and PAD_31 as Ack from Host 
 void setup_d2h_hardware(void) {
   
@@ -100,18 +102,30 @@ void start_d2h_protocol_task(void) {
   d2h_plat_info.H2D_gpio = GPIO_6;
   d2h_plat_info.D2H_gpio = 0xFF;      // D2H intr is through PAD 43. AP intr
 
-#if (USE_4PIN_D2H_PROTOCOL == 1)
-  
   d2h_plat_info.H2D_ack = GPIO_7;
   d2h_plat_info.D2H_ack = GPIO_2;      // D2H Ack is through PAD 11.
 
-#endif
-  
   d2h_protocol_init(&d2h_plat_info);
   
   return;
 }
+#else 
+void start_d2h_protocol_task(void) {
 
+    //setup AP INT pins
+    h2d_config_intr((void *) NULL); //enable interrupt to host
+    configure_host_interrupt(); //enable software interrupt from host
+    
+    //for 1-wire we do not use GPIO's. so fill with invalid values
+    D2H_Platform_Info d2h_plat_info;
+    d2h_plat_info.H2D_gpio = 0xFF;
+    d2h_plat_info.D2H_gpio = 0xFF;
+    d2h_plat_info.H2D_ack  = 0xFF;
+    d2h_plat_info.D2H_ack  = 0xFF; 
+
+    d2h_protocol_init(&d2h_plat_info);
+}
+#endif //FEATURE_1WIRE_PROTOCOL_DEVICE
 
 extern int  VR_FSMConfigData;
 
@@ -151,6 +165,10 @@ static void nvic_init(void)
     NVIC_SetPriority(Sdma_Done0_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(Gpio_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 
+#if (FEATURE_1WIRE_PROTOCOL_DEVICE  == 1)
+    NVIC_SetPriority(SwInt1_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+#endif
+    
  }
 
 void banner(void)
@@ -192,11 +210,17 @@ int main(void)
 
     //setup D2H protocol pins and interrupts and start the task
     start_d2h_protocol_task();
-    hif_task_Start();
 
+    hif_task_Start();
+    
     uart_set_lpm_state(UART_ID_HW,1);
     HAL_RTC_Init(0);
     banner(); 
+#if (FEATURE_D2HPROTOCOL_DEVICE == 1)
+    dbg_str("Using 1-wire D2H Protocol\n\n");
+#else
+    dbg_str("Using 4-pin  D2H Protocol\n\n");
+#endif
     //ldo_init();     
     nvic_init();
 #if (PDM_PAD_28_29 == 1)

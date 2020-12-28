@@ -56,8 +56,6 @@ void S3x_Tick_Hook(void);
 extern void service_intr_from_host(void);
 extern void service_ack_from_host(void);
 
-extern void SendBLERxDataReady(void);
-
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
@@ -611,14 +609,16 @@ void SwInt2_Handler(void)
 
 void SwInt1_Handler(void)
 {
-	/* this is the BLE interrupt */
+	/* this is the Host interrupt */
 	/* Disable the Interrupt */
 	INTR_CTRL->SOFTWARE_INTR_1_EN_M4 &= ~(SW_INTR_1_EN_M4);
-
-//    SendBLERxDataReady();
+#if (FEATURE_1WIRE_PROTOCOL_DEVICE  == 1)
+    service_intr_from_host();
+#endif    
     /* Clear the pending interrupt */
     INTR_CTRL->SOFTWARE_INTR_1 = 0;
     NVIC_ClearPendingIRQ(SwInt1_IRQn);
+    
     /* Re-Enable the Interrupt */
     INTR_CTRL->SOFTWARE_INTR_1_EN_M4 = SW_INTR_1_EN_M4;
 }

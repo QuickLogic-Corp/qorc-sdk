@@ -37,9 +37,12 @@
 //But when there is a requirement to use only  2 pins, one pin from each of Device and Host
 //there is a inherent limitation in the protocol. Since same pin is used for both interrupt generation
 //and ack generation, there will be times a misinterpretation occurs which will lead to missing
-//the interrupts. So, 2-pin protocol should be avoided.
-#define USE_4PIN_D2H_PROTOCOL       (1) //1=use 4 pins, 2 for interrupt and 2 for ack, 0=2 pin protocol (optional)
-
+//the interrupts. So, 2-pin protocol is obsoleted. Instead 1-wire protocol is used
+#if (FEATURE_1WIRE_PROTOCOL_DEVICE == 1)
+#define USE_4PIN_D2H_PROTOCOL       (0) //0=use 1-wire protocol
+#else
+#define USE_4PIN_D2H_PROTOCOL       (1) //1=use 4 pins, 2 for interrupt and 2 for ack, 0=use 1-wire 
+#endif
 /* These addr should be in sync with icf/ld file*/
 #define D2H_READ_ADDR                  (0x7C800)  // this is where host writes and slave reads (H2D_WRITE_ADDR on host side)
 #define D2H_WRITE_ADDR                   (0x7C400)  // this is whrer host reads and slave writes (H2D_READ_ADDR on host side)
@@ -48,6 +51,18 @@
 #define MAX_NUM_CHANNEL             (64)
 #define MAX_DATA_LEN_IN_BYTES       (6)
 #define H2D_PACKET_SIZE_IN_BYTES    (8)
+
+//this is total buffer shared between Host and Device
+#if (FEATURE_1WIRE_PROTOCOL_DEVICE == 1)
+#define D2H_SPI_TX_TOTAL_SIZE_BYTES  (2*1024)
+#else
+#define D2H_SPI_TX_TOTAL_SIZE_BYTES  (1024)
+#endif
+#define D2H_SPI_RX_TOTAL_SIZE_BYTES  (1024)
+
+//First 8 bytes are aside for D2H protocol packet. Rest is used for Data
+#define D2H_SPI_TX_BUF_SIZE_BYTES  (D2H_SPI_TX_TOTAL_SIZE_BYTES - H2D_PACKET_SIZE_IN_BYTES )
+#define D2H_SPI_RX_BUF_SIZE_BYTES  (D2H_SPI_RX_TOTAL_SIZE_BYTES - H2D_PACKET_SIZE_IN_BYTES )
 
 #define D2HRX_MSGQ_WAIT_TIME	portMAX_DELAY
 
@@ -58,15 +73,16 @@
 #define D2HRX_MSG_ACK_RCVD   (0x41)
 #define D2HRX_MSG_EVT_RCVD   (0x42)
 #define D2HRX_MSG_INTR_RCVD  (0x43)
+#define D2HRX_MSG_WAIT_FOR_ACK  (0x44)
 
 typedef struct {
 	uint8_t	H2D_gpio;	/* For Host to Device interrupt generation (QL_INT) */
 	uint8_t	D2H_gpio;	/* For Device to Host interrupt (AP_INT) */
 
-#if (USE_4PIN_D2H_PROTOCOL == 1)
+    //by default it is 4-pin protocol
 	uint8_t	H2D_ack;	/* For Host to Device Ack (is an interrupt to Device) */
 	uint8_t	D2H_ack;	/* For Device to Host interrupt (is an interrupt to Host) */
-#endif    
+
 } D2H_Platform_Info;
 
 /* Structure to be used by user to send info for transmitting command to device */
@@ -96,10 +112,12 @@ typedef void (*D2H_Tx_Done_Callback)(void *cookie, D2H_Pkt_Info tx_pkt_info);
 #define D2H_STATUS_OK   (0)
 #define D2H_ERROR       ((D2H_ERR_BASE << 16) | 1)
 
-
 /* tx api*/
 int d2h_transmit_cmd(D2H_Pkt_Info *d2h_evt_info);
-
+#if (USE_4PIN_D2H_PROTOCOL == 0)
+/* SW Int1 from host config */
+extern void configure_host_interrupt(void);
+#endif
 
 /*register rx callback api*/
 int d2h_register_callback(D2H_Callback rx_cb, uint8_t ch_num, void * cookie_rx, D2H_Tx_Done_Callback tx_done_cb, void *cookie_tx);
@@ -111,5 +129,6 @@ void h2d_config_intr(void *pv);
 
 int h2d_transmit_lock_acquire(void);
 int h2d_transmit_lock_release(void);
+
 
 #endif //__H2D_PROTOCOL_H_

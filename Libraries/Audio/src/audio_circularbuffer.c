@@ -302,6 +302,10 @@ static int transmit_to_outputQ(int count)
      /* change the process ID and add to the Queue. Should not release the block */
      pBlock->dbHeader.pid = AUDIO_CIRCULAR_BUFFER_PID;
      
+     //since the DataBlock will be released by the recipient, do not keep the
+     //address else it will try to release when emptying
+     audio->audio_data_blocks[audio->array_rd_index] = NULL;
+     
      /* ignore the return value when adding to the queue with 0 delay */
      if(audio->outputQ_mode == CIRCULARBUFFER_OUTQ_MODE_FRONT)
        ret = xQueueSendToFront(audio->audiobuffer_outputQ_handle, &pBlock, 0);

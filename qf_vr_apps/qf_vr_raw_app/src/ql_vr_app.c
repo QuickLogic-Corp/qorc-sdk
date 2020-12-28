@@ -318,10 +318,10 @@ int ave_count = 0;
 #endif
 
 t_ql_audio_meta_data o_ql_audio_meta_data = { 0, -1, -1, -1, 0 };
-
+int kp_detection_count = 1; 
 void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int num_data_bytes)
 {
-  static int kp_dtection_count = 1; //chalil, todo - void static, shall be read from structure.
+
   ql_vr_event_data_t *p_ql_vr_evt = (ql_vr_event_data_t *)p_event_data;
   // Wait on AudioSysQ handle
   if (pid != AUDIO_QL_VR_PID)
@@ -332,9 +332,9 @@ void audio_ql_vr_event_handler(int pid, int event_type, void *p_event_data, int 
    uint32_t timestamp=xTaskGetTickCount();
 
    if (isStreamingOn())
-      dbg_str_int_noln("\n   RESULT : STREAMING ON KP ", kp_dtection_count++);
+      dbg_str_int_noln("\n   RESULT : STREAMING ON KP ", kp_detection_count++);
    else
-      dbg_str_int_noln("\n   RESULT : KP ", kp_dtection_count++);
+      dbg_str_int_noln("\n   RESULT : KP ", kp_detection_count++);
    dbg_str_int_noln(" VR EVT at ", timestamp);
    //dbg_str_int_noln(" idx ", 0);
    dbg_str_str_nonl(" keyword ", p_ql_vr_evt->p_phrase_text);

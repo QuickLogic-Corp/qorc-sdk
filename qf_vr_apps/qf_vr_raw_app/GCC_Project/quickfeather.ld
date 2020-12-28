@@ -7,9 +7,9 @@ MEMORY
 {
 	rom (rx)    : ORIGIN = 0x00000000, LENGTH = 0x0003F000
 	RAM1 (rwx)  : ORIGIN = _ram1_start, LENGTH = 0x0000ef00
-	ram (rwx)   : ORIGIN = 0x2004df00, LENGTH = 0x0002e400
-	HWA (rw)    : ORIGIN = 0x2007C300, LENGTH = 0x00000100
-    spiram (rw) : ORIGIN = 0x2007C400, LENGTH = 0x00000800
+	ram (rwx)   : ORIGIN = 0x2004df00, LENGTH = 0x0002df00
+	HWA (rw)    : ORIGIN = 0x2007BE00, LENGTH = 0x00000100
+    spiram (rw) : ORIGIN = 0x2007C000, LENGTH = 0x00000C00
 }
 
 SECTIONS
@@ -131,6 +131,12 @@ SECTIONS
     } > ram
 
 /* SPI shared addresses are fixed: */
+    .HOST_SPI_TX_LOCATION 0x2007c000 (NOLOAD) :
+    {
+        . = ALIGN(4);
+        KEEP(*(.HOST_SPI_TX_LOCATION)) /* keep it even if not referenced */
+    } > spiram
+
     .BLE_SPI_TX_LOCATION 0x2007c400 (NOLOAD) :
     {
         . = ALIGN(4);

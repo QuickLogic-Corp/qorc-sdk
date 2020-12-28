@@ -106,6 +106,7 @@ void    hostIfTaskHandler(void *pParameter);
 void    init_protocol_variables(hif_channel_info_t *p_hif_channel_info);
 void    ql_hif_msg_send_KPDetected(void);
 void    hif_data_addToQueueFromISR(struct xQ_Packet* pxMsg);
+void    hif_data_addToQueueFromTask(struct xQ_Packet* pxMsg);
 void    hif_msg_sendOpusChunkDone(UINT8_t* uintchunkStartAddress, int length);
 void    hif_msg_sendRawChunkDone(UINT8_t* p_buffer, int length);
 void    opus_host_msg_callback(int opus_bytes_available);
