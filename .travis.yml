@@ -17,8 +17,8 @@ before_install:
   - conda update $CONDA_FLAGS -q conda
   - curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > arch.tar.gz
   - tar -C $INSTALL_DIR -xvf arch.tar.gz
-  - conda install $CONDA_FLAGS -c quicklogic-corp/label/ql yosys="0.8.0_0002_gc3b38fdc 20200901_073908" python=3.7
-  - conda install $CONDA_FLAGS -c quicklogic-corp/label/ql yosys-plugins="1.2.0_0009_g9ab211c 20201001_121833"
+  - conda install $CONDA_FLAGS -c quicklogic-corp/label/ql yosys="0.8.0_0003_e80fb742f_20201208_122808 None" python=3.7
+  - conda install $CONDA_FLAGS -c quicklogic-corp/label/ql yosys-plugins="1.2.0_0011_g21045a9 None"
   - conda install $CONDA_FLAGS -c quicklogic-corp/label/ql vtr="v8.0.0_rc2_2894_gdadca7ecf 20201008_140004"
   - conda install $CONDA_FLAGS -c quicklogic-corp iverilog
   - conda install $CONDA_FLAGS -c tfors gtkwave
