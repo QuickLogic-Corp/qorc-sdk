@@ -33,6 +33,7 @@ fi
 
 QORC_SDK_ENVSETUP_VER=1.5.0
 
+GIT_REPO_URL_EXPECTED_LOWERCASE=https://github.com/quicklogic-corp/qorc-sdk.git
 
 ARM_TOOLCHAIN_ARCHIVE_FILE=gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
 ARM_TOOLCHAIN_INSTALL_DIR=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update
@@ -59,17 +60,36 @@ printf "executing envsetup.sh from:\n%s\n" ${PWD}
 #---------------------------------------------------------
 printf "\n[0] are we inside qorc-sdk?\n"
 
-GIT_REPO_URL=`git config --get remote.origin.url`
-if [ ! "$GIT_REPO_URL" = "https://github.com/QuickLogic-Corp/qorc-sdk.git" ]; then
+# there seems to be strange behaviour on certain systems, the URL obtained below 
+# seems to have some letter lowercase, whereas on most, it is as it should be.
+# to avoid this stuff we do all lowercase only comparison, use "tr" to do this.
+GIT_REPO_URL_LOWERCASE=`git config --get remote.origin.url | tr '[:upper:]' '[:lower:]'`
+
+if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE" ]; then
 
     printf "This script should be executed from within the qorc-sdk directory!\n"
     return
 
 fi
 
+# # we can also add check for if we are in the git repo root as well...
+# # this is probably overkill, we will enable if needed in the future.
+# GIT_REPO_GIT_DIR=`git rev-parse --git-dir`
+
+# # if we are in root, we should get ".git", else we will get different path, should cd to that.
+
+# if [ ! "$GIT_REPO_GIT_DIR" = ".git" ]; then
+
+#     printf "We are not in repo root, cd to repo root dir: [%s]\n" $GIT_REPO_GIT_DIR/..
+
+#     cd $GIT_REPO_GIT_DIR/..
+
+# fi
+
 printf "    ok.\n"
 #---------------------------------------------------------
 
+return
 
 #---------------------------------------------------------
 printf "\n[1] check (minimal) qorc-sdk submodules\n"
