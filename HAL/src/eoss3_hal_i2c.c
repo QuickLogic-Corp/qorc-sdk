@@ -14,12 +14,11 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *                                                          
- *    File   : eoss3_hal_i2c.c
- *    Purpose: 
- *                                                          
- *=========================================================*/
+/*!	\file eoss3_hal_i2c.c
+ *
+ *  \brief This file contains API implementation for the I2C
+ *         Controller(s) in the EOS S3
+ */
 #include "Fw_global_config.h"
 
 #include <stdio.h>
@@ -109,7 +108,7 @@ HAL_StatusTypeDef HAL_I2C_Init(I2C_Config xI2CConfig)
 *           For pre-scale (1-3 ), X = 5
 *           For pre-scale (4-7 ), X = 7
 *           For pre-scale (8-11 ), X = 9 
-*           For pre-scale (12-15 ), X =11 …. So On
+*           For pre-scale (12-15 ), X =11 and So On
 *
 * So, the values are precomputed for a lookup in a Table
 */

@@ -14,13 +14,12 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *                                                          
- *    File   : eoss3_hal_gpio.c
- *    Purpose: This file contains macros, structures and APIs to
- *             read/write GPIO
- *                                                          
- *=========================================================*/
+/*!	\file eoss3_hal_gpio.h
+ *
+ *  \brief This file contains API implementation to
+ *         mainpulate the GPIOs in the EOS S3.
+ */
+
 #include "Fw_global_config.h"
 
 #include <stdint.h>

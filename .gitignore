@@ -37,3 +37,9 @@
 **/rtl/build/
 **/rtl/Makefile.symbiflow
 **/rtl/*.h
+
+# toolchain installation
+arm_toolchain_install/
+fpga_toolchain_install/
+gcc-arm-none-eabi-*.tar.bz2
+Symbiflow_v*.gz.run
