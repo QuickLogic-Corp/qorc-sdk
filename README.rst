@@ -409,3 +409,8 @@ project directories, for example qorc-sdk/qf_apps/qf_myapp
     :alt: Travis (.com) branch
     :target: https://travis-ci.com/QuickLogic-Corp/qorc-sdk
 
+
+Using Eclipse to Build/Debug applications
+-----------------------------------------
+
+Please refer to `Using Eclipse <https://github.com/QuickLogic-Corp/qorc-sdk/blob/master/using_eclipse.rst>`__ .
