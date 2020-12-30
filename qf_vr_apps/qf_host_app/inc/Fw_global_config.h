@@ -41,7 +41,7 @@
 #define FEATURE_D2HPROTOCOL_HOST (1)
 
 #define FEATURE_1WIRE_PROTOCOL_HOST (0) //1 = 1-Pin protocol, 0 = 4-pin protocol
-#define FEATURE_OPUS_ENCODER    (0)
+#define FEATURE_OPUS_ENCODER        (0)
 
 /* Device firmware image selection */
 #define DEVICE_FIRMWARE_IMAGE_VR_RAW_APP    (1)
@@ -54,6 +54,21 @@
 //#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
 //#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
 //#define DEVICE_FIRMWARE_IMAGE             (DEVICE_FIRMWARE_IMAGE_VR_1WIRE_RAW_APP)
+
+#if (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_1WIRE_RAW_APP)
+#undef  FEATURE_1WIRE_PROTOCOL_HOST
+#define FEATURE_1WIRE_PROTOCOL_HOST (1) //1 = 1-Pin protocol, 0 = 4-pin protocol
+#endif
+
+#if (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_OPUS_APP)
+#undef  FEATURE_OPUS_ENCODER
+#define FEATURE_OPUS_ENCODER    (1)
+#endif
+
+#if (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
+#undef  FEATURE_I2S_MASTER_CLKS
+#define FEATURE_I2S_MASTER_CLKS   (1) // Generates I2S Master clks
+#endif
 
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)

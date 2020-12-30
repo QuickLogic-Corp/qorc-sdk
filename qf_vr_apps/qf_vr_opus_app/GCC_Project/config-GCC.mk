@@ -129,7 +129,7 @@ export FREERTOS_DIR     = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 
 export LIB_DIR          = $(PROJ_ROOT)$(DIR_SEP)Libraries
 # Enable the below line to link with pryon_lite
-#export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
+export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
 export AUDIO_DIR        = $(LIB_DIR)$(DIR_SEP)Audio$(DIR_SEP)src
 export CLI_DIR          = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
 export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src

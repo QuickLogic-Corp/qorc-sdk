@@ -908,7 +908,7 @@ void StreamTimerCB(TimerHandle_t StreamTimerHandle) {
     if (h2d_transmit_cmd(&cmd_info)){
         dbg_str("Error returned from h2d tansmit api\n");
     }
-    dbg_str("CMD_HOST_PROCESS_OFF cmd sent\n");
+    dbg_str("\nCMD_HOST_PROCESS_OFF cmd sent\n");
 }
 
 /* Setup msg queue and Task Handler for Host Task */
