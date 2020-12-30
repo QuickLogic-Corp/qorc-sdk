@@ -647,13 +647,12 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
     
     memcpy( &(g_h2d_protocol_info.pfm_info), h2d_platform_info, sizeof(H2D_Platform_Info)); 
     
+#if (USE_4PIN_D2H_PROTOCOL == 1)
     uint8_t out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
     HAL_GPIO_Write(out_gpio, 0);            // write 0 to the QL_INT at init
 
-#if (USE_4PIN_D2H_PROTOCOL == 1)
     out_gpio = g_h2d_protocol_info.pfm_info.H2D_ack;
     HAL_GPIO_Write(out_gpio, 0);            // write 0 to the H2D_ack
-#endif
     
     // Check to see if D2H is active, if so wait for it to go inactive
     if (read_gpio_intr_val(g_h2d_protocol_info.pfm_info.D2H_gpio)) {
@@ -665,6 +664,7 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
         }
         dbg_str("D2H inactive - resuming config\n");
     }
+#endif
     
     //create tx lock
     if(g_h2d_transmit_lock == NULL) {

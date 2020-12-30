@@ -5,9 +5,9 @@ ENTRY(Reset_Handler)
 _ram1_start = 0x2005C000;
 MEMORY
 {
-	rom (rx)    : ORIGIN = 0x00000000, LENGTH = 0x0005C000
+	rom (rx)    : ORIGIN = 0x00000000, LENGTH = 0x00060000
 	RAM1 (rwx)  : ORIGIN = _ram1_start, LENGTH = 0x000010
-	ram (rwx)   : ORIGIN = 0x2005C010, LENGTH = 0x00020000
+	ram (rwx)   : ORIGIN = 0x20060010, LENGTH = 0x0001C000
 	HWA (rw)    : ORIGIN = 0x2007C300, LENGTH = 0x00000100
     spiram (rw) : ORIGIN = 0x2007C400, LENGTH = 0x00000800
 }
