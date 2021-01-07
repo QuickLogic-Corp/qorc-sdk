@@ -55,7 +55,7 @@ void ssiTaskHandler(void* pParameter)
     while (1)
     {
         // Send the JSON string
-		vTaskDelay(1000);
+        vTaskDelay(1000);
         if (is_ssi_connected == false)
         {
             uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
@@ -79,13 +79,11 @@ void ssiTaskHandler(void* pParameter)
                 sensor_ssss_startstop(0);
             }
         }
-		else
-		{
-			continue;
-		}
+        else
+        {
+            continue;
+        }
     }
-
-    // vTaskDelete(NULL);
 }
 
 void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
