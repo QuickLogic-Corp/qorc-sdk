@@ -29,75 +29,92 @@
 #include "RtosTask.h"
 #include "ssi_comms.h"
 
-#define STACK_SIZE_TASK_SSI   (256)
-#define PRIORITY_TASK_SSI     (PRIORITY_NORMAL)
-#define SSI_RXBUF_SIZE        (32)
+#define STACK_SIZE_TASK_SSI (256)
+#define PRIORITY_TASK_SSI (PRIORITY_NORMAL)
+#define SSI_RXBUF_SIZE (32)
 
-xTaskHandle     xHandleTaskSSI;
-bool is_ssi_connected = false;
-const char ssi_connect_string[] = "connect";
-int ssi_connect_string_len = sizeof(ssi_connect_string)-1;
+xTaskHandle xHandleTaskSSI;
+bool        is_ssi_connected          = false;
+const char  ssi_connect_string[]      = "connect";
+int         ssi_connect_string_len    = sizeof(ssi_connect_string) - 1;
+const char  ssi_disconnect_string[]   = "disconnect";
+int         ssi_disconnect_string_len = sizeof(ssi_disconnect_string) - 1;
 
 /* Control  task */
-void ssiTaskHandler(void *pParameter)
+void ssiTaskHandler(void* pParameter)
 {
-	int count = 0;
-	int json_len = 0;
-	char ssi_rxbuf[SSI_RXBUF_SIZE];
+    int  count    = 0;
+    int  json_len = 0;
+    int  rx_avail = 0;
+    char ssi_rxbuf[SSI_RXBUF_SIZE];
 
-	assert(SSI_RXBUF_SIZE >= ssi_connect_string_len);
+    assert(SSI_RXBUF_SIZE >= ssi_connect_string_len);
 
-	memset(ssi_rxbuf, 0, sizeof(ssi_rxbuf));
+    memset(ssi_rxbuf, 0, sizeof(ssi_rxbuf));
     json_len = strlen(json_string_sensor_config);
-	while (1)
-	{
-		// Send the JSON string
+    while (1)
+    {
+        // Send the JSON string
 		vTaskDelay(1000);
-		if (is_ssi_connected == true)
-			continue;
-		uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
-		while (uart_rx_available(UART_ID_SSI))
+        if (is_ssi_connected == false)
+        {
+            uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
+        }
+        rx_avail = uart_rx_available(UART_ID_SSI);
+        if (rx_avail == ssi_connect_string_len)
+        {
+            uart_rx_raw_buf(UART_ID_SSI, ssi_rxbuf, ssi_connect_string_len);
+            if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
+            {
+                is_ssi_connected = true;
+                sensor_ssss_startstop(1);
+            }
+        }
+        else if (rx_avail == ssi_disconnect_string_len)
+        {
+            uart_rx_raw_buf(UART_ID_SSI, ssi_rxbuf, ssi_disconnect_string_len);
+            if (strncmp(ssi_rxbuf, ssi_disconnect_string, ssi_disconnect_string_len) == 0)
+            {
+                is_ssi_connected = false;
+                sensor_ssss_startstop(0);
+            }
+        }
+		else
 		{
-			char ch = uart_rx(UART_ID_SSI);
-			for ( count = 0; count < ssi_connect_string_len-1; count++ )
-			{
-				ssi_rxbuf[count] = ssi_rxbuf[count+1];
-			}
-			ssi_rxbuf[count] = ch;
-			if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
-			{
-				is_ssi_connected = true;
-				// Simple Streaming Interface is connected to DCL
-				// this task may now be deleted
-				sensor_ssss_startstop(1);
-			}
+			continue;
 		}
-	}
+    }
 
-	vTaskDelete(NULL);
+    // vTaskDelete(NULL);
 }
 
-void ssi_publish_sensor_data( uint8_t *p_source, int ilen )
+void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
 {
-	if (is_ssi_connected)
-	{
-		uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
-	}
+    if (is_ssi_connected)
+    {
+        uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
+    }
 }
 
-void ssi_publish_sensor_results( uint8_t *p_source, int ilen )
+void ssi_publish_sensor_results(uint8_t* p_source, int ilen)
 {
-	if (is_ssi_connected == false)
-	{
-		uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
-	}
+    if (is_ssi_connected == false)
+    {
+        uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
+    }
 }
 
-signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void)   // to remove warnings      uxPriority not used in the function
+signed portBASE_TYPE StartSimpleStreamingInterfaceTask(
+    void)  // to remove warnings      uxPriority not used in the function
 {
-  static uint8_t ucParameterToPass;
-  /* Create SSI Task */
-  xTaskCreate (ssiTaskHandler, "SSITaskHandler", STACK_SIZE_ALLOC(STACK_SIZE_TASK_SSI), &ucParameterToPass, PRIORITY_TASK_SSI, &xHandleTaskSSI);
-  configASSERT( xHandleTaskSSI );
-  return pdPASS;
+    static uint8_t ucParameterToPass;
+    /* Create SSI Task */
+    xTaskCreate(ssiTaskHandler,
+                "SSITaskHandler",
+                STACK_SIZE_ALLOC(STACK_SIZE_TASK_SSI),
+                &ucParameterToPass,
+                PRIORITY_TASK_SSI,
+                &xHandleTaskSSI);
+    configASSERT(xHandleTaskSSI);
+    return pdPASS;
 }
