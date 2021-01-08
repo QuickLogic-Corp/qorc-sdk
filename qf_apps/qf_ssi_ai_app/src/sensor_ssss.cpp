@@ -58,7 +58,7 @@ MC3635  qorc_ssi_accel;
 
 const char json_string_sensor_config[] = \
 "{"\
-   "\"sample_rate\":100,"\
+   "\"sample_rate\":105,"\
    "\"samples_per_packet\":6,"\
    "\"column_location\":{"\
 	"  \"AccelerometerX\":0,"\
