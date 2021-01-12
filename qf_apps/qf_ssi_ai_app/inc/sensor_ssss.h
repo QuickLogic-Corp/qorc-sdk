@@ -30,7 +30,7 @@ extern "C" {
 /*--- BEGIN User modifiable section ---*/
 /* User settable MACROs and variables */
 
-#define SENSOR_SSSS_SAMPLE_RATE_HZ       (105) // sensor sample rate per channel in Hz
+#define SENSOR_SSSS_SAMPLE_RATE_HZ       (100) // sensor sample rate per channel in Hz
 #define SENSOR_SSSS_CHANNELS_PER_SAMPLE  ( 3)  // Number of channels
 #define SENSOR_SSSS_LATENCY              (20)  // process samples every 20ms
 #define SENSOR_SSSS_BIT_DEPTH            (16)  // bit-depth per sample, must be 16

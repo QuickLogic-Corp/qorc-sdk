@@ -46,7 +46,7 @@
             "name": "Motion",
             "part": "MC3635",
             "sample_rates": [
-                14, 28, 54, 105, 210, 400, 600
+                333, 250, 200, 100, 50
             ],
             "is_default": true,
             "sensors": [
@@ -70,13 +70,7 @@
             "name": "Qwiic Scale",
             "part": "NAU7802",
             "sample_rates": [
-                14,
-                28,
-                54,
-                105,
-                210,
-                400,
-                600
+                333, 250, 200, 100, 50
             ],
             "is_default": false,
             "sensors": [
@@ -99,10 +93,10 @@
             "name": "ADC",
             "part": "ADS1015",
             "sample_rates": [
-                128,
+                100,
                 250,
-                490,
-                920,
+                500,
+                1000,
                 1600,
                 2400,
                 3300
