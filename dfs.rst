@@ -15,7 +15,7 @@ All the clocks in the EOS S3 use the High Speed Oscillator as the Clock Source.
 
 The HSOSC consumes more power as its frequency goes up.
 
-The max frequency is 76.6667 MHz (0x92D).
+The default frequency is 77.0703 MHz (0x92D).
 
 The usual max frequency we limit in SW is to 72 MHz (0x8C7) - so that we have easy divisibility into multiple domain clocks needed.
 
