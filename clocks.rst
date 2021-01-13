@@ -109,12 +109,14 @@ Calculations
 ------------
 
 STEP 1
-======
+######
 
 Suppose we have a system where we use the UART and an I2C sensor (on I2C0) via the M4.
 
 UART <- C11 <- HSOSC
+
 I2C0 <- C08X1 <- C08X4 <- HSOSC
+
 M4F <- C10 <- HSOSC
 
 UART -> 115200 baud, this can be achieved using the fractional divider, so C11 has no strict constraints.
@@ -129,7 +131,7 @@ So, we can then keep C11, C08X4 at 3 Mhz to be enough for UART/I2C0 output gener
 We can keep C10 at acceptable perf level, at say 12MHz or more.
 
 STEP 2
-======
+######
 
 Now, we add a requirement of using the FPGA UART - which has integer divider only, and requires C21 at a multiple of 1.8432 MHz.
 
@@ -154,7 +156,7 @@ Also of note here, is that when we refer in code, to HSOSC or Core frequency of 
 Similarly 36MHz is 36864000 Hz (32 x 1024 x 1000).
 
 STEP 3
-======
+######
 
 Consider that we need to add SPI1M in the design, which communicates with external device, with a max required frequency of 6 MHz.
 
@@ -183,7 +185,7 @@ Note that, we would not be able to take advantage of the top speed available fro
 we are constrained by the system design (including the FPGA UART requirement)
 
 STEP 4
-======
+######
 
 The same way, lets start with HSOSC = 73728000 Hz
 
@@ -208,8 +210,8 @@ This type of optimization, requires some calculations to be done, to arrive at t
 It would help to have a utility calculator tool that can do this for us, this is *TODO*.
 
 
-Step 5
-======
+STEP 5
+######
 
 Considering the audio use case, and assuming use of a PDM mic, and also including LPSD clock, complicates things further.
 
@@ -275,7 +277,7 @@ Questions TBD
   There are a lot of utility functions available in the clock implementation, and we can *possibly* make the above calculations dynamic.
 
   However, it would seem like its a better approach to statically design a few scenarios and design in the clock frequencies for optimal perf-power balance.
-  
+
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none
