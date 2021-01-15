@@ -67,6 +67,26 @@
         },
         {
             "max_throughput": 0,
+            "name": "Audio",
+            "part": "Default",
+            "sample_rates": [
+                16000
+            ],
+            "is_default": true,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [""],
+                    "type": "Microphone",
+                    "parameters": [],
+                    "sensor_id": 1096107087,
+                    "can_live_stream": true
+                }
+            ]
+        },
+        {
+            "max_throughput": 0,
             "name": "Qwiic Scale",
             "part": "NAU7802",
             "sample_rates": [
