@@ -28,6 +28,7 @@
 #include "sec_debug.h"
 
 #define ENABLE_VOICE_SOLUTION   1
+#define PDM2DEC_FACT  48
 
 #define FEATURE_CLI_DEBUG_INTERFACE  1
 #define FEATURE_CLI_FILESYSTEM       0
@@ -67,6 +68,19 @@
 // Toggle GPIO whenever a datablock buffer is dispatched to the UART
 // Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
 #define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
+
+#if !defined(S3AI_FIRMWARE_MODE)
+     /* allow for commandline define for automated builds on Linux */
+/* There is not enough RAM to do both - collection & recognition, choose 1 */
+#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
+// #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
+#endif
+
+
+#define S3AI_FIRMWARE_IS_COLLECTION   (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_COLLECTION)
+#define S3AI_FIRMWARE_IS_RECOGNITION  (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_RECOGNITION)
+/* future may have other modes? */
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
@@ -120,7 +134,7 @@ extern int FPGA_FFE_LOADED;
 //#define LTC1859_DRIVER  0 // 1
 //
 ///* enable the AUDIO driver */
-//#define AUDIO_DRIVER    0    // Set 1 to enable audio sampling
+#define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
 //
 ///* enable LPSD mode of AUDIO IP*/
 //#define ENABLE_LPSD    0 //Set to 1 enable, 0 to disable LPSD
@@ -134,7 +148,7 @@ extern int FPGA_FFE_LOADED;
 //#define ENABLE_INTERNAL_LDO   1  // set to 0 for power measurement
 
 /* select one of the following for Audio PDM  block */
-//#define PDM_PAD_28_29 1
+#define PDM_PAD_28_29 1
 //#define PDM_PAD_8_10  0
 //#define VOICE_AP_BYPASS_MODE 0
 
@@ -150,6 +164,8 @@ extern int FPGA_FFE_LOADED;
 #define PDM_MIC_RIGHT_CH 0
 
 #define EN_STEREO_DUAL_BUF 0
+
+#define PDM_MIC_CHANNELS (1)
 
 //#define AEC_ENABLED 1
 

@@ -67,7 +67,9 @@ void ssiTaskHandler(void* pParameter)
             if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
             {
                 is_ssi_connected = true;
-                sensor_ssss_startstop(1);
+				//sensor_ssss_startstop(1);
+				sensor_audio_add();
+				sensor_audio_startstop(1);
             }
         }
         else if (rx_avail == ssi_disconnect_string_len)

@@ -39,6 +39,7 @@ export LIBSENSIML_DIR=$(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
+                 -I"$(APP_DIR)/sensor_audio/inc" \
                  -I"$(APP_DIR)/knowledgepack/inc" \
                  -I"$(APP_DIR)/knowledgepack/sensiml/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware/" \
@@ -55,6 +56,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
                  -I"$(PROJ_ROOT)/Libraries/FPGA/inc"\
+                 -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" \
                  -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
                  -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635"
@@ -102,3 +104,4 @@ export DBP_DIR         = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor
 export DBM_DIR        = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
 export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
 export GENERATED_DIR = $(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)src
+export SENSOR_AUDIO_DIR = $(APP_DIR)$(DIR_SEP)sensor_audio$(DIR_SEP)src

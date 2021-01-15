@@ -101,7 +101,8 @@ int main(void)
 
     kb_model_init(); /* initialize the knowledgepack */
 
-    sensor_ssss_block_processor();
+    //sensor_ssss_block_processor();
+    audio_block_processor();
 
 #if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)
     StartSimpleStreamingInterfaceTask();

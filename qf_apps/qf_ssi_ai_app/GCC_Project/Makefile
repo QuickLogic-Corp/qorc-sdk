@@ -24,7 +24,8 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED
+external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED \
+    SENSOR_AUDIO
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -113,6 +114,14 @@ clean_GENERATED:
 	make -f makefiles/Makefile_generated clean
 
 CLEAN_TARGET += GENERATED
+
+.PHONY:SENSOR_AUDIO
+SENSOR_AUDIO:
+	make -f makefiles/Makefile_sensor_audio
+clean_SENSOR_AUDIO:
+	make -f makefiles/Makefile_sensor_audio clean
+
+CLEAN_TARGET += SENSOR_AUDIO
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

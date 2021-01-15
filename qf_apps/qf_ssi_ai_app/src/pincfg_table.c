@@ -233,7 +233,53 @@ PadConfig pincfg_table[] =
     .ucDrv = PAD_DRV_STRENGTH_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  }
+  },
+#endif
+#if (AUDIO_DRIVER == 1) && (PDM_PAD_28_29 == 1)
+  { // Pad 28 -- PDM DATA
+    .ucPin = PAD_28,
+    .ucFunc = PAD28_FUNC_SEL_PDM_DIN,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 29 -- PDM CLK
+    .ucPin = PAD_29,
+    .ucFunc = PAD29_FUNC_SEL_PDM_CKO,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+#endif
+#if  (AUDIO_DRIVER == 1) && (PDM_PAD_8_10 == 1)
+  {
+    /* Configuring Pad_8 as PDM Clk out*/
+    .ucPin = PAD_8;
+    .ucFunc = PAD8_FUNC_PDM_CKO;
+    .ucCtrl = PAD_CTRL_SRC_A0;
+    .ucMode = PAD_MODE_OUTPUT_EN;
+    .ucPull = PAD_NOPULL;
+    .ucDrv = PAD_DRV_STRENGHT_4MA;
+    .ucSpeed = PAD_SLEW_RATE_SLOW;
+    .ucSmtTrg = PAD_SMT_TRIG_DIS;
+  },
+  {
+    /* Configuring PAD_10 as PDM Data In*/
+    .ucPin = PAD_10;
+    .ucFunc = PAD10_FUNC_SEL_PDM_DIN;
+    .ucCtrl = PAD_CTRL_SRC_A0;
+    .ucMode = PAD_MODE_INPUT_EN;
+    .ucPull = PAD_NOPULL;
+    .ucDrv = PAD_DRV_STRENGHT_4MA;
+    .ucSpeed = PAD_SLEW_RATE_SLOW;
+    .ucSmtTrg = PAD_SMT_TRIG_DIS;
+  },
 #endif
 
 };

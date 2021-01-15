@@ -58,12 +58,10 @@ MC3635  qorc_ssi_accel;
 
 const char json_string_sensor_config[] = \
 "{"\
-   "\"sample_rate\":100,"\
-   "\"samples_per_packet\":6,"\
+   "\"sample_rate\":16000,"\
+   "\"samples_per_packet\":240,"\
    "\"column_location\":{"\
-	"  \"AccelerometerX\":0,"\
-	"  \"AccelerometerY\":1,"\
-	"  \"AccelerometerZ\":2"\
+	"  \"pcm_sample\":0"\
    "}"\
 "}\r\n" ;
 /* END JSON descriptor for the sensor data */

@@ -114,6 +114,29 @@
             ],
             "sensor_id": 1184532964,
             "can_live_stream": true
+        },
+        {
+            "max_throughput": 0,
+            "name": "PCM Audio",
+            "part": "EOSS3 PDM2PCM",
+            "sample_rates": [
+                16000
+            ],
+            "is_default": false,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [
+                        ""
+                    ],
+                    "type": "pcm_sample",
+                    "parameters": [],
+                    "units": null
+                }
+            ],
+            "sensor_id": 1334804865,
+            "can_live_stream": true
         }
     ],
     "is_little_endian": true
