@@ -21,10 +21,12 @@ A few key points to remember during any discussion about the clock infrastructur
 
 - The HSOSC frequency is derived from the REFCLK (32768 Hz) with a multiplier, with the formula below:
 
-  HSOSC = (3 + OSC_CTRL_1__prog) * 32768
+  :code:`HSOSC = (3 + OSC_CTRL_1__prog) * 32768`
 
-  where, OSC_CTRL_1__prog is the value of the :code:`prog` bitfield [11:0] of 
+  where, OSC_CTRL_1__prog is the value of the :code:`prog` bitfield [12:0] of 
   the :code:`OSC_CTRL_1` register (0x40005484)
+
+  OSC_CTRL_1__prog can have a max value of 8191, having 13 bits.
 
 - Due to the fact that HSOSC is always derived from 32768 Hz multiplied by an integer, we will always have
   clocks which relate to base :code:`1024` rather than base :code:`1000`
@@ -393,26 +395,26 @@ So far, the constraint on HSOSC is to be a multiple of 4096000 Hz.
 
 With simple varitions in HSOSC to get unique SPI1M clocks, we can see that:
 
-- HSOSC = 4096000 Hz
-  C02 DIV = 1
-  SP1M BAUD DIV = 2 (minimum)
-  SPI1M Frequency = 4096000 Hz (low)
+- | HSOSC = 4096000 Hz
+  | C02 DIV = 1
+  | SP1M BAUD DIV = 2 (minimum)
+  | SPI1M Frequency = 4096000 Hz (low)
 
-- HSOSC = 20480000 Hz
-  C02 DIV = 1
-  SP1M BAUD DIV = 4
-  SPI1M Frequency = 5120000 Hz (ok) 
+- | HSOSC = 20480000 Hz
+  | C02 DIV = 1
+  | SP1M BAUD DIV = 4
+  | SPI1M Frequency = 5120000 Hz (ok) 
 
 Note that, we would not be able to take advantage of the top speed available from the 
 device point of view, because we are constrained by the system design.
 
 We can arrive at, with a bit more variation in the C02 DIV and HSOSC values at the following combo:
 
-- HSOSC = 73728000 Hz (72000 KiHz)
-  C02 DIV = 7
-  C02 Frequency = 73728000 / 7 Hz = 10532571.4286 Hz (approx 10.5 MHz)
-  SP1M BAUD DIV = 2 (minimum)
-  SPI1M Frequency = 10532571.4286/2 = 5266285.71428 Hz (approx 5.266 MHz)
+- | HSOSC = 73728000 Hz (72000 KiHz)
+  | C02 DIV = 7
+  | C02 Frequency = 73728000 / 7 Hz = 10532571.4286 Hz (approx 10.5 MHz)
+  | SP1M BAUD DIV = 2 (minimum)
+  | SPI1M Frequency = 10532571.4286/2 = 5266285.71428 Hz (approx 5.266 MHz)
 
 We can see that we can arrive at an even better SPI frequency of 5.266 MHz with some variations.
 
