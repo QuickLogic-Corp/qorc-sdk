@@ -57,6 +57,13 @@ const char *SOFTWARE_VERSION_STR;
 /*
  * Global variable definition
  */
+
+static const fw_global_config_t fw_global_config_vars =
+{
+    .ssi_sensor_select_audio = SSI_SENSOR_SELECT_AUDIO,
+    .ssi_sensor_select_ssss = SSI_SENSOR_SELECT_SSSS
+};
+
 #if 1
 static I2C_Config i2c0config =
 {
@@ -100,9 +107,13 @@ int main(void)
     HAL_I2C_Init(i2c0config);
 
     kb_model_init(); /* initialize the knowledgepack */
+#if (SSI_SENSOR_SELECT_SSSS == 1)
+    sensor_ssss_block_processor();
+#endif
 
-    //sensor_ssss_block_processor();
+#if (SSI_SENSOR_SELECT_AUDIO == 1)
     audio_block_processor();
+#endif
 
 #if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)
     StartSimpleStreamingInterfaceTask();

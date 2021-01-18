@@ -67,9 +67,13 @@ void ssiTaskHandler(void* pParameter)
             if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
             {
                 is_ssi_connected = true;
-				//sensor_ssss_startstop(1);
-				sensor_audio_add();
-				sensor_audio_startstop(1);
+#if (SSI_SENSOR_SELECT_SSSS)
+                sensor_ssss_startstop(1);
+#endif
+#if (SSI_SENSOR_SELECT_AUDIO)
+                sensor_audio_add();
+                sensor_audio_startstop(1);
+#endif
             }
         }
         else if (rx_avail == ssi_disconnect_string_len)
@@ -78,7 +82,12 @@ void ssiTaskHandler(void* pParameter)
             if (strncmp(ssi_rxbuf, ssi_disconnect_string, ssi_disconnect_string_len) == 0)
             {
                 is_ssi_connected = false;
+#if (SSI_SENSOR_SELECT_SSSS)
                 sensor_ssss_startstop(0);
+#endif
+#if (SSI_SENSOR_SELECT_AUDIO)
+                sensor_audio_startstop(0);
+#endif
             }
         }
         else

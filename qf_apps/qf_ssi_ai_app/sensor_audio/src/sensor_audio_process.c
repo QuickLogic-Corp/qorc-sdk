@@ -24,6 +24,20 @@
 #include "sensor_audio_process.h"
 /** */
 
+#if (SSI_SENSOR_SELECT_AUDIO == 1)
+/* BEGIN JSON descriptor for the sensor configuration */
+
+const char json_string_sensor_config[] = \
+"{"\
+   "\"sample_rate\":16000,"\
+   "\"samples_per_packet\":2,"\
+   "\"column_location\":{"\
+	"  \"Microphone\":0"\
+   "}"\
+"}\r\n" ;
+/* END JSON descriptor for the sensor data */
+#endif /* SSI_SENSOR_SELECT_AUDIO */
+
 /*========== BEGIN: AUDIO SENSOR Datablock processor definitions =============*/
 /** @addtogroup QAI_AUDIO_PIPELINE_EXAMPLE QuickAI SDK AUDIO pipeline example
  *
@@ -169,7 +183,7 @@ void audio_block_processor(void)
 
   /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
   //sensor_audio_configure();
-  
+#if (0)
   printf("Sensor Name:                   %s\n", "SENSOR_AUDIO_NAME");
   printf("Sensor Memory:                 %d\n", SENSOR_AUDIO_MEMSIZE_MAX);
   printf("Sensor Sampling rate max:      %d Hz\n", (int)SENSOR_AUDIO_RATE_HZ_MAX);
@@ -177,6 +191,7 @@ void audio_block_processor(void)
   printf("Sensor frame size per channel: %d\n", AUDIO_FRAME_SIZE_PER_CHANNEL);
   printf("Sensor frame size:             %d\n", AUDIO_FRAME_SIZE);
   printf("Sensor datablock count:        %d\n", AUDIO_NUM_DATA_BLOCKS);
+#endif
 }
 /*========== END: AUDIO SENSOR Datablock processor definitions =============*/
 

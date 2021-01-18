@@ -69,6 +69,14 @@
 // Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
 #define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
 
+/* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
+#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+
+#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
+#error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
+#endif
+
 #if !defined(S3AI_FIRMWARE_MODE)
      /* allow for commandline define for automated builds on Linux */
 /* There is not enough RAM to do both - collection & recognition, choose 1 */
@@ -181,5 +189,11 @@ extern int FPGA_FFE_LOADED;
 /* this should always be the last #define in this file */
 /* it insures that we have completely processed this entire file */
 #define _EnD_Of_Fw_global_config_h  1
+
+typedef struct st_fw_global_config
+{
+	int ssi_sensor_select_audio ;
+	int ssi_sensor_select_ssss  ;
+} fw_global_config_t;
 
 #endif
