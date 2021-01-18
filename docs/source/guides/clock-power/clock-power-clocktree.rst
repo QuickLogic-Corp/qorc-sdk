@@ -1,5 +1,6 @@
-QORC SDK CLOCK INFRA
-====================
+
+QORC SDK CLOCK/POWER INFRA : CLOCK TREE
+=======================================
 
 |WORK IN PROGRESS|
 
@@ -11,7 +12,7 @@ Intro
 
 A condensed representation of all the clocks in the EOS S3 architecture is shown below.
 
-.. image:: eoss3-clocks.svg
+.. image:: clock-tree.svg
 
 A few key points to remember during any discussion about the clock infrastructure in the EOSS3:
 
@@ -56,7 +57,7 @@ A few key points to remember during any discussion about the clock infrastructur
 
 For any target clock frequency, we would need to consider 2 aspects:
 
-1. Exact Requirements: 
+1. Exact Requirement Calculation: 
 
    If the target frequency is an exact requirement (for example, PDM) then we need to check that it can
    be produced in the system.
@@ -66,6 +67,7 @@ For any target clock frequency, we would need to consider 2 aspects:
    | Example: Obtain 3072000 Hz (3.072 MHz) at, say C10.
    | LCM (32768, 3072000) = 12288000 Hz (12.288 MHz) which is in range for HSOSC (2.5 - 80 MHz)
    | So, this target frequency is possible to be exactly generated
+   |
 
    | Example: Obtain 4800000 Hz (4.8 MHz) at, say C10.
    | LCM (32768, 4800000) = 307200000 Hz (307.2 MHz) which is **NOT** in range for HSOSC (2.5 - 80 MHz)
@@ -323,9 +325,7 @@ PDM clocks are derived from C30 (max 5 MHz).
 
    We need to check if this value can be derived from any HSOSC.
 
-   Using the generic calculation method, reduce 1024000/32768 to fraction = 125/4
-
-   It is then possible to get 1024000 Hz.
+   LCM(32768,1024000) = 4096000 Hz (4000 KiHz, 4.096 MHz) which is in range for HSOSC
 
    HSOSC Constraint Calculation:
 
@@ -333,9 +333,7 @@ PDM clocks are derived from C30 (max 5 MHz).
 
 2. Let's consider using PDM clock of 3.072 MHz, then:
 
-   Using the generic calculation method, reduce 3072000/32768 to fraction = 375/4
-
-   It is then possible to get 3072000 Hz.
+   LCM (3072000,32768) = 12288000 Hz (12000 KiHz, 12.288 MHz) which is in range for HSOSC
 
    HSOSC Constraint Calculation:
 
@@ -343,9 +341,9 @@ PDM clocks are derived from C30 (max 5 MHz).
 
 3. Now, consider using PDM clock of 4.8 MHz.
 
-   Using the generic calculation method, reduce 4800000/32768 to fraction = 146.484375 = 9375/64 (approximately)
-
-   Hence, we cannot obtain a PDM clock of exactly 4.8 MHz in the system, because 9375 as PROG is not possible.
+   LCM(32768,4800000) = 307200000 Hz (307.2 MHz) which is **NOT** in range for HSOSC
+   
+   Hence, we cannot obtain a PDM clock of exactly 4.8 MHz in the system.
 
 
 LPSD
@@ -353,9 +351,9 @@ LPSD
 
 LPSD clocks are derived from C31 which has a max spec of 1 MHz.
 
-It is preferable (and generally fixed) to use 512 KHz for LPSD clock.
+It is preferable to use 512 KHz for LPSD clock.
 
-Using the generic calculation method, reduce 512000/32768 to fraction = 125/8
+LCM (32768, 512000) = 4096000 Hz (4000 KiHz, 4.096 MHz) which is in range for HSOSC.
 
 It is then possible to get 512000 Hz.
 
@@ -437,11 +435,13 @@ In general (integer div), UART Clock = baudrate x 16, and hence sometimes called
 With C21 having a constraint of being a multiple of 1.8432 MHz, it follows that
 the HSOSC needs to be a multiple of 1.8432 MHz too.
 
+LCM (32768, 1843200) = 7372800 Hz (7200 KiHz, 7.372 MHz) which is in range for HSOSC.
+
 So far, the constraint on the HSOSC is to be a multiple of 4096000 Hz, and adding 1843200 Hz to this,
 
 HSOSC = multiple of (LCM of 4096000, 1843200) = multiple of 36864000 Hz (36000 KiHz, 36.864 MHz)
 
-Side Note: we skipped using some of the constraints (LPSD 512000 Hz and REFCLK 32768 Hz) as it has already
+Side Note: we skipped using some of the constraints (LPSD 512000 Hz and REFCLK 32768 Hz) as they have already
 been factored in the previous steps. It can be verified that even including both of these, the LCM 
 obtained is the same as above (36864000 Hz)
 

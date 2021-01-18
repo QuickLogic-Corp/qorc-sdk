@@ -1,5 +1,6 @@
-QORC SDK DYNAMIC FREQUENCY SCALING
-==================================
+
+QORC SDK CLOCK/POWER INFRA : QUALITY OF SERVICE
+===============================================
 
 |WORK IN PROGRESS|
 
@@ -17,9 +18,7 @@ The HSOSC consumes more power as its frequency goes up.
 
 The default frequency is 77.0703 MHz (0x92D).
 
-The usual max frequency we limit in SW is to 72 MHz (0x8C7) - so that we have easy divisibility into multiple domain clocks needed.
-
-The other usual frequencies chosen are 48 MHz, 36 MHz, 12 MHz, 6 MHz, again for the same reasons.
+The usual max frequency we limit in SW is to 73.728 MHz (0x8C7) - so that we have easy divisibility into multiple domain clocks needed.
 
 The clocks can change at any time the the CPU goes IDLE, and comes back up (depending on the scheduling - here we look at FreeRTOS scheduling only)
 
@@ -36,7 +35,7 @@ Terminology
 -----------
 
 DFS
-   Dynamic Frequency SCALING
+   Dynamic Frequency Scaling
 
 HSOSC
    High Speed Oscillator
