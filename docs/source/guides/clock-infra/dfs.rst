@@ -27,7 +27,7 @@ Also, it takes some time for the scaling up and down to complete, as HSOSC scali
 
 In certain situations, we would like to prevent a change in the clocking, or guarantee a minimum clock frequency, while a particular "task" is running until it completes.
 
-To satisfy such needs, the DFS system provides a Qualit Of Service (QOS) API.
+To satisfy such needs, the DFS system provides a Quality Of Service (QOS) API.
 
 Using the QOS APIs, we can set the operating conditions on the HSOSC, or the Cortex-M4 core clock (CPU) or any of the other clocks in the system.
 

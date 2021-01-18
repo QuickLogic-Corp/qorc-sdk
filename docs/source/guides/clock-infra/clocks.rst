@@ -11,7 +11,7 @@ Intro
 
 A condensed representation of all the clocks in the EOS S3 architecture is shown below.
 
-:code:`TODO`
+.. image:: eoss3-clocks.svg
 
 A few key points to remember during any discussion about the clock infrastructure in the EOSS3:
 
@@ -41,8 +41,8 @@ A few key points to remember during any discussion about the clock infrastructur
   
   :code:`Ki` refers to kibi - meaning 1024 as per the IEC 80000 convention for binary base numbers.
 
-- On a related note to the above, it can also be derived that we would never be able to generate certain
-  frequencies exactly. For example, exact 72 MHz would never be possible to generate in the EOSS3 system.
+- On a related note, it can also be derived that we would never be able to generate certain
+  frequencies exactly. For example, an exact 72 MHz would never be possible to generate in the EOSS3 system.
 
   Correspondingly, we *may* not always be able to generate other base :code:`1000` frequencies such as 5 MHz.
 
@@ -51,58 +51,51 @@ A few key points to remember during any discussion about the clock infrastructur
 
 - Another consequence of all the domain clocks being generated from HSOSC is that any time one of the domain
   clock frequency needs to be changed, and hence HSOSC needs to be changed, it will affect the *other* domain
-  clocks as well.
-
-- Generic calculation method if any value of clock is **exactly** possible with a specific HSOSC value:
-  
-  :code:`HSOSC * OSC_CTRL_1__prog / CLOCK_DIV = CLOCK_FREQ`
-
-  :code:`CLOCK_FREQ / HSOSC = OSC_CTRL_1__prog / CLOCK_DIV`
-  
-  where :code:`0 < OSC_CTRL_1__prog < 8192` and :code:`0 < CLOCK_DIV <= 512` (can vary if extra dividers in path)
-
-  So, if CLOCK_FREQ / HSOSC ratio can be reduced as a fraction, with numerator < 8192 and div < 512
-  then that CLOCK_FREQ is possible to achieve.
-
-  We can use an online tool, such as: https://www.calculatorsoup.com/calculators/math/fractionssimplify.php
-
-  Example: Obtain 3072000 Hz (3.072 MHz) at, say C10.
-  
-  3072000 / 32768 = 375 / 4
-
-  So, with OSC_CTRL_1__prog = 375 and C10 DIV = 4, we can achieve this.
-
-  Note that there would be other combinations possible too, but here we look at if any combination can achieve this.
-
-  Example: Obtain 4800000 Hz (4.8 MHz) at, say C10.
-
-  4800000 / 32768 = 9375 / 64 (approx)
-
-  This is not possible to achieve exactly, because OSC_CTRL_1__prog should be < 8192.
-
-- Calculating Constaints on HSOSC:
-
-  If we have more than 1 clocks, which should be obtained after being divided down from HSOSC, 
-  then we can calculate the constraint on HSOSC using the LCM of the clocks and the REFCLK (32768 Hz).
-
-  NOTE: we assume that we have checked all the clocks are possible to achieve using the above method.
-
-  Example: We would like C10 to be a multiple of (or equal to) 3072000 Hz, 
-  and say C30 to be a multiple of (or equal to) 1024000 Hz.
-
-  LCM (3072000,1024000,32768) = 12288000 = 12.288 MHz = 12000 KiHz  
-
-  HSOSC then needs to be a multiple of (or equal to) 12288000 Hz to achieve this combination.
-
-  We can use an online tool, such as: https://www.calculator.net/lcm-calculator.html
+  clocks as well, leading to more constraints on the HSOSC according to all clock requirements in the system.
 
 
+For any target clock frequency, we would need to consider 2 aspects:
+
+1. Exact Requirements: 
+
+   If the target frequency is an exact requirement (for example, PDM) then we need to check that it can
+   be produced in the system.
+
+   This can be calculated using the LCM of the REFCLK (32768 Hz) and the target frequency.
+
+   | Example: Obtain 3072000 Hz (3.072 MHz) at, say C10.
+   | LCM (32768, 3072000) = 12288000 Hz (12.288 MHz) which is in range for HSOSC (2.5 - 80 MHz)
+   | So, this target frequency is possible to be exactly generated
+
+   | Example: Obtain 4800000 Hz (4.8 MHz) at, say C10.
+   | LCM (32768, 4800000) = 307200000 Hz (307.2 MHz) which is **NOT** in range for HSOSC (2.5 - 80 MHz)
+   | So, this target frequency is **NOT** possible to be exactly generated
+
+   If the target frequency is not an exact requirement(for example SPI, I2C), we should be able to achieve 
+   close to the target frequency and this should be ok in most cases.
+
+2. HSOSC Constraints With Other Clocks:
+
+   If we have more than 1 clock, which should be exactly obtained after being divided down from HSOSC, 
+   then we can calculate the constraint on HSOSC using the LCM of the clocks and the REFCLK (32768 Hz).
+
+   NOTE: we assume that we have checked all the clocks are possible to achieve using the above method.
+
+   Example: We would like C10 to be a multiple of (or equal to) 3072000 Hz, 
+   and C30 to be a multiple of (or equal to) 1024000 Hz.
+
+   LCM (32768,3072000,1024000) = 12288000 (12.288 MHz, 12000 KiHz)
+
+   HSOSC then needs to be a multiple of (or equal to) 12288000 Hz to achieve this combination.
+
+
+We can use an online tool, such as: https://www.calculator.net/lcm-calculator.html
 
 
 The clock infrastructure in the EOSS3 should be clear from the diagram above.
 
 There are many clocks which we do not (normally) need to check while trying to set the clock frequencies
-for any particular application.
+for any particular application (for example AHB clocks, APB clocks) and we would not look at these in depth.
 
 To understand the clocks which we generally consider, we will take an "example design" approach
 which may be easier to digest in a step-by-step manner, rather than taking the system as a whole.
@@ -139,7 +132,7 @@ to produce standard baud rates (115200, 9600 etc.)
 There is not much to worry about the baudrate matching, due to the fractional divider 
 and (almost) any C11 frequency would do.
 
-:code:`TODO add preferred frequencies for least error in baud, if any`
+:code:`TODO add calculations/preferred frequencies for least error in baud, if any`
 
 Whenever HSOSC changes, C11 will change, and we need to ensure that the UART 
 fractional divider is set to output the required baudrate.
@@ -172,7 +165,6 @@ Whenever the HSOSC changes, the C02 will change, and correspondingly
 the SPI1M BAUDR divider needs to be set to ensure a specific frequency output.
 
 
-
 SPI: SPI0 Master
 ~~~~~~~~~~~~~~~~
 
@@ -197,7 +189,7 @@ Both of these are interfaced as a Wishbone Slave, and accessed from the M4 via a
 
 Each of these has 2 8-bit PRESCALE registers to derive the I2C clock from the C08_X1 clock.
 
-Calculation is :code:`TODO`.
+:code:`TODO add calculation details`
 
 
 FPGA
@@ -246,13 +238,12 @@ the limitation of C10, and hence HSOSC.
 Example Design - Calculations
 -----------------------------
 
-We will take a walkthrough of designing in the clock infrastructure for specific applications, which call
+We will take a walk-through of designing in the clock infrastructure for specific applications, which call
 for specific limitations on the peripheral clocks, and hence would affect the HSOSC, and in turn 
 other peripheral clocks.
 
 We start with flexible requirements, and as we add more peripherals, we can see how the possible HSOSC
 range gets limited.
-
 
 
 STEP 1
@@ -261,7 +252,7 @@ STEP 1
 We start with a simple application, which needs to only use the UART, and I2C0 to interface a I2C peripheral
 to M4.
 
-Let's assume the UART needs to be at 115200 baud, and the I2C peripheral needs to be accessed at 400kHz.
+Let's assume the UART needs to be at 115200 baud, and the I2C peripheral needs to be accessed at 400kHz(max).
 
 UART    <<==     C11     <<==     HSOSC
 
@@ -275,7 +266,7 @@ UART
 The UART clock is derived from C11 using a fractional divider, so C11 has no really strict constraints,
 and can take (almost) any value for achieving 115200 baud.
 
-:code:`TODO, add preferred frequencies to keep baud error at 115200 minimal`
+:code:`TODO add calculations/preferred frequencies for least error in baud, if any`
 
 I2C0
 ^^^^
@@ -393,7 +384,7 @@ SPI1M is derived from C02 and needs a minimum div of 2 or greater, even divider 
 
 So far, the constraint on HSOSC is to be a multiple of 4096000 Hz.
 
-With simple varitions in HSOSC to get unique SPI1M clocks, we can see that:
+With simple variations in HSOSC to get unique SPI1M clocks, we can see that:
 
 - | HSOSC = 4096000 Hz
   | C02 DIV = 1
@@ -419,13 +410,15 @@ We can arrive at, with a bit more variation in the C02 DIV and HSOSC values at t
 We can see that we can arrive at an even better SPI frequency of 5.266 MHz with some variations.
 
 In this particular case, the downside is needing the HSOSC to go to 72000 KiHz, which is not great for power
-consumption, but in situations where high performace is required, this might be an acceptable solution.
+consumption, but in situations where high performance is required, this might be an acceptable solution.
 
 :code:`TODO: check if we can make such calculations possible automatically, maybe with a tool/utility.`
 
 Note that we have not really added a constraint on the HSOSC here, as SPI (like I2C) can run at
 any frequency below the max spec of the devices, faster the better, but slower is acceptable as 
-long as the application is ok. This is highly dependent on the criticality of the SPI transactions.
+long as the application is ok. 
+
+This is highly dependent on the criticality of the SPI transactions.
 
 
 STEP 4
