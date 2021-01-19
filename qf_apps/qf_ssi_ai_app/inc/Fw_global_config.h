@@ -77,19 +77,6 @@
 #error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
 #endif
 
-#if !defined(S3AI_FIRMWARE_MODE)
-     /* allow for commandline define for automated builds on Linux */
-/* There is not enough RAM to do both - collection & recognition, choose 1 */
-#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
-// #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
-#endif
-
-
-#define S3AI_FIRMWARE_IS_COLLECTION   (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_COLLECTION)
-#define S3AI_FIRMWARE_IS_RECOGNITION  (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_RECOGNITION)
-/* future may have other modes? */
-
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
 #if !DBG_FLAGS_ENABLE
@@ -193,7 +180,12 @@ extern int FPGA_FFE_LOADED;
 typedef struct st_fw_global_config
 {
 	int ssi_sensor_select_audio ;
+	int sensor_audio_livestream_enabled;
+	int sensor_audio_recog_enabled;
+
 	int ssi_sensor_select_ssss  ;
+	int sensor_ssss_livestream_enabled;
+	int sensor_ssss_recog_enabled;
 } fw_global_config_t;
 
 #endif

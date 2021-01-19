@@ -44,10 +44,11 @@
 #include "sensor_ssss.h"
 #include "ssi_comms.h"
 #include "cli.h"
-
 #include "fpga_loader.h"    // API for loading FPGA
 #include "gateware.h"           // FPGA bitstream to load into FPGA
 #include "kb.h"
+#include "sensor_audio_config.h"
+#include "sensor_audio_process.h"
 extern const struct cli_cmd_entry my_main_menu[];
 
 
@@ -61,7 +62,12 @@ const char *SOFTWARE_VERSION_STR;
 static const fw_global_config_t fw_global_config_vars =
 {
     .ssi_sensor_select_audio = SSI_SENSOR_SELECT_AUDIO,
-    .ssi_sensor_select_ssss = SSI_SENSOR_SELECT_SSSS
+	.sensor_audio_livestream_enabled = SENSOR_AUDIO_LIVESTREAM_ENABLED,
+	.sensor_audio_recog_enabled = SENSOR_AUDIO_RECOG_ENABLED,
+
+	.ssi_sensor_select_ssss = SSI_SENSOR_SELECT_SSSS,
+    .sensor_ssss_livestream_enabled = SENSOR_SSSS_LIVESTREAM_ENABLED,
+    .sensor_ssss_recog_enabled = SENSOR_SSSS_RECOG_ENABLED
 };
 
 #if 1
@@ -115,7 +121,7 @@ int main(void)
     audio_block_processor();
 #endif
 
-#if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)
+#if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1) || (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)
     StartSimpleStreamingInterfaceTask();
 #endif
 

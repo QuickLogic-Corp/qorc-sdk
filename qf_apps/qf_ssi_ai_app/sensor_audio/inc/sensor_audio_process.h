@@ -42,4 +42,6 @@ extern uint8_t               audio_data_blocks[SENSOR_AUDIO_MEMSIZE_MAX] ;
 extern QAI_DataBlockMgr_t    audioBuffDataBlkMgr;
 extern QueueHandle_t         audio_dbp_thread_q;
 
+extern void audio_block_processor(void);
+
 #endif /* __SENSOR_AUDIO_PROCESS_H__ */

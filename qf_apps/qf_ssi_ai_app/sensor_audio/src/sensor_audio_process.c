@@ -22,6 +22,9 @@
 #include "sensor_audio_config.h"
 #include "sensor_audio_acquisition.h"
 #include "sensor_audio_process.h"
+#include "ssi_comms.h"
+#include "sml_recognition_run.h"
+
 /** */
 
 #if (SSI_SENSOR_SELECT_AUDIO == 1)
@@ -139,12 +142,12 @@ outQ_processor_t audio_livestream_outq_processor =
 
 datablk_pe_descriptor_t  audio_datablk_pe_descr[] =
 { // { IN_ID, OUT_ID, ACTIVE, fSupplyOut, fReleaseIn, outQ, &pe_function_pointers, bypass_function, pe_semaphore }
-#if (SENSOR_AUDIO_RECOG_ENABLED) && (S3AI_FIRMWARE_IS_RECOGNITION)
+#if (SENSOR_AUDIO_RECOG_ENABLED == 1)
     /* processing element descriptor for SensiML AI for AUDIO sensor */
     { AUDIO_ISR_PID, AUDIO_AI_PID, true, false, true, &audio_sensiml_ai_outq_processor, &audio_sensiml_ai_funcs, NULL, NULL},   
 #endif
 
-#if (SENSOR_AUDIO_LIVESTREAM_ENABLED) && (S3AI_FIRMWARE_IS_COLLECTION)
+#if (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)
     /* processing element descriptor for AUDIO sesnsor livestream */
     { AUDIO_ISR_PID, AUDIO_LIVESTREAM_PID, true, false, true, &audio_livestream_outq_processor, &audio_livestream_funcs, NULL, NULL},   
 #endif 
@@ -209,7 +212,8 @@ void audio_ai_data_processor(
     int nSamples = pIn->dbHeader.numDataElements;
     int nChannels = pIn->dbHeader.numDataChannels;
 
-    //recog_data_using_dbp(p_data, (nSamples/nChannels), nChannels, SENSOR_AUDIO_ID);
+    int batch_sz = nSamples / nChannels;
+    sml_recognition_run_batch(p_data, batch_sz, nChannels, SENSOR_AUDIO_ID);
 
     *pRet = NULL;
     return;
