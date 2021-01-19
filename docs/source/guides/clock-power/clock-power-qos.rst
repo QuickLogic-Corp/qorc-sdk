@@ -123,7 +123,7 @@ This is very much dependent on the DFS system configuration, and profiling of th
 
 For example, if we know that there is no way the HSOSC will go above, say 36 MHz, we can make a QOS request for that frequency as the minimum.
 
-The power consumption of the HSOSC sharply rises with the frequency, so the power consumption at 72 MHz will more than double that at 36 MHz.
+The power consumption of the HSOSC increases with the frequency, so the power consumption at 72 MHz will be approximately double that at 36 MHz.
 
 Hence, this decision should be taken according to the system configuration and profile data.
 
