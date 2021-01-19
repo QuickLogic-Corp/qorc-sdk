@@ -37,6 +37,11 @@ often work together and need to be understood as a set.
 Hardware Capability
 -------------------
 
+
+A condensed representation of all the clocks and power domains in the EOS S3 architecture is shown below.
+
+.. image:: clock-tree.svg
+
 Power Domains
 ~~~~~~~~~~~~~
 
@@ -45,7 +50,7 @@ controlled.
 
 All of the domains can be controlled from the PMU registers.
 
-:code:`TODO add specific document for power domains`
+:code:`TODO add specific document for power domains if needed`
 
 Clock Tree
 ~~~~~~~~~~
@@ -64,25 +69,35 @@ Software Implementation
 Power Domain and Clock Control
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The APIs available for control of the power domains are in:
+The public APIs available for control of clock/power management are in:
 
-:code:`qorc-sdk/Libraries/Power/inc/s3x_pi.h`
-:code:`qorc-sdk/Libraries/Power/src/s3x_pi.c`
+| :code:`qorc-sdk/HAL/inc/s3x_clock_hal.h`
+| :code:`qorc-sdk/HAL/src/s3x_clock_hal.c`
+|
 
-The APIs available for control of clocks are in:
+The (internal) APIs available for control of the power domains are in:
 
-:code:`qorc-sdk/Libraries/Power/inc/s3x_clock.h`
-:code:`qorc-sdk/Libraries/Power/src/s3x_clock.c`
+| :code:`qorc-sdk/Libraries/Power/inc/s3x_pi.h`
+| :code:`qorc-sdk/Libraries/Power/src/s3x_pi.c`
+|
+
+The (internal) APIs available for control of clocks are in:
+
+| :code:`qorc-sdk/Libraries/Power/inc/s3x_clock.h`
+| :code:`qorc-sdk/Libraries/Power/src/s3x_clock.c`
+|
 
 :code:`TODO add specific document for clock/power API`
 
 Low Power Mode (LPM)
 ~~~~~~~~~~~~~~~~~~~~
 
-LPM is used when the CPU is "IDLE", and there are no tasks pending to be run anytime "soon".
+In general, lower power mode is used to describe a way to identify when the system has nothing to do 
+(idle) - for example, when waiting for an event, or regular intervals between processing data, and 
+use this time to turn off power domains, and turn off or scale down clocks to minimize power consumption.
 
-While entering LPM, we can additionally turn off clocks, and while exiting LPM, turn them back on 
-before any task actually starts running.
+In the context of an RTOS, LPM is used when the CPU is in "IDLE" state, and 
+there are no tasks pending to be run anytime "soon" (in terms of timing ticks).
 
 LPM management in QORC SDK is described in detail in `LPM <./clock-power-lpm.rst>`__
 

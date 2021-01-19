@@ -102,12 +102,11 @@ A description of the structure and its usage is as below:
   If the cpu load is lower than :code:`cpuload_downthreshold` for :code:`step_width` milliseconds, DFS "steps down" 
   to the next lower policy.
 
-- :code:`policySleep` is used by LPM to invoke sleep at a specific DFS policy node.
+- :code:`policySleep` is used by LPM to invoke sleep at a specific DFS policy node, and disabled DFS to run 
+  during LPM at specific policy nodes.
 
-  ::
-
-    TODO : cover this in more detail as part of the Low Power Management (LPM) implementation.
-
+  A detailed description of this variable w.r.t LPM is in : `LPM <./clock-power-lpm.rst>`__ 
+  in the :code:`LPM and DFS` section.
 
 Example Design using DFS
 ------------------------

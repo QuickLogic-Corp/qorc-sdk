@@ -10,10 +10,6 @@ QORC SDK CLOCK/POWER INFRA : CLOCK TREE
 Intro
 -----
 
-A condensed representation of all the clocks in the EOS S3 architecture is shown below.
-
-.. image:: clock-tree.svg
-
 A few key points to remember during any discussion about the clock infrastructure in the EOSS3:
 
 - All of the clocks in the EOSS3 are (practically) always derived from the HSOSC
@@ -93,8 +89,6 @@ For any target clock frequency, we would need to consider 2 aspects:
 
 We can use an online tool, such as: https://www.calculator.net/lcm-calculator.html
 
-
-The clock infrastructure in the EOSS3 should be clear from the diagram above.
 
 There are many clocks which we do not (normally) need to check while trying to set the clock frequencies
 for any particular application (for example AHB clocks, APB clocks) and we would not look at these in depth.
