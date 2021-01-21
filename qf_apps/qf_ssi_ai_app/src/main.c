@@ -119,9 +119,16 @@ int main(void)
 
 #if (SSI_SENSOR_SELECT_AUDIO == 1)
     audio_block_processor();
+
+#if (SENSOR_AUDIO_RECOG_ENABLED == 1)
+    sensor_audio_add();
+    sensor_audio_startstop(1);
 #endif
 
-#if (SENSOR_SSSS_LIVESTREAM_ENABLED == 1) || (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)
+#endif /* SSI_SENSOR_SELECT_AUDIO */
+
+#if ( ((SSI_SENSOR_SELECT_SSSS == 1) && (SENSOR_SSSS_LIVESTREAM_ENABLED == 1)) || \
+      ((SSI_SENSOR_SELECT_AUDIO == 1) && (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)) )
     StartSimpleStreamingInterfaceTask();
 #endif
 
