@@ -130,8 +130,8 @@ fi
 
 
 printf "    initializing toolchain.\n"
-export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
-export QORC_TC_PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin
+export PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin:$PATH
+export QORC_TC_PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin
 
 
 ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
