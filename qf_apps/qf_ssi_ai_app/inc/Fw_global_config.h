@@ -28,6 +28,7 @@
 #include "sec_debug.h"
 
 #define ENABLE_VOICE_SOLUTION   1
+#define PDM2DEC_FACT  48
 
 #define FEATURE_CLI_DEBUG_INTERFACE  1
 #define FEATURE_CLI_FILESYSTEM       0
@@ -67,6 +68,14 @@
 // Toggle GPIO whenever a datablock buffer is dispatched to the UART
 // Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
 #define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
+
+/* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
+#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+
+#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
+#error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
+#endif
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
@@ -120,7 +129,7 @@ extern int FPGA_FFE_LOADED;
 //#define LTC1859_DRIVER  0 // 1
 //
 ///* enable the AUDIO driver */
-//#define AUDIO_DRIVER    0    // Set 1 to enable audio sampling
+#define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
 //
 ///* enable LPSD mode of AUDIO IP*/
 //#define ENABLE_LPSD    0 //Set to 1 enable, 0 to disable LPSD
@@ -134,7 +143,7 @@ extern int FPGA_FFE_LOADED;
 //#define ENABLE_INTERNAL_LDO   1  // set to 0 for power measurement
 
 /* select one of the following for Audio PDM  block */
-//#define PDM_PAD_28_29 1
+#define PDM_PAD_28_29 1
 //#define PDM_PAD_8_10  0
 //#define VOICE_AP_BYPASS_MODE 0
 
@@ -151,6 +160,8 @@ extern int FPGA_FFE_LOADED;
 
 #define EN_STEREO_DUAL_BUF 0
 
+#define PDM_MIC_CHANNELS (1)
+
 //#define AEC_ENABLED 1
 
 //#define AUDIO_LED_TEST 1 //Valid only in Chandalar BSP specific apps
@@ -165,5 +176,16 @@ extern int FPGA_FFE_LOADED;
 /* this should always be the last #define in this file */
 /* it insures that we have completely processed this entire file */
 #define _EnD_Of_Fw_global_config_h  1
+
+typedef struct st_fw_global_config
+{
+	int ssi_sensor_select_audio ;
+	int sensor_audio_livestream_enabled;
+	int sensor_audio_recog_enabled;
+
+	int ssi_sensor_select_ssss  ;
+	int sensor_ssss_livestream_enabled;
+	int sensor_ssss_recog_enabled;
+} fw_global_config_t;
 
 #endif

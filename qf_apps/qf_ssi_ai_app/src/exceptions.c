@@ -466,14 +466,19 @@ void ApPDMClkOff_Handler(void)
 	spurious_interrupt(__LINE__);
 }
 
-void Dmac0BlkDone_Handler(void) 
+#include "datablk_mgr.h"
+extern outQ_processor_t audio_isr_outq_processor ;
+void Dmac0BlkDone_Handler(void)
 {
-     spurious_interrupt(__LINE__);
+     onDmac0BlockDone();
 }
 
-void Dmac0BufDone_Handler(void) 
+void Dmac0BufDone_Handler(void)
 {
-    spurious_interrupt(__LINE__);
+    if (audio_isr_outq_processor.process_func)
+      audio_isr_outq_processor.process_func();
+	else
+      onDmac0BufferDone();
 }
 
 void Dmac1BlkDone_Handler(void) 

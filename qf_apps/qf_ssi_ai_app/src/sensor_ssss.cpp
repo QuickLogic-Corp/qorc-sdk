@@ -54,6 +54,8 @@ uint8_t sensor_rate_debug_gpio_val = 1;
 MC3635  qorc_ssi_accel;
 
 /* User modifiable sensor descriptor in JSON format */
+#if (SSI_SENSOR_SELECT_SSSS == 1)
+
 /* BEGIN JSON descriptor for the sensor configuration */
 
 const char json_string_sensor_config[] = \
@@ -61,12 +63,13 @@ const char json_string_sensor_config[] = \
    "\"sample_rate\":100,"\
    "\"samples_per_packet\":6,"\
    "\"column_location\":{"\
-	"  \"AccelerometerX\":0,"\
-	"  \"AccelerometerY\":1,"\
-	"  \"AccelerometerZ\":2"\
+	"  \"AccelerometerX\":0,"
+	"  \"AccelerometerY\":1,"
+	"  \"AccelerometerZ\":2"
    "}"\
 "}\r\n" ;
 /* END JSON descriptor for the sensor data */
+#endif /* SSI_SENSOR_SELECT_SSSS */
 
 /* User modifiable function. Update the below function
  * to initialize and setup I2C sensors */
