@@ -143,7 +143,7 @@ PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
 
 ifndef QORC_TC_PATH
-FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell where arm-none-eabi-gcc))
+FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell which arm-none-eabi-gcc))
 export QORC_TC_PATH = $(subst /arm-none-eabi-gcc,,$(FIND_TOOL_DIR))
 endif #QORC_TC_PATH
 
