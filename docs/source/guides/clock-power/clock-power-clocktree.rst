@@ -1,6 +1,6 @@
 
-QORC SDK CLOCK/POWER INFRA : CLOCK TREE
-=======================================
+QORC SDK CLOCK/POWER INFRASTRUCTURE : CLOCK TREE
+================================================
 
 |WORK IN PROGRESS|
 

@@ -1,6 +1,6 @@
 
-QORC SDK CLOCK/POWER INFRA : LOW POWER MODE
-===========================================
+QORC SDK CLOCK/POWER INFRASTRUCTURE : LOW POWER MODE
+====================================================
 
 |WORK IN PROGRESS|
 

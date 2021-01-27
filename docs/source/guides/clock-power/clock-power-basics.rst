@@ -1,6 +1,6 @@
 
-QORC SDK CLOCK/POWER INFRA : BASIC CONCEPTS
-===========================================
+QORC SDK CLOCK/POWER INFRASTRUCTURE : BASIC CONCEPTS
+====================================================
 
 
 |WORK IN PROGRESS|

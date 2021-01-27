@@ -1,6 +1,6 @@
 
-QORC SDK CLOCK/POWER INFRA : DYNAMIC FREQUENCY SCALING
-======================================================
+QORC SDK CLOCK/POWER INFRASTRUCTURE : DYNAMIC FREQUENCY SCALING
+===============================================================
 
 |WORK IN PROGRESS|
 
