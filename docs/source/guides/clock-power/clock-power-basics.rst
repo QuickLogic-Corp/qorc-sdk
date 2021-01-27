@@ -6,8 +6,8 @@ QORC SDK CLOCK/POWER INFRASTRUCTURE : BASIC CONCEPTS
 |WORK IN PROGRESS|
 
 
-Intro
------
+Introduction
+------------
 
 The clock/power control on the EOSS3 involves primarily using the PMU to control
 the power domains, and CRU for clock frequencies of the various parts of the SoC.
@@ -28,7 +28,7 @@ There are 2 aspects to the clock/power control on the EOSS3:
 
   - Dynamic Frequency Scaling (DFS)
 
-  - Quality Of Service (QoS)
+  - Quality Of Service (QOS)
 
 It is worthwhile to note that most of the time, the software implementation components 
 often work together and need to be understood as a set.

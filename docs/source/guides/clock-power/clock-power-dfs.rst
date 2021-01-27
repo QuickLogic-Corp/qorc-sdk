@@ -111,9 +111,106 @@ A description of the structure and its usage is as below:
 Example Design using DFS
 ------------------------
 
-::
+We would have multiple sets of frequencies depending on the application.
 
-  TODO
+Each set of frequencies would be represented by a "DFS Policy Node".
+
+In general, for each DFS Policy Node, we would calculate the desired frequencies using the 
+approach followed in `Clock Tree <./clock-power-clocktree.rst>`__ in the 
+:code:`Example Design - Calculations` section.
+
+There will be 2 "categories" of frequency calculation:
+
+1. Frequencies which remain the same irrespective of the DFS Policy Node
+2. Frequencies which vary according to the DFS Policy Node
+
+For example, we would generally want, say, I2C frequencies or SPI frequencies to remain the 
+same all the time.
+
+On the other hand, we would generally want the CPU frequency to scale according to the system 
+load conditions. In this category, there would also be situations where we would like the system 
+frequencies to remain stable at a particular DFS Policy Node.
+
+For the frequencies which would remain the same all the time, irrespective of the DFS Policy Node 
+changing (which can potentially change HSOSC) - we would set these up one time, and in the QORC SDK, 
+this is done in the :code:`S3x_ClkD S3clk []` array in :code:`s3x_pwrcfg.c`.
+
+For example, in :code:`qf_vr_apps/qf_1micvr_app/src/s3x_pwrcfg.c`, the PDM clock and LPSD clock 
+are set to :code:`HSOSC_2MHZ` and :code:`HSOSC_512KHZ` respectively.
+
+The clock framework code would try to keep these frequencies same whenever the HSOSC changes due to 
+change in the current DFS Policy Node.
+
+For the frequencies which need to change according to CPU Load, we would set these up in the 
+:code:`S3x_Policy_Node dfs_node[]` array in :code:`s3x_pwrcfg.c`.
+
+To take the simplest usage of DFS, we can look at 
+:code:`qf_apps/qf_bootloader_uart/src/s3x_pwrcfg.c`.
+
+This has only 2 DFS nodes, and starts with Node 1.
+This has :code:`.policySleep = 0` so on entering LPM (CPU sleeps) DFS Policy Node 0 
+is applied, which reduces the clocks defined in :code:`.clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4}`.
+
+However, we can see that the :code:`.minHSOSC = F_48MHZ` indicates that the HSOSC is 
+not changed. This is because the HSOSC has to be maintained as it is required by the USBSERIAL 
+FPGA design to keep running correctly.
+
+
+Taking a more involved example, we can look at :code:`qf_vr_apps/qf_1micvr_app/src/s3x_pwrcfg.c`
+
+We have "pairs" of DFS Policy Nodes, which working in sync with the FSM.
+
+::
+  
+  TODO add link to the FSM documentation.
+
+For example, the DFS starts with DFS Node 1, and due to :code:`.policySleep = 0`, on CPU 
+going idle, DFS Policy Node is changed to Node 0, and on CPU waking up, we go back to Node 1.
+
+Note that DFS only changes between these 2 nodes at this point.
+
+The FSM defines events, which cause change from Node 1 to say Node 3.
+This can be seen in :code:`qf_vr_apps/qf_1micvr_app/fsm/fsm_tables.h` in :code:`struct GSMrow afsmrow[KSTATES]`.
+For example, we can see that on "LPSD ON event" DFS Policy Node is changed to Node 3.
+
+From here, due to :code:`policySleep = 2`, on CPU going to sleep, DFS Policy Node changes to Node 2.
+
+Note the :code:`.cpuload_downthreshold = 0,` in Node 2, which prevents DFS from going any 
+lower in the DFS Policy Nodes, so in essence we switch between Node 3 and Node 2 until the state 
+changes, according to the FSM for this particular application.
+
+The same pattern can be seen for the following DFS Policy Node pairs:
+
+- Node 0, Node 1 and Node 2, Node 3
+
+Taking Node 4, we can see that :code:`.policySleep = 0xFF` which indicates that DFS will be active during 
+CPU being idle as well.
+
+With :code:`.step_width =  50` and :code:`.cpuload_downthreshold = 10`, it is indicated that 
+if the CPU Load is <10% for more than 50msec, DFS will switch to the next lower DFS Policy Node, 
+which would be Node 3 in this case.
+
+Also, if :code:`.cpuload_upthreshold` is not explicitly specified, as in this case, then, 
+if the CPU Load >98% for more than 50msec, then DFS will switch to the next higher DFS Policy Node, 
+which would be Node 5 in this case.
+
+Default (implicit) value for :code:`.cpuload_upthreshold` is 98 if not defined in the node.
+
+Note that, DFS will only set the clock values specified in the list :code:`.clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},` 
+according to the defined values in that node, for example :code:` .rate = {FREQ_6MHZ, FREQ_3MHZ, FREQ_48MHZ, FREQ_256KHZ},`
+
+All other frequencies in the system are assumed to belong to the "category 1" mentioned above, 
+and the clock framework will try and keep those frequencies same, in every DFS Policy Node.
+
+It is possible that there is a slight change in the "category 1" frequency with change in DFS Policy Node.
+
+For example, say SPI frequency is set to produce 5120000 Hz, at HSOSC of 20480000 Hz.
+
+If the DFS node changes such that HSOSC needs to change to, say 4096000 Hz, then it is only 
+possible to obtain SPI frequency of 4096000 Hz, even though it was expected to be at 5120000 Hz.
+
+This caveat should be kept in mind while deciding on the frequencies in the DFS Policy Nodes.
+
 
 
   
