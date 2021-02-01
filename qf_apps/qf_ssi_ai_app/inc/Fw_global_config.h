@@ -123,7 +123,7 @@ extern int FPGA_FFE_LOADED;
 //#define FFE_DRIVERS	0 // 1
 //
 ///* do or do not perform dynamic frequency scaling */
-//#define CONST_FREQ (1)
+#define CONST_FREQ (1)
 //
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1

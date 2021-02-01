@@ -109,7 +109,16 @@ int main(void)
 	
 	dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
     HAL_Delay_Init();
-
+#if (PDM_PAD_28_29 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x02;   // 1 for pad10, 2 for pad28
+#endif
+#if (PDM_PAD_8_10 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x01;   // 1 for pad10, 2 for pad28
+#endif
+#if (VOICE_AP_BYPASS_MODE == 1)
+    /* Select for PAD 38 */
+    IO_MUX->PDM_CLKIN_SEL = 0x01;
+#endif
     HAL_I2C_Init(i2c0config);
 
     kb_model_init(); /* initialize the knowledgepack */
