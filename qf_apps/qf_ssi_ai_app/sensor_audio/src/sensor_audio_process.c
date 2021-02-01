@@ -184,8 +184,7 @@ void audio_block_processor(void)
   /** Set the first data block for the ISR or callback function */
   audio_set_first_data_block();
 
-  /* [TBD]: sensor configuration : should this be here or after scheduler starts? */
-  //sensor_audio_configure();
+  sensor_audio_configure();
 #if (0)
   printf("Sensor Name:                   %s\n", "SENSOR_AUDIO_NAME");
   printf("Sensor Memory:                 %d\n", SENSOR_AUDIO_MEMSIZE_MAX);
