@@ -70,15 +70,9 @@ collection. This section provides basic guideline on adding a new sensor
 to the project for data collection. Sensor data acquisition and
 processing or transfer to an external application such as `Data Capture
 Lab <https://sensiml.com/products/data-capture-lab/>`__ uses `datablock
-<<<<<<< HEAD
-manager <qf_vr_apps#datablock-manager>`__
-(qorc-sdk/Libraries/DatablockManager) and `datablock
-processor <qf_vr_apps#datablock-processor>`__
-=======
 manager <../../qf_vr_apps#datablock-manager>`__
 (qorc-sdk/Libraries/DatablockManager) and `datablock
 processor <../../qf_vr_apps#datablock-processor>`__
->>>>>>> master
 (qorc-sdk/Tasks/DatablockProcessor) for acquiring samples and processing
 these acquired samples. Qorc-sdk uses `Simple Streaming
 Interface <https://sensiml.com/documentation/simple-streaming-specification/introduction.html>`__
@@ -91,11 +85,7 @@ datablock is processed and the samples are sent over the UART using the
 `Simple Streaming
 Interface <https://sensiml.com/documentation/simple-streaming-specification/introduction.html>`__.
 
-<<<<<<< HEAD
-The [Wire interface] may be used to provide the requrired configuration
-=======
 The `Wire interface <inc/Wire.h>`__ may be used to provide the requrired configuration
->>>>>>> master
 and sample acquisition member functions to configure and read data from
 the new sensor.
 
@@ -304,13 +294,8 @@ Quickfeather using the following pinouts
 ============== ============
 ADS1015 module Quickfeather
 ============== ============
-<<<<<<< HEAD
-SCL            J2.7
-SDA            J2.8
-=======
 SCL            J2.11
 SDA            J2.12
->>>>>>> master
 GND            J8.16
 Vcc            J8.15
 ============== ============
@@ -378,17 +363,10 @@ NAU7802 <https://www.sparkfun.com/products/15242>`__ sensor to the
 Quickfeather using the following pinouts
 
 ============== ============
-<<<<<<< HEAD
-ADS1015 module Quickfeather
-============== ============
-SCL            J2.7
-SDA            J2.8
-=======
 NAU7802 module Quickfeather
 ============== ============
 SCL            J2.11
 SDA            J2.12
->>>>>>> master
 GND            J8.16
 Vcc            J8.15
 ============== ============

@@ -401,15 +401,6 @@ project directories, for example qorc-sdk/qf_apps/qf_myapp
 .. |qf_helloworld CLI diag| image:: docs/getting-started/images/qf_helloworldsw-cli-diag.png
 .. |qf_helloworld CLI diag sub-menu| image:: docs/getting-started/images/qf_helloworldsw-cli-diag-help.png
 
-<<<<<<< HEAD
-.. |rtd-docs| image:: https://readthedocs.org/projects/qorc-sdk/badge/?version=latest
-    :alt: Documentation Status
-    :target: https://qorc-sdk.readthedocs.io/en/latest/?badge=latest
-    
-.. |travis-ci| image:: https://travis-ci.com/QuickLogic-Corp/qorc-sdk.svg?branch=master
-    :target: https://travis-ci.com/QuickLogic-Corp/qorc-sdk
-
-=======
 .. |rtd-docs| image:: https://img.shields.io/readthedocs/qorc-sdk?label=READTHEDOCS&logo=read-the-docs&style=for-the-badge
     :alt: Read the Docs
     :target: https://qorc-sdk.readthedocs.io/en/latest
@@ -423,4 +414,3 @@ Using Eclipse to Build/Debug applications
 -----------------------------------------
 
 Please refer to `Using Eclipse <https://github.com/QuickLogic-Corp/qorc-sdk/blob/master/using_eclipse.rst>`__ .
->>>>>>> master
