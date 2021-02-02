@@ -2,7 +2,7 @@
 QORC SDK CLOCK/POWER INFRASTRUCTURE : QUALITY OF SERVICE
 ========================================================
 
-|WORK IN PROGRESS|
+|PRE RELEASE|
 
 
 .. contents::
@@ -243,7 +243,8 @@ Notes on the QOS API
    This condition needs to be taken care of while setting the system configuration and DFS configuration.
 
 
-
+.. |PRE RELEASE| image:: https://img.shields.io/static/v1?label=STATUS&message=PRE-RELEASE&color=yellow&style=for-the-badge
+   :target: none
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none

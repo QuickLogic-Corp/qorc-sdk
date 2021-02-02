@@ -3,7 +3,7 @@ QORC SDK CLOCK/POWER INFRASTRUCTURE : BASIC CONCEPTS
 ====================================================
 
 
-|WORK IN PROGRESS|
+|PRE RELEASE|
 
 
 Introduction
@@ -50,8 +50,6 @@ controlled.
 
 All of the domains can be controlled from the PMU registers.
 
-:code:`TODO add specific document for power domains if needed`
-
 Clock Tree
 ~~~~~~~~~~
 
@@ -60,7 +58,7 @@ various peripheral blocks in the EOSS3.
 
 All of the clocks can be controlled from the CRU registers.
 
-The clock tree is described in detail in `Clock Tree <./clock-power-clocktree.rst>`__
+The clock tree (and power domains) is described in detail in `Clock Tree <./clock-power-clocktree.rst>`__
 
 
 Software Implementation
@@ -152,6 +150,9 @@ QOS in QORC SDK is described in detail in `QOS <./clock-power-qos.rst>`__
 
 
 
+
+.. |PRE RELEASE| image:: https://img.shields.io/static/v1?label=STATUS&message=PRE-RELEASE&color=yellow&style=for-the-badge
+   :target: none
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none

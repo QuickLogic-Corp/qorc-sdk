@@ -2,7 +2,7 @@
 QORC SDK CLOCK/POWER INFRASTRUCTURE : CLOCK TREE
 ================================================
 
-|WORK IN PROGRESS|
+|PRE RELEASE|
 
 
 .. contents::
@@ -478,6 +478,8 @@ At this point, we can see that if we are going to use the FPGA UART design, the 
 restricted, and can run only at 36.864 MHz and 73.728 MHz.
 
 
+.. |PRE RELEASE| image:: https://img.shields.io/static/v1?label=STATUS&message=PRE-RELEASE&color=yellow&style=for-the-badge
+   :target: none
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none

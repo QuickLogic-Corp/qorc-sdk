@@ -2,7 +2,7 @@
 QORC SDK CLOCK/POWER INFRASTRUCTURE : DYNAMIC FREQUENCY SCALING
 ===============================================================
 
-|WORK IN PROGRESS|
+|PRE RELEASE|
 
 .. contents::
 
@@ -213,7 +213,8 @@ This caveat should be kept in mind while deciding on the frequencies in the DFS 
 
 
 
-  
+.. |PRE RELEASE| image:: https://img.shields.io/static/v1?label=STATUS&message=PRE-RELEASE&color=yellow&style=for-the-badge
+   :target: none
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none

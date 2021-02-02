@@ -2,7 +2,7 @@
 QORC SDK CLOCK/POWER INFRASTRUCTURE : LOW POWER MODE
 ====================================================
 
-|WORK IN PROGRESS|
+|PRE RELEASE|
 
 
 .. contents::
@@ -124,6 +124,10 @@ References
 - https://www.freertos.org/low-power-tickless-rtos.html
 
 - https://www.freertos.org/low-power-ARM-cortex-rtos.html
+
+
+.. |PRE RELEASE| image:: https://img.shields.io/static/v1?label=STATUS&message=PRE-RELEASE&color=yellow&style=for-the-badge
+   :target: none
 
 .. |WORK IN PROGRESS| image:: https://img.shields.io/static/v1?label=STATUS&message=WORK-IN-PROGRESS&color=red&style=for-the-badge
    :target: none
