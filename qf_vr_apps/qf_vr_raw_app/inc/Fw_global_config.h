@@ -37,6 +37,8 @@
 
 #define FEATURE_D2HPROTOCOL_DEVICE (1)
 
+#define FEATURE_1WIRE_PROTOCOL_DEVICE  (0) //1 = 1-Pin protocol, 0 = 4-pin protocol
+
 /* Select the filesystem API to use */
 #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
 #define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem
@@ -54,7 +56,7 @@
      
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
-#define SIZEOF_DBGBUFFER    2048    // Number of characters in circular debug buffer
+#define SIZEOF_DBGBUFFER    (2*2048)    // Number of characters in circular debug buffer
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1

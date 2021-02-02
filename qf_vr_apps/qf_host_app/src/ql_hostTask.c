@@ -37,8 +37,10 @@
 #include "firmware_image_vr_opus_app.h"
 #elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_I2S_APP)
 #include "firmware_image_vr_i2s_app.h"
+#elif (DEVICE_FIRMWARE_IMAGE == DEVICE_FIRMWARE_IMAGE_VR_1WIRE_RAW_APP)
+#include "firmware_image_vr_1wire_raw_app.h"
 #else
-#error "Unknown Device Firmware Imge selection"
+#error "Unknown Device Firmware Image selection"
 #endif
 #include "h2d_protocol.h"
 #include "eoss3_hal_gpio.h"
@@ -49,6 +51,7 @@
 #include "datablk_mgr.h"
 #include "eoss3_hal_uart.h"
 #include "ql_base64.h"
+#include "ql_stackwatermark.h"
 
 void    h2d_config(void);
 void    h2d_start(void);
@@ -119,6 +122,10 @@ void set_usb_print_disable(void) {
 void print_kp_detect_info(int count) {
   char kp_count_buf[10];
   int count_size = sprintf(kp_count_buf, "%d. ",count);
+
+  //if USB is not working or disabled return
+  if(disable_usb_prints)
+    return;
   
   //USB serial might have disconnected
   if(disable_usb_prints)
@@ -136,7 +143,7 @@ void print_kp_end_info(int count) {
   sample_count_buf[count_size++] = '\n';
   sample_count_buf[count_size++] = '\n';
 
-  //USB serial might have disconnected
+  //if USB is not working or disabled return
   if(disable_usb_prints)
     return;
   
@@ -629,6 +636,9 @@ void hostTaskHandler(void * parameter)
     unsigned int hostTaskStop = 0;
     struct xQ_Packet hostMsg = {0};
     s3_mon_info_t  *ps3info ;
+    char tmp_sprintf_buf[20];
+    int start_ticks = 0;
+    
 #if DEBUG_H2D_PROTOCOL
     int i = 0;
     for(i=0;i<DATA_READ_WRITE_SIZE; ++i)
@@ -646,6 +656,9 @@ void hostTaskHandler(void * parameter)
     // send msg to host task to load device firmware
     hostMsg.ucCommand = HOST_LOAD_DEVICE_FW;
     addPktToQueue_Host(&hostMsg, CTXT_TASK);
+
+    //enable this to fine tune stack usage
+    //set_task_stack_watermark_monitor(1,0); //1 = use timer, 0 = no assert
     
     while(!hostTaskStop)
     {
@@ -738,7 +751,7 @@ void hostTaskHandler(void * parameter)
             //At the start of the session print the number of the phrase
             print_kp_detect_info(pwwinfo->n_keyphrase_count);
 #endif             
-            
+            start_ticks = xTaskGetTickCount();
           break;
           }
         case EVT_OPUS_PKT_READY:
@@ -756,7 +769,11 @@ void hostTaskHandler(void * parameter)
         case EVT_RAW_PKT_READY :
           {
             /* receive callback will send this msg only after reading the opus data in the buffer*/
-            dbg_str(".");
+            int clk_diff = xTaskGetTickCount() - start_ticks;
+            start_ticks = xTaskGetTickCount();
+            int n_count = sprintf(tmp_sprintf_buf,".%d",clk_diff);
+            dbg_str(tmp_sprintf_buf);
+            //dbg_str(".");
 #if (FEATURE_USBSERIAL == 1)
 
             int recvd_length = (hostMsg.ucData[0]) | (hostMsg.ucData[1] << 8 );
@@ -891,7 +908,7 @@ void StreamTimerCB(TimerHandle_t StreamTimerHandle) {
     if (h2d_transmit_cmd(&cmd_info)){
         dbg_str("Error returned from h2d tansmit api\n");
     }
-    dbg_str("CMD_HOST_PROCESS_OFF cmd sent\n");
+    dbg_str("\nCMD_HOST_PROCESS_OFF cmd sent\n");
 }
 
 /* Setup msg queue and Task Handler for Host Task */

@@ -1,5 +1,5 @@
 // generated on 2020/11/19 21:04 : convert_fbcfg_to_cpuwrites.pl /cygdrive/c/Work/QORC/I2S FLL (voxAI port)/USBserial_I2Sclk/Impl_Quick_Feather/ShiftRegPattern.qlal4s3b.al4s3b_fpga_top
-const uint32_t	axFPGABitStream[] = {
+const uint32_t	axFPGABitStream_USB_I2S[] = {
 	 0x00000048, 0x00000c20, 0x00009052, 0x00000004, 0x00000934, 0x000002a9, 0x0000800a, 0x00009002, 0x00005114, 0x0000670d,
 	 0x00000211, 0x0000a08a, 0x00008442, 0x00004104, 0x000046f5, 0x00001a01, 0x000088a2, 0x00009442, 0x00000518, 0x000013c1,
 	 0x00000ab1, 0x0000402c, 0x00000040, 0x0000145e, 0x00001820, 0x00000010, 0x00006b2d, 0x00001082, 0x0000291a, 0x00000014,

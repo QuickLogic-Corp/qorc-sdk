@@ -287,7 +287,7 @@ void en_intr_to_s3(void)
 
     while(!reg_read_val)
     {
-    ql_spi_write_s3_mem(SW_INTR_1_EN_M4, (uint8_t *)&reg_clr_val, 4);
+      ql_spi_write_s3_mem(SW_INTR_1_EN_M4, (uint8_t *)&reg_clr_val, 4);
       ql_spi_read_s3_mem(SW_INTR_1_EN_M4, (uint8_t *)&reg_read_val, 4); 
     }
 }

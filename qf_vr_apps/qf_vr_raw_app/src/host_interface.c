@@ -184,7 +184,7 @@ enum process_state D2H_FSMAction(enum process_action pa, void* pv){
         hif_msg_sendRawBlockReady(NULL);    // Inform D2H that5 it has data to process
         packet.ucCommand = MESSAGE_NOP;     // Poke HIF CMD queue to ensure it starts looking for DATA packets
         packet.ucSrc = HOSTIF_ISR_MESSAGE;
-        hif_data_addToQueueFromISR(&packet);
+        hif_data_addToQueueFromTask(&packet);
         D2H_State = PSTATE_STARTED;
         break;
         
@@ -252,6 +252,7 @@ static void SendEventAudioTransportBlockReadyD2H(hif_channel_info_t* p_ci, uint8
         d2h_transmit_cmd(&d2h_evt_info);
     }
 }
+static char host_sprintf_buf[100];
 static void SendEventKPDetected(hif_channel_info_t* p_hif_channel_info, uint8_t evt)
 {
   uint8_t ucData[6];
@@ -259,8 +260,10 @@ static void SendEventKPDetected(hif_channel_info_t* p_hif_channel_info, uint8_t 
   uint16_t size;
   addr = (uint32_t)(&o_ql_audio_meta_data);
   size = sizeof (o_ql_audio_meta_data);
-  printf ("addr = 0x%X, size = %d\n", addr, size);
-
+  //printf ("addr = 0x%X, size = %d\n", addr, size);
+  int n_count = sprintf(host_sprintf_buf,"addr = 0x%X, size = %d\n", addr, size);
+  dbg_str(host_sprintf_buf);
+  
   // send wake word meta data size and address in little endian order
   ucData[0] = (uint8_t)(size & 0xFF);
   ucData[1] = (uint8_t)((size >> 8) & 0xFF);
@@ -326,9 +329,9 @@ void hostIfTaskHandler(void *pParameter)
 
     if( xResult != pdPASS ) {
        // See if there is input data to process
-        dbgtrace(__LINE__, 2, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
+        //dbgtrace(__LINE__, 2, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
         if (uxQueueMessagesWaiting(q_id_inQ_hif)) {
-             dbgtrace(__LINE__, 3, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
+            // dbgtrace(__LINE__, 3, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
             hif_SendData(p_hif_channel_info);
         }
     } else {
@@ -424,7 +427,10 @@ Rx_Cb_Ret receive_cmd_pkt(void * cookie, D2H_Pkt_Info rx_pkt_info)
     hif_channel_info_t *p_hif_channel_info = (hif_channel_info_t*)cookie;
     int icommand = rx_pkt_info.cmd;
     int k;
-printf("Recd %d command\n",icommand);
+
+    int n_count = sprintf(host_sprintf_buf,"Recd %d command\n",icommand);
+    dbg_str(host_sprintf_buf);
+
     dbgtrace(__LINE__, rx_pkt_info.cmd, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
     ql_assert(p_hif_channel_info->channel_number == rx_pkt_info.channel);
     for (k = 0; k < hif_command_table_size; k++)
@@ -495,8 +501,10 @@ void hif_data_addToQueueFromTask(struct xQ_Packet *pxMsg)
 void init_protocol_variables(hif_channel_info_t *p_hif_channel_info)
 {
   p_hif_channel_info->sequence_number = 0;
-  //d2h_register_rx_callback(&receive_cmd_pkt, p_hif_channel_info->channel_number, (void*)p_hif_channel_info);
+
+  //register with D2H Task for Rx and Tx callbacks
   d2h_register_callback(&receive_cmd_pkt, p_hif_channel_info->channel_number, (void*)p_hif_channel_info, &transmit_done_callback, (void*)p_hif_channel_info);
+  
   //Create Semaphore for synchronization with Host.
   //create tx lock
   if(g_host_ready_lock == NULL)

@@ -80,7 +80,11 @@ H2D_Protocol_info g_h2d_protocol_info = {0};
 uint8_t g_h2d_tx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 
 #pragma data_alignment = 32
+#if (USE_4PIN_D2H_PROTOCOL == 1)
 uint8_t g_h2d_rx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
+#else //we will read pkt + data in one shot
+uint8_t g_h2d_rx_buf [MAX_H2D_READ_SIZE] = {0};
+#endif
 
 /* Allocating 4kB for reading data received from the device.
  * This has enough room for receiving 128ms 16-bit audio data @16kHz */
@@ -133,7 +137,7 @@ static void extract_rx_packet(H2D_Cmd_Info *h2d_cmd_info){
     memcpy(&(h2d_cmd_info->data[0]),&(g_h2d_rx_buf[2]),H2D_DATA_NUM_BYTES);
     return;
 }
-
+#if (USE_4PIN_D2H_PROTOCOL == 1)
 /*!
 * \fn      void generate_interrupt_to_s3(void)
 * \brief   function to generate interrupt to device (s3)
@@ -164,6 +168,28 @@ static void extract_rx_packet(H2D_Cmd_Info *h2d_cmd_info){
     LedBlueOff();
     #endif
 }
+#else //1-wire protocol
+/*!
+* \fn      void generate_interrupt_to_s3(void)
+* \brief   function to generate interrupt to device (s3)
+* \param   -
+* \returns -
+*/
+ void generate_interrupt_to_device(void){
+  QLSPI_Trigger_Intr(); //triggers SW Int1 on Device
+  vTaskDelay(1); //wait 1ms for Device to read the data and clear interrupt
+}
+/*!
+* \fn      void clear_interrupt_to_s3(void)
+* \brief   function to clear interrupt to device (s3)
+* \param   -
+* \returns -
+*/
+ void clear_interrupt_to_device(void){
+  //QLSPI_Clear_Intr();
+  return;
+}
+#endif
 
 static inline uint8_t read_gpio_intr_val(uint8_t gpio_num)
 {
@@ -200,21 +226,8 @@ uint8_t h2d_ack = g_h2d_protocol_info.pfm_info.H2D_ack;
 
     return;
 }
-#else
-static void generate_pulse_to_device(void){
-    
-    /*generate intr to device (QL_INT high)*/
-    generate_interrupt_to_device();
-    
-    int delay_in_ms = 1; // Add one ms delay
-    vTaskDelay((delay_in_ms/portTICK_PERIOD_MS));
-    
-    /*clear intr to device (QL_INT low)*/
-    clear_interrupt_to_device();
-
-    return;
-}
 #endif
+
 //Receiving a Data pkt is done in 2 stages. First the pkt info is read;
 //Then the data is read using the pointer from the pkt info.
 //In between there should not be any interruption.
@@ -375,113 +388,73 @@ void h2dRxTaskHandler(void *pParameter){
   
     return;
 }
-#else //use 2-pin protocol
+#else //use 1-wire protocol
 /* Receive task handler */
 void h2dRxTaskHandler(void *pParameter){
   
     BaseType_t qret;
     unsigned int h2dRxTaskStop = 0;
     H2D_Rx_Pkt h2drx_msg;
-    
+
     while(!h2dRxTaskStop){
         //clear the Msg Q buffer 
         memset(&h2drx_msg, 0, sizeof(h2drx_msg));
         qret = xQueueReceive(H2DRx_MsgQ, &h2drx_msg, H2DRX_MSGQ_WAIT_TIME);
         configASSERT(qret == pdTRUE);
-        
-        switch(h2drx_msg.msg)
-        {
-        case H2DRX_MSG_INTR_RCVD:
-        {
-            // check QL_INT level
-            uint8_t out_gpio,in_gpio, out_gpio_val;
-            in_gpio = g_h2d_protocol_info.pfm_info.D2H_gpio;
-            out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
 
-            out_gpio_val = read_gpio_out_val(out_gpio);
-#if (DEBUG_H2D_PROTOCOL ==1)
-            dbg_str("[H2D Protocol]: QL_INT value = %d\n", out_gpio_val);
-#endif
-#if 1 //print interrupts states 
-      //printf("[H2D]: QL_INT = %d, S3_INT = %d\n", out_gpio_val, read_gpio_intr_val(in_gpio));
-      printf("[H2D %d %d]", out_gpio_val, read_gpio_intr_val(in_gpio));
-#endif
-            
-            if(out_gpio_val){          // if QL_INT is high
-            
-                /* This is an ack from the device for host transmit
-                    Wait for intr from device to go low 
-                    and then pull QL_INT low
-                    */
-            
-                // wait for intr to go low
-                while (read_gpio_intr_val(in_gpio)) {
-                    vTaskDelay(1); // Leave 2 ticks for other process to execute
+        switch(h2drx_msg.msg)     {
+        case H2DRX_MSG_INTR_RCVD:
+            /* This is an event from device.
+               read the device mem for rx buf over qlspi
+               extract the ch_num and invoke the callback
+               check if data is expected and fill data_buf
+            */
+            //disable interrupt from Device. Do we need to do this?
+            //dis_intr_from_s3();
+
+            //To prevent another process to use the SPI bus. Start the lock
+            start_recv_lock();
+            // read rx buf from device mem
+            if (read_device_mem(H2D_READ_ADDR,(uint8_t *)&(g_h2d_rx_buf[0]), (MAX_H2D_READ_SIZE))) {   //SJ
+                dbg_fatal_error("device memory read failed\n");
+            } else {
+                // extract info from rx buf and fill info pkt to be sent to callback
+                H2D_Cmd_Info h2d_cmd;
+                Rx_Cb_Ret cb_ret = {0};
+                extract_rx_packet(&h2d_cmd);
+                uint8_t  ch_num = h2d_cmd.channel;
+
+                /*invoke the callback*/
+                if (g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr) {
+                    cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,cb_ret.data_read_req);
+                    //printf("[H2D Protocol]: finished calling\n");
                 }
-              
-                // pull QL_INT low
-                clear_interrupt_to_device();
-#if 0 //we give it after writting to S3. so should not release it
-                // release the lock
-                if (xSemaphoreGive(g_h2d_transmit_lock) != pdTRUE) {
-                    dbg_fatal_error("[H2D Protocol] : Error : unable to release lock to g_h2d_transmit_lock\n");
+                
+                /* checking from callback ret value if second read is needed */
+                /* if yes, then copy the data after the Pkt info */
+                if (cb_ret.data_read_req == 1){
+                    //printf("cb_ret.data_read_req = %d\n", cb_ret.data_read_req);
+                    // need to just copy since whole buffer is already read
+                	configASSERT( cb_ret.len <= MAX_H2D_READ_DATA_SIZE);
+                    memcpy((uint8_t *)&g_data_buf[0],(uint8_t *)&g_h2d_rx_buf[H2D_PACKET_SIZE_IN_BYTES], cb_ret.len);
+                    cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,1);
                 }
-#endif                
-#if (DEBUG_H2D_PROTOCOL ==1)
-                dbg_str("[H2D Protocol]:Transmit from host complete. Received pulse from device\n");
-#endif
+
             }
-            else{           // H2D is low -- device is writing to us
-                /* This is an event from device.
-                    read the device mem for rx buf over qlspi
-                    extract the ch_num and invoke the callback
-                    check if second read required for this event and fill data_buf
-                */
-                //To prevent another process to use the SPI bus. Start the lock
-                start_recv_lock();
-                // read rx buf from device mem
-                if (read_device_mem(H2D_READ_ADDR,(uint8_t *)&(g_h2d_rx_buf[0]), (H2D_PACKET_SIZE_IN_BYTES))) {   //SJ
-                    dbg_str("device memory read failed\n");
-                }
-                else {
-                    // extract info from rx buf and fill info pkt to be sent to callback
-                    H2D_Cmd_Info h2d_cmd;
-                    Rx_Cb_Ret cb_ret = {0};
-                    extract_rx_packet(&h2d_cmd);
-                    uint8_t  ch_num = h2d_cmd.channel;
-                   
-                    /*invoke the callback*/
-                    if (g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr) {
-                        cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,cb_ret.data_read_req);
-                    }
-                    /* keep checking from callback ret value if second read is needed */
-                    /* if yes, then read the data from addr and length passed by cb ret value*/
-                    while(cb_ret.data_read_req == 1){
-                        // need to read data buffer from device memory
-                    	configASSERT( cb_ret.len <= H2D_MAX_DATA_SIZE );
-                        if (read_device_mem(cb_ret.addr,(uint8_t *)&(g_data_buf[0]), cb_ret.len)) {
-                            dbg_str("device memory read failed\n");
-                        }
-                        else{
-#if DEBUG_H2D_PROTOCOL
-                            dbg_str("[H2D_PROTOCOL] Read data for received event type.\n");
-#endif
-                            cb_ret = g_h2d_protocol_info.cb_info[ch_num].rx_cb_ptr(h2d_cmd,1);
-                        }
-                    }
-                    generate_pulse_to_device();
-#if DEBUG_H2D_PROTOCOL
-                    dbg_str("[H2D_PROTOCOL] Received event from device. Pulse sent\n");
-#endif
-                }
-                //Release only after both pkt info and data are read 
-                end_recv_lock();
-            }
-          
+            //Release only after both pkt info and data are read 
+            end_recv_lock();
+                           
+            //clear the Device Interrupt since we read the whole buffer
+            clear_intr_sts_s3();
+            //en_intr_from_s3();
             break;
-        }
-        }
-    }
+
+
+        default:
+            dbg_str("Invalid msg event received\n");
+            break;
+        } //end of switch
+    } //end of while(1)
   
     return;
 }
@@ -622,13 +595,9 @@ int h2d_transmit_cmd(H2D_Cmd_Info *h2d_cmd_info) {
    // generate interrupt to device independent of other states
    generate_interrupt_to_device();
 
-#else //check the states before generating interrupt 
+#else //1-wire protocol generates SW Int1 
 
-    //use protected read of both lines, and then generate interupt
-    while(generate_protected_interrupt() == 0)
-    {
-        vTaskDelay(1);
-    }
+   generate_interrupt_to_device();
    
 #endif //USE_4PIN_D2H_PROTOCOL
    return H2D_STATUS_OK;
@@ -678,13 +647,12 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
     
     memcpy( &(g_h2d_protocol_info.pfm_info), h2d_platform_info, sizeof(H2D_Platform_Info)); 
     
+#if (USE_4PIN_D2H_PROTOCOL == 1)
     uint8_t out_gpio = g_h2d_protocol_info.pfm_info.H2D_gpio;
     HAL_GPIO_Write(out_gpio, 0);            // write 0 to the QL_INT at init
 
-#if (USE_4PIN_D2H_PROTOCOL == 1)
     out_gpio = g_h2d_protocol_info.pfm_info.H2D_ack;
     HAL_GPIO_Write(out_gpio, 0);            // write 0 to the H2D_ack
-#endif
     
     // Check to see if D2H is active, if so wait for it to go inactive
     if (read_gpio_intr_val(g_h2d_protocol_info.pfm_info.D2H_gpio)) {
@@ -696,6 +664,7 @@ int h2d_protocol_init(H2D_Platform_Info * h2d_platform_info) {
         }
         dbg_str("D2H inactive - resuming config\n");
     }
+#endif
     
     //create tx lock
     if(g_h2d_transmit_lock == NULL) {

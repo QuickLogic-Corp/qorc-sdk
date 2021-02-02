@@ -55,7 +55,7 @@
 #if (FEATURE_I2S_MASTER_CLKS == 1)
 #include "usb2serial_i2sclk_bit_2020_11_19b.h" //this also has I2s
 // length of axFPGABitStream array in bytes
-int   axFPGABitStream_length = sizeof(axFPGABitStream);
+int   axFPGABitStream_USB_I2S_length = sizeof(axFPGABitStream_USB_I2S);
 #else
 #include "gateware.h"
 #endif
@@ -192,11 +192,12 @@ int main(void)
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     
-    load_fpga(axFPGABitStream_length,axFPGABitStream);
     // Use 0x6141 as the USB serial product ID (USB PID)
 #if (FEATURE_I2S_MASTER_CLKS == 1)
+    load_fpga(axFPGABitStream_USB_I2S_length,axFPGABitStream_USB_I2S);
     HAL_usbserial_i2s_init(false, false, USBSERIAL_PRODUCTID, 0x1A5BD); // Start USB serial not using interrupts
 #else
+    load_fpga(axFPGABitStream_length,axFPGABitStream);
     HAL_usbserial_init2(false, false, USBSERIAL_PRODUCTID);          // Start USB serial not using interrupts    
 #endif    
     for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
@@ -218,7 +219,11 @@ uart_tx_raw_buf( UART_ID_USBSERIAL,info_usbserial, sizeof(info_usbserial));
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
-
+#if (FEATURE_D2HPROTOCOL_HOST == 1)
+    dbg_str("Using 1-wire D2H Protocol\n\n");
+#else
+    dbg_str("Using 4-pin  D2H Protocol\n\n");
+#endif
     //ldo_init();
     nvic_init();
 

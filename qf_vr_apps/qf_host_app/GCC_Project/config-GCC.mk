@@ -106,4 +106,4 @@ export D2H_DIR          = $(LIB_DIR)$(DIR_SEP)D2HProtocol$(DIR_SEP)src
 export CONTROL_DIR      = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)Control$(DIR_SEP)src
 export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 export MAIN_FPGA_RTL_DIR	= 
-export MAIN_FPGA_SRC_DIR	= #$(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
