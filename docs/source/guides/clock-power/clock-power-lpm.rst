@@ -8,8 +8,8 @@ QORC SDK CLOCK/POWER INFRASTRUCTURE : LOW POWER MODE
 .. contents::
 
 
-Intro
------
+Introduction
+------------
 
 Low Power Mode in the QORC SDK is achieved by leveraging the FreeRTOS tickless IDLE power saving technique.
 
@@ -56,7 +56,7 @@ to run,  :code:`S3x_Pre_Lpm` and :code:`S3x_Lpm_Handler` is called, in which the
 stops at the WFI instruction.
 
 When the CPU is awoken (either by pending task, or an interrupt) - execution continues after 
-the WFI intruction in :code:`S3x_Lpm_Handler`, after which :code:`S3x_Post_Lpm` is invoked.
+the WFI instruction in :code:`S3x_Lpm_Handler`, after which :code:`S3x_Post_Lpm` is invoked.
 
 As a companion to the :code:`S3x_Pre_Lpm` and :code:`S3x_Post_Lpm` functions, we have the 
 :code:`S3x_Register_Lpm_Cb` function, which is meant to be used from various peripheral drivers 

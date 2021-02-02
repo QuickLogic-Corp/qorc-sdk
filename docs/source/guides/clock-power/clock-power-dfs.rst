@@ -6,8 +6,8 @@ QORC SDK CLOCK/POWER INFRASTRUCTURE : DYNAMIC FREQUENCY SCALING
 
 .. contents::
 
-Intro
------
+Introduction
+------------
 
 It is assumed that the reader is acquainted with the clock infrastructure in the EOSS3.
 

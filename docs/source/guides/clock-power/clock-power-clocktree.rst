@@ -7,8 +7,8 @@ QORC SDK CLOCK/POWER INFRASTRUCTURE : CLOCK TREE
 
 .. contents::
 
-Intro
------
+Introduction
+------------
 
 A few key points to remember during any discussion about the clock infrastructure in the EOSS3:
 
@@ -262,18 +262,46 @@ UART
 The UART clock is derived from C11 using a fractional divider, so C11 has no really strict constraints,
 and can take (almost) any value for achieving 115200 baud.
 
-:code:`TODO add calculations/preferred frequencies for least error in baud, if any`
+Example calculation is shown below:
+
+::
+
+  16x_clock = baud * 16
+  baud_rate_divider_integer = C11_CLK_FREQ/16x_clock
+  baud_rate_divider_float = (float)C11_CLK_FREQ/16x_clock - baud_rate_divider_integer
+
+  IBRD = baud_rate_divider_integer
+  FBRD = (int)((baud_rate_divider_float * 64) + 0.5f) -> 64x of float, rounded up to the next integer
+
+  So, given a C11_CLK_FREQ and target baud, after calculations, the actual baud rate would be:
+  baud = C11_CLK_FREQ/(IBRD + FBRD/64)*16
+
+  target baud = 115200
+  C11_CLK_FREQ = 3072000 Hz
+
+  baud_rate_divider_integer = 3072000/115200*16 = 1
+  baud_rate_divider_float = 3072000/115200*16 - IBRD = 1.6667 - 1 = 0.6667
+  
+  FBRD = int((0.6667*64) + 0.5) = 43
+  IBRD = 1
+
+  baud_actual = 3072000/((1 + 43/64)*16) = 3072000/26.75 = 114841.1215
+
+  percentage deviation from target = ((115200 - 114841.1215)/115200) * 100 = 0.311%
+
+  any deviation < +/- 5% is generally acceptable for UART comms, so this is a pretty good value.
 
 I2C0
 ^^^^
 
-| I2C0 clock is generated using a prescaler from C08X1.
+| I2C0 clock is generated using a "pre-scaler" from C08X1.
 | Here, it would be worthwhile to note that most of the time exact frequencies of 100kHz, or 400 kHz cannot
   be generated in the system. However, we can get close to these frequencies, and due to the protocol,
   a bit off-value is perfectly acceptable and does not really cause any major problem.
 
 The only aspect to be careful about is not to **exceed** the required frequency, as the I2C peripheral will
 not be able to support that.
+
 
 M4F Core
 ^^^^^^^^
