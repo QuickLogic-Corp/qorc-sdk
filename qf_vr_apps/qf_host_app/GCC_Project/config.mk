@@ -102,22 +102,22 @@ FIND_TOOL_DIR := $(shell where /r c:\progra~2 arm-none-eabi-gcc)
 endif
 
 ifdef FIND_TOOL_DIR
-export TC_PATH = $(subst \arm-none-eabi-gcc.exe,,$(FIND_TOOL_DIR))
+export QORC_TC_PATH = $(subst \arm-none-eabi-gcc.exe,,$(FIND_TOOL_DIR))
 endif
 
 #Override with your own tool direcoty
-#export TC_PATH=C:\Program Files (x86)\GNU Tools ARM Embedded\7 2017-q4-major\bin
-ifndef TC_PATH
-$(info ######  ERROR - TC_PATH is not defined in config.mk #########)
+#export QORC_TC_PATH=C:\Program Files (x86)\GNU Tools ARM Embedded\7 2017-q4-major\bin
+ifndef QORC_TC_PATH
+$(info ######  ERROR - QORC_TC_PATH is not defined in config.mk #########)
 exit
 endif
 
-export NM="$(TC_PATH)\arm-none-eabi-nm"
-export LD="$(TC_PATH)\arm-none-eabi-gcc"
-export AS="$(TC_PATH)\arm-none-eabi-gcc" -c
-export CC="$(TC_PATH)\arm-none-eabi-gcc" -c
-export ELF2BIN="$(TC_PATH)\arm-none-eabi-objcopy"
-export AR="$(TC_PATH)\arm-none-eabi-ar"
+export NM="$(QORC_TC_PATH)\arm-none-eabi-nm"
+export LD="$(QORC_TC_PATH)\arm-none-eabi-gcc"
+export AS="$(QORC_TC_PATH)\arm-none-eabi-gcc" -c
+export CC="$(QORC_TC_PATH)\arm-none-eabi-gcc" -c
+export ELF2BIN="$(QORC_TC_PATH)\arm-none-eabi-objcopy"
+export AR="$(QORC_TC_PATH)\arm-none-eabi-ar"
 ################
 else
 ################ Linux ###################
@@ -141,29 +141,31 @@ export APP_DIR = $(subst /GCC_Project,,${PROJ_DIR})
 TMPVAR = $(subst ${DIR_SEP}, ,${APP_DIR})
 PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
-FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell whereis arm-none-eabi-gcc))
-export TC_PATH = $(subst /arm-none-eabi-gcc,,$(FIND_TOOL_DIR))
+ifndef QORC_TC_PATH
+FIND_TOOL_DIR := $(subst arm-none-eabi-gcc: ,,$(shell which arm-none-eabi-gcc))
+export QORC_TC_PATH = $(subst /arm-none-eabi-gcc,,$(FIND_TOOL_DIR))
+endif #QORC_TC_PATH
 
 # Allow TOOL to be provided on the command line
-# ie;   make -f Makefile TC_PATH=/some/path/
+# ie;   make -f Makefile QORC_TC_PATH=/some/path/
 
-ifndef TC_PATH
+ifndef QORC_TC_PATH
 #Override with your own tool directory
 #use full path. do not use ~/ as a relative path
-#export TC_PATH="~/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin"  <<<=== will not work
-#export TC_PATH="/home/user_name/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin" <<<=== works
-export TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
+#export QORC_TC_PATH="~/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin"  <<<=== will not work
+#export QORC_TC_PATH="/home/user_name/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin" <<<=== works
+export QORC_TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
 endif
 
-ifndef TC_PATH
-$(info ######  ERROR - TC_PATH is not defined in config.mk #########)
+ifndef QORC_TC_PATH
+$(info ######  ERROR - QORC_TC_PATH is not defined in config.mk #########)
 exit
 endif
-export NM="$(TC_PATH)/arm-none-eabi-nm"
-export LD="$(TC_PATH)/arm-none-eabi-gcc"
-export AS="$(TC_PATH)/arm-none-eabi-gcc" -c
-export CC="$(TC_PATH)/arm-none-eabi-gcc" -c
-export ELF2BIN="$(TC_PATH)/arm-none-eabi-objcopy"
+export NM="$(QORC_TC_PATH)/arm-none-eabi-nm"
+export LD="$(QORC_TC_PATH)/arm-none-eabi-gcc"
+export AS="$(QORC_TC_PATH)/arm-none-eabi-gcc" -c
+export CC="$(QORC_TC_PATH)/arm-none-eabi-gcc" -c
+export ELF2BIN="$(QORC_TC_PATH)/arm-none-eabi-objcopy"
 ################
 endif
 ################

@@ -61,7 +61,7 @@ printf "executing envsetup.sh from:\n%s\n" ${PWD}
 #---------------------------------------------------------
 printf "\n[0] are we inside qorc-sdk?\n"
 
-# there seems to be strange behaviour on certain systems, the URL obtained below 
+# there seems to be strange behaviour on certain systems, the URL obtained below
 # seems to have some letter lowercase, whereas on most, it is as it should be.
 # to avoid this stuff we do all lowercase only comparison, use "tr" to do this.
 GIT_REPO_URL_LOWERCASE=`git config --get remote.origin.url | tr '[:upper:]' '[:lower:]'`
@@ -72,7 +72,7 @@ if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE" ]; then
 
         printf "This script should be executed from within the qorc-sdk directory!\n"
         return
-        
+
     fi
 
 fi
@@ -112,7 +112,7 @@ printf "    ok.\n"
 #---------------------------------------------------------
 printf "\n[2] check arm gcc toolchain\n"
 if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
-    
+
     printf "    creating toolchain directory : %s\n" "${PWD}/arm_toolchain_install"
     mkdir arm_toolchain_install
 
@@ -120,7 +120,7 @@ if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
 
         printf "    downloading toolchain archive.\n"
         wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
-    
+
     fi
 
     printf "    extracting toolchain archive.\n"
@@ -130,7 +130,8 @@ fi
 
 
 printf "    initializing toolchain.\n"
-export PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+export PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin:$PATH
+export QORC_TC_PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin
 
 
 ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
@@ -159,7 +160,7 @@ if [ ! -d $FPGA_TOOLCHAIN_INSTALL_DIR ]; then
 
         printf "    downloading toolchain installer.\n"
         wget -O $FPGA_TOOLCHAIN_INSTALLER  -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
-    
+
     fi
 
     export INSTALL_DIR=$FPGA_TOOLCHAIN_INSTALL_DIR
@@ -238,42 +239,30 @@ printf "\n\nqorc-sdk env initialized.\n\n\n"
 # components : {
 
 #     qorc-sdk : {
-        
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-        
-#     },
-    
-#     arm-gcc-toolchain : {
-        
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-        
-#     },
-    
-#     quicklogic-fpga-toolchain : {
-        
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-        
-#     },
-    
-#     quicklogic-tinyfpga-programmer : {
-        
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-        
-#     }
 
-# }
+#         download : true,
+#         install : true,
+#         timestamp : xxxxxx,
+#         version : yyyy
+
+#     },
+
+#     arm-gcc-toolchain : {
+
+#         download : true,
+#         install : true,
+#         timestamp : xxxxxx,
+#         version : yyyy
+
+#     },
+
+#     quicklogic-fpga-toolchain : {
+
+#         download : true,
+#         install : true,
+#         timestamp : xxxxxx,
+#         version : yyyyendif #QORC_TC_PATH
+
 #---------------------------------------------------------
 
 # references for choices made while writing the sh script:
