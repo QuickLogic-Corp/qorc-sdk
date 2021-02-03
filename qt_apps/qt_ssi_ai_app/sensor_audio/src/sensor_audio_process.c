@@ -3,15 +3,15 @@
 /*==========================================================
  *
  *-  Copyright Notice  -------------------------------------
- *                                                          
- *    Licensed Materials - Property of QuickLogic Corp.     
- *    Copyright (C) 2019 QuickLogic Corporation             
- *    All rights reserved                                   
- *    Use, duplication, or disclosure restricted            
- *                                                          
+ *
+ *    Licensed Materials - Property of QuickLogic Corp.
+ *    Copyright (C) 2019 QuickLogic Corporation
+ *    All rights reserved
+ *    Use, duplication, or disclosure restricted
+ *
  *    File   : sensor_audio_process.c
- *    Purpose: 
- *                                                          
+ *    Purpose:
+ *
  *=========================================================*/
 
 #include <stdbool.h>
@@ -33,7 +33,7 @@
 const char json_string_sensor_config[] = \
 "{"\
    "\"sample_rate\":16000,"\
-   "\"samples_per_packet\":2,"\
+   "\"samples_per_packet\":240,"\
    "\"column_location\":{"\
 	"  \"Microphone\":0"\
    "}"\
@@ -51,17 +51,17 @@ const char json_string_sensor_config[] = \
  * and setting up the datablock processor processing elements (\ref DATABLK_PE).
  * A specific AUDIO processing element for motion detection is provided in this
  * example.
- * 
+ *
  * @{
  */
 
 /** Maximum number of audio data blocks that may be queued for chain processing */
 #define AUDIO_MAX_DATA_BLOCKS              (AUDIO_NUM_DATA_BLOCKS)
 
-/** maximum number of vertical (parallel processing elements) that may generate datablock outputs 
+/** maximum number of vertical (parallel processing elements) that may generate datablock outputs
  *  that may add to the front of the queue.
  *
- *  Queue size of a given datablock processor must be atleast 
+ *  Queue size of a given datablock processor must be atleast
  *  summation of maximum datablocks of all sensors registered for
  *  processing with some room to handle the vertical depth
  */
@@ -87,13 +87,13 @@ extern int  audio_ai_stop(void);
 
 /** AUDIO AI processing element functions */
 
-datablk_pe_funcs_t audio_sensiml_ai_funcs = 
+datablk_pe_funcs_t audio_sensiml_ai_funcs =
 {
   .pconfig     = audio_ai_config,
-  .pprocess    = audio_ai_data_processor, 
-  .pstart      = audio_ai_start, 
-  .pstop       = audio_ai_stop, 
-  .p_pe_object = (void *)NULL 
+  .pprocess    = audio_ai_data_processor,
+  .pstart      = audio_ai_start,
+  .pstop       = audio_ai_stop,
+  .p_pe_object = (void *)NULL
 } ;
 
 /** outQ processor for AUDIO AI processing element */
@@ -120,13 +120,13 @@ extern int  audio_livestream_stop(void);
 
 /** AUDIO AI processing element functions */
 
-datablk_pe_funcs_t audio_livestream_funcs = 
+datablk_pe_funcs_t audio_livestream_funcs =
 {
   .pconfig     = audio_livestream_config,
-  .pprocess    = audio_livestream_data_processor, 
-  .pstart      = audio_livestream_start, 
-  .pstop       = audio_livestream_stop, 
-  .p_pe_object = (void *)NULL 
+  .pprocess    = audio_livestream_data_processor,
+  .pstart      = audio_livestream_start,
+  .pstop       = audio_livestream_stop,
+  .p_pe_object = (void *)NULL
 } ;
 
 /** outQ processor for AUDIO Live-stream processing element */
@@ -144,22 +144,22 @@ datablk_pe_descriptor_t  audio_datablk_pe_descr[] =
 { // { IN_ID, OUT_ID, ACTIVE, fSupplyOut, fReleaseIn, outQ, &pe_function_pointers, bypass_function, pe_semaphore }
 #if (SENSOR_AUDIO_RECOG_ENABLED == 1)
     /* processing element descriptor for SensiML AI for AUDIO sensor */
-    { AUDIO_ISR_PID, AUDIO_AI_PID, true, false, true, &audio_sensiml_ai_outq_processor, &audio_sensiml_ai_funcs, NULL, NULL},   
+    { AUDIO_ISR_PID, AUDIO_AI_PID, true, false, true, &audio_sensiml_ai_outq_processor, &audio_sensiml_ai_funcs, NULL, NULL},
 #endif
 
 #if (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)
     /* processing element descriptor for AUDIO sesnsor livestream */
-    { AUDIO_ISR_PID, AUDIO_LIVESTREAM_PID, true, false, true, &audio_livestream_outq_processor, &audio_livestream_funcs, NULL, NULL},   
-#endif 
+    { AUDIO_ISR_PID, AUDIO_LIVESTREAM_PID, true, false, true, &audio_livestream_outq_processor, &audio_livestream_funcs, NULL, NULL},
+#endif
 };
 
-datablk_processor_params_t audio_datablk_processor_params[] = { 
-    { AUDIO_DBP_THREAD_PRIORITY, 
-      &audio_dbp_thread_q, 
-      sizeof(audio_datablk_pe_descr)/sizeof(audio_datablk_pe_descr[0]), 
+datablk_processor_params_t audio_datablk_processor_params[] = {
+    { AUDIO_DBP_THREAD_PRIORITY,
+      &audio_dbp_thread_q,
+      sizeof(audio_datablk_pe_descr)/sizeof(audio_datablk_pe_descr[0]),
       audio_datablk_pe_descr,
-      256, 
-      "AUDIO_DBP_THREAD", 
+      256,
+      "AUDIO_DBP_THREAD",
       NULL
     }
 };
@@ -168,19 +168,19 @@ void audio_block_processor(void)
 {
   /* Initialize datablock manager */
    datablk_mgr_init( &audioBuffDataBlkMgr,
-                      audio_data_blocks, 
-                      sizeof(  audio_data_blocks), 
-                      AUDIO_FRAME_SIZE, 
+                      audio_data_blocks,
+                      sizeof(  audio_data_blocks),
+                      AUDIO_FRAME_SIZE,
                       sizeof(int16_t)
                     );
 
   /** AUDIO datablock processor thread : Create AUDIO Queues */
   audio_dbp_thread_q = xQueueCreate(AUDIO_DBP_THREAD_Q_SIZE, sizeof(QAI_DataBlock_t *));
   vQueueAddToRegistry( audio_dbp_thread_q, "AUDIOPipelineExampleQ" );
-  
+
   /** AUDIO datablock processor thread : Setup AUDIO Thread Handler Processing Elements */
   datablk_processor_task_setup(&audio_datablk_processor_params[0]);
-  
+
   /** Set the first data block for the ISR or callback function */
   audio_set_first_data_block();
 
