@@ -1,0 +1,12 @@
+
+POWER_SRCS:=$(wildcard $(POWER_DIR)/*.c )
+
+filters=hearable_pwrcfg.c s3x_pwrcfg_prototype.c
+
+
+SRCS:=$(filter-out $(filters),$(notdir $(POWER_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(POWER_DIR)
+
+include $(COMMON_STUB)
+
