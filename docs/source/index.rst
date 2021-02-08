@@ -29,7 +29,9 @@ The documentation is organized as:
 
 6. :doc:`ql-eos-s3/ql-eos-s3`: Covers the EOS S3 chip details in some depth.
 
-7. :doc:`ql-faq/ql-faq`: All the frequently asked questions related to the QuickLogic platform.
+7. :doc:`guides/guides`: All the frequently asked questions related to the QuickLogic platform.
+
+8. :doc:`ql-faq/ql-faq`: All the frequently asked questions related to the QuickLogic platform.
 
 .. toctree::
    :hidden:
@@ -41,6 +43,7 @@ The documentation is organized as:
    ql-tinyfpga-programmer/ql-tinyfpga-programmer
    ql-development-boards/ql-development-boards
    ql-eos-s3/ql-eos-s3
+   guides/guides
    ql-faq/ql-faq
 
 
