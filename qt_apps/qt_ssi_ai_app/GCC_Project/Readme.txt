@@ -20,7 +20,7 @@ The following is a brief description of Makefile Architecture used for QuickAI S
       -set BUILD_SYS=WINCMD - for Windows or comment it out for Linux
       Note: 
         On Windows 10, there may be a problem to "auto-detect" the ARM Gnu Embedded Tool
-        Chain path. Then explicit set the TC_PATH to where the ARM GCC tools are installed.
+        Chain path. Then explicit set the QORC_TC_PATH to where the ARM GCC tools are installed.
       -
     2. config-GCC.mk - sets the GCC compiler options, source directories and "output file"
     
@@ -51,7 +51,7 @@ Adding New makefiles:
        - create build commands for the new Target as .PHONY objects point to your new makefile
 
 Building:
-     Make sure "C:\GnuWin32\bin" is the first in the Path and TC_PATH is properly set.
+     Make sure "C:\GnuWin32\bin" is the first in the Path and QORC_TC_PATH is properly set.
      - At the command prompt just type "make" to build all
      - Type "make clean" to delete all the object files and output built
      - type "make target" to selectively build a Target (for example, "make HAL")

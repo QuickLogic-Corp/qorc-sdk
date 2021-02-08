@@ -95,11 +95,13 @@ TMPVAR = $(subst \, ,${APP_DIR})
 PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
 
+ifndef QORC_TC_PATH
 #FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
 $(info using recursive seach)
 FIND_TOOL_DIR := $(shell where /r c:\progra~2 arm-none-eabi-gcc)
 endif
+endif #QORC_TC_PATH
 
 ifdef FIND_TOOL_DIR
 export QORC_TC_PATH = $(subst \arm-none-eabi-gcc.exe,,$(FIND_TOOL_DIR))
@@ -154,7 +156,7 @@ ifndef QORC_TC_PATH
 #use full path. do not use ~/ as a relative path
 #export QORC_TC_PATH="~/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin"  <<<=== will not work
 #export QORC_TC_PATH="/home/user_name/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin" <<<=== works
-export QORC_TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
+#export QORC_TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
 endif
 
 ifndef QORC_TC_PATH
