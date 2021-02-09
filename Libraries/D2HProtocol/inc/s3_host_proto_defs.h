@@ -54,6 +54,10 @@ typedef enum HIF_EVT_
   EVT_THRESHOLD       = 0x13,
   EVT_PING            = 0x14,
   EVT_STREAM_KP_DETECTED   = 0x15, //while streaming another KP detected
+  EVT_RAW_PKT_READY_2   = 0x16,
+  EVT_RAW_PKT_END_2     = 0x17,
+  EVT_RAW_PKT_READY_3   = 0x18,
+  EVT_RAW_PKT_END_3     = 0x19,
   EVT_RAW_PKT_READY   = 0x21,
   EVT_RAW_PKT_END     = 0x22,
   EVT_MUTE_START      = 0x30,
