@@ -1,4 +1,4 @@
-Quickfeather `Simple Streaming Interface <https://sensiml.com/documentation/simple-streaming-specification/introduction.html>`__ AI Application Project
+QuickThing+ `Simple Streaming Interface <https://sensiml.com/documentation/simple-streaming-specification/introduction.html>`__ AI Application Project
 =======================================================================================================================================================
 
 This project performs either data collection or recognition based on the
@@ -27,9 +27,9 @@ Building and running the project for data collection mode:
    appropriate ARM GCC toolchain to build the project
 
 3. Use the flash programming procedure to flash the binary to
-   Quickfeather board.
+   QuickThing+ board.
 
-4. Reset the board to start running the qf_ssi_ai_app application.
+4. Reset the board to start running the qt_ssi_ai_app application.
 
 5. Use `Data Capture
    Lab <https://sensiml.com/products/data-capture-lab/>`__ to connect,
@@ -50,12 +50,12 @@ Building and running the project for recognition mode:
    appropriate ARM GCC toolchain to build the project
 
 3. Use the flash programming procedure to flash the binary to
-   Quickfeather board.
+   QuickThing+ board.
 
-4. Reset the board to start running the qf_ssi_ai_app application.
+4. Reset the board to start running the qt_ssi_ai_app application.
 
-5. Connect a UART to the Quickfeather board. Open a terminal
-   application, set its baud to 4608000 bps to get the recognition
+5. Connect a UART to the QuickThing+ board. Open a terminal
+   application, set its baud to 460800 bps to get the recognition
    results from the running application.
 
 For details on data collection, building an AI model, and recognition
@@ -204,8 +204,7 @@ Capturing the sensor samples
 -  Sensor samples are sent using the `Simple Streaming
    Interface <https://sensiml.com/documentation/simple-streaming-specification/introduction.html>`__.
    A 16-bit little-endian data format is used for sending each channel's
-   sample data. Quickfeather uses either an S3 UART or the USB serial to
-   transmit these data. Sensor samples may be captured using `Data
+   sample data. QuickThing+ uses either an S3 UART. Sensor samples may be captured using `Data
    Capture Lab <https://sensiml.com/products/data-capture-lab/>`__
 
 Accelerometer sensor example
@@ -285,14 +284,14 @@ following code snippet to read Channel 3 of the ADS1015 sensor.
 Update the string value definition of json_string_sensor_config in
 sensor_ssss.cpp as described in above section.
 
-Build and load the project to the Quickfeather.
+Build and load the project to the QuickThing+.
 
 Connect a `SparkFun Qwiic 12-bit
 ADC <https://www.sparkfun.com/products/15334>`__ sensor to the
-Quickfeather using the following pinouts
+QuickThing+ using the following pinouts
 
 ============== ============
-ADS1015 module Quickfeather
+ADS1015 module QuickThing+
 ============== ============
 SCL            J2.11
 SDA            J2.12
@@ -356,14 +355,14 @@ value into the datablock buffer as shown in the code snippet below.
 Update the string value definition of json_string_sensor_config in
 sensor_ssss.cpp as described in above section.
 
-Build and load the project to the Quickfeather.
+Build and load the project to the QuickThing+.
 
 Connect a `SparkFun Qwiic Scale -
 NAU7802 <https://www.sparkfun.com/products/15242>`__ sensor to the
-Quickfeather using the following pinouts
+QuickThing+ using the following pinouts
 
 ============== ============
-NAU7802 module Quickfeather
+NAU7802 module QuickThing+
 ============== ============
 SCL            J2.11
 SDA            J2.12
@@ -373,5 +372,5 @@ Vcc            J8.15
 
 Refer `Qwiic Scale Hookup
 Guide <https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.193267885.1228472612.1605042107-1202899191.1566946929>`__
-for details. Quickfeather is now ready to stream data to `Data Capture
+for details. QuickThing+ is now ready to stream data to `Data Capture
 Lab <https://sensiml.com/products/data-capture-lab/>`__
