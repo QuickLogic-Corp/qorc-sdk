@@ -153,6 +153,12 @@ static void SPI_FiFoWrite(SPI_HandleTypeDef *hspi)
     {
       //slave select enable
       while((SPI_MS->SR & SR_TFE) == 0) ; //wait until Tx Fifo Empty is set
+      if(hspi->Init.ucSSn == SPI_SLAVE_1_SELECT)
+          SPI_MS->SER = SER_SS_0_N_SELECTED;
+      else if(hspi->Init.ucSSn == SPI_SLAVE_2_SELECT)
+          SPI_MS->SER = SER_SS_1_N_SELECTED;
+      else
+          SPI_MS->SER = SER_SS_2_N_SELECTED;
       do {     
         SPI_MS->DR0 = *txb++;
         ulLen--;
