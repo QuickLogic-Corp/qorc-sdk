@@ -76,7 +76,6 @@ export ELF2BIN_OPTIONS=-O binary
 #
 export COMMON_STUB =$(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
 
-export BSP_DIR        = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)qomu$(DIR_SEP)src
 export HAL_DIR        = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
 export FREERTOS_DIR   = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 export LIB_DIR        = $(PROJ_ROOT)$(DIR_SEP)Libraries
