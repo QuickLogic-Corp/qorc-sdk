@@ -137,6 +137,14 @@ static void SPI_FiFoWrite(SPI_HandleTypeDef *hspi)
 
   if (ulLen > 0)
   {
+	while((SPI_MS->SR & SR_TFE) == 0) ; //wait until Tx Fifo Empty is set
+	//slave select enable
+	if(hspi->Init.ucSSn == SPI_SLAVE_1_SELECT)
+       SPI_MS->SER = SER_SS_0_N_SELECTED;
+	else if(hspi->Init.ucSSn == SPI_SLAVE_2_SELECT)
+       SPI_MS->SER = SER_SS_1_N_SELECTED;
+	else
+       SPI_MS->SER = SER_SS_2_N_SELECTED;
     if (hspi->Init.ucCmdType == PROGRAM_CMD)
     {
       /* byte len to wordLen */
@@ -151,22 +159,37 @@ static void SPI_FiFoWrite(SPI_HandleTypeDef *hspi)
     }
     else
     {
-      //slave select enable
-      while((SPI_MS->SR & SR_TFE) == 0) ; //wait until Tx Fifo Empty is set
-      do {     
-        SPI_MS->DR0 = *txb++;
-        ulLen--;
-      } while (ulLen > 0);
+        __IO uint32_t *DR0 = &SPI_MS->DR0;
+        while (ulLen > 0)
+        {
+          int k = SPI_MS->TXFLR;
+          DR0 = &SPI_MS->DR0;
+          if(k <= 1)
+          {
+            if(ulLen >= 6)
+            {
+              *DR0 = *txb++;
+              *DR0 = *txb++;
+              *DR0 = *txb++;
+              *DR0 = *txb++;
+              *DR0 = *txb++;
+              *DR0 = *txb++;
+              ulLen -= 6;
+            }
+            else
+            {
+              while (ulLen > 0)
+              {
+                *DR0 = *txb++;
+                ulLen--;
+              }
+            }
+          }
+        }
     }
   }
 
-  //slave select enable
-  if(hspi->Init.ucSSn == SPI_SLAVE_1_SELECT)
-    SPI_MS->SER = SER_SS_0_N_SELECTED;
-  else if(hspi->Init.ucSSn == SPI_SLAVE_2_SELECT)
-    SPI_MS->SER = SER_SS_1_N_SELECTED;
-  else
-    SPI_MS->SER = SER_SS_2_N_SELECTED;
+  while((SPI_MS->SR & SR_TFE) == 0) ; //wait until Tx Fifo Empty is set
 }
 
 /*!
