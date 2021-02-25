@@ -81,7 +81,7 @@ uint32_t scratch_1Kbyte_ram[256];
 
 
 
-extern void qomu_hardwareSetup();
+extern void qomu_hardwaresetup();
 static void nvic_init(void);
 
 int main(void)
@@ -89,7 +89,7 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc-qomu-loadflash";
     
-    qomu_hardwareSetup();
+    qomu_hardwaresetup();
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
@@ -114,7 +114,7 @@ int main(void)
     load_fpga(axFPGABitStream_length,axFPGABitStream);
     // Use 0x6140 as the USB serial product ID (USB PID)
     HAL_usbserial_init2(false, false, 0x6140);          // Start USB serial not using interrupts
-    for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+    for (volatile int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
 
     LoadFlash_Task_Init();
     /* Start the tasks and timer running */
