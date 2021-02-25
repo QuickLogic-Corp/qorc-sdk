@@ -52,7 +52,8 @@
 //#include "ql_hostTask.h"
 
 #include "fpga_loader.h"
-#include "gateware.h"           // FPGA bitstream
+extern uint32_t axFPGABitStream[];      // FPGA bitstream
+extern int      axFPGABitStream_length; // length of axFPGABitStream array in bytes
 
 //extern const struct cli_cmd_entry my_main_menu[];
 
