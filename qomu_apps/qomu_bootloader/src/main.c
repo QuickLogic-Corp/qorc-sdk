@@ -57,7 +57,7 @@ int main(void)
   SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2.1) (GCC)";
 #endif
 
-  qomu_hardwareSetup();
+  qomu_hardwaresetup();
 
   dbg_str("\n\n");
   dbg_str( "##########################\n");

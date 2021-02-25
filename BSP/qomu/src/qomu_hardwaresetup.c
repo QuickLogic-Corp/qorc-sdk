@@ -45,7 +45,7 @@ void system_init(void);
 static void uart_setup(void);
 //static void i2c_init_for_m4();
 
-void qomu_hardwareSetup(void) {
+void qomu_hardwaresetup(void) {
 
     SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;
     S3x_pwrcfg_init();
@@ -92,23 +92,22 @@ static void ldo_init(void)
     AIP->LD0_50_CTRL_0 = 0x2ec; // LDO Enable       /* 0x2ec 1.21v */
 }   
 
-static void uart_setup()
-{
-	int uart_id;
-	UartBaudRateType brate;
-	UartHandler uartObj;
-    memset( (void *)&(uartObj), 0, sizeof(uartObj) );
+static void uart_setup() {
+  int uart_id;
+  UartBaudRateType brate;
+  UartHandler uartObj;
+  memset( (void *)&(uartObj), 0, sizeof(uartObj) );
 
-    uart_id = UART_ID_HW;
-	brate = BAUD_115200;
-	uartObj.baud = brate;
-	uartObj.wl = WORDLEN_8B;
-	uartObj.parity = PARITY_NONE;
-	uartObj.stop = STOPBITS_1;
-	uartObj.mode = TX_RX_MODE;
-	uartObj.hwCtrl = HW_FLOW_CTRL_DISABLE;
-	uartObj.intrMode = UART_INTR_ENABLE;
-    uartHandlerUpdate(uart_id,&uartObj);
+  uart_id = UART_ID_HW;
+  brate = BAUD_115200;
+  uartObj.baud = brate;
+  uartObj.wl = WORDLEN_8B;
+  uartObj.parity = PARITY_NONE;
+  uartObj.stop = STOPBITS_1;
+  uartObj.mode = TX_RX_MODE;
+  uartObj.hwCtrl = HW_FLOW_CTRL_DISABLE;
+  uartObj.intrMode = UART_INTR_ENABLE;
+  uartHandlerUpdate(uart_id,&uartObj);
 
-	uart_init( uart_id, NULL, NULL, &uartObj);
+  uart_init( uart_id, NULL, NULL, &uartObj);
 }

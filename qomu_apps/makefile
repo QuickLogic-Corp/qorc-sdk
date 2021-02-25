@@ -19,7 +19,6 @@ qomu_mfgpkg:	$(MFGBINS)
 	cp $(MFGBINS) qomu-initial-binaries
 	cp ../s3-gateware/usb2serial/usb2serial.bin qomu-initial-binaries/qomu_bootfpga.bin
 
-
 qomu_helloworldsw/GCC_Project/output/bin/qomu_helloworldsw.bin:
 	cd qomu_helloworldsw/GCC_Project/ && make
 

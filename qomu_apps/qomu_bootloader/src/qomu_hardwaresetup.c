@@ -44,7 +44,7 @@ static void system_init(void);
 static void uart_setup(void);
 static void SPIM_Setup(void);
 
-void qomu_hardwareSetup(void) {
+void qomu_hardwaresetup(void) {
 
     SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;
     S3x_pwrcfg_init();
