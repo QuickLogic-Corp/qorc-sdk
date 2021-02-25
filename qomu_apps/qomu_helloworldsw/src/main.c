@@ -43,7 +43,8 @@
 #include "cli.h"
 
 #include "fpga_loader.h"    // API for loading FPGA
-#include "gateware.h"           // FPGA bitstream to load into FPGA
+extern uint32_t axFPGABitStream[];      // FPGA bitstream
+extern int      axFPGABitStream_length; // length of axFPGABitStream array in bytes
 
 extern const struct cli_cmd_entry my_main_menu[];
 
@@ -73,7 +74,7 @@ int main(void)
     load_fpga(axFPGABitStream_length,axFPGABitStream);
     // Use 0x6141 as USB serial product ID (USB PID)
     HAL_usbserial_init2(false, false, 0x6141);        // Start USB serial not using interrupts
-    for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+    for (volatile int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");

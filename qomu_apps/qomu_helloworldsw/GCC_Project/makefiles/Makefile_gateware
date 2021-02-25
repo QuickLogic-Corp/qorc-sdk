@@ -1,6 +1,7 @@
 ####### SW Files (routines to access FPGA IP) ##########
 $(info MAIN_FPGA_SRC_DIR=$(MAIN_FPGA_SRC_DIR))
 MAIN_FPGA_SRCS:=$(wildcard $(MAIN_FPGA_SRC_DIR)/*.c)
+$(info MAIN_FPGA_SRCS=$(MAIN_FPGA_SRCS))
 filters=
 SRCS:=$(filter-out $(filters),$(notdir $(MAIN_FPGA_SRCS)))
 OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
