@@ -69,6 +69,11 @@
 // Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
 #define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
 
+/* Setting this MACRO to 1 enables sending a known sawtooth pattern as live-stream
+ * sensor data, this setting is intended for verifying communication interface
+ */
+#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => Send a known sawtooth pattern for live-streaming
+
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
 #define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
 #define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
