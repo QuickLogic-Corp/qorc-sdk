@@ -362,6 +362,13 @@ uint8_t datablk_mgr_usecount_incrementFromISR
  */
 int datablk_mgr_reset(QAI_DataBlockMgr_t *pdatablk_mgr_handle);
 
+/** @brief Get the number (in sequence) of the current datablock in the buffer
+ *
+ * @param[in] pdata_block pointer to data block whose number is needed
+ *
+ */
+int get_datablk_index(QAI_DataBlock_t *pdata_block);
+
 /** @} */
 
 #ifdef __cplusplus

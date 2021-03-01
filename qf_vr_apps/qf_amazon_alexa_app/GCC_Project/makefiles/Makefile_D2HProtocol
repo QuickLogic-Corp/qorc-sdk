@@ -1,0 +1,11 @@
+
+D2H_SRCS:=$(wildcard $(D2H_DIR)/*.c )
+
+filters=h2d_protocol.c
+
+SRCS:=$(filter-out $(filters), $(notdir $(D2H_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(D2H_DIR)
+
+include $(COMMON_STUB)
+

@@ -1,0 +1,46 @@
+# -*- mode: Makefile -*-
+
+all: POWER CMSIS UTILS DATABLOCKMANAGER D2HPROTOCOL AUDIO AMAZON
+
+
+.PHONY: POWER
+POWER:
+	make -f makefiles/Makefile_Power
+
+.PHONY: CMSIS
+CMSIS:
+	make -f makefiles/Makefile_CMSIS
+	make -f makefiles/Makefile_CMSIS_2
+	make -f makefiles/Makefile_CMSIS_3
+
+.PHONY: UTILS
+UTILS:
+	make -f makefiles/Makefile_Utils
+
+.PHONY: DATABLOCKMANAGER
+DATABLOCKMANAGER:
+	make -f makefiles/Makefile_DatablockManager
+
+.PHONY: D2HPROTOCOL
+D2HPROTOCOL:
+	make -f makefiles/Makefile_D2HProtocol
+
+.PHONY: AUDIO
+AUDIO:
+	make -f makefiles/Makefile_Audio
+
+.PHONY: AMAZON
+AMAZON:
+	make -f makefiles/Makefile_Amazon
+
+clean:
+	make -f makefiles/Makefile_Power clean
+	make -f makefiles/Makefile_Utils clean
+	make -f makefiles/Makefile_CMSIS clean
+	make -f makefiles/Makefile_CMSIS_2 clean
+	make -f makefiles/Makefile_CMSIS_3 clean
+	make -f makefiles/Makefile_DatablockManager clean
+	make -f makefiles/Makefile_D2HProtocol clean
+	make -f makefiles/Makefile_Audio clean
+	make -f makefiles/Makefile_Amazon clean
+

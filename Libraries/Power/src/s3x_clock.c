@@ -669,7 +669,14 @@ static int  s3x_clkd_grate(S3x_ClkD *clkd)
     UINT16_t div_shift_mask;
     int ret = STATUS_OK;
 
+    int intrpt_state = 0;//by default non-ISR state
+    //check if inside an interrupt
+    if(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) {
     intr_st = taskENTER_CRITICAL_FROM_ISR();
+      intrpt_state = 1;
+    } else {
+      taskENTER_CRITICAL();
+    }
 
     src_rate = s3x_clkd_get_src_rate(clkd);
 
@@ -694,7 +701,11 @@ static int  s3x_clkd_grate(S3x_ClkD *clkd)
 
     ret = src_rate / div;
 
+    if(intrpt_state) {
     taskEXIT_CRITICAL_FROM_ISR(intr_st);
+    } else {
+      taskEXIT_CRITICAL();
+    }
     return ret;
 }
 
@@ -765,7 +776,14 @@ static int s3x_clkd_srate(S3x_ClkD *clkd, UINT32_t rate)
     int ret = STATUS_OK;
     UINT32_t rdiv, intr_st, cpu_rate;
 
+    int intrpt_state = 0;//by default non-ISR state
+    //check if inside an interrupt
+    if(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) {
     intr_st = taskENTER_CRITICAL_FROM_ISR();
+      intrpt_state = 1;
+    } else {
+      taskENTER_CRITICAL();
+    }
 
     if (clkd->qos)
     {
@@ -814,7 +832,11 @@ static int s3x_clkd_srate(S3x_ClkD *clkd, UINT32_t rate)
     CRU_WVAL(0, cpu_rate);
 
 exit:
+    if(intrpt_state) {
     taskEXIT_CRITICAL_FROM_ISR(intr_st);
+    } else {
+      taskEXIT_CRITICAL();
+    }
     return ret;
 
 }

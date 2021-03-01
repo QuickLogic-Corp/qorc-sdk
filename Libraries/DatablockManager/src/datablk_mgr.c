@@ -396,4 +396,17 @@ int datablk_mgr_reset(QAI_DataBlockMgr_t *pdatablk_mgr_handle)
     return num_data_blocks_acquired;
 }
 
+int get_datablk_index(QAI_DataBlock_t *pdata_block)
+{
+  QAI_DataBlockMgr_t *pdatablk_mgr_handle = datablk_mgr_get_handle(pdata_block);
+  uint8_t *buf_start    = pdatablk_mgr_handle->pmem_buf_start;
+  uint8_t *block_start  = (uint8_t *)pdata_block;
+  
+  int diff = block_start - buf_start;
+  
+  int block_number = diff/pdatablk_mgr_handle->size_data_block;
+  
+  return block_number;
+}
+
 /** @} */
