@@ -253,15 +253,6 @@ void h2d_config_intr(void *pv){
 	IO_MUX->PAD_43_CTRL = PAD43_FUNC_SEL_AP_INTR | PAD_E_12MA | PAD_OEN_NORMAL;
 	MISC_CTRL->LOCK_KEY_CTRL = 0x00000000;
 
-
-    // QL_INT configuration (Host to Device)
-    {
-		HAL_GPIO_IntrCfg((GPIOCfgTypeDef *)pv);    // (&xGpioCfg);
-
-        NVIC_ClearPendingIRQ(Gpio_IRQn);        //SJ
-        NVIC_EnableIRQ(Gpio_IRQn);
-    }
-
     return;
 }
 

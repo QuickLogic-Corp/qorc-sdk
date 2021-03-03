@@ -97,50 +97,11 @@ GPIOCfgTypeDef D2H_FSMConfigData =
    EDGE_TRIGGERED,
    RISE_HIGH
 };					
-//this is Ack coming from Host as an interrupt
-GPIOCfgTypeDef H2D_AckConfigData = 
-{ 
-   GPIO_6,//Gpio number has to be interrupt number 
-   PAD_31,
-   PAD31_FUNC_SEL_SENS_INT_6,
-   PAD_NOPULL,
-   EDGE_TRIGGERED,
-   RISE_HIGH
-};
-//Using PAD_24 as Ack from S3 and PAD_31 as Ack from Host 
-void setup_d2h_hardware(void) {
-  
-  //these setup only 2 pins
-  h2d_config_intr(&D2H_FSMConfigData);
-  
-  //these 2 setups are for 4 pin protocol
-  
-  //configure H2D Ack as input interrupt
-  HAL_GPIO_IntrCfg(&H2D_AckConfigData);
-
-  //Configure D2H Ack as output 
-  PadConfig padcfg;
-
-  //output pin
-  padcfg.ucCtrl = PAD_CTRL_SRC_A0; 
-  padcfg.ucMode = PAD_MODE_OUTPUT_EN;
-  padcfg.ucPull = PAD_NOPULL;
-  padcfg.ucDrv = PAD_DRV_STRENGHT_4MA;
-  padcfg.ucSpeed = PAD_SLEW_RATE_FAST;
-  padcfg.ucSmtTrg = PAD_SMT_TRIG_DIS;
-  
-  //Pad 24 -- Gpio0
-  padcfg.ucPin = PAD_24;
-  padcfg.ucFunc = PAD24_FUNC_SEL_GPIO_0;
-  HAL_PAD_Config(&padcfg);
-
-  return;
-}
 
 void start_d2h_protocol_task(void) {
   
   //setup gpios and interrupts
-  setup_d2h_hardware();
+  h2d_config_intr((void *)NULL);
     
   D2H_Platform_Info d2h_plat_info;
   d2h_plat_info.H2D_gpio = GPIO_7;
@@ -171,18 +132,6 @@ void SystemInit(void)
 
 extern void qf_hardwareSetup();
 
-static void ldo_init(void)
-{
-    /* LDO Settings */
-#if ( ENABLE_INTERNAL_LDO == 1)
-    AIP->LD0_30_CTRL_0 = 0x1ac; // LDO Enable       /* 0x1ac -> Vo =1.01V, imax = 7.2mA, LDO enabled. */
-    AIP->LD0_50_CTRL_0 = 0x1ac; // LDO Enable
-#else
-    AIP->LD0_30_CTRL_0 = 0x1a1; // LDO Disable     /* 0x1a1 -> Vo = 1.01 V, LDO Disabled */
-    AIP->LD0_50_CTRL_0 = 0x1a1; // LDO Disable
-#endif
-}
-
 static void nvic_init(void)
  {
     // To initialize system, this interrupt should be triggered at main.
@@ -208,16 +157,6 @@ void banner(void)
     dbg_str( __DATE__ " " __TIME__ " \n" );
 
     dbg_str( "\n  ############################################################\n\n");
-#if 0 //it is FOSS now for AWWE
-    
-    dbg_str( "  *--  Copyright Notice:  -----------------------------------*    \n");
-    dbg_str( "  *                                                          *    \n");
-    dbg_str( "  *    Licensed Materials - Property of QuickLogic Corp.     *    \n");
-    dbg_str( "  *    Copyright (C) 2019 QuickLogic Corporation             *    \n");
-    dbg_str( "  *    All rights reserved                                   *    \n");
-    dbg_str( "  *    Use, duplication, or disclosure restricted            *    \n");
-    dbg_str( "  *----------------------------------------------------------*    \n\n");
-#endif
     
 #if (PDM_MIC_STEREO == 1)
     dbg_str("   + PCM Stereo Transport Enabled \n");
@@ -231,15 +170,9 @@ void banner(void)
 int main(void)
 {
  
-    SOFTWARE_VERSION_STR = "OP2-AWWE-App";
-
-    // Initialize FSM ConfigData variables
-    // this variable specifies the amount of audio data in milli-secs
-    // to be pre-processed to minimize the voiceSpot engine detection
-    // latency
-    VR_FSMConfigData = 375;
-
+    SOFTWARE_VERSION_STR = "QORC-SDK-AWWE-App";
     qf_hardwareSetup();
+    
     //setup D2H protocol pins and interrupts and start the task
     start_d2h_protocol_task();
     hif_task_Start();
@@ -247,45 +180,32 @@ int main(void)
     uart_set_lpm_state(UART_ID_HW,1);
     HAL_RTC_Init(0);
     banner(); 
-    //ldo_init();     
     nvic_init();
+
+#if (PDM_PAD_28_29 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x02;   // 1 for pad10, 2 for pad28
+#endif
+#if (PDM_PAD_8_10 == 1)
+    IO_MUX->PDM_DATA_SELE = 0x01;   // 1 for pad10, 2 for pad28
+#endif
+#if (VOICE_AP_BYPASS_MODE == 1)
+    /* Select for PAD 38 */
+    IO_MUX->PDM_CLKIN_SEL = 0x01;
+#endif
+    
     ql_smart_remote_example();
+    
     /* for debug - view and control over COM */
 #if FEATURE_CLI_DEBUG_INTERFACE
     CLI_start_task( my_main_menu );
 #endif
     dbg_startbufferedprinttask(PRIORITY_LOWER);
+    
     StartControlTask(); 
+    
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     while(1);
-}
-
-//Initialize all System Clocks,Gate settings and  used Power Resources
-void system_init(void)
-{
-    S3x_Clk_Enable(S3X_M4_S0_S3_CLK);
-    S3x_Clk_Enable(S3X_M4_S4_S7_CLK);
-    S3x_Clk_Enable(S3X_M4_S8_S11_CLK);
-    S3x_Clk_Enable(S3X_M4_S12_S15_CLK);
-
-    /* FPU settings ------------------------------------------------------------*/
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
-    SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
-#endif
-
-    /* Configure Memory to support light sleep and retention mode */
-    PMU->M4SRAM_SSW_LPMF = 0xFFFF;
-    PMU->M4SRAM_SSW_LPMH_MASK_N = 0xFFFF;
-
-    //S3x_Clk_Enable(S3X_FB_16_CLK);
-    //S3x_Clk_Enable(S3X_FB_21_CLK);
-
-    S3x_Clk_Enable(S3X_A1_CLK);
-    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-
-    INTR_CTRL->OTHER_INTR = 0xffffff;
-    DMA_SPI_MS->DMA_CTRL = DMA_CTRL_STOP_BIT;
 }
 
 void i2c_init_for_m4(void)
@@ -299,46 +219,6 @@ void i2c_init_for_m4(void)
     xI2CConfig.ucI2Cn = 1;
     HAL_I2C_Init(xI2CConfig);
 }
-
-
-void GenerateInterruptToBLE(void)
-{
-   int count =0;
-   volatile uint32_t sts=0;
-#if 1 //this is failing some times. so disable. check only for interrupt clear
-   //first check interrupt is enabled from other side
-   do
-   {
-      sts=INTR_CTRL->SOFTWARE_INTR_2_EN_AP;
-      count++;
-   } while(!sts);
-   count = 0;
-#endif
-
-   //next make sure the interrupt is cleared from other side
-   do
-   {
-      sts=INTR_CTRL->SOFTWARE_INTR_2;
-      count++;
-#if 1
-      if(count > (100*1000))
-      {
-        dbg_str("Error-INTR_2\n");
-        break;
-      }
-#endif
-   }while(sts);
-
-
-   INTR_CTRL->SOFTWARE_INTR_2_EN_AP = 1; // Enable interrupt to AP
-   INTR_CTRL->SOFTWARE_INTR_2 = 1;
-   return;
-}
-void ClearInterruptToBLE(void)
-{
-    INTR_CTRL->SOFTWARE_INTR_2 = 0;
-}
-
 
 void update_calendar(void)
 {
