@@ -18,6 +18,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
@@ -496,6 +497,11 @@ void sensor_ssss_event_notifier(int pid, int event_type, void *p_event_data, int
   printf("[SSSS Event] PID=%d, event_type=%d, data=%02x\n", pid, event_type, p_data[0]);
 }
 
+#if (SENSOR_COMMS_KNOWN_PATTERN == 1)
+int16_t sensor_ssss_debug_buffer[240]; // Buffer intended to send a known pattern such as sawtooth
+int16_t sensor_ssss_debug_data = 0;    // state for holding current data for the known pattern
+#endif
+
 /* SSSS livestream processing element functions */
 
 void sensor_ssss_livestream_data_processor(
@@ -519,6 +525,19 @@ void sensor_ssss_livestream_data_processor(
       // for transmission for data collection
       HAL_GPIO_Write(GPIO_2, sensor_rate_debug_gpio_val);
       sensor_rate_debug_gpio_val ^= 1;
+#endif
+
+#if (SENSOR_COMMS_KNOWN_PATTERN == 1)
+      int nSamples = pIn->dbHeader.numDataElements;
+      int nChannels = pIn->dbHeader.numDataChannels;
+      // prepare the sawtooth known pattern data
+      for (int k = 0; k < nSamples; k+=nChannels)
+      {
+    	  for (int l = 0; l < nChannels; l++)
+              sensor_ssss_debug_buffer[k+l] = sensor_ssss_debug_data;
+    	  sensor_ssss_debug_data++;
+      }
+	  memcpy (pIn->p_data, sensor_ssss_debug_buffer, nSamples * sizeof(int16_t));
 #endif
       ssi_publish_sensor_data(p_source, ilen);
     }
