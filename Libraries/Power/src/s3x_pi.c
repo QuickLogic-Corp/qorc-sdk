@@ -203,7 +203,6 @@ int s3x_pi_set_active_st (S3x_Pi *pi)
         do {
           time_in = xTaskGetTickCount();
           st_reg = PMU_RVAL(pi->pctrl.st_off) & pi->pctrl.pmask;
-        //} while(PMU_RVAL(pi->pctrl.swu_off) && (time_in < time_out)); //we should not check swu_off since it is RWHC
         } while((st_reg != pi->pctrl.pmask) && (time_in < time_out));
         if (time_out == time_in)
         {

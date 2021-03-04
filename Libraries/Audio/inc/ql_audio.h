@@ -42,7 +42,7 @@
 
 extern enum process_state LPSD_State;
 #ifndef KSAMPLES_TO_DROP
-#define KSAMPLES_TO_DROP    400         // Number of samples at start of audio to replace with zeros in order to suppress mic transient
+#define KSAMPLES_TO_DROP    100         // Number of samples at start of audio to replace with zeros in order to suppress mic transient
 #endif
 
 #define SM_VOICE_TRIG 119

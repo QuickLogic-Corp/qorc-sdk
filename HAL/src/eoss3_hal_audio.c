@@ -90,8 +90,7 @@ static inline void hangForever(const char *message)
  */
 void enableAudioClocks(bool fUsingLeftChannel, bool fUsingRightChannel)
 {
-    if (fUsingLeftChannel)
-         S3x_Clk_Enable(S3X_PDM_LEFT);
+    S3x_Clk_Enable(S3X_PDM_LEFT); // LPSD always needs Left channel PDM clock
     if (fUsingRightChannel)
          S3x_Clk_Enable(S3X_PDM_RIGHT);
   return;
@@ -102,8 +101,7 @@ void enableAudioClocks(bool fUsingLeftChannel, bool fUsingRightChannel)
  */
 void disableAudioClocks(bool fUsingLeftChannel, bool fUsingRightChannel)
 {
-     if (fUsingLeftChannel)
-         S3x_Clk_Disable(S3X_PDM_LEFT);
+    S3x_Clk_Disable(S3X_PDM_LEFT);
     if (fUsingRightChannel)
          S3x_Clk_Disable(S3X_PDM_RIGHT);
 }

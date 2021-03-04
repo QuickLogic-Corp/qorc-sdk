@@ -841,6 +841,13 @@ exit:
 
 }
 
+// force C10 to same as HSOSC
+void s3x_force_set_cpu(S3x_ClkD *clkd, UINT32_t rate) {
+    (void)rate; // ignore the given value
+    s3x_clkd_write_div(clkd, 1, clkd->src_rate, NULL);
+    clkd->curr_rate = clkd->src_rate  ;
+}
+
 int s3x_update_clk_rate(S3x_ClkD *clkd, UINT32_t rate, UINT32_t src_rate, uint32_t* pcruval)
 {
     int ret = STATUS_OK;
