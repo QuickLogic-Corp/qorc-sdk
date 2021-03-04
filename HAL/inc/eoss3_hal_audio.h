@@ -62,6 +62,14 @@
 #define  PDM2PCM_CLK_C30                (HSOSC_2MHZ)
 #define  PDM2PCM_CLK_C31                (HSOSC_512KHZ)
 
+#elif   PDM2DEC_FACT==24
+ 
+#define  PDM2PCM_PGA_SYNC_RATE          (24)
+#define  PDM2PCM_PGA_GAIN_VAL           (8+8)  // < == not sure about gain
+#define  PDM2PCM_MCLKDIV_VAL            (3)
+#define  PDM2PCM_CLK_C30                (HSOSC_3MHZ)  // <= ¾ = 768KHz
+#define  PDM2PCM_CLK_C31                (HSOSC_768KHZ)
+
 #else
 #error "PDM2DEC_FACT is not defined "
 #endif

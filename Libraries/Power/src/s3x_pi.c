@@ -202,7 +202,8 @@ int s3x_pi_set_active_st (S3x_Pi *pi)
         PMU_WVAL(pi->pctrl.swu_off, reg);
         do {
           time_in = xTaskGetTickCount();
-        } while(PMU_RVAL(pi->pctrl.swu_off) && (time_in < time_out));
+          st_reg = PMU_RVAL(pi->pctrl.st_off) & pi->pctrl.pmask;
+        } while((st_reg != pi->pctrl.pmask) && (time_in < time_out));
         if (time_out == time_in)
         {
           printf("%s Err PI SWU REG STATE\n", __func__);

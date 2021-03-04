@@ -107,6 +107,7 @@ QueueHandle_t D2HRx_MsgQ;
 /*Lock will be acquired when tx api is called and
 released in ISR after device receives the data*/
 SemaphoreHandle_t g_d2h_transmit_lock;
+static int d2h_tx_cmd_sent = 0;
 
 /*gloabal variable for d2h protocol info*/
 D2H_Protocol_info g_d2h_protocol_info = {0};
@@ -116,8 +117,20 @@ D2H_Protocol_info g_d2h_protocol_info = {0};
 uint8_t g_d2h_tx_buf [H2D_PACKET_SIZE_IN_BYTES] = {0};
 
 int d2h_spurious_interrupts = 0;
+int d2h_spurious_ack_interrupts = 0;
 /*Internal APIs*/
 static void clear_interrupt_to_host(void);
+
+int d2h_error_count = 0;
+extern void softreset_m4(void);
+void check_d2h_errors(void)
+{
+    d2h_error_count++;
+    if(d2h_error_count > 10) {
+      //softreset_m4();
+    }
+    return;
+}
 
 #define MONITOR_D2H_TRANSMIT_TIME (1)
 #if MONITOR_D2H_TRANSMIT_TIME == 1
@@ -250,18 +263,24 @@ void h2d_config_intr(void *pv){
 * \returns -
 */
 static void generate_interrupt_to_host(void){
-
-    uint32_t start_ticks = xTaskGetTickCount() + 200;
+    uint32_t start_ticks = xTaskGetTickCount() + 500;
     // PAD43 as AP_INT. generate soft intr2
     volatile uint32_t sts = 0;
 	do
 	{
 		sts = INTR_CTRL->SOFTWARE_INTR_2;
+        if(sts) {
+          //clear the interrupt since this is called only after ACK is received
+          INTR_CTRL->SOFTWARE_INTR_2 = 0;
+          vTaskDelay(1);
+        
         uint32_t current_ticks = xTaskGetTickCount();
         if(current_ticks > start_ticks)
         {
-          dbg_str("ERROR - Host interrupt is not cleared");
-          configASSERT(0);
+            start_ticks = current_ticks;
+            dbg_str("ERROR - Host interrupt is not cleared for 500 sec");
+            //configASSERT(0);
+          }
         }
 	}
 	while(sts);
@@ -291,11 +310,22 @@ static void clear_interrupt_to_host(void){
 
     // PAD43 .. clear soft intr2
     volatile uint32_t sts = 1;
-
+    uint32_t start_ticks = xTaskGetTickCount() + 200;
 	INTR_CTRL->SOFTWARE_INTR_2 = 0;
 
 	do{
 		sts = INTR_CTRL->SOFTWARE_INTR_2;
+        if(sts) {
+          INTR_CTRL->SOFTWARE_INTR_2 = 0;
+          vTaskDelay(1);
+          uint32_t current_ticks = xTaskGetTickCount();
+          if(current_ticks > start_ticks)
+          {
+            dbg_str("ERROR - Host interrupt (2) is not cleared for 200 sec");
+            //configASSERT(0);
+            break; //since this called when ACK is received
+          }
+        }
 	}while(sts);
 
 	do{
@@ -397,6 +427,9 @@ void service_ack_from_host(void){
 
 /* to hold the value of previous cmd sequence received from host*/
 static int g_prev_seq = -1;
+/* to hold the value of previous cmd sequence transmitted to host*/
+static int g_prev_tx_seq = -1;
+
 
 #if (USE_4PIN_D2H_PROTOCOL == 1)
 /* Receive task handler */
@@ -426,7 +459,7 @@ void d2hRxTaskHandler(void *pParameter){
             if (d2h_rx_pkt.seq == g_prev_seq) { // Trouble: host did not update rx buffer so assume this is a spurious interrupt and ignore
                 d2h_spurious_interrupts++; //count the spurious interrupts
                 #if 1 //DEBUG_D2H_PROTOCOL
-                dbg_str("[D2H_PROTOCOL] unexpected host interrupt - ignoring\n");
+                dbg_str_int("[D2H_PROTOCOL] unexpected host interrupt - ignoring ", d2h_spurious_interrupts);
                 #endif
             } else {
                 g_prev_seq = d2h_rx_pkt.seq;   // Update last completed sequence number
@@ -449,6 +482,10 @@ void d2hRxTaskHandler(void *pParameter){
 
             //Extract tx packet info from the tx buffer and send to the tx_done_callback
             extract_tx_packet_info(&d2h_tx_pkt);
+            if (d2h_tx_pkt.seq != g_prev_tx_seq) {
+              d2h_spurious_ack_interrupts++;
+              dbg_str("[D2H_PROTOCOL] Tx sequence does not match ACK sequence\n");
+            }
             if(g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].tx_done_cb_ptr){
                 void * pchannel_info =  g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].pchannel_info_tx;
                 g_d2h_protocol_info.cb_info[d2h_tx_pkt.channel].tx_done_cb_ptr(pchannel_info, d2h_tx_pkt);
@@ -469,10 +506,22 @@ void d2hRxTaskHandler(void *pParameter){
             }
             clear_interrupt_to_host();  // pull AP_INT low (tell host we heard the ACK)
 
+            //clear tx pkt header 2 bytes
+            g_device_write_buff[0] = 0;
+            g_device_write_buff[1] = 0;
+            
+            //release the tx lock only if it is in response to a transmit
+            //Note: checking only g_prev_tx_seq is not enough since it may be 0
+            //But checking only d2h_tx_cmd_sent should be good enough
+            if ((d2h_tx_cmd_sent == 1) && (d2h_tx_pkt.seq == g_prev_tx_seq))
+            {
+              d2h_tx_cmd_sent = 0;
             //release the tx lock
             if (xSemaphoreGive(g_d2h_transmit_lock) != pdTRUE) {        // release the tx lock
-                dbg_str("[D2H Protocol] : Error : unable to release lock to g_d2h_transmit_lock\n");
-                configASSERT(0);
+                  dbg_fatal_error("[D2H Protocol] : Error : unable to release lock to g_d2h_transmit_lock\n");
+              }
+            } else {
+              dbg_str("[D2H_PROTOCOL] unexpected host ACK interrupt - ignoring\n");
             }
 
             #if DEBUG_D2H_PROTOCOL
@@ -673,10 +722,15 @@ int d2h_transmit_cmd(D2H_Pkt_Info *d2h_evt_info) {
 
     dbgtrace(__LINE__, d2h_evt_info->cmd, adbgtraceHIF, K_DBGTRACE_HIF, &idbgtraceHIF);
    //take the lock to prevent another tx before ack 
-   if (xSemaphoreTake(g_d2h_transmit_lock, portMAX_DELAY) != pdTRUE) {
+   if (xSemaphoreTake(g_d2h_transmit_lock, 2000) != pdTRUE) {
         dbg_fatal_error("[D2H Protocol] : Error unable to take lock to g_d2h_transmit_lock\n");
         return D2H_ERROR;
    }
+   
+   //This is redundant in normal conditions, but error conditions like 
+   //extra/spurous ACKs this is helpful
+   d2h_tx_cmd_sent = 1;
+   g_prev_tx_seq = d2h_evt_info->seq;
    
    // create tx packet
    create_tx_packet(d2h_evt_info);
@@ -838,8 +892,8 @@ int d2h_register_callback(D2H_Callback rx_cb, uint8_t ch_num, void* pchannel_inf
 int h2d_transmit_lock_acquire(void)
 {
     int ret = D2H_STATUS_OK;
-    if (xSemaphoreTake(g_d2h_transmit_lock, 1000) != pdTRUE) {
-        dbg_fatal_error("[D2H Protocol] : Error unable to take lock to g_d2h_transmit_lock\n");
+    if (xSemaphoreTake(g_d2h_transmit_lock, 2000) != pdTRUE) {
+        dbg_fatal_error("[D2H Protocol] : Error (2) unable to take lock to g_d2h_transmit_lock\n");
         ret = D2H_ERROR;
    }
    return ret;
@@ -858,7 +912,7 @@ int h2d_transmit_lock_release(void)
     int ret = D2H_STATUS_OK;
     // release the lock
     if (xSemaphoreGive(g_d2h_transmit_lock) != pdTRUE) {
-        dbg_fatal_error("[D2H Protocol] : Error : unable to release lock to g_d2h_transmit_lock\n");
+        dbg_fatal_error("[D2H Protocol] : Error (2) unable to release lock to g_d2h_transmit_lock\n");
         ret = D2H_ERROR;
         }
     return ret;

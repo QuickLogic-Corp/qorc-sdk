@@ -40,7 +40,7 @@
 #include "dbg_uart.h"
 #if DFS_LED_TEST == 1
 #include "leds.h"
-#endif DFS_LED_TEST
+#endif // DFS_LED_TEST
 
 /*** Local macros ***/
 #define CLKD_MAX_INDEX_PNODE (SIZEOF_ARRAY(dfs_node[0].clk_domain) - 1)
