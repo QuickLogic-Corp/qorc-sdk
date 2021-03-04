@@ -372,8 +372,10 @@ void hostIfTaskHandler(void *pParameter)
           /* Parse input message and process the request */
           switch( receivedMsg.ucCommand ) {
           case MESSAGE_STOP_TX:
+#if (FEATURE_MULTI_CHANNEL_STREAM_DEVICE == 1)
             disable_multi_channel_stream();
             hif_release_mch_inputQ();
+#endif
             stop_audio_streaming(p_hif_channel_info);
             handle_led_for_audio_stop();
             ControlEventSend(CEVENT_HIF_EOT);
@@ -407,7 +409,9 @@ void hostIfTaskHandler(void *pParameter)
             stream_kp_detect_enable = 0;
             SendEventKPDetected(p_hif_channel_info, EVT_KP_DETECTED);
             timeout_count_bytes = 0;
+#if (FEATURE_MULTI_CHANNEL_STREAM_DEVICE == 1)
             enable_multi_channel_stream();
+#endif
             break;
 
           case MESSAGE_GET_MONINFO:
