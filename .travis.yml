@@ -28,6 +28,7 @@ before_install:
   - pip install serial
   - pip install --upgrade pip setuptools wheel
   - pip install fasm
+  - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
   - pip install git+https://github.com/QuickLogic-Corp/quicklogic-fasm
   - conda deactivate
   - export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
