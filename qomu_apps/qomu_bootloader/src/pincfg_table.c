@@ -65,44 +65,10 @@ PadConfig pincfg_table[] =
     .ucPull = PAD_NOPULL
   },
 
-  {
-    //Currently Pad 9 is not configured and has an internal pull-down and is 
-    // connected to SWD_DATA that has an external pull-up
-    //Pad 9 - remove default pull-down configuration, ensure pin is configured as input
-    .ucPin = PAD_9,
-    .ucFunc = PAD9_FUNC_SEL_GPIO_1,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS
-  },
-  
-  {  // configure SCL0
-    .ucPin = PAD_0,
-    .ucFunc = PAD0_FUNC_SEL_SCL_0,
-    .ucCtrl = PAD_CTRL_SRC_OTHER,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_PULLUP,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-
-  {  // configure SDA0
-    .ucPin = PAD_1,
-    .ucFunc = PAD1_FUNC_SEL_SDA_0,
-    .ucCtrl = PAD_CTRL_SRC_OTHER,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_PULLUP,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
   //------------- LEDs ---------------//
-  { // Pad 18 -- blue LED
-    .ucPin = PAD_18,
-    .ucFunc = PAD18_FUNC_SEL_GPIO_4,
+  { // Pad 6 -- green LED
+    .ucPin = PAD_6,
+    .ucFunc = PAD6_FUNC_SEL_GPIO_0,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -110,19 +76,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 21 -- green LED
-    .ucPin = PAD_21,
-    .ucFunc = PAD21_FUNC_SEL_GPIO_5,
-    .ucCtrl = PAD_CTRL_SRC_A0,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-  { // Pad 22 -- red LED
-    .ucPin = PAD_22,
-    .ucFunc = PAD22_FUNC_SEL_GPIO_6,
+  { // Pad 30 -- blue LED
+    .ucPin = PAD_30,
+    .ucFunc = PAD30_FUNC_SEL_GPIO_3,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -131,16 +87,6 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
   
-   { // Pad 33 -- Test clock
-    .ucPin = PAD_33,
-    .ucFunc = PAD33_FUNC_SEL_FBIO_33,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
   
   // SPI Master
    { // Pad 34 -- SPI Master CLK
@@ -182,9 +128,9 @@ PadConfig pincfg_table[] =
   },
 #if (FEATURE_USBSERIAL == 1)
   //------------- USB ---------------//
-   { // Pad 37 -- USB Pullup control
-    .ucPin = PAD_37,
-    .ucFunc = PAD37_FUNC_SEL_FBIO_37,
+   { // Pad 23 -- USB Pullup control
+    .ucPin = PAD_23,
+    .ucFunc = PAD23_FUNC_SEL_FBIO_23,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -192,9 +138,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 41 -- USB D-
-    .ucPin = PAD_41,
-    .ucFunc = PAD41_FUNC_SEL_FBIO_41,
+  { // Pad 28 -- USB D-
+    .ucPin = PAD_28,
+    .ucFunc = PAD28_FUNC_SEL_FBIO_28,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -202,9 +148,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 42 -- USB D+
-    .ucPin = PAD_42,
-    .ucFunc = PAD42_FUNC_SEL_FBIO_42,
+  { // Pad 31 -- USB D+
+    .ucPin = PAD_31,
+    .ucFunc = PAD31_FUNC_SEL_FBIO_31,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -213,30 +159,17 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
-  //------------- Buttons ---------------//
-   { // Pad 6 -- User Buttion 
-    .ucPin = PAD_6,
-    .ucFunc = PAD6_FUNC_SEL_GPIO_0,
-    .ucCtrl = PAD_CTRL_SRC_A0,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_PULLUP,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-  
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =
 {
-  {
-    //vm1010 dout setup as hardware interrupt pin on PAD_41 (sensor interrupt 6)  //Chandalar jumper J3.4
-    .usPadNum = PAD_41,
-    .ucGpioNum = GPIO_6,
-    .ucFunc = PAD41_FUNC_SEL_SENS_INT_6,
+  { //Pad 10 -- ToucPad (sensor interrupt 4)
+    .usPadNum = PAD_10,
+	.ucGpioNum = GPIO_4,
+	.ucFunc = PAD10_FUNC_SEL_SENS_INT_4,
     .intr_type = EDGE_TRIGGERED,
     .pol_type = RISE_HIGH,
-    .ucPull = PAD_PULLDOWN,
+	.ucPull = PAD_NOPULL,
   },
 
 };

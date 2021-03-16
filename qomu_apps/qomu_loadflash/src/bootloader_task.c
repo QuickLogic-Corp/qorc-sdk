@@ -39,10 +39,10 @@ extern int load_usb_flasher(void);
 
 #define MAX_BOOTLOADER_WAIT_MSEC  (5*1000)
 #define MIN_USER_BTN_PRESS_WAIT_MSEC  (200)
-#define USER_BUTTON_GPIO_NUM      (0) //PAD 6, GPIO is connected to User Button
-#define BLUE_LED_GPIO_NUM         (4) //PAD 18, GPIO is connected to Blue LED
-#define GREEN_LED_GPIO_NUM        (5) //PAD 21, GPIO is connected to Green LED
-#define RED_LED_GPIO_NUM          (6) //PAD 22, GPIO is connected to Red LED
+#define USER_BUTTON_GPIO_NUM      (7) //Not Valid
+#define BLUE_LED_GPIO_NUM         (3) //PAD 30, GPIO is connected to Blue LED
+#define GREEN_LED_GPIO_NUM        (0) //PAD 6, GPIO is connected to Green LED
+#define RED_LED_GPIO_NUM          (6) //PAD 24, GPIO is connected to Red LED
 
 TaskHandle_t    LoadFlashTaskHandle;
 static int user_button_pressed = 0;

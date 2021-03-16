@@ -44,10 +44,10 @@ int check_active_images(void);
 
 #define MAX_BOOTLOADER_WAIT_MSEC  (5*1000)
 #define MIN_USER_BTN_PRESS_WAIT_MSEC  (200)
-#define USER_BUTTON_GPIO_NUM      (0) //PAD 6, GPIO is connected to User Button
-#define BLUE_LED_GPIO_NUM         (4) //PAD 18, GPIO is connected to Blue LED
-#define GREEN_LED_GPIO_NUM        (5) //PAD 21, GPIO is connected to Green LED
-#define RED_LED_GPIO_NUM          (6) //PAD 22, GPIO is connected to Red LED
+#define USER_BUTTON_GPIO_NUM      (0) //Not Used
+#define BLUE_LED_GPIO_NUM         (3) //PAD 30, GPIO is connected to Blue LED
+#define GREEN_LED_GPIO_NUM        (0) //PAD 6, GPIO is connected to Green LED
+#define RED_LED_GPIO_NUM          (0) //PAD 24, GPIO is connected to Red LED
 
 
 #define METADATA_UNKNOWN_FLASH_STATE        (0x0)
@@ -62,18 +62,15 @@ static int user_button_pressed = 0;
 static int user_btn_on_start = 0;
 void check_user_button(void)
 {
-  uint8_t gpio_value = 1;
-  HAL_GPIO_Read(USER_BUTTON_GPIO_NUM, &gpio_value);
-  if(gpio_value == 0)
-  {
-    //if first time get the time stamp
-    if(user_btn_on_start == 0)
-      user_btn_on_start = xTaskGetTickCount();
-    if((xTaskGetTickCount() - user_btn_on_start) > MIN_USER_BTN_PRESS_WAIT_MSEC)
+	  uint32_t mailbox = 0;
+
+	  mailbox = MISC->SW_MB_1;
+
+	  if(mailbox == 0xFEED1BEE)
     {
       user_button_pressed = 1;
     }
-  }
+
   return;
 }
 /* 

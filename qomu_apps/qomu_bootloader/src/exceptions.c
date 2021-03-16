@@ -428,7 +428,18 @@ void FB_ConfigureInterrupt ( UINT32_t fbIrq, UINT8_t type, UINT8_t polarity, UIN
 
 void SensorGpio_Handler(void) 
 {
-	spurious_interrupt(__LINE__);
+	// spurious_interrupt(__LINE__);
+	int intrCtrl;
+	NVIC_DisableIRQ(Gpio_IRQn);
+	intrCtrl = INTR_CTRL->GPIO_INTR;
+
+	if(intrCtrl & (1<<GPIO_4))
+		{
+		    INTR_CTRL->GPIO_INTR |= (1<<GPIO_4);
+		    MISC->SW_MB_1 = 0xFEED1BEE;
+		}
+	NVIC_ClearPendingIRQ(Gpio_IRQn);
+    NVIC_EnableIRQ(Gpio_IRQn);
 }
 
 
