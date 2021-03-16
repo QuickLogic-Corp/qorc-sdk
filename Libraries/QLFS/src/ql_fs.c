@@ -33,8 +33,6 @@
 //#include "ff_headers.h"
 //#include "ff_stdio.h"
 
-//#include "media_drv_spi_sd.h"
-//#include "media_drv_spi.h"
 #include "ql_fs.h"
 #include "dbg_uart.h"
 
@@ -69,7 +67,9 @@ QLFS_Handle qlfsHandle_sdcard;
 QLFS_Handle qlfsHandle_spiflash;
 
 #if (USE_FREERTOS_FAT == 1)
-
+#include "media_drv_spi_sd.h"
+#include "media_drv_spi.h"
+#include "ff_stdio.h"
 static FF_FindData_t *pxFindStruct = NULL;
 static struct QLFS_file_find_info find_info;
 
@@ -212,6 +212,9 @@ QLFS_Handle *QLFS_mount_this( QL_FSStorageMedia what )
     return QLFS_mount( what, cp );
 }
 
+#if (USE_FATFS == 1)
+FATFS qlfs_fatfs_obj;
+#endif
 
 /*
  * @fn        QLFS_mount
@@ -246,7 +249,9 @@ printf("Mount Type %d\n",fsType);
 #if (USE_FREERTOS_FAT == 1)      
         pDisk = FF_SPISDMount(path);
 #elif (USE_FATFS == 1)
-        pDisk = (void *)mount_sensortile_SD_card();
+        FRESULT fr = f_mount(&qlfs_fatfs_obj, path, 1);
+        if (fr == FR_OK)
+           pDisk = &qlfs_fatfs_obj;
 #endif
         if(pDisk != NULL)
         {
@@ -1012,11 +1017,6 @@ printf(":fN End %s::",pFileName);
     return xReturn;
 }
 #endif
-/* Equivalent of time() : returns the number of seconds after 1-1-1970. */
-time_t FreeRTOS_time( time_t *pxTime )
-{
-   return ql_time(pxTime); 
-}
 
 /* goal:  equal to: "man 2 stat" on linux */
 int QLFS_stat( const char *filename, QLFS_FILEFINDINFO *pFI, QLFS_Handle *fsHandle  )

@@ -1,0 +1,11 @@
+
+FATFS_SRCS:=$(wildcard $(FATFS_DIR)/*.c )
+FATFS_SRCS:=$(filter-out $(FATFS_DIR)/ff_app.c, $(FATFS_SRCS))
+FATFS_SRCS:=$(filter-out $(FATFS_DIR)/ff_dev_support.c, $(FATFS_SRCS))
+
+SRCS:=$(notdir $(FATFS_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FATFS_DIR)
+
+include $(COMMON_STUB)
+

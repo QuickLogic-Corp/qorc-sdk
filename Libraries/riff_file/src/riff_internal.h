@@ -8,7 +8,13 @@
 #include "FreeRTOS.h"
 #include <queue.h>
 
+#if (USE_FATFS_APIS == 1)
+#include "ff.h"
+#elif (USE_FREERTOS_FAT_APIS == 1)
+#include "ff_headers.h"
+#else
 #include "ql_fs.h"
+#endif
 
 /* this is only used internal to the riff file code
  * it is not a public api and should become public.
@@ -21,11 +27,38 @@
 void riff_valid_busy_object(struct riff_object *pObject);
 void riff_valid_free_object(struct riff_object *pObject);
 
+#if ((USE_FATFS_APIS == 1) || (USE_FREERTOS_FAT_APIS == 1))
+/* File system and storage media */
+typedef enum
+{
+    FREERTOS_NONE_MOUNTED = 0,
+    FREERTOS_SPI_FLASH = 1,
+    FREERTOS_SPI_SD = 2,
+} QLFS_FSStorageMedia;
+#endif
+
 /* this represents an open riff file */
 struct riff_file {
   uint32_t magic;
+#if (USE_FATFS_APIS == 1)
+  //char mountVolume[QLFS_MAX_FILENAME_COMPONENT];
+  //uint8_t pathLen;
+  //uint8_t isMounted;
+  FATFS *pDisk; //will be casted to FF_Disk_t or FATFS
+  QLFS_FSStorageMedia fsType;
+  FIL *pFile;
+  FIL FileDescriptor;
+#elif (USE_FREERTOS_FAT_APIS == 1)
+  //char mountVolume[QLFS_MAX_FILENAME_COMPONENT];
+  //uint8_t pathLen;
+  //uint8_t isMounted;
+  FF_Disk_t *pDisk;
+  QLFS_FSStorageMedia fsType;
+  FF_FILE *pFile;
+#else /* (USE_QLFS_APIS == 1) */
   const QLFS_Handle *pFsHandle;
   QLFILE_Handle *pFile;
+#endif
 };
 
 /* initialize different items */

@@ -320,6 +320,15 @@ BaseType_t QLFS_RemoveUserFiles(const char *dirPath);
 uint32_t QLFS_getDiskSpaceInfo(const QLFS_Handle *pHandle, uint32_t *pTotalSz, uint32_t *pInuseSz);
 
 #if (USE_FATFS)
+
+#if !defined(ff_malloc)
+#define ff_malloc pvPortMalloc
+#endif
+
+#if !defined(ff_free)
+#define ff_free   vPortFree
+#endif
+
 extern int GetFatFsFileSize(QLFILE_Handle *pFileHandle);
 #endif
 #endif

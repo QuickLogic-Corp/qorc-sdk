@@ -335,3 +335,9 @@ int      ql_lw_timer_is_expired( intptr_t token, int msecs )
         return 0;
     }
 }
+
+/* Equivalent of time() : returns the number of seconds after 1-1-1970. */
+time_t FreeRTOS_time( time_t *pxTime )
+{
+   return ql_time(pxTime);
+}
