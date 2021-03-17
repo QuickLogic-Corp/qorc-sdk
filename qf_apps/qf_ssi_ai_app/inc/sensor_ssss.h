@@ -75,6 +75,9 @@ extern "C" {
 #define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
 
+/* Select whether to save sensor data to SD card or not */
+#define SENSOR_SSSS_DATASAVE_ENABLED   1    /* Enable datasave to SD card for data collection */
+
 #if (((SENSOR_SSSS_RECOG_ENABLED) + (SENSOR_SSSS_LIVESTREAM_ENABLED)) > 1)
 #error "Enable only one of the modes SENSOR_SSSS_RECOG_ENABLED or SENSOR_SSSS_LIVESTREAM_ENABLED"
 #endif

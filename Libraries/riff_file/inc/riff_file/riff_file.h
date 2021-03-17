@@ -42,4 +42,7 @@ int RIFF_file_write_object( struct riff_object *pObject );
  */
 void RIFF_file_close( struct riff_file *pFile );
 
+void riff_filename_format_init(char *basename, int ifilenum);
+char *riff_get_newfilename(void);
+
 #endif

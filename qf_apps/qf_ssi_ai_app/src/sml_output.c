@@ -39,7 +39,7 @@ static void sml_output_led(uint16_t model, uint16_t classification)
 uint8_t sensor_ssss_ai_fv_arr[MAX_VECTOR_SIZE];
 uint8_t sensor_ssss_ai_fv_len;
 char    sensor_ssss_ai_result_buf[SENSOR_SSSS_RESULT_BUFLEN];
-
+extern void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes);
 static void sml_output_serial(uint16_t model, uint16_t classification)
 {
     int count;
@@ -61,6 +61,7 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
     wbytes += count;
     buflen -= count;
     uart_tx_raw_buf(UART_ID_SSI, sensor_ssss_ai_result_buf, wbytes);
+    data_save_recognition_results(sensor_ssss_ai_result_buf, wbytes);
 }
 
 static intptr_t last_output;

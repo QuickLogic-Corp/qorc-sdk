@@ -1,5 +1,6 @@
 #include "Fw_global_config.h"
-#if ((USE_FATFS_APIS == 0) && (USE_FREERTOS_FAT_APIS == 0))
+#if (USE_FREERTOS_FAT_APIS == 1)
+#include "ff_stdio.h"
 #include "ql_riff.h"
 #include "riff_internal.h"
 #include <string.h>
@@ -30,8 +31,12 @@ void RIFF_file_close( struct riff_file *pFile )
 {
     riff_valid_file(pFile);
     
-    QLFS_fclose( pFile->pFsHandle, pFile->pFile );
-    pFile->pFsHandle = NULL;
+    ff_fclose( pFile->pFile );
+    if (pFile->fsType == FREERTOS_SPI_FLASH)
+    {
+       SPIFlashCacheFlush();
+    }
+
     pFile->pFile = NULL;
 	pFile->magic = 0;
 }
@@ -55,19 +60,16 @@ struct riff_file *RIFF_file_open( const char *filename, const char *mode )
         dbg_fatal_error("riff-toomany-files");
     }
     
-    pFile->pFsHandle = QLFS_DEFAULT_FILESYTEM;
-    
     /* always delete the old file */
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_str("riff-rm", filename );
     }
-    QLFS_RmFile( pFile->pFsHandle, filename );
+    ff_remove( filename );
 	
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_str("riff-open", filename );
     }
-
-    pFile->pFile = QLFS_fopen( pFile->pFsHandle, filename, "wb" );
+    pFile->pFile = ff_fopen( filename, "wb" );
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_ptr("riff-handle", (void *)(pFile->pFile) );
     }
@@ -114,6 +116,21 @@ int RIFF_file_write_object( struct riff_object *pObject )
         /* RIFF length is value 1 */
         nBytes = pObject->byte_wr_index;
     }
+#if ((RIFF_FILE_SIZE_MAX > 0) && (RIFF_AUTO_SEQUENCE_FILENAMES == 1))
+    long fileSize = 0; // ff_tell(pObject->pFile->pFile);
+    if (fileSize > RIFF_FILE_SIZE_MAX)
+    {
+        dbg_str_int("riff file size limit reached", fileSize);
+        ff_close(pObject->pFile->pFile);
+
+        char *nextfilename = riff_get_newfilename();
+        pObject->pFile->pFile = ff_open( nextfilename, "wb" );
+        if (pObject->pFile->pFile != FR_OK)
+        {
+            dbg_str_str("datafile", nextfilename);
+        }
+    }
+#endif
     /* update the actual bytes in the riff header */
     pObject->u.pData32[1] = nBytes;
     
@@ -125,11 +142,10 @@ int RIFF_file_write_object( struct riff_object *pObject )
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str("riff-wr-START\n");
     }
-	actual = QLFS_fwrite( pObject->pFile->pFsHandle, 
-                          pObject->pFile->pFile, 
-                          pObject->u.pDataVp,
-                          1, 
-                          nBytes );
+	actual = ff_fwrite( pObject->u.pDataVp, 
+                        1, 
+                        nBytes,
+                        pObject->pFile->pFile );
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str("riff-wr-DONE\n");
     }
@@ -141,4 +157,39 @@ int RIFF_file_write_object( struct riff_object *pObject )
 	}    
 }
 
-#endif /* ((USE_FATFS_APIS == 0) && (USE_FREERTOS_FAT_APIS == 0)) */
+#if (RIFF_AUTO_SEQUENCE_FILENAMES == 1)
+static int riff_file_count = 0;
+static char riff_file_basename[64]= "data_";
+static char riff_file_nextname[64];
+
+/** @brief RIFF fileformat initialization function using the
+ *  user provided basename and the initial file number integer
+ *  New riff filenames will be constructed in the format
+ *  basenameIIIIIIII.qlsm where IIIIIIII is an integer
+ *
+ *  @param[in] basename pointer a char array not exceeding 50 bytes
+ *  @param[in] ifilenum initial integer to be used in filename format
+ */
+void riff_filename_format_init(char *basename, int ifilenum)
+{
+	strncpy(riff_file_basename, basename, sizeof(riff_file_basename));
+	riff_file_count = ifilenum;
+}
+
+/** @brief Get a new RIFF filename in the format basenameIIIIIIII.qlsm for
+ *  storing the sensor data
+ *  @param[out] newfilename pointer a char array of atleast 64 bytes
+ */
+char *riff_get_newfilename(void)
+{
+	riff_file_count++;
+	snprintf(riff_file_nextname, sizeof(riff_file_nextname), "%50s%08d.qlsm", riff_file_basename, riff_file_count);
+	return riff_file_nextname;
+}
+
+size_t RIFF_get_filesize(void)
+{
+
+}
+#endif /* RIFF_AUTO_SEQUENCE_FILENAMES */
+#endif /* USE_FREERTOS_FAT_APIS */

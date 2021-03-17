@@ -211,7 +211,7 @@ int wait_ready (void)
 /*-----------------------------------------------------------------------*/
 
 static
-void deselect (void)
+void deselect_card (void)
 {
 //	CS_HIGH();			/* Set CS# high */
 	xchg_spi(0xFF);		/* Dummy clock (force DO hi-z for multiple slave SPI) */
@@ -224,14 +224,14 @@ void deselect (void)
 /*-----------------------------------------------------------------------*/
 
 static
-int select (void)	/* 1:Successful, 0:Timeout */
+int select_card (void)	/* 1:Successful, 0:Timeout */
 {
 //	CS_LOW();			/* Set CS# low */
 	xchg_spi(0xFF);		/* Dummy clock (force DO enabled) */
 
 	if (wait_ready()) return 1;	/* Wait for card ready */
 
-	deselect();
+	deselect_card();
 	return 0;	/* Timeout */
 }
 
@@ -325,8 +325,8 @@ int xmit_datablock (	/* 1:OK, 0:Failed */
 //
 //	/* Select the card and wait for ready except to stop multiple block read */
 //	if (cmd != CMD12) {
-//		deselect();
-//		if (!select()) return 0xFF;
+//		deselect_card();
+//		if (!select_card()) return 0xFF;
 //	}
 //
 //	/* Send command packet */
@@ -368,8 +368,8 @@ BYTE send_cmd (
     
 	/* Select the card and wait for ready except to stop multiple block read */
 	if (cmd != CMD12 && cmd != CMD0) {
-		deselect();
-		if (!select())
+		deselect_card();
+		if (!select_card())
         {
           printf("-ff-error5-");          
           return 0xFF;
@@ -484,7 +484,7 @@ DSTATUS disk_initialize (
 		}
 	}
 	CardType = ty;
-	deselect();
+	deselect_card();
 
 	if (ty) {		/* Function succeded */
 		Stat &= ~STA_NOINIT;	/* Clear STA_NOINIT */
@@ -529,7 +529,7 @@ DRESULT disk_read (
 			send_cmd(CMD12, 0);				/* STOP_TRANSMISSION */
 		}
 	}
-	deselect();
+	deselect_card();
 
 	return (count != 0) ? RES_ERROR : RES_OK;
 }
@@ -589,7 +589,7 @@ DRESULT disk_write (
         }
 #endif      
 	}
-	deselect();
+	deselect_card();
     
 //    if (count != 0) {
 //        int rval = send_cmd(CMD13, 0);
@@ -625,7 +625,7 @@ DRESULT disk_ioctl (
 	res = RES_ERROR;
 	switch (cmd) {
 	case CTRL_SYNC :	/* Flush write-back cache, Wait for end of internal process */
-		if (select()) res = RES_OK;
+		if (select_card()) res = RES_OK;
 		break;
 
 	case GET_SECTOR_COUNT :	/* Get number of sectors on the disk (WORD) */
@@ -706,7 +706,7 @@ DRESULT disk_ioctl (
 		res = RES_PARERR;
 	}
 
-	deselect();
+	deselect_card();
 
 	return res;
 }

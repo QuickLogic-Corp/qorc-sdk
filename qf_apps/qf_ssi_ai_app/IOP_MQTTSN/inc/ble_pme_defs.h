@@ -14,44 +14,42 @@
  * limitations under the License.
  *==========================================================*/
 
-/** @file micro_tick64.h */
 /*==========================================================
- *
- *    File   : micro_tick64.h
+ *                                                          
+ *    File   : ble_pme_defs.h
  *    Purpose: 
  *                                                          
  *=========================================================*/
 
-#ifndef _MICRO_TICK64_H_
+#ifndef _BLE_PME_DEFS_H_
+#define _BLE_PME_DEFS_H_
 
-#define _MICRO_TICK64_H_
+#include <stdint.h>
+#include <stdbool.h>
+#ifdef SENSIML_RECOGNITION
+#include "kb.h"
+#include "kb_defines.h"
 
-#ifdef __cplusplus
-extern "C" {
+#define BLE_PME_MAX_FV_FRAME_SZ MAX_VECTOR_SIZE
+
+#else
+#define BLE_PME_MAX_FV_FRAME_SZ 2 //not for collection.
 #endif
+typedef struct
+{
+    uint16_t context;
+    uint16_t classification;
 
-/** @brief set tick count to the given value
- *
- *  @param[in] new_val new value for the tick count in micro-seconds
- *
- */
-extern void xTaskSet_uSecCount(uint64_t new_val);
+    uint8_t fv_len; //Actual length to read
+    uint8_t feature_vector[BLE_PME_MAX_FV_FRAME_SZ]; //Max features reporting out is 128
 
-/** @brief return the current tick count in micro-seconds
- * 
- * @return return current tick count in micro-seconds
- */
-extern uint64_t xTaskGet_uSecCount(void);
+} ble_pme_result_w_fv_t;
+
+typedef struct
+{
+    uint16_t context;
+    uint16_t classification;
+} ble_pme_result_t;
 
 
-/** @brief return given tick count in micro-seconds
- * 
- * @return return given tick count in micro-seconds
- */
-extern uint64_t convert_to_uSecCount(uint32_t tickCount);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _MICRO_TICK64_H_ */
+#endif //_BLE_PME_DEFS_H_

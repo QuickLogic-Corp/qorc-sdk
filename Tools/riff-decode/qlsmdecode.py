@@ -208,7 +208,7 @@ class QLSM_SensorHDR(RIFF_Block):
         tmp = self.file_block.header.find_sensor_details(self.parent.sensor_id)
         self.parent.json_info = tmp
 
-        if self.parent.json_info['version'] == 1:
+        if (self.parent.json_info['version'] == 1) or (self.parent.json_info['version'] == 2):
             self._extract_json1()
         else:
             # future ...
@@ -313,6 +313,159 @@ class QLSM_SensorSNSR(RIFF_Block):
         self.data_block.parse()
 
 
+class QLSM_SensorRECO_HDR(RIFF_Block):
+    """
+    All sensor data blocks use the tag 'SNSR'
+    A SNSR block contains 2 sub blocks, a 'HDR!' and 'DATA' block.
+
+    The HDR! contains information about the content of the DATA block.
+    Specifically the HDR! contains the sensor id, and timestamp
+    """
+
+    def __init__(self, file_block, parent):
+        RIFF_Block.__init__(self, file_block)
+        self.parent = parent
+
+    def parse(self):
+        """Parse a HDR! block"""
+        assert ('HDR!' == self.tag)
+        assert (24 == len(self.payload))
+        a, b, c, d = struct.unpack('<IIQQ', self.payload)
+        self.parent.sensor_id = a
+        self.parent.sequence_number = b
+        self.parent.first_timestamp_usecs = c
+        self.parent.last_timestamp_usecs = d
+        if PRINT_PARSING_DEBUG:
+            print('Block sensor: 0x%08x' % self.parent.sensor_id)
+            print('sequence-number: %d' % self.parent.sequence_number)
+        tmpC = datetime.datetime.fromtimestamp((float)(c) / 1000000.0)
+        self.parent.first_timestamp_datetime = tmpC
+        tmpD = datetime.datetime.fromtimestamp((float)(d) / 1000000.0)
+        self.parent.last_timestamp_datetime = tmpD
+        if PRINT_PARSING_DEBUG:
+            print('Block start: %s' % tmpC.isoformat())
+            print('       stop: %s' % tmpD.isoformat())
+
+        self._extract_json1()
+        #tmp = self.file_block.header.find_sensor_details(self.parent.sensor_id)
+        #self.parent.json_info = tmp
+
+        #if self.parent.json_info['version'] == 1:
+        #    self._extract_json1()
+        #else:
+        #    # future ...
+        #    raise NotImplementedError('write me')
+
+    def _extract_json1(self):
+        p = self.parent
+        j = p.json_info
+        p.column_titles = ['recog_result',] # j['titles'].split(',')
+        p.sensor_name = 'sensor_recog' # j['name']
+        if PRINT_PARSING_DEBUG:
+            print('sensor-name: %s' % p.sensor_name)
+        p.unpack_str = 's' # j['format']
+        p.rate_hz = 100 # j['rate']
+        if PRINT_PARSING_DEBUG:
+            print('sensor-rate: %d' % p.rate_hz)
+
+class QLSM_SensorRECO_DATA(RIFF_Block):
+    """
+    This represents the DATA component of a SNSR block.
+    The payload here is the sensor data in some packed format.
+    as defined by the header->sensor->[NAME]->format json element.
+    """
+
+    def __init__(self, file_block, parent):
+        RIFF_Block.__init__(self, file_block)
+        self.parent = parent
+
+    def parse(self):
+        # remove trailing zeros from the payload
+        n_zeros = 1
+        for val in self.payload[::-1]:
+           if (val == 0):
+              n_zeros = n_zeros + 1
+              continue
+           break
+        model_strings = self.payload[:-n_zeros].decode().split('\n')
+        n_samples = 0
+        for model_string in model_strings:
+            self.parent.data.append([model_string,])
+            n_samples = n_samples + 1
+        self.parent.n_samples = n_samples
+        if (0):
+            step = struct.calcsize(self.parent.unpack_str)
+            # Data must be a multiple of the struct size
+            w, f = divmod(len(self.payload), step)
+            if f != 0:
+                self.file_block.warning(
+                    "block %d invalid/truncated payload length" %
+                    self.parent.block_number);
+                self.file_block.ew_more(
+                    "expected multiple of %d, got %d" %
+                     (step,len(self.payload)))
+            # unpack the data
+            w = w * step
+            for cursor in range(0, w, step):
+                values = struct.unpack(
+                    self.parent.unpack_str,
+                    self.payload[cursor: cursor + step])
+                self.parent.data.append(values)
+
+            # determine the timestamp in uSecs of last value in this block
+            # How many readings are there?
+            n_samples = len(self.payload) // step
+            self.parent.n_samples = n_samples
+        if PRINT_PARSING_DEBUG:
+            print('n-samples: %d' % n_samples)
+            delta_usecs = self.parent.last_timestamp_usecs - \
+                          self.parent.first_timestamp_usecs
+            seconds = float(delta_usecs) / 1000000.0
+            calc_rate = float(n_samples) / seconds
+            print('calc-rate: %f' % calc_rate)
+
+class QLSM_SensorRECO(RIFF_Block):
+    """
+    This represents a SENSOR recognition result block in a QLSM file.
+    There should be MANY of these in a data file.
+
+    This block contains 2 sub components,
+    * A single 'HDR!' block
+    * Multiple 'DATA' blocks.
+    """
+
+    def __init__(self, file_block):
+        RIFF_Block.__init__(self, file_block)
+        self.hdr_block = QLSM_SensorRECO_HDR(self.file_block, self)
+        self.data_block = QLSM_SensorRECO_DATA(self.file_block, self)
+        self.sensor_id = None
+        self.first_timestamp_datetime = None
+        self.first_timestamp_usecs = None
+        self.last_timestamp_datetime = None
+        self.last_timestamp_usecs = None
+        self.sequence_number = None
+        self.sensor_name = None
+        self.column_titles = None
+        self.unpack_str = None
+        self.json_info = None
+        self.data = []
+
+    def parse(self):
+        """Parse a data block (tag='RECO')"""
+        parser = ChunkParser()
+        assert (self.tag == 'RECO')
+        if PRINT_PARSING_DEBUG:
+            print('')
+            print('snsr-block file-offset: 0x%08x' % self.file_offset)
+        chunks = parser.parse_bytearray(self.file_block,
+                                        self.file_offset,
+                                        self.payload)
+        assert (len(chunks) == 2)
+        self.hdr_block.from_riff_block(chunks[0])
+        self.hdr_block.parse()
+        self.data_block.from_riff_block(chunks[1])
+        self.data_block.parse()
+
 class QLSM_DataFile():
     """
     This represents an entire QLSM data file.
@@ -362,12 +515,19 @@ class QLSM_DataFile():
         self.header.file_block = self
         parser = ChunkParser()
         for n,block in enumerate(arrayofblocks[1:]):
-            assert (block.tag == 'SNSR')
-            this_data_block = QLSM_SensorSNSR(self)
-            this_data_block.block_number = n
-            this_data_block.from_riff_block(block)
-            this_data_block.parse()
-            self.datablocks.append(this_data_block)
+            assert (block.tag == 'SNSR') or (block.tag == 'RECO')
+            if (block.tag == 'SNSR'):
+                this_data_block = QLSM_SensorSNSR(self)
+                this_data_block.block_number = n
+                this_data_block.from_riff_block(block)
+                this_data_block.parse()
+                self.datablocks.append(this_data_block)
+            if (block.tag == 'RECO'):
+                this_data_block = QLSM_SensorRECO(self)
+                this_data_block.block_number = n
+                this_data_block.from_riff_block(block)
+                this_data_block.parse()
+                self.datablocks.append(this_data_block)
 
 
 class ChunkParser(object):

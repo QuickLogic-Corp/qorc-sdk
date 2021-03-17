@@ -1,5 +1,5 @@
 #include "Fw_global_config.h"
-#if ((USE_FATFS_APIS == 0) && (USE_FREERTOS_FAT_APIS == 0))
+#if (USE_FATFS_APIS == 1)
 #include "ql_riff.h"
 #include "riff_internal.h"
 #include <string.h>
@@ -30,8 +30,8 @@ void RIFF_file_close( struct riff_file *pFile )
 {
     riff_valid_file(pFile);
     
-    QLFS_fclose( pFile->pFsHandle, pFile->pFile );
-    pFile->pFsHandle = NULL;
+    f_close( pFile->pFile );
+
     pFile->pFile = NULL;
 	pFile->magic = 0;
 }
@@ -41,6 +41,7 @@ void RIFF_file_close( struct riff_file *pFile )
 */
 struct riff_file *RIFF_file_open( const char *filename, const char *mode )
 {
+    FRESULT fresult;
     struct riff_file *pFile;
     int x;
     
@@ -55,23 +56,21 @@ struct riff_file *RIFF_file_open( const char *filename, const char *mode )
         dbg_fatal_error("riff-toomany-files");
     }
     
-    pFile->pFsHandle = QLFS_DEFAULT_FILESYTEM;
-    
     /* always delete the old file */
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_str("riff-rm", filename );
     }
-    QLFS_RmFile( pFile->pFsHandle, filename );
+    f_unlink( filename );
 	
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_str("riff-open", filename );
     }
-
-    pFile->pFile = QLFS_fopen( pFile->pFsHandle, filename, "wb" );
+    pFile->pFile = &pFile->FileDescriptor;
+    fresult = f_open( pFile->pFile, filename, FA_WRITE | FA_CREATE_ALWAYS );
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str_ptr("riff-handle", (void *)(pFile->pFile) );
     }
-    if( pFile->pFile == NULL ){
+    if( fresult != FR_OK ){
       pFile = NULL;
     } else {
       pFile->magic = RIFF_FILE_MAGIC;
@@ -103,6 +102,7 @@ void RIFF_file_enqueue_object(  struct riff_file *pFile, struct riff_object *pOb
 */
 int RIFF_file_write_object( struct riff_object *pObject )
 {
+    FRESULT fresult;
     riff_valid_busy_object(pObject);
     riff_valid_file( pObject->pFile );
     size_t actual;
@@ -114,6 +114,21 @@ int RIFF_file_write_object( struct riff_object *pObject )
         /* RIFF length is value 1 */
         nBytes = pObject->byte_wr_index;
     }
+#if ((RIFF_FILE_SIZE_MAX > 0) && (RIFF_AUTO_SEQUENCE_FILENAMES == 1))
+    size_t fileSize = 0; // f_size(pObject->pFile->pFile);
+    if (fileSize > RIFF_FILE_SIZE_MAX)
+    {
+        dbg_str_int("riff file size limit reached", fileSize);
+        f_close(pObject->pFile->pFile);
+
+        char *nextfilename = riff_get_newfilename();
+        fresult = f_open(pObject->pFile->pFile, nextfilename, FA_WRITE | FA_CREATE_ALWAYS );
+        if (fresult == FR_OK)
+        {
+            dbg_str_str("datafile", nextfilename);
+        }
+    }
+#endif
     /* update the actual bytes in the riff header */
     pObject->u.pData32[1] = nBytes;
     
@@ -121,15 +136,14 @@ int RIFF_file_write_object( struct riff_object *pObject )
     /* align to 32bit boundary*/
     
     nBytes = (nBytes + 8 + 3) & ~0x03;
-
+    actual = 0;
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str("riff-wr-START\n");
     }
-	actual = QLFS_fwrite( pObject->pFile->pFsHandle, 
-                          pObject->pFile->pFile, 
-                          pObject->u.pDataVp,
-                          1, 
-                          nBytes );
+    fresult = f_write(pObject->pFile->pFile,
+                     pObject->u.pDataVp,
+                     nBytes,
+                     &actual );
     if( DBG_flags & DBG_FLAG_datasave_debug ){
         dbg_str("riff-wr-DONE\n");
     }
@@ -141,4 +155,39 @@ int RIFF_file_write_object( struct riff_object *pObject )
 	}    
 }
 
-#endif /* ((USE_FATFS_APIS == 0) && (USE_FREERTOS_FAT_APIS == 0)) */
+#if (RIFF_AUTO_SEQUENCE_FILENAMES == 1)
+static int riff_file_count = 0;
+static char riff_file_basename[64]= "data_";
+static char riff_file_nextname[64];
+
+/** @brief RIFF fileformat initialization function using the
+ *  user provided basename and the initial file number integer
+ *  New riff filenames will be constructed in the format
+ *  basenameIIIIIIII.qlsm where IIIIIIII is an integer
+ *
+ *  @param[in] basename pointer a char array not exceeding 50 bytes
+ *  @param[in] ifilenum initial integer to be used in filename format
+ */
+void riff_filename_format_init(char *basename, int ifilenum)
+{
+	strncpy(riff_file_basename, basename, sizeof(riff_file_basename));
+	riff_file_count = ifilenum;
+}
+
+/** @brief Get a new RIFF filename for storing the sensor data
+ *  A new filename of the format
+ *  @param[out] newfilename pointer a char array of atleast 64 bytes
+ */
+char *riff_get_newfilename(void)
+{
+	riff_file_count++;
+	snprintf(riff_file_nextname, sizeof(riff_file_nextname), "%s%08d.qlsm", riff_file_basename, riff_file_count);
+	return riff_file_nextname;
+}
+
+size_t RIFF_get_filesize(void)
+{
+
+}
+#endif /* RIFF_AUTO_SEQUENCE_FILENAMES */
+#endif /* USE_FATFS_APIS */
