@@ -78,7 +78,7 @@ int main(void)
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather LED / User Button Test\n");
+    dbg_str( "Quicklogic Qomu LED Test\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
