@@ -43,6 +43,8 @@
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
 
+#include "dbg_uart.h"
+
 /// @cond SPI_FLASH_TEST_GLOBAL_VAR
 SPI_HandleTypeDef spiFlashHandle;
 SemaphoreHandle_t xLockFlash = NULL;
@@ -1135,30 +1137,19 @@ uint32_t flash_boot_setup(void)
 * Note: We do not validate the chip ID. Just assume it is 256byte pages
 * and alleast 1MB size for BL0 purpose. And set some Flash params.
 */
-uint8_t read_flash_id(void)
-{
-	uint8_t idcode[3];
-	uint8_t cmd = FLASH_CMD_RDID;
-	int ret;
+uint8_t read_flash_id(void) {
+  uint8_t idcode[3];
+  uint8_t cmd = FLASH_CMD_RDID;
+  int ret;
 
-    idcode[0] = 0;
-	ret = spi_flash_cmd(&cmd, 1, &idcode, sizeof(idcode), CMD_WithResponse);
-	if(ret != FlashOperationSuccess)
-    {
-		printf("Failed SPI Flash ID command\r\n");
-    }
-
-    //set it to any params, since only page size required for BL0
-    spiFlashParams = &spi_flash_table[0];
-#if 0
-    //Would it work if it is a different Manufacturer ID?
-    //check for Macronix Manufacturer ID
-    if(idcode[0] != 0xc2)
-    {
-		printf("Invalid SPI Flash chip\r\n");
-    }
-#endif
-    return idcode[0];
+  idcode[0] = 0;
+  ret = spi_flash_cmd(&cmd, 1, &idcode, sizeof(idcode), CMD_WithResponse);
+  if(ret != FlashOperationSuccess)   {
+    printf("Failed SPI Flash ID command\r\n");
+  }
+  //set it to any params, since only page size required for BL0
+  spiFlashParams = &spi_flash_table[0];
+  return idcode[0];
 }
 
 /// @endcondw
