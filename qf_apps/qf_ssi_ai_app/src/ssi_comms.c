@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 #include "eoss3_hal_uart.h"
@@ -47,10 +48,12 @@ void ssiTaskHandler(void* pParameter)
     int  json_len = 0;
     int  rx_avail = 0;
     char ssi_rxbuf[SSI_RXBUF_SIZE];
-
+    char *pposConnect, *pposDisconnect;
     assert(SSI_RXBUF_SIZE >= ssi_connect_string_len);
 
-    memset(ssi_rxbuf, 0, sizeof(ssi_rxbuf));
+    memset(ssi_rxbuf, '0', sizeof(ssi_rxbuf));
+    ssi_rxbuf[SSI_RXBUF_SIZE-1] = 0;
+
     json_len = strlen(json_string_sensor_config);
     while (1)
     {
@@ -60,39 +63,52 @@ void ssiTaskHandler(void* pParameter)
         {
             uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
         }
-        rx_avail = uart_rx_available(UART_ID_SSI);
-        if (rx_avail == ssi_connect_string_len)
+        while (1)
         {
-            uart_rx_raw_buf(UART_ID_SSI, ssi_rxbuf, ssi_connect_string_len);
-            if (strncmp(ssi_rxbuf, ssi_connect_string, ssi_connect_string_len) == 0)
+            rx_avail = uart_rx_available(UART_ID_SSI);
+            if (rx_avail == 0)
+            	break;
+            memmove(ssi_rxbuf, ssi_rxbuf+1, SSI_RXBUF_SIZE-2);
+            uart_rx_raw_buf(UART_ID_SSI, &ssi_rxbuf[SSI_RXBUF_SIZE-2], 1);
+      	    pposConnect = strstr(ssi_rxbuf, ssi_connect_string);
+      	    pposDisconnect = strstr(ssi_rxbuf, ssi_disconnect_string);
+            if (pposDisconnect)
             {
-                is_ssi_connected = true;
+               count = pposDisconnect - ssi_rxbuf + ssi_disconnect_string_len;
+               memset(ssi_rxbuf, '0', count);
+               if (is_ssi_connected == false)
+            	   break;
+               is_ssi_connected = false;
 #if (SSI_SENSOR_SELECT_SSSS)
-                sensor_ssss_startstop(1);
+               sensor_ssss_startstop(0);
 #endif
 #if (SSI_SENSOR_SELECT_AUDIO)
-                sensor_audio_add();
-                sensor_audio_startstop(1);
+               //sensor_audio_startstop(0);
 #endif
+               break;
             }
-        }
-        else if (rx_avail == ssi_disconnect_string_len)
-        {
-            uart_rx_raw_buf(UART_ID_SSI, ssi_rxbuf, ssi_disconnect_string_len);
-            if (strncmp(ssi_rxbuf, ssi_disconnect_string, ssi_disconnect_string_len) == 0)
+            if (pposConnect)
             {
-                is_ssi_connected = false;
+               count = pposConnect - ssi_rxbuf + ssi_connect_string_len;
+               memset(ssi_rxbuf, '0', count);
+               if (is_ssi_connected == true)
+            	   break;
+               is_ssi_connected = true;
 #if (SSI_SENSOR_SELECT_SSSS)
-                sensor_ssss_startstop(0);
+               sensor_ssss_startstop(1);
 #endif
 #if (SSI_SENSOR_SELECT_AUDIO)
-                sensor_audio_startstop(0);
+               uart_tx_raw_buf(UART_ID_SSI, "AUDIOSTREAMSTART", 16);
+               sensor_audio_add();
+               sensor_audio_startstop(1);
 #endif
+               break;
             }
-        }
-        else
-        {
-            continue;
+            else
+            {
+        	   //count = 0;
+               continue;
+            }
         }
     }
 }
