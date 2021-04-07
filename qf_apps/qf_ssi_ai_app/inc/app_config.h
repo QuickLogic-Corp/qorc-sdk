@@ -22,15 +22,15 @@
 
 
 #define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection       */
-#define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition    */
+#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition    */
 
 
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
 
 
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
-#define SSI_SENSOR_SELECT_SSSS     0 // 1 => Select SSSS sensor data for live-streaming of recognition modes
-#define SSI_SENSOR_SELECT_AUDIO    1 // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_SSSS     1 // 1 => Select SSSS sensor data for live-streaming of recognition modes
+#define SSI_SENSOR_SELECT_AUDIO    0 // 1 => Select Audio data for live-streaming or recognition modes
 
 
 /*######################## OPTIONS  ################################*/
@@ -43,8 +43,8 @@
 /*######################## DATA CAPTURE METHOD  ################################*/
 
 
-#define S3AI_FIRMWARE_LIVESTREAM 0   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
-#define S3AI_FIRMWARE_DATASAVE 1     /* Enable SD card for collection        (supports sensor and recognition) */
+#define S3AI_FIRMWARE_LIVESTREAM 1   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
+#define S3AI_FIRMWARE_DATASAVE 0     /* Enable SD card for collection        (supports sensor and recognition) */
 
 
 
