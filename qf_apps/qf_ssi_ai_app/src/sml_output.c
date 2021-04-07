@@ -75,7 +75,7 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
     wbytes += count;
     buflen -= count;
    
-    uart_tx_raw_buf(UART_ID_SSI, sensor_ssss_ai_result_buf, wbytes);
+    uart_tx_raw_buf(UART_ID_APP, sensor_ssss_ai_result_buf, wbytes);
 
 #if (DATASAVE_RECOGNITION_RESULTS==1)    
     data_save_recognition_results(sensor_ssss_ai_result_buf, wbytes);

@@ -18,33 +18,18 @@
 #define FW_GLOBAL_CONFIG_H_INCLUDED
 
 #include <stdint.h>
+#include "app_config.h"
 #include "sec_debug.h"
 
+/***************    HARDWARE OUTPUT OPTIONS    *****************/
 
-
-/*######################## FIRMAWARE MODE SETTINGS  ################################*/
-
-#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection via SSI Interface */
-#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition                */
-#define S3AI_FIRMWARE_DATASAVE 0   			/* Enable datasave to SD card for data collection  */
-
-
-/*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
-
-/* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
-#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
-#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
-
-
-#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => replace sensor data with a known sawtooth pattern
-
-#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
-#error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
-#endif
-// TODO: Make a macro for validating only one option is selected
+#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
+#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
+#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
 
 
 /*######################## INTERFACE OUTPUT OPTIONS  ################################*/
+// TODO: CHECK THAT ONLY ONE IS ENABLED
 
 // #define UART_ID_DISABLED     0   // /dev/null */
 // #define UART_ID_HW           1   // the hard UART on the S3
@@ -56,75 +41,11 @@
 
 
 #define DEBUG_UART  (UART_ID_USBSERIAL)  // Set the output of debug messages
-#define UART_ID_SSI  (UART_ID_HW)       // Set the output for sensor data an recognition results
+#define UART_ID_APP  (UART_ID_HW)       // Set the output for application messages
 
-// TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
 
 
 /*######################## ADVANCED SETTINGS  ################################*/
-
-
-/***************    HARDWARE OUTPUT OPTIONS    *****************/
-
-#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
-#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
-#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
-// TODO: CHECK THAT ONLY ONE IS ENABLED
-
-
-/***************    DATA COLLECTION SETTINGS   *****************/
-
-#if S3AI_FIRMWARE_IS_COLLECTION
-
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   100
-
-#if (SSI_SENSOR_SELECT_AUDIO)
-#define SENSOR_AUDIO_RECOG_ENABLED (0)
-#define SENSOR_AUDIO_LIVESTREAM_ENABLED (1)
-#define SENSOR_AUDIO_DATASAVE_ENABLED (S3AI_FIRMWARE_DATASAVE)
-#endif
-
-#if (SSI_SENSOR_SELECT_SSSS)
-#define SENSOR_SSSS_RECOG_ENABLED      0  
-#define SENSOR_SSSS_LIVESTREAM_ENABLED 1    
-#define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)   
-#endif
-
-#endif
-
-
-/***************    RECOGNITION SETTINGS   *****************/
-
-#if S3AI_FIRMWARE_IS_RECOGNITION
-
-#define SSI_OUTPUT_FEATURE_VECTOR 0 // Include feature vector as part of output
-
-#if (SSI_SENSOR_SELECT_AUDIO)
-#define SENSOR_AUDIO_RECOG_ENABLED (1)
-#define SENSOR_AUDIO_LIVESTREAM_ENABLED (0)
-#define SENSOR_AUDIO_DATASAVE_ENABLED (S3AI_FIRMWARE_DATASAVE)
-#endif
-
-
-#if (SSI_SENSOR_SELECT_SSSS)
-#define SENSOR_SSSS_RECOG_ENABLED      1  
-#define SENSOR_SSSS_LIVESTREAM_ENABLED 0    
-#define SENSOR_SSSS_DATASAVE_ENABLED  (S3AI_FIRMWARE_DATASAVE)    /* Enable datasave to SD card for data collection */
-#endif
-
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   should not be called
-
-/* Select whether to save recognition results to SD card*/
-#define DATASAVE_RECOGNITION_RESULTS (S3AI_FIRMWARE_DATASAVE) 
-
-#endif
-
-
-
-// Toggle GPIO whenever a datablock buffer is dispatched to the UART
-// Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
-#define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
-
 
 #define SIZEOF_DBGBUFFER    512    // Number of characters in circular debug buffer
 
@@ -306,15 +227,5 @@ extern int FPGA_FFE_LOADED;
 /* it insures that we have completely processed this entire file */
 #define _EnD_Of_Fw_global_config_h  1
 
-typedef struct st_fw_global_config
-{
-	int ssi_sensor_select_audio ;
-	int sensor_audio_livestream_enabled;
-	int sensor_audio_recog_enabled;
-
-	int ssi_sensor_select_ssss  ;
-	int sensor_ssss_livestream_enabled;
-	int sensor_ssss_recog_enabled;
-} fw_global_config_t;
 
 #endif
