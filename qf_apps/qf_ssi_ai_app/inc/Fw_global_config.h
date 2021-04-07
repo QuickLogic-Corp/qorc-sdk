@@ -29,7 +29,7 @@
 #define SSI_SENSOR_SELECT_AUDIO    (1) // 1 => Select Audio data for live-streaming or recognition modes
 #define SSI_SENSOR_SELECT_SSSS     (0) // 1 => Select SSSS sensor data for live-streaming of recognition modes
 
-#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => Send a known sawtooth pattern for live-streaming instead of sensor data
+#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => replace sensor data with a known sawtooth pattern
 
 
 #if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
@@ -42,17 +42,8 @@
 /*######################## FIRMAWARE MODE SETTINGS  ################################*/
 
 
-#define S3AI_FIRMWARE_MODE_RECOGNITION   ('R')
-#define S3AI_FIRMWARE_MODE_COLLECTION    ('C')
-#define S3AI_FIRMWARE_MODE_none           0
-
-#define S3AI_FIRMWARE_MODE (S3AI_FIRMWARE_MODE_RECOGNITION)
-#if !defined(S3AI_FIRMWARE_MODE)
-#define S3AI_FIRMWARE_MODE (S3AI_FIRMWARE_MODE_RECOGNITION)
-#endif
-
-#define S3AI_FIRMWARE_IS_COLLECTION  (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_COLLECTION)
-#define S3AI_FIRMWARE_IS_RECOGNITION (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_RECOGNITION)
+#define S3AI_FIRMWARE_IS_COLLECTION  0
+#define S3AI_FIRMWARE_IS_RECOGNITION 1
 
 
 /***************    DATA COLLECTION SETTINGS   *****************/
