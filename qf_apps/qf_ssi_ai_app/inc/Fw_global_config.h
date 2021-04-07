@@ -33,7 +33,7 @@
 
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
 #define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
-#define SSI_SENSOR_SELECT_AUDIO    (9) // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
 
 
 #define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => replace sensor data with a known sawtooth pattern
