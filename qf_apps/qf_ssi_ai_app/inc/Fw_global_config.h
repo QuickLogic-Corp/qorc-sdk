@@ -20,14 +20,23 @@
 #include <stdint.h>
 #include "sec_debug.h"
 
+
+
+/*######################## FIRMAWARE MODE SETTINGS  ################################*/
+
+#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection via SSI Interface */
+#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition                */
+#define S3AI_FIRMWARE_DATASAVE 0   			/* Enable datasave to SD card for data collection  */
+
+
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
 
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
-#define SSI_SENSOR_SELECT_AUDIO    (1) // 1 => Select Audio data for live-streaming or recognition modes
-#define SSI_SENSOR_SELECT_SSSS     (0) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+#define SSI_SENSOR_SELECT_AUDIO    (9) // 1 => Select Audio data for live-streaming or recognition modes
+
 
 #define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => replace sensor data with a known sawtooth pattern
-
 
 #if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
 #error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
@@ -35,13 +44,36 @@
 // TODO: Make a macro for validating only one option is selected
 
 
+/*######################## INTERFACE OUTPUT OPTIONS  ################################*/
 
-/*######################## FIRMAWARE MODE SETTINGS  ################################*/
+
+/***************    HARDWARE OUTPUT OPTIONS    *****************/
+
+#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
+#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
+#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
+// TODO: CHECK THAT ONLY ONE IS ENABLED
 
 
-#define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection via SSI Interface */
-#define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition                */
-#define S3AI_FIRMWARE_DATASAVE 0   			/* Enable datasave to SD card for data collection  */
+/***************    INTERFACE OUTPUT SETTINGS    *****************/
+
+// #define UART_ID_DISABLED     0   // /dev/null */
+// #define UART_ID_HW           1   // the hard UART on the S3
+// #define UART_ID_SEMIHOST     2   // Write debug data to semihost
+// #define UART_ID_FPGA         3   // second uart if part of FPGA
+// #define UART_ID_BUFFER       4   // Write data to internal buffer
+// #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
+// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
+
+
+#define DEBUG_UART  (UART_ID_USBSERIAL)  // Set the output of debug messages
+#define UART_ID_SSI  (UART_ID_HW)       // Set the output for sensor data an recognition results
+
+// TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
+
+
+
+/*######################## ADVANCED SETTINGS  ################################*/
 
 
 /***************    DATA COLLECTION SETTINGS   *****************/
@@ -54,12 +86,9 @@
 #define SENSOR_AUDIO_RECOG_ENABLED (0)
 #define SENSOR_AUDIO_LIVESTREAM_ENABLED (1)
 #define SENSOR_AUDIO_DATASAVE_ENABLED (S3AI_FIRMWARE_DATASAVE)
-
 #endif
 
-
 #if (SSI_SENSOR_SELECT_SSSS)
-
 #define SENSOR_SSSS_RECOG_ENABLED      0  
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    
 #define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)   
@@ -95,38 +124,6 @@
 #endif
 
 
-
-/*######################## INTERFACE OUTPUT OPTIONS  ################################*/
-
-
-/***************    HARDWARE OUTPUT OPTIONS    *****************/
-
-#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
-#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
-#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
-// TODO: CHECK THAT ONLY ONE IS ENABLED
-
-
-/***************    INTERFACE OUTPUT SETTINGS    *****************/
-
-// #define UART_ID_DISABLED     0   // /dev/null */
-// #define UART_ID_HW           1   // the hard UART on the S3
-// #define UART_ID_SEMIHOST     2   // Write debug data to semihost
-// #define UART_ID_FPGA         3   // second uart if part of FPGA
-// #define UART_ID_BUFFER       4   // Write data to internal buffer
-// #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
-// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-
-// Set the output of debug messages
-#define DEBUG_UART  (UART_ID_USBSERIAL)
-
-// Set the output for sensor data and recognition results
-#define UART_ID_SSI  (UART_ID_HW)
-// TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
-
-
-
-/*######################## ADVANCED SETTINGS  ################################*/
 
 // Toggle GPIO whenever a datablock buffer is dispatched to the UART
 // Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
