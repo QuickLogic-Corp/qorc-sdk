@@ -46,17 +46,6 @@
 
 /*######################## INTERFACE OUTPUT OPTIONS  ################################*/
 
-
-/***************    HARDWARE OUTPUT OPTIONS    *****************/
-
-#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
-#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
-#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
-// TODO: CHECK THAT ONLY ONE IS ENABLED
-
-
-/***************    INTERFACE OUTPUT SETTINGS    *****************/
-
 // #define UART_ID_DISABLED     0   // /dev/null */
 // #define UART_ID_HW           1   // the hard UART on the S3
 // #define UART_ID_SEMIHOST     2   // Write debug data to semihost
@@ -72,8 +61,15 @@
 // TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
 
 
-
 /*######################## ADVANCED SETTINGS  ################################*/
+
+
+/***************    HARDWARE OUTPUT OPTIONS    *****************/
+
+#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
+#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
+#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
+// TODO: CHECK THAT ONLY ONE IS ENABLED
 
 
 /***************    DATA COLLECTION SETTINGS   *****************/
