@@ -20,9 +20,6 @@
 #include <stdint.h>
 #include "sec_debug.h"
 
-
-
-
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
 
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
@@ -75,11 +72,7 @@
 
 #if S3AI_FIRMWARE_IS_RECOGNITION
 
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   should not be called
-
-#ifndef SSI_OUTPUT_FEATURE_VECTOR
 #define SSI_OUTPUT_FEATURE_VECTOR 0 // Include feature vector as part of output
-#endif
 
 #if (SSI_SENSOR_SELECT_AUDIO)
 #define SENSOR_AUDIO_RECOG_ENABLED (1)
@@ -91,13 +84,13 @@
 #if (SSI_SENSOR_SELECT_SSSS)
 #define SENSOR_SSSS_RECOG_ENABLED      1  
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 0    
-#define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)    /* Enable datasave to SD card for data collection */
-
-
+#define SENSOR_SSSS_DATASAVE_ENABLED  (S3AI_FIRMWARE_DATASAVE)    /* Enable datasave to SD card for data collection */
 #endif
 
+#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   should not be called
+
 /* Select whether to save recognition results to SD card*/
-#define DATASAVE_RECOGNITION_RESULTS (0)   // Set this to 1 to save recognition results to SD card
+#define DATASAVE_RECOGNITION_RESULTS (S3AI_FIRMWARE_DATASAVE) 
 
 #endif
 
