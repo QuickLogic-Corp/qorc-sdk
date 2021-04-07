@@ -134,6 +134,8 @@
 #define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
 
 
+#define SIZEOF_DBGBUFFER    512    // Number of characters in circular debug buffer
+
 #define ENABLE_VOICE_SOLUTION   1
 #define PDM2DEC_FACT  48
 
