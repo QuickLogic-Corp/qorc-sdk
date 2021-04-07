@@ -26,8 +26,8 @@
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
 
 /* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
-#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
-#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+#define SSI_SENSOR_SELECT_AUDIO    (1) // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_SSSS     (0) // 1 => Select SSSS sensor data for live-streaming of recognition modes
 
 #define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => replace sensor data with a known sawtooth pattern
 
@@ -42,8 +42,8 @@
 /*######################## FIRMAWARE MODE SETTINGS  ################################*/
 
 
-#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection via SSI Interface */
-#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition                */
+#define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection via SSI Interface */
+#define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition                */
 #define S3AI_FIRMWARE_DATASAVE 0   			/* Enable datasave to SD card for data collection  */
 
 
@@ -57,10 +57,12 @@
 #define SENSOR_AUDIO_RECOG_ENABLED (0)
 #define SENSOR_AUDIO_LIVESTREAM_ENABLED (1)
 #define SENSOR_AUDIO_DATASAVE_ENABLED (S3AI_FIRMWARE_DATASAVE)
+
 #endif
 
 
 #if (SSI_SENSOR_SELECT_SSSS)
+
 #define SENSOR_SSSS_RECOG_ENABLED      0  
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    
 #define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)   
@@ -90,6 +92,8 @@
 #define SENSOR_SSSS_RECOG_ENABLED      1  
 #define SENSOR_SSSS_LIVESTREAM_ENABLED 0    
 #define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)    /* Enable datasave to SD card for data collection */
+
+
 #endif
 
 /* Select whether to save recognition results to SD card*/
@@ -124,7 +128,7 @@
 #define DEBUG_UART  (UART_ID_USBSERIAL)
 
 // Set the output for sensor data and recognition results
-#define UART_ID_SSI  (UART_ID_HW) 
+#define UART_ID_SSI  (UART_ID_HW)
 // TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
 
 
