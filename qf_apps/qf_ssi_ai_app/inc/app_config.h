@@ -34,14 +34,12 @@
 #define SSI_SENSOR_SELECT_SSSS     1 // 1 => Select SSSS sensor data for live-streaming of recognition modes
 #define SSI_SENSOR_SELECT_AUDIO    0 // 1 => Select Audio data for live-streaming or recognition modes
 
-
 /*######################## OPTIONS  ################################*/
 
 #define SENSOR_COMMS_KNOWN_PATTERN 0 // 1 => replace sensor data with a known sawtooth pattern
 #define SSI_OUTPUT_FEATURE_VECTOR 0  // 1 => Include feature vector as part of output
 
 /*######################## ADVANCED SETTINGS  ################################*/
-
 
 /***************    DATA COLLECTION SETTINGS   *****************/
 
@@ -106,7 +104,7 @@ typedef struct st_fw_global_config
 
 
 
-#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
+#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1) && (S3AI_FIRMWARE_LIVESTREAM==1)
 #error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
 #endif
 // TODO: Make a macro for validating only one option is selected
