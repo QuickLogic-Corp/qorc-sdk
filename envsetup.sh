@@ -35,6 +35,7 @@ QORC_SDK_ENVSETUP_VER=1.5.0
 
 GIT_REPO_URL_EXPECTED_LOWERCASE=https://github.com/quicklogic-corp/qorc-sdk.git
 GIT_REPO_URL_EXPECTED_LOWERCASE_ALT=https://github.com/quicklogic-corp/qorc-sdk
+GIT_REPO_URL_EXPECTED_LOWERCASE_GIT=git@github.com:quicklogic-corp/qorc-sdk.git
 
 ARM_TOOLCHAIN_ARCHIVE_FILE=gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
 ARM_TOOLCHAIN_INSTALL_DIR=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update
@@ -70,9 +71,10 @@ if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE" ]; then
 
     if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE_ALT" ]; then
 
-        printf "This script should be executed from within the qorc-sdk directory!\n"
-        return
-
+        if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE_GIT" ]; then
+            printf "This script should be executed from within the qorc-sdk directory!\n"
+            return
+        fi
     fi
 
 fi
