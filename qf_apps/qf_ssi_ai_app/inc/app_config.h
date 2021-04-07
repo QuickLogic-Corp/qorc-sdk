@@ -21,7 +21,7 @@
 /*######################## FIRMAWARE MODE SETTINGS  ################################*/
 
 
-#define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection       */
+#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection       */
 #define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition    */
 
 
@@ -43,8 +43,8 @@
 /*######################## DATA CAPTURE METHOD  ################################*/
 
 
-#define S3AI_FIRMWARE_LIVESTREAM 1   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
-#define S3AI_FIRMWARE_DATASAVE 0     /* Enable SD card for collection        (supports sensor and recognition) */
+#define S3AI_FIRMWARE_LIVESTREAM 0   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
+#define S3AI_FIRMWARE_DATASAVE 1     /* Enable SD card for collection        (supports sensor and recognition) */
 
 
 
@@ -56,7 +56,7 @@
 /***************    DATA COLLECTION SETTINGS   *****************/
 
 #if (S3AI_FIRMWARE_DATASAVE)
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   10
+#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   100
 #endif
 
 #if (SSI_SENSOR_SELECT_AUDIO)
@@ -122,7 +122,7 @@ typedef struct st_fw_global_config
 #endif
 
 #if (S3AI_FIRMWARE_IS_COLLECTION == 1) && (S3AI_FIRMWARE_IS_RECOGNITION == 1) && (S3AI_FIRMWARE_LIVESTREAM==1)
-#error "Enable only one of  S3AI_FIRMWARE_IS_COLLECTION and S3AI_FIRMWARE_IS_RECOGNITION for S3AI_FIRMWARE_LIVESTREAM 
+#error "Enable only one of  S3AI_FIRMWARE_IS_COLLECTION and S3AI_FIRMWARE_IS_RECOGNITION for S3AI_FIRMWARE_LIVESTREAM"
 #endif
 
 #endif

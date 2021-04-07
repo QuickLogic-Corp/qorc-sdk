@@ -21,14 +21,21 @@
 #include "app_config.h"
 #include "sec_debug.h"
 
-/***************    HARDWARE OUTPUT OPTIONS    *****************/
+
+/*######################## INTERFACE OUTPUT OPTIONS  ################################*/
+
+
+
+/***************   CONFIGURE HARDWARE OUTPUT    *****************/
 
 #define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
 #define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
 #define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
 
 
-/*######################## INTERFACE OUTPUT OPTIONS  ################################*/
+
+/***************   UART ROUTES SETTINGS        *****************/
+
 // TODO: CHECK THAT ONLY ONE IS ENABLED
 
 // #define UART_ID_DISABLED     0   // /dev/null */
@@ -38,7 +45,6 @@
 // #define UART_ID_BUFFER       4   // Write data to internal buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-
 
 #define DEBUG_UART  (UART_ID_USBSERIAL)  // Set the output of debug messages
 #define UART_ID_APP  (UART_ID_HW)       // Set the output for application messages
