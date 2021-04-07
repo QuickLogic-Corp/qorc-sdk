@@ -33,13 +33,6 @@
 #define SSI_SENSOR_SELECT_AUDIO    0 // 1 => Select Audio data for live-streaming or recognition modes
 
 
-/*######################## OPTIONS  ################################*/
-
-
-#define SENSOR_COMMS_KNOWN_PATTERN 0 // 1 => replace sensor data with a known sawtooth pattern
-#define SSI_OUTPUT_FEATURE_VECTOR 0  // 1 => Include feature vector as part of output
-
-
 /*######################## DATA CAPTURE METHOD  ################################*/
 
 
@@ -48,9 +41,15 @@
 
 
 
+/*######################## OPTIONS  ################################*/
+
+
+#define SENSOR_COMMS_KNOWN_PATTERN 0 // 1 => replace sensor data with a known sawtooth pattern
+#define SSI_OUTPUT_FEATURE_VECTOR 0  // 1 => Include feature vector as part of output
+
+
 
 /*######################## ADVANCED SETTINGS  ################################*/
-
 
 
 /***************    DATA COLLECTION SETTINGS   *****************/
@@ -59,42 +58,21 @@
 #define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   100
 #endif
 
-#if (SSI_SENSOR_SELECT_AUDIO)
-#define SENSOR_AUDIO_LIVESTREAM_ENABLED (S3AI_FIRMWARE_LIVESTREAM)
-#define SENSOR_AUDIO_DATASAVE_ENABLED (S3AI_FIRMWARE_DATASAVE)
-#endif
+/***************    AUTOCONFIGURED DATA COLLECTION SETTINGS   *****************/
 
-#if (SSI_SENSOR_SELECT_SSSS)
-#define SENSOR_SSSS_LIVESTREAM_ENABLED (S3AI_FIRMWARE_LIVESTREAM)
-#define SENSOR_SSSS_DATASAVE_ENABLED   (S3AI_FIRMWARE_DATASAVE)   
-#endif
+#define SENSOR_AUDIO_LIVESTREAM_ENABLED   (S3AI_FIRMWARE_IS_COLLECTION)  && (S3AI_FIRMWARE_LIVESTREAM) &&  (SSI_SENSOR_SELECT_AUDIO)
+#define SENSOR_AUDIO_DATASAVE_ENABLED     (S3AI_FIRMWARE_DATASAVE) && (SSI_SENSOR_SELECT_AUDIO)
+
+#define SENSOR_SSSS_LIVESTREAM_ENABLED     (S3AI_FIRMWARE_IS_COLLECTION) && (S3AI_FIRMWARE_LIVESTREAM) && (SSI_SENSOR_SELECT_SSSS)
+#define SENSOR_SSSS_DATASAVE_ENABLED       (S3AI_FIRMWARE_DATASAVE) && (SSI_SENSOR_SELECT_SSSS)
 
 
-/***************    RECOGNITION SETTINGS   *****************/
+/***************  AUTOCONFIGURED RECOGNITION SETTINGS   *****************/
 
-#if S3AI_FIRMWARE_IS_RECOGNITION
+#define SENSOR_AUDIO_RECOG_ENABLED    (S3AI_FIRMWARE_IS_RECOGNITION) && (SSI_SENSOR_SELECT_AUDIO)
+#define SENSOR_SSSS_RECOG_ENABLED     (S3AI_FIRMWARE_IS_RECOGNITION) && (SSI_SENSOR_SELECT_SSSS)
+#define DATASAVE_RECOGNITION_RESULTS  (S3AI_FIRMWARE_IS_RECOGNITION) && (S3AI_FIRMWARE_DATASAVE)
 
-#if (SSI_SENSOR_SELECT_AUDIO)
-#define SENSOR_AUDIO_RECOG_ENABLED 1
-#endif
-
-#if (SSI_SENSOR_SELECT_SSSS)
-#define SENSOR_SSSS_RECOG_ENABLED  1
-#endif
-
-#define DATASAVE_RECOGNITION_RESULTS (S3AI_FIRMWARE_DATASAVE) 
-
-#else
-
-#if (SSI_SENSOR_SELECT_AUDIO)
-#define SENSOR_AUDIO_RECOG_ENABLED 0
-#endif
-
-#if (SSI_SENSOR_SELECT_SSSS)
-#define SENSOR_SSSS_RECOG_ENABLED  0
-#endif
-
-#endif
 
 
 // Toggle GPIO whenever a datablock buffer is dispatched to the UART
