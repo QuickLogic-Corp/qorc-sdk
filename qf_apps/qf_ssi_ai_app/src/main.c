@@ -154,7 +154,9 @@ int main(void)
 #endif
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
+#if (S3AI_FIRMWARE_MODE_COLLECTION == 1)
     create_datasave_task();
+#endif
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");

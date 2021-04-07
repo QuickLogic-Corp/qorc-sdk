@@ -14,18 +14,125 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : Fw_global_config.h
- *    Purpose:
- *
- *=========================================================*/
-
-#ifndef FW_GLOBAL_CONFIG_H_INCLUDED     /* Avoid multiple inclusion             */
+#ifndef FW_GLOBAL_CONFIG_H_INCLUDED   
 #define FW_GLOBAL_CONFIG_H_INCLUDED
 
 #include <stdint.h>
 #include "sec_debug.h"
+
+
+
+
+/*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
+
+/* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
+#define SSI_SENSOR_SELECT_AUDIO    (1) // 1 => Select Audio data for live-streaming or recognition modes
+#define SSI_SENSOR_SELECT_SSSS     (0) // 1 => Select SSSS sensor data for live-streaming of recognition modes
+
+#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => Send a known sawtooth pattern for live-streaming instead of sensor data
+
+
+#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
+#error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
+#endif
+// TODO: Make a macro for validating only one option is selected
+
+
+
+/*######################## FIRMAWARE MODE SETTINGS  ################################*/
+
+
+#define S3AI_FIRMWARE_MODE_RECOGNITION   ('R')
+#define S3AI_FIRMWARE_MODE_COLLECTION    ('C')
+#define S3AI_FIRMWARE_MODE_none           0
+
+#define S3AI_FIRMWARE_MODE (S3AI_FIRMWARE_MODE_RECOGNITION)
+#if !defined(S3AI_FIRMWARE_MODE)
+#define S3AI_FIRMWARE_MODE (S3AI_FIRMWARE_MODE_RECOGNITION)
+#endif
+
+#define S3AI_FIRMWARE_IS_COLLECTION  (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_COLLECTION)
+#define S3AI_FIRMWARE_IS_RECOGNITION (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_RECOGNITION)
+
+
+/***************    DATA COLLECTION SETTINGS   *****************/
+
+#if S3AI_FIRMWARE_IS_COLLECTION
+
+#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   100
+
+#if (SSI_SENSOR_SELECT_AUDIO)
+#define SENSOR_AUDIO_RECOG_ENABLED (0)
+#define SENSOR_AUDIO_LIVESTREAM_ENABLED (1)
+#define SENSOR_AUDIO_DATASAVE_ENABLED (0)
+#endif
+
+#endif
+
+
+/***************    RECOGNITION SETTINGS   *****************/
+
+#if S3AI_FIRMWARE_IS_RECOGNITION
+
+#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   should not be called
+
+#ifndef SSI_OUTPUT_FEATURE_VECTOR
+#define SSI_OUTPUT_FEATURE_VECTOR 0 // Include feature vector as part of output
+#endif
+
+#if (SSI_SENSOR_SELECT_AUDIO)
+#define SENSOR_AUDIO_RECOG_ENABLED (1)
+#define SENSOR_AUDIO_LIVESTREAM_ENABLED (0)
+#define SENSOR_AUDIO_DATASAVE_ENABLED (0)
+#endif
+
+/* Select whether to save recognition results to SD card*/
+#define DATASAVE_RECOGNITION_RESULTS (0)   // Set this to 1 to save recognition results to SD card
+
+#endif
+
+#if ( S3AI_FIRMWARE_IS_COLLECTION + S3AI_FIRMWARE_IS_RECOGNITION ) > 1
+#error "S3AI does not have enough memory to support both at the same time"
+#endif //TODO: Remove this we are going to support this as data collection
+
+
+
+/*######################## INTERFACE OUTPUT OPTIONS  ################################*/
+
+
+/***************    HARDWARE OUTPUT OPTIONS    *****************/
+
+#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
+#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
+#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
+// TODO: CHECK THAT ONLY ONE IS ENABLED
+
+
+/***************    INTERFACE OUTPUT SETTINGS    *****************/
+
+// #define UART_ID_DISABLED     0   // /dev/null */
+// #define UART_ID_HW           1   // the hard UART on the S3
+// #define UART_ID_SEMIHOST     2   // Write debug data to semihost
+// #define UART_ID_FPGA         3   // second uart if part of FPGA
+// #define UART_ID_BUFFER       4   // Write data to internal buffer
+// #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
+// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
+
+// Set the output of debug messages
+#define DEBUG_UART  (UART_ID_HW)
+
+// Set the output for sensor data 
+#define UART_ID_SSI  (UART_ID_USBSERIAL) 
+// TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
+
+
+
+/*######################## ADVANCED SETTINGS  ################################*/
+
+// Toggle GPIO whenever a datablock buffer is dispatched to the UART
+// Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
+#define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
+
 
 #define ENABLE_VOICE_SOLUTION   1
 #define PDM2DEC_FACT  48
@@ -58,93 +165,6 @@
 
 #define uartHandlerUpdate(id,x)
 
-// HARDWARE OUTPUT OPTIONS
-#define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
-#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
-#define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
-
-// TODO: CHECK THAT ONLY ONE IS ENABLED
-
-
-// INTERFACE OUTPUT OPTIONS
-// #define UART_ID_DISABLED     0   // /dev/null */
-// #define UART_ID_HW           1   // the hard UART on the S3
-// #define UART_ID_SEMIHOST     2   // Write debug data to semihost
-// #define UART_ID_FPGA         3   // second uart if part of FPGA
-// #define UART_ID_BUFFER       4   // Write data to buffer
-// #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
-// #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-
-// INTERFACE OUTPUT SETTINGS
-
-// Set the output of debug messages
-#define DEBUG_UART  (UART_ID_USBSERIAL)
-
-// Set the output for sensor data 
-#define UART_ID_SSI  (UART_ID_HW)
-
-// TODO: Add A Check that UART_ID_SSI and DEBUG_UART ARE NOT THE SAME
-
-// UART_ID_BUFFER Settings
-#define SIZEOF_DBGBUFFER    2048   // Number of characters in circular debug buffer 
-
-
-// Toggle GPIO whenever a datablock buffer is dispatched to the UART
-// Datablocks are dispatched every (SENSOR_SSSS_LATENCY) ms. Default is 20ms or 50Hz
-#define SENSOR_SSSS_RATE_DEBUG_GPIO      (1)    // Set to 1 to toggle configured GPIO
-
-/* Setting this MACRO to 1 enables sending a known sawtooth pattern as live-stream
- * sensor data, this setting is intended for verifying communication interface
- */
-#define SENSOR_COMMS_KNOWN_PATTERN (0) // 1 => Send a known sawtooth pattern for live-streaming
-
-/* Settings for selecting either Audio or an I2C sensor, Enable only one of these mode */
-#define SSI_SENSOR_SELECT_AUDIO    (0) // 1 => Select Audio data for live-streaming or recognition modes
-#define SSI_SENSOR_SELECT_SSSS     (1) // 1 => Select SSSS sensor data for live-streaming of recognition modes
-
-#if (SSI_SENSOR_SELECT_AUDIO == 1) && (SSI_SENSOR_SELECT_SSSS == 1)
-#error "Enable only one of the sensors SSI_SENSOR_SELECT_AUDIO or SSI_SENSOR_SELECT_SSSS"
-#endif
-
-#define SSI_RECOGNITION_RIFF_ID     (0x12345678) // ID stored in SD card datafile for recognition results
-
-#define S3AI_FIRMWARE_MODE_RECOGNITION   ('R')
-#define S3AI_FIRMWARE_MODE_COLLECTION    ('C')
-#define S3AI_FIRMWARE_MODE_none           0
-
-
-#if !defined(S3AI_FIRMWARE_MODE)
-     /* allow for commandline define for automated builds on Linux */
-/* There is not enough RAM to do both - collection & recognition, choose 1 */
-#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
-// #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
-#endif
-
-#define RECOG_VIA_BLE 1
-
-
-#define S3AI_FIRMWARE_IS_COLLECTION   (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_COLLECTION)
-#define S3AI_FIRMWARE_IS_RECOGNITION  (S3AI_FIRMWARE_MODE==S3AI_FIRMWARE_MODE_RECOGNITION)
-/* future may have other modes? */
-
-#if S3AI_FIRMWARE_IS_COLLECTION
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES   100
-#else
-/*
- * In this case, Data collection is disabled
- *
- * Thus #define is "funny lookign" it is 3 english words.
- * If this macro is actually used, those 3 words will cause
- * a syntax error and code will not compile, that is the intent.
- */
-#define DATA_CAPTURE_BUFFER_SIZE_K_BYTES  not enabled here
-#endif
-
-
-#if ( S3AI_FIRMWARE_IS_COLLECTION + S3AI_FIRMWARE_IS_RECOGNITION ) > 1
-#error "S3AI does not have enough memory to support both at the same time"
-#endif
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
 #define DBG_FLAGS_ENABLE 1
@@ -179,9 +199,7 @@ extern uint32_t DBG_flags;
 #define RIFF_AUTO_SEQUENCE_FILENAMES        (0)  // Set to 1 to use sequential count appended to filename
 #define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (1)  // Set to 1 to use timestamp appended to filename
 #define USE_DCL_FILENAME_ONLY               (0)
-
-/* Select whether to save recognition results to SD card*/
-#define DATASAVE_RECOGNITION_RESULTS (1)   // Set this to 1 to save recognition results to SD card
+#define SSI_RECOGNITION_RIFF_ID     (0x12345678) // ID stored in SD card datafile for recognition results
 
 #define UUID_TOTAL_BYTES     16
 extern uint8_t DeviceClassUUID[UUID_TOTAL_BYTES];

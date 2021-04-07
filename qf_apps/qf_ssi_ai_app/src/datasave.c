@@ -41,7 +41,8 @@
 #include "sensor_ssss.h"
 #include "sensor_audio_config.h"
 #include "micro_tick64.h"
-//#if S3AI_FIRMWARE_IS_COLLECTION
+
+#if S3AI_FIRMWARE_IS_COLLECTION
 
 SensorEnableStatus datacollection_sensor_status;
 
@@ -1353,4 +1354,4 @@ void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes)
     return;
 }
 
-//#endif
+#endif
