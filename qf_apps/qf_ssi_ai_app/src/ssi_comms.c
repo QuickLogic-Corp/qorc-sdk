@@ -83,7 +83,7 @@ void ssiTaskHandler(void* pParameter)
                sensor_ssss_startstop(0);
 #endif
 #if (SSI_SENSOR_SELECT_AUDIO)
-               //sensor_audio_startstop(0);
+               sensor_audio_startstop(0);
 #endif
                break;
             }

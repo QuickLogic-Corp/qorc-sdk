@@ -118,12 +118,6 @@ source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
 
 1. Verify that the following macros is set for saving data to SD card 
 
-   (a) in the source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
-
-::
-
-    #define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-
 To save recognition results to the SD card, enable the macro S3AI_FIRMWARE_DATASAVE in 
 in the source file `app_config.h <inc/acpp_config.h>`__.
 

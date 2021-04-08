@@ -73,17 +73,13 @@ uint8_t DeviceClassUUID[UUID_TOTAL_BYTES] =
 
 static const fw_global_config_t fw_global_config_vars =
 {
-#if (SSI_SENSOR_SELECT_AUDIO)
     .ssi_sensor_select_audio = SSI_SENSOR_SELECT_AUDIO,
 	.sensor_audio_livestream_enabled = SENSOR_AUDIO_LIVESTREAM_ENABLED,
 	.sensor_audio_recog_enabled = SENSOR_AUDIO_RECOG_ENABLED,
-#endif
 
-#if (SSI_SENSOR_SELECT_SSSS)
 	.ssi_sensor_select_ssss = SSI_SENSOR_SELECT_SSSS,
     .sensor_ssss_livestream_enabled = SENSOR_SSSS_LIVESTREAM_ENABLED,
     .sensor_ssss_recog_enabled = SENSOR_SSSS_RECOG_ENABLED
-#endif
 };
 
 #if 1
