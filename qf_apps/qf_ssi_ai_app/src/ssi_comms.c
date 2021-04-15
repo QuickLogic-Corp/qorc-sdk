@@ -61,15 +61,15 @@ void ssiTaskHandler(void* pParameter)
         vTaskDelay(1000);
         if (is_ssi_connected == false)
         {
-            uart_tx_raw_buf(UART_ID_SSI, json_string_sensor_config, json_len);
+            uart_tx_raw_buf(UART_ID_APP, json_string_sensor_config, json_len);
         }
         while (1)
         {
-            rx_avail = uart_rx_available(UART_ID_SSI);
+            rx_avail = uart_rx_available(UART_ID_APP);
             if (rx_avail == 0)
             	break;
             memmove(ssi_rxbuf, ssi_rxbuf+1, SSI_RXBUF_SIZE-2);
-            uart_rx_raw_buf(UART_ID_SSI, &ssi_rxbuf[SSI_RXBUF_SIZE-2], 1);
+            uart_rx_raw_buf(UART_ID_APP, &ssi_rxbuf[SSI_RXBUF_SIZE-2], 1);
       	    pposConnect = strstr(ssi_rxbuf, ssi_connect_string);
       	    pposDisconnect = strstr(ssi_rxbuf, ssi_disconnect_string);
             if (pposDisconnect)
@@ -83,7 +83,7 @@ void ssiTaskHandler(void* pParameter)
                sensor_ssss_startstop(0);
 #endif
 #if (SSI_SENSOR_SELECT_AUDIO)
-               //sensor_audio_startstop(0);
+               sensor_audio_startstop(0);
 #endif
                break;
             }
@@ -98,7 +98,7 @@ void ssiTaskHandler(void* pParameter)
                sensor_ssss_startstop(1);
 #endif
 #if (SSI_SENSOR_SELECT_AUDIO)
-               uart_tx_raw_buf(UART_ID_SSI, "AUDIOSTREAMSTART", 16);
+               uart_tx_raw_buf(UART_ID_APP, "AUDIOSTREAMSTART", 16);
                sensor_audio_add();
                sensor_audio_startstop(1);
 #endif
@@ -117,7 +117,7 @@ void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
 {
     if (is_ssi_connected)
     {
-        uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
+        uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
     }
 }
 
@@ -125,7 +125,7 @@ void ssi_publish_sensor_results(uint8_t* p_source, int ilen)
 {
     if (is_ssi_connected == false)
     {
-        uart_tx_raw_buf(UART_ID_SSI, p_source, ilen);
+        uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
     }
 }
 

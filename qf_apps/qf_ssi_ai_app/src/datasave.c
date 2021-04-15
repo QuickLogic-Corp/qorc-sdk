@@ -41,7 +41,8 @@
 #include "sensor_ssss.h"
 #include "sensor_audio_config.h"
 #include "micro_tick64.h"
-//#if S3AI_FIRMWARE_IS_COLLECTION
+
+#if S3AI_FIRMWARE_DATASAVE
 
 SensorEnableStatus datacollection_sensor_status;
 
@@ -1320,6 +1321,30 @@ create_datasave_task(void)
     configASSERT(datasave_task_vars.task_handle);
 }
 
+void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes)
+{
+    struct sensor_data Info, *pInfo = &Info;
+#if (SENSOR_SSSS_DATASAVE_ENABLED == 1)
+    pInfo->rate_hz = sensor_ssss_config.rate_hz; // what should go here?
+#endif
+
+#if (SENSOR_AUDIO_DATASAVE_ENABLED == 1)
+    pInfo->rate_hz = sensor_audio_config.rate_hz; // what should go here?
+#endif
+    uint64_t curr_time = convert_to_uSecCount(xTaskGetTickCount());
+    pInfo->bytes_per_reading = 1;
+    pInfo->n_bytes = wbytes;
+    pInfo->sensor_id = SSI_RECOGNITION_RIFF_ID; // use a fixed ID for recognition results
+    pInfo->time_end = curr_time; // convert_to_uSecCount(pIn->dbHeader.Tend);
+    pInfo->time_start = prev_rec_start_time; // convert_to_uSecCount(pIn->dbHeader.Tstart);
+    pInfo->vpData = sensor_ssss_ai_result_buf;
+    data_save((const struct sensor_data *)pInfo);
+    prev_rec_start_time = curr_time;
+    return;
+}
+
+#endif
+
 static uint64_t prev_rec_start_time = 0;
 static uint64_t curr_rec_start_time = 0;
 void set_recognition_start_time(void)
@@ -1335,22 +1360,3 @@ void set_recognition_current_block_time(void)
 	return;
 }
 
-void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes)
-{
-#if (SENSOR_SSSS_DATASAVE_ENABLED == 1)
-    struct sensor_data Info, *pInfo = &Info;
-    uint64_t curr_time = convert_to_uSecCount(xTaskGetTickCount());
-    pInfo->bytes_per_reading = 1;
-    pInfo->n_bytes = wbytes;
-    pInfo->rate_hz = sensor_ssss_config.rate_hz; // what should go here?
-    pInfo->sensor_id = SSI_RECOGNITION_RIFF_ID; // use a fixed ID for recognition results
-    pInfo->time_end = curr_time; // convert_to_uSecCount(pIn->dbHeader.Tend);
-    pInfo->time_start = prev_rec_start_time; // convert_to_uSecCount(pIn->dbHeader.Tstart);
-    pInfo->vpData = sensor_ssss_ai_result_buf;
-    data_save((const struct sensor_data *)pInfo);
-    prev_rec_start_time = curr_time;
-#endif
-    return;
-}
-
-//#endif
