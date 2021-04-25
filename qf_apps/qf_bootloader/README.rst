@@ -87,6 +87,23 @@ Features Explained
 Usage
 ~~~~~
 
+0. update the qf_bootloader (this app) from the :code:`qomu-bl-dump-read-protect` branch.
+   
+   ::
+
+     git pull
+     git checkout qomu-bl-dump-read-protect
+
+   From the qf_bootloader app, build and then flash the new bootloader bin onto the board.
+
+   ::
+
+     cd GCC_Project
+     make
+
+     qfprog --port /dev/ttyACM0 --bootloader GCC_Project/output/bin/qf_bootloader.bin
+
+
 1. update the programmer to the latest, on the :code:`qomu-bl-dump-read-protect` branch
 
    ::
