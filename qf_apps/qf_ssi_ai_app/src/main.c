@@ -133,7 +133,10 @@ int main(void)
 #endif
     HAL_I2C_Init(i2c0config);
 
+#if (S3AI_FIRMWARE_IS_RECOGNITION == 1)
     kb_model_init(); /* initialize the knowledgepack */
+#endif
+
 #if (SSI_SENSOR_SELECT_SSSS == 1)
     sensor_ssss_block_processor();
 #endif
@@ -154,7 +157,9 @@ int main(void)
 #endif
     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
+#if (S3AI_FIRMWARE_DATASAVE == 1)
     create_datasave_task();
+#endif
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");

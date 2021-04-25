@@ -16,12 +16,13 @@ Building and running the project for data collection mode:
 ----------------------------------------------------------
 
 1. Verify that the following macros are set for data collection mode in
-   the source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
+   the source file `app_config.h <inc/app_config.h>`__.
 
 ::
 
-   #define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
-   #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
+   #define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection    */
+   #define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition */
+
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
@@ -39,12 +40,12 @@ Building and running the project for recognition mode:
 ------------------------------------------------------
 
 1. Verify that the following macros are set for recognition mode in the
-   source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
+the source file `app_config.h <inc/app_config.h>`__.
 
 ::
 
-   #define SENSOR_SSSS_RECOG_ENABLED      1    /* Enable SensiML recognition */
-   #define SENSOR_SSSS_LIVESTREAM_ENABLED 0    /* Enable live-streaming for data collection */
+   #define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection    */
+   #define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition */
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
@@ -117,26 +118,14 @@ source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
 
 1. Verify that the following macros is set for saving data to SD card 
 
-   (a) in the source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
+To save recognition results to the SD card, enable the macro S3AI_FIRMWARE_DATASAVE in 
+in the source file `app_config.h <inc/acpp_config.h>`__.
 
 ::
 
-    #define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+    #define S3AI_FIRMWARE_LIVESTREAM 0   		/* Enable livestream via SSI Interface  (supports only sensor or recogntion not both)  */
+    #define S3AI_FIRMWARE_DATASAVE 1 			/* Enable SD card for collection        (supports sensor and recogntion not both)      */
 
-To save recognition results to the SD card, enable the macro DATASAVE_RECOGNITION_RESULTS
-
-::
-
-    /* Select whether to save recognition results to SD card*/
-    #define DATASAVE_RECOGNITION_RESULTS (1)   // Set this to 1 to save recognition results to SD card
-
-
-   (b) in the source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
-
-::
-
-    /* Select whether to save sensor data to SD card or not */
-    #define SENSOR_SSSS_DATASAVE_ENABLED   1    /* Enable datasave to SD card for data collection */
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
