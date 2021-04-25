@@ -3,7 +3,9 @@ ENTRY(Reset_Handler)
 MEMORY
 {
 	rom (rx)  : ORIGIN = 0x20000000, LENGTH = 0x0000A000
-	ram (rwx) : ORIGIN = 0x2000A000, LENGTH = 0x00006000
+	/*ram (rwx) : ORIGIN = 0x2000A000, LENGTH = 0x00006000*/
+    ram (rwx) : ORIGIN = 0x2000A000, LENGTH = 0x00005F80 /* -128B */
+    BLID (rx) : ORIGIN = 0x2000FF80, LENGTH = 0x00000080 /* 128B for IDSTRING */
 	stack	  : ORIGIN = 0x2007E000, LENGTH = 0x00001000
 	LOADER (rx)	  : ORIGIN = 0x2007F200, LENGTH = 0x00000E00
 }
@@ -62,6 +64,13 @@ SECTIONS
     . = ALIGN(4);
     __LOADER_FUNC_end__ = .;
    	} > LOADER AT > rom
+
+    .BLIDSECTION :
+    {
+        . = ALIGN(4);
+        KEEP(*(.BLIDSECTION));
+        . = ALIGN(4);
+    } > BLID
 	
 	.txt :
 	{

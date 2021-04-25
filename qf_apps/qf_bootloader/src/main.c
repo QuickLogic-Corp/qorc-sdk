@@ -48,6 +48,27 @@ extern void BL_Task_Init(void);
 
 const char *SOFTWARE_VERSION_STR="QF_BL 1.0" ;
 
+// FORMAT (; delimiter)
+// BOARD; (QUICKFEATHER/QOMU...)
+// APPLICATION (BOOTLOADER)
+// VERSION (MAJ.MIN.PATCH)
+// DATE (DD-MMM-YYYY)
+// <OTHER OPTIONAL STUFF>
+// ENDs with 0x00 byte like a normal C string.
+// Place at 0x2000FF80(SRAM address)
+// max length = 128 bytes (127 bytes + 0x00)
+// built into the binary - the bootloader bin will always be 64kB in size.
+// offset = 0xFF80 in the binary
+#ifdef __IAR_BUILD
+#pragma default_function_attributes = @ "BLIDSECTION"
+const char BLID_DATA[128] =
+#else
+__attribute__((section(".BLIDSECTION"))) const char BLID_DATA[128] = 
+#endif
+
+"QOMU;BOOTLOADER;1.0.1;17-MAR-2021;";
+
+
 // The entry Function of the BL when the system boots up.
 int main(void)
 {

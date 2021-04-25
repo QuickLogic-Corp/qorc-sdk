@@ -46,6 +46,31 @@ uint32_t    xval;
 uint32_t    xret;
 uint32_t    xtickStart;
 uint32_t    xtime;
+uint32_t    ccommand; // custom command
+uint8_t     boot_area_locked = 0xFF; // lock bootloader/bootfpga areas from write.
+
+// locked areas in boot:
+// bootloader :             0x00000000 - 0x0000FFFF
+// bootfpga metadata :      0x00010000 - 0x00010FFF
+// bootloader metadata :    0x0001F000 - 0x0001FFFF
+// bootfpga :               0x00020000 - 0x0003FFFF
+
+// coalescing them, we have 2 contiguous regions to lock:
+// 0x00000000 - 0x00010FFF
+// 0x0001F000 - 0x0003FFFF
+#define LOCK_REGION_1_START     0x00000000
+#define LOCK_REGION_1_END       0x00010FFF
+#define LOCK_REGION_2_START     0x0001F000
+#define LOCK_REGION_2_END       0x0003FFFF
+
+// can be tested with m4app and m4app metadata:
+// #define LOCK_REGION_1_START     0x00080000
+// #define LOCK_REGION_1_END       0x000EDFFF
+// #define LOCK_REGION_2_START     0x00013000
+// #define LOCK_REGION_2_END       0x00013FFF
+
+// https://stackoverflow.com/a/3269471/3379867
+#define IS_OVERLAPPING(start1, end1, start2, end2)  (start1 <= end2 && start2 <= end1)
 
 //-------------------- External functions -----------//
 void toggle_downloading_led(int high_time_msec, int low_time_msec);
@@ -95,6 +120,28 @@ void program_flash( void *pParameter )
                 atflCmd[icmd++] = c;
             }
         }
+
+        // debug++
+        // dbg_str("\n");
+        // icmd=0;        
+        // while(icmd < 5)
+        // {
+        //     dbg_str("0x");dbg_hex8(atflPkt[icmd++]);dbg_str(" ");
+        // }
+        // dbg_str("\n");
+
+        // dbg_str("\n");
+        // dbg_str_int("kbWrite", kbWrite);
+        // dbg_str_int("kbRead", kbRead);
+        // dbg_str("\n");
+        // icmd=0;        
+        // while(icmd < kbWrite)
+        // {
+        //     dbg_str("0x");dbg_hex8(atflCmd[icmd++]);dbg_str(" ");
+        // }
+        // dbg_str("\n");
+        // debug--
+
         // Process command
         switch(atflCmd[0]) {
         case 0xAB:
@@ -111,51 +158,136 @@ void program_flash( void *pParameter )
             uart_tx_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
             break;
         case 0x05:
+            // Read Status Reg 1
+            dbg_str("Read Status Reg 1 ");
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_WithResponse);
             xval = (atflResponse[1] << 8) | (atflResponse[0] << 0);
             uart_tx_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
+            dbg_str("done\n");
             break;
         case 0x20:
+            // Block Erase 4 KBytes
+            dbg_str("Block Erase 4 KBytes ");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
             dbg_str_hex32("Addr", xaddr);
-            dbg_str("Erase 4 KBytes() .. ");
+            if(boot_area_locked == 0xFF) // locked
+            {
+                // overlap?
+                if( IS_OVERLAPPING(xaddr, xaddr+(4*1024), LOCK_REGION_1_START, LOCK_REGION_1_END) ||
+                    IS_OVERLAPPING(xaddr, xaddr+(4*1024), LOCK_REGION_2_START, LOCK_REGION_2_END) )
+                    {
+                        dbg_str("bootarea locked! use --force\n");
+                        break;
+                    }
+            }
+            
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_NoResponse);
             dbg_str("done\n");
             break;
         case 0x52:
+            // Block Erase 32 KBytes
+            dbg_str("Block Erase 32 KBytes ");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
             dbg_str_hex32("Addr", xaddr);
-            dbg_str("Erase 32 KBytes() .. ");
+            if(boot_area_locked == 0xFF) // locked
+            {
+                // overlap?
+                if( IS_OVERLAPPING(xaddr, xaddr+(32*1024), LOCK_REGION_1_START, LOCK_REGION_1_END) ||
+                    IS_OVERLAPPING(xaddr, xaddr+(32*1024), LOCK_REGION_2_START, LOCK_REGION_2_END) )
+                    {
+                        dbg_str("bootarea locked! use --force\n");
+                        break;
+                    }
+            }
+            
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_NoResponse);
             dbg_str("done\n");
             break;
         case 0xD8:
+            // Block Erase 64 KBytes
+            dbg_str("Block Erase 64 KBytes");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
             dbg_str_hex32("Addr", xaddr);
-            dbg_str("Erase 64 KBytes() .. ");
+            if(boot_area_locked == 0xFF) // locked
+            {
+                // overlap?
+                if( IS_OVERLAPPING(xaddr, xaddr+(64*1024), LOCK_REGION_1_START, LOCK_REGION_1_END) ||
+                    IS_OVERLAPPING(xaddr, xaddr+(64*1024), LOCK_REGION_2_START, LOCK_REGION_2_END) )
+                    {
+                        dbg_str("bootarea locked! use --force\n");
+                        break;
+                    }
+            }
+            
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_NoResponse);
             dbg_str("done\n");
             break;
         case 0x06:
+            // Write Enable
+            dbg_str("Write Enable ");
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, CMD_NoResponse);
+            dbg_str("done\n");
             break;
         case 0x02:
+            // Byte/Page Program
+            dbg_str("Byte/Page Program ");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
+            dbg_str_hex32("Addr", xaddr);
             xval = (atflCmd[7] << 24) |(atflCmd[6] << 16) | (atflCmd[5] << 8) | atflCmd[4];
+            if(boot_area_locked == 0xFF) // locked
+            {
+                // overlap?
+                if( IS_OVERLAPPING(xaddr, xaddr+(kbWrite-4), LOCK_REGION_1_START, LOCK_REGION_1_END) ||
+                    IS_OVERLAPPING(xaddr, xaddr+(kbWrite-4), LOCK_REGION_2_START, LOCK_REGION_2_END) )
+                    {
+                        dbg_str("bootarea locked! use --force\n");
+                        break;
+                    }
+            }
             xret = spi_flash_program(atflCmd, 4, &atflCmd[4], kbWrite-4, NULL);
             if (xret != FlashOperationSuccess) {
                 dbg_str("Page Program failed\n");
                 while (1);
             }
+            dbg_str("done\n");
             break;
         case 0x0B:
+            // Read Array
+            dbg_str("Read Array ");
             xaddr = (atflCmd[1] << 16) | (atflCmd[2] << 8) | atflCmd[3];
+            dbg_str_hex32("Addr", xaddr);
             spi_flash_cmd(atflCmd, kbWrite, atflResponse, kbRead, READ_CMD);
             uart_tx_raw_buf(UART_ID_BOOTLOADER, atflResponse, kbRead);
+            dbg_str("done\n");
             break;
+        case 0xCC:
+            // custom command 1B only
+            dbg_str("Custom Command ");
+            ccommand = atflCmd[1] & 0xFF;
+
+            if(ccommand == 0xB1)
+            {
+                dbg_str("Lock Boot Area\n");
+                // lock boot area
+                boot_area_locked = 0xFF;
+            }
+            else if(ccommand == 0xB0)
+            {
+                dbg_str("Unlock Boot Area\n");
+
+                // unlock bootloader area
+                boot_area_locked = 0x00;
+            }
+            else
+            {
+                dbg_str_hex8("Ignore Unknown CustomCommand", (int)atflCmd[1]);
+            }
+            dbg_str("done\n");
+            break;
+
         default:
-            dbg_str_hex8("Unknown OpCode", (int)atflCmd[0]);
-            while(1);
+            dbg_str_hex8("Ignore Unknown OpCode", (int)atflCmd[0]);
+            //while(1); // ignore, don't hang (need this change to other bootloaders too!)
             break;
         }
     }
