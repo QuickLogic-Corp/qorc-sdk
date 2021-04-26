@@ -1,9 +1,0 @@
-
-UTILS_SRCS:=$(wildcard $(UTILS_DIR)/*.c )
-
-SRCS:=$(filter-out micro_tick64.c, $(notdir $(UTILS_SRCS)))
-OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
-SRC_PATH:= $(UTILS_DIR)
-
-include $(COMMON_STUB)
-
