@@ -36,6 +36,9 @@ Building and running the project for data collection mode:
    Lab <https://sensiml.com/products/data-capture-lab/>`__ to connect,
    stream and capture the sensor data.
 
+   Audio data stream could also be captured using the python script
+   `getaudio.py <../../Tools/uartaudio/getaudio.py>`__. 
+
 Building and running the project for recognition mode:
 ------------------------------------------------------
 
