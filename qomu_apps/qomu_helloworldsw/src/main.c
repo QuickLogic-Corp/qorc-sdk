@@ -63,7 +63,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldsw";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qomu_apps/qomu_helloworldsw";
     
     qomu_hardwaresetup();
     nvic_init();
