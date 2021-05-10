@@ -1,0 +1,16 @@
+#
+# SW sources
+#
+MAIN_SRCS:=$(wildcard $(MAIN_DIR)/*.c)
+
+filters=audio_pipeline_example.c h2d_protocol.c ql_hostTask.c ql_smart_remote_app.c
+
+SRCS:=$(filter-out $(filters),$(notdir $(MAIN_SRCS)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(MAIN_DIR)
+
+
+include $(COMMON_STUB)
+
+
