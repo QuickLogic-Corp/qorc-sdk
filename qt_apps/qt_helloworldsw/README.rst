@@ -1,2 +1,2 @@
-QuickFeather Hello World (Cortex M4) Application
+Thing+ Hello World (Cortex M4) Application
 ================================================
