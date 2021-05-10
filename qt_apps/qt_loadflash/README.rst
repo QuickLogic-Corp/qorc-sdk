@@ -1,2 +1,2 @@
-QuickFeather Flash Loader Application
+Thing+ Flash Loader Application
 =====================================
