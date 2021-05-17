@@ -32,6 +32,7 @@
 
 const char json_string_sensor_config[] = \
 "{"\
+   "\"version\":2,"\
    "\"sample_rate\":16000,"\
    "\"samples_per_packet\":240,"\
    "\"column_location\":{"\

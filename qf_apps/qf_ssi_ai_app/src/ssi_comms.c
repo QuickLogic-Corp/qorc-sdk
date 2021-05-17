@@ -33,6 +33,15 @@
 #define STACK_SIZE_TASK_SSI (256)
 #define PRIORITY_TASK_SSI (PRIORITY_NORMAL)
 #define SSI_RXBUF_SIZE (32)
+#define SSI_SYNC_DATA (0xFF)
+
+uint8_t txbufWithSync[1024];
+
+extern void ssi_seqnum_init(void);
+extern void ssi_seqnum_reset(void);
+extern uint32_t ssi_seqnum_update(void);
+extern uint32_t ssi_seqnum_get(void);
+extern uint8_t ssi_payload_checksum_get(uint8_t *p_data, uint16_t len);
 
 xTaskHandle xHandleTaskSSI;
 bool        is_ssi_connected          = false;
@@ -94,6 +103,7 @@ void ssiTaskHandler(void* pParameter)
                if (is_ssi_connected == true)
             	   break;
                is_ssi_connected = true;
+               ssi_seqnum_reset();
 #if (SSI_SENSOR_SELECT_SSSS)
                sensor_ssss_startstop(1);
 #endif
@@ -115,9 +125,38 @@ void ssiTaskHandler(void* pParameter)
 
 void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
 {
+    int nbytes ;
+    uint32_t seqnum;
+    uint16_t u16len;
+    uint8_t crc8 = 0xFF;
     if (is_ssi_connected)
     {
-        uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
+        // Add sync data
+        nbytes = 0;
+        txbufWithSync[nbytes] = SSI_SYNC_DATA;
+        nbytes++;
+
+        // Add sequence number
+        seqnum = ssi_seqnum_update();
+        memcpy(txbufWithSync+nbytes, &seqnum, sizeof(seqnum));
+        nbytes += sizeof(seqnum);
+
+        // Add payload length
+        u16len = ilen;
+        memcpy(txbufWithSync+nbytes, &u16len, sizeof(u16len));
+        nbytes += sizeof(u16len);
+
+        // Add payload data
+        memcpy(txbufWithSync+nbytes, p_source, ilen);
+        nbytes += ilen;
+
+        // compute 8-bit checksum
+        crc8 = ssi_payload_checksum_get(p_source, ilen);
+        txbufWithSync[nbytes] = crc8;
+        nbytes += sizeof(crc8);
+
+        //uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
+        uart_tx_raw_buf(UART_ID_APP, txbufWithSync, nbytes);
     }
 }
 
@@ -143,3 +182,36 @@ signed portBASE_TYPE StartSimpleStreamingInterfaceTask(
     configASSERT(xHandleTaskSSI);
     return pdPASS;
 }
+
+static uint32_t ssi_conn_seqnum = 0;
+void ssi_seqnum_init(void)
+{
+    ssi_conn_seqnum = 0;
+}
+
+void ssi_seqnum_reset(void)
+{
+    ssi_conn_seqnum = 0;
+}
+
+uint32_t ssi_seqnum_update(void)
+{
+    ssi_conn_seqnum++;
+    return ssi_conn_seqnum;
+}
+
+uint32_t ssi_seqnum_get(void)
+{
+    return ssi_conn_seqnum;
+}
+
+uint8_t ssi_payload_checksum_get(uint8_t *p_data, uint16_t len)
+{
+    uint8_t crc8 = p_data[0];
+    for (int k = 1; k < len; k++)
+    {
+        crc8 ^= p_data[k];
+    }
+    return crc8;
+}
+
