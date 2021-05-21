@@ -30,6 +30,16 @@
 #if (SSI_SENSOR_SELECT_AUDIO == 1)
 /* BEGIN JSON descriptor for the sensor configuration */
 
+#if (SSI_JSON_CONFIG_VERSION == 1)
+const char json_string_sensor_config[] = \
+"{"\
+   "\"sample_rate\":16000,"\
+   "\"samples_per_packet\":240,"\
+   "\"column_location\":{"\
+	"  \"Microphone\":0"\
+   "}"\
+"}\r\n" ;
+#elif (SSI_JSON_CONFIG_VERSION == 2)
 const char json_string_sensor_config[] = \
 "{"\
    "\"version\":2,"\
@@ -39,6 +49,9 @@ const char json_string_sensor_config[] = \
 	"  \"Microphone\":0"\
    "}"\
 "}\r\n" ;
+#else
+#error "Unknown SSI json config version"
+#endif
 /* END JSON descriptor for the sensor data */
 #endif /* SSI_SENSOR_SELECT_AUDIO */
 

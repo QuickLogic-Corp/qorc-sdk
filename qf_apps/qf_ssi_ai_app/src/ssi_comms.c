@@ -27,13 +27,13 @@
 #include "eoss3_hal_uart.h"
 #include "dbg_uart.h"
 #include "sensor_ssss.h"
+#include "sensor_audio_config.h"
 #include "RtosTask.h"
 #include "ssi_comms.h"
 
 #define STACK_SIZE_TASK_SSI (256)
 #define PRIORITY_TASK_SSI (PRIORITY_NORMAL)
 #define SSI_RXBUF_SIZE (32)
-#define SSI_SYNC_DATA (0xFF)
 
 uint8_t txbufWithSync[1024];
 
@@ -125,39 +125,36 @@ void ssiTaskHandler(void* pParameter)
 
 void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
 {
-    int nbytes ;
+	if (is_ssi_connected == false)
+		return;
+
+	// SSI is in connected state, send the sensor data
+#if (SSI_JSON_CONFIG_VERSION == 2)
     uint32_t seqnum;
     uint16_t u16len;
     uint8_t crc8 = 0xFF;
-    if (is_ssi_connected)
-    {
-        // Add sync data
-        nbytes = 0;
-        txbufWithSync[nbytes] = SSI_SYNC_DATA;
-        nbytes++;
+    // compute 8-bit checksum
+    crc8 = ssi_payload_checksum_get(p_source, ilen);
 
-        // Add sequence number
-        seqnum = ssi_seqnum_update();
-        memcpy(txbufWithSync+nbytes, &seqnum, sizeof(seqnum));
-        nbytes += sizeof(seqnum);
+    // Send SYNc data
+    uint8_t sync_data = SSI_SYNC_DATA;
+    uart_tx_raw_buf(UART_ID_APP, &sync_data, sizeof(sync_data));
 
-        // Add payload length
-        u16len = ilen;
-        memcpy(txbufWithSync+nbytes, &u16len, sizeof(u16len));
-        nbytes += sizeof(u16len);
+    // Add sequence number
+    seqnum = ssi_seqnum_update();
+    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&seqnum, sizeof(seqnum));
 
-        // Add payload data
-        memcpy(txbufWithSync+nbytes, p_source, ilen);
-        nbytes += ilen;
+    // Add payload length
+    u16len = ilen;
+    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&u16len, sizeof(u16len));
+#endif
 
-        // compute 8-bit checksum
-        crc8 = ssi_payload_checksum_get(p_source, ilen);
-        txbufWithSync[nbytes] = crc8;
-        nbytes += sizeof(crc8);
+    uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
 
-        //uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
-        uart_tx_raw_buf(UART_ID_APP, txbufWithSync, nbytes);
-    }
+#if (SSI_JSON_CONFIG_VERSION == 2)
+    // Add 8-bit checksum
+    uart_tx_raw_buf(UART_ID_APP, &crc8, 1);
+#endif
 }
 
 void ssi_publish_sensor_results(uint8_t* p_source, int ilen)

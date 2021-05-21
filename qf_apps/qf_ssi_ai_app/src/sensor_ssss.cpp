@@ -60,6 +60,7 @@ MC3635  qorc_ssi_accel;
 
 /* BEGIN JSON descriptor for the sensor configuration */
 
+#if SSI_JSON_CONFIG_VERSION == 1
 const char json_string_sensor_config[] = \
 "{"\
    "\"version\":2,"\
@@ -71,6 +72,21 @@ const char json_string_sensor_config[] = \
 	"  \"AccelerometerZ\":2"
    "}"\
 "}\r\n" ;
+#elif SSI_JSON_CONFIG_VERSION == 2
+const char json_string_sensor_config[] = \
+"{"\
+   "\"sample_rate\":100,"\
+   "\"samples_per_packet\":6,"\
+   "\"column_location\":{"\
+	"  \"AccelerometerX\":0,"
+	"  \"AccelerometerY\":1,"
+	"  \"AccelerometerZ\":2"
+   "}"\
+"}\r\n" ;
+#else
+#error "Unknown SSI json config version"
+#endif
+
 /* END JSON descriptor for the sensor data */
 #endif /* SSI_SENSOR_SELECT_SSSS */
 

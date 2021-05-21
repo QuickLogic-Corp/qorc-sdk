@@ -26,6 +26,9 @@ extern "C" {
 #include "Fw_global_config.h"
 #include "FreeRTOS.h"
 
+#define SSI_JSON_CONFIG_VERSION    (2)     /* 2 => Use enhance SSI protocol, 1 => use original SSI protocol */
+#define SSI_SYNC_DATA (0xFF)
+
 extern bool is_ssi_connected;
 extern signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void);
 void ssi_publish_sensor_data( uint8_t *p_source, int ilen );
