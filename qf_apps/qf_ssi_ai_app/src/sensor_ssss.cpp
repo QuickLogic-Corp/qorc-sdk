@@ -63,7 +63,6 @@ MC3635  qorc_ssi_accel;
 #if SSI_JSON_CONFIG_VERSION == 1
 const char json_string_sensor_config[] = \
 "{"\
-   "\"version\":2,"\
    "\"sample_rate\":100,"\
    "\"samples_per_packet\":6,"\
    "\"column_location\":{"\
@@ -75,6 +74,7 @@ const char json_string_sensor_config[] = \
 #elif SSI_JSON_CONFIG_VERSION == 2
 const char json_string_sensor_config[] = \
 "{"\
+   "\"version\":2,"\
    "\"sample_rate\":100,"\
    "\"samples_per_packet\":6,"\
    "\"column_location\":{"\
