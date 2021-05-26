@@ -58,7 +58,7 @@
 #include "host_interface.h"
 #include "d2h_protocol.h"
 
-#include "qf_hardwareSetup.h"
+#include "qf_hardwaresetup.h"
 #include "eoss3_hal_pad_config.h"
 #if (FEATURE_FLL_I2S_DEVICE == 1)
 #include "fpga_loader.h"
