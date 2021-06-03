@@ -299,7 +299,7 @@ void audio_livestream_data_processor(
 	  memcpy (pIn->p_data, audio_debug_buffer, nSamples * sizeof(int16_t));
 #endif
 
-      ssi_publish_sensor_data(pIn->p_data, nSamples * (pIn->dbHeader.dataElementSize));
+      ssiv2_publish_sensor_data(SSI_CHANNEL_DEFAULT, pIn->p_data, nSamples * (pIn->dbHeader.dataElementSize));
       //ble_send( &sdi );
     }
     *pRet = NULL;

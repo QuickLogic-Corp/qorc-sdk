@@ -596,7 +596,7 @@ void sensor_ssss_livestream_data_processor(
       }
 	  memcpy (pIn->p_data, sensor_ssss_debug_buffer, nSamples * sizeof(int16_t));
 #endif
-      ssi_publish_sensor_data(p_source, ilen);
+      ssiv2_publish_sensor_data(SSI_CHANNEL_DEFAULT, p_source, ilen);
     }
     *pRet = NULL;
     return;

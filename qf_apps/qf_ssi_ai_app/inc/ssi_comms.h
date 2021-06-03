@@ -27,12 +27,15 @@ extern "C" {
 #include "FreeRTOS.h"
 
 #define SSI_JSON_CONFIG_VERSION    (2)     /* 2 => Use enhance SSI protocol, 1 => use original SSI protocol */
-#define SSI_SYNC_DATA (0xFF)
+#define SSI_SYNC_DATA              (0xFF)
+#define SSI_MAX_CHANNELS           (4)
+#define SSI_CHANNEL_DEFAULT        (0)
 
 extern bool is_ssi_connected;
 extern signed portBASE_TYPE StartSimpleStreamingInterfaceTask( void);
 void ssi_publish_sensor_data( uint8_t *p_source, int ilen );
 void ssi_publish_sensor_results( uint8_t *p_source, int ilen );
+void ssiv2_publish_sensor_data(uint8_t channel, uint8_t *p_source, int ilen );
 
 #ifdef __cplusplus
 }

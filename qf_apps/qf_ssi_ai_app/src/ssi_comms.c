@@ -37,10 +37,10 @@
 
 uint8_t txbufWithSync[1024];
 
-extern void ssi_seqnum_init(void);
-extern void ssi_seqnum_reset(void);
-extern uint32_t ssi_seqnum_update(void);
-extern uint32_t ssi_seqnum_get(void);
+extern void ssi_seqnum_init(uint8_t);
+extern void ssi_seqnum_reset(uint8_t);
+extern uint32_t ssi_seqnum_update(uint8_t);
+extern uint32_t ssi_seqnum_get(uint8_t);
 extern uint8_t ssi_payload_checksum_get(uint8_t *p_data, uint16_t len);
 
 xTaskHandle xHandleTaskSSI;
@@ -103,7 +103,9 @@ void ssiTaskHandler(void* pParameter)
                if (is_ssi_connected == true)
             	   break;
                is_ssi_connected = true;
-               ssi_seqnum_reset();
+               // reset sequence number for this connection
+               // default channel number is 0
+               ssi_seqnum_reset(SSI_CHANNEL_DEFAULT);
 #if (SSI_SENSOR_SELECT_SSSS)
                sensor_ssss_startstop(1);
 #endif
@@ -125,36 +127,10 @@ void ssiTaskHandler(void* pParameter)
 
 void ssi_publish_sensor_data(uint8_t* p_source, int ilen)
 {
-	if (is_ssi_connected == false)
-		return;
-
-	// SSI is in connected state, send the sensor data
-#if (SSI_JSON_CONFIG_VERSION == 2)
-    uint32_t seqnum;
-    uint16_t u16len;
-    uint8_t crc8 = 0xFF;
-    // compute 8-bit checksum
-    crc8 = ssi_payload_checksum_get(p_source, ilen);
-
-    // Send SYNc data
-    uint8_t sync_data = SSI_SYNC_DATA;
-    uart_tx_raw_buf(UART_ID_APP, &sync_data, sizeof(sync_data));
-
-    // Add sequence number
-    seqnum = ssi_seqnum_update();
-    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&seqnum, sizeof(seqnum));
-
-    // Add payload length
-    u16len = ilen;
-    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&u16len, sizeof(u16len));
-#endif
-
-    uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
-
-#if (SSI_JSON_CONFIG_VERSION == 2)
-    // Add 8-bit checksum
-    uart_tx_raw_buf(UART_ID_APP, &crc8, 1);
-#endif
+    if (is_ssi_connected)
+    {
+        uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
+    }
 }
 
 void ssi_publish_sensor_results(uint8_t* p_source, int ilen)
@@ -180,26 +156,34 @@ signed portBASE_TYPE StartSimpleStreamingInterfaceTask(
     return pdPASS;
 }
 
-static uint32_t ssi_conn_seqnum = 0;
-void ssi_seqnum_init(void)
+static uint32_t ssi_conn_seqnum[SSI_MAX_CHANNELS] = {0};
+void ssi_seqnum_init(uint8_t channel)
 {
-    ssi_conn_seqnum = 0;
+	if (channel >= SSI_MAX_CHANNELS)
+		return;
+    ssi_conn_seqnum[channel] = 0;
 }
 
-void ssi_seqnum_reset(void)
+void ssi_seqnum_reset(uint8_t channel)
 {
-    ssi_conn_seqnum = 0;
+	if (channel >= SSI_MAX_CHANNELS)
+		return;
+    ssi_conn_seqnum[channel] = 0;
 }
 
-uint32_t ssi_seqnum_update(void)
+uint32_t ssi_seqnum_update(uint8_t channel)
 {
-    ssi_conn_seqnum++;
-    return ssi_conn_seqnum;
+	if (channel >= SSI_MAX_CHANNELS)
+		return 0;
+    ssi_conn_seqnum[channel]++;
+    return ssi_conn_seqnum[channel];
 }
 
-uint32_t ssi_seqnum_get(void)
+uint32_t ssi_seqnum_get(uint8_t channel)
 {
-    return ssi_conn_seqnum;
+	if (channel >= SSI_MAX_CHANNELS)
+		return 0;
+    return ssi_conn_seqnum[channel];
 }
 
 uint8_t ssi_payload_checksum_get(uint8_t *p_data, uint16_t len)
@@ -212,3 +196,35 @@ uint8_t ssi_payload_checksum_get(uint8_t *p_data, uint16_t len)
     return crc8;
 }
 
+void ssiv2_publish_sensor_data(uint8_t channel, uint8_t* p_source, int ilen)
+{
+    if (is_ssi_connected == false)
+       return;
+
+    // SSI is in connected state, send the sensor data
+    uint32_t seqnum;
+    uint16_t u16len;
+    uint8_t crc8 = 0xFF;
+    // compute 8-bit checksum
+    crc8 = ssi_payload_checksum_get(p_source, ilen);
+
+    // Send SYNC data
+    uint8_t sync_data = SSI_SYNC_DATA;
+    uart_tx_raw_buf(UART_ID_APP, &sync_data, sizeof(sync_data));
+
+    // Add channel number
+    uart_tx_raw_buf(UART_ID_APP, &channel, sizeof(channel));
+
+    // Add sequence number
+    seqnum = ssi_seqnum_update(channel);
+    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&seqnum, sizeof(seqnum));
+
+    // Add payload length
+    u16len = ilen;
+    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&u16len, sizeof(u16len));
+
+    uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
+
+    // Add 8-bit checksum
+    uart_tx_raw_buf(UART_ID_APP, &crc8, 1);
+}
