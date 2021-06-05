@@ -46,7 +46,8 @@ parser.add_argument('--rawdata', dest='rawdata', default=None, type=str,
 parser.add_argument('--payload', dest='expected_dlen', default=480, type=int, 
                      help='Expected payload length')
 
-def decodessiv2(serbytes, payload_length=480):
+def decodessiv2(serbytes, payload_length=(480,)):
+    decodessiv2.header_size = getattr(decodessiv2, 'header_size', 9)
     decodessiv2.seqnum = getattr(decodessiv2, 'seqnum', 0)
     decodessiv2.prevseq = getattr(decodessiv2, 'prevseq', 0)
     decodessiv2.sync_data = getattr(decodessiv2, 'sync_data', b'\xFF')
@@ -54,53 +55,53 @@ def decodessiv2(serbytes, payload_length=480):
     decodessiv2.bytes_out = getattr(decodessiv2, 'bytes_out', 0)
     decodessiv2.bytes_dropped = getattr(decodessiv2, 'bytes_dropped', 0)
     decoded_bytes = b''
+    channel = -1
     
     decodessiv2.bytes_in = decodessiv2.bytes_in + len(serbytes)
-    while (len(serbytes) >= 8):
+    header_size = decodessiv2.header_size
+    while (len(serbytes) > header_size):
       # scan for sync byte
       indx = serbytes.find( decodessiv2.sync_data )
-      if (indx == -1) or ( len(serbytes) < (indx+7) ):
+      if (indx == -1) or ( len(serbytes) < (indx+header_size) ):
          break
-      sync, seqnum, dlen = struct.unpack("<BIH", serbytes[indx:(indx+7)])
-      if (dlen == payload_length):
-        if (len(serbytes) >= (indx+dlen+8)):
-          decodessiv2.prevseq = decodessiv2.seqnum
-          decodessiv2.seqnum = decodessiv2.seqnum + 1
-          textstr = serbytes[ (indx+7):(indx+7+dlen) ]
-          csstr   = serbytes[ (indx+7+dlen):(indx+8+dlen) ]
-          checksum = struct.unpack('<B', csstr)[0]
-          payload_iter = struct.iter_unpack('<h', textstr)
-          bytes_iter = struct.iter_unpack('B', textstr)
-          bytes_data = [ b[0] for b in bytes_iter ]
-          payload = [ d[0] for d in payload_iter ]
-          cs = 0
-          for b in bytes_data:
-            cs = cs ^ b
-          if (cs == checksum):
-            serbytes = serbytes[indx+8+dlen:]
-            decodessiv2.bytes_in = decodessiv2.bytes_in - len(serbytes)
-            decodessiv2.bytes_out = decodessiv2.bytes_out + len(textstr)
-            return textstr, serbytes
-          else:
-            serbytes = serbytes[(indx+8+dlen):]
-            logging.error('seqnum=%d checksum [%d, %d]', decodessiv2.seqnum, checksum, cs)
-        else:
-          logging.info('seqnum=%d sync found, need more data [%d:%d %d, %d, %d]', 
-                     decodessiv2.seqnum, indx, len(serbytes), sync, seqnum, dlen)
-          serbytes = serbytes[indx:]
-          decodessiv2.bytes_in = decodessiv2.bytes_in - len(serbytes)
-          decodessiv2.bytes_out = decodessiv2.bytes_out + len(decoded_bytes)
-          return decoded_bytes, serbytes
-      else:
+      sync, dlen, rsvd, channel, seqnum = struct.unpack("<BHBBI", serbytes[indx:(indx+header_size)])
+      dlen = dlen - 6
+      if (channel >= len(payload_length)) or (rsvd != 0) or (dlen != payload_length[channel]):
         if decodessiv2.seqnum != decodessiv2.prevseq:
            logging.error('seqnum=%d header [%d:%d %d, %d, %d] ',
                     decodessiv2.seqnum, indx, len(serbytes), sync, seqnum, dlen)
            decodessiv2.prevseq = decodessiv2.seqnum
         serbytes = serbytes[1:]
+        continue
+      if (len(serbytes) > (indx+dlen+header_size)):
+          decodessiv2.prevseq = decodessiv2.seqnum
+          decodessiv2.seqnum = decodessiv2.seqnum + 1
+          headerstr = serbytes[ (indx+3):(indx+header_size) ]
+          textstr = serbytes[ (indx+header_size):(indx+header_size+dlen) ]
+          csstr   = serbytes[ (indx+header_size+dlen):(indx+header_size+dlen+1) ]
+          checksum = struct.unpack('<B', csstr)[0]
+          bytes_iter = struct.iter_unpack('B', headerstr+textstr)
+          bytes_data = [ b[0] for b in bytes_iter ]
+          cs = 0
+          for b in bytes_data:
+            cs = cs ^ b
+          if (cs == checksum):
+            serbytes = serbytes[indx+header_size+1+dlen:]
+            decodessiv2.bytes_in = decodessiv2.bytes_in - len(serbytes)
+            decodessiv2.bytes_out = decodessiv2.bytes_out + len(textstr)
+            return channel, textstr, serbytes
+          else:
+            serbytes = serbytes[(indx+header_size+1+dlen):]
+            logging.error('seqnum=%d checksum [%d, %d]', decodessiv2.seqnum, checksum, cs)
+      else:
+          logging.info('seqnum=%d sync found, need more data [%d:%d %d, %d, %d]', 
+                     decodessiv2.seqnum, indx, len(serbytes), sync, seqnum, dlen)
+          serbytes = serbytes[indx:]
+          break
 
     decodessiv2.bytes_in = decodessiv2.bytes_in - len(serbytes)
     decodessiv2.bytes_out = decodessiv2.bytes_out + len(decoded_bytes)
-    return decoded_bytes, serbytes
+    return channel, decoded_bytes, serbytes
 
 args = parser.parse_args()
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, 
@@ -152,7 +153,7 @@ with open(args.outfile, 'wb') as af:
        if (rawdatafd != None):
          rawdatafd.write(nextstr)
        nextstr = currstr + nextstr
-       out, currstr = decodessiv2(nextstr, payload_length=args.expected_dlen)
+       channel, out, currstr = decodessiv2(nextstr, payload_length=(args.expected_dlen,))
        bytes_out = getattr(decodessiv2, 'bytes_out', 0)
        if (bytes_out > 0):
          af.write(out)
@@ -163,7 +164,7 @@ with open(args.outfile, 'wb') as af:
          start = time.time()
          bytes_in = getattr(decodessiv2, 'bytes_in', 0)
          bytes_out = getattr(decodessiv2, 'bytes_out', 0)
-         bytes_dropped = (args.expected_dlen*bytes_in) // (args.expected_dlen+8)
+         bytes_dropped = (args.expected_dlen*bytes_in) // (args.expected_dlen+10)
          bytes_dropped = bytes_dropped - bytes_out
          logging.info('bytes in = %d, out = %d, dropped = %d', bytes_in, bytes_out, bytes_dropped)
      except KeyboardInterrupt:
@@ -172,7 +173,7 @@ with open(args.outfile, 'wb') as af:
        break
    bytes_in = getattr(decodessiv2, 'bytes_in', 0)
    bytes_out = getattr(decodessiv2, 'bytes_out', 0)
-   bytes_dropped = (args.expected_dlen*bytes_in) // (args.expected_dlen+8)
+   bytes_dropped = (args.expected_dlen*bytes_in) // (args.expected_dlen+10)
    bytes_dropped = bytes_dropped - bytes_out
    logging.info('bytes in = %d, out = %d, dropped = %d', bytes_in, bytes_out, bytes_dropped)
 

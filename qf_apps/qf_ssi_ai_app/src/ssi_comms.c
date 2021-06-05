@@ -201,30 +201,33 @@ void ssiv2_publish_sensor_data(uint8_t channel, uint8_t* p_source, int ilen)
     if (is_ssi_connected == false)
        return;
 
-    // SSI is in connected state, send the sensor data
-    uint32_t seqnum;
-    uint16_t u16len;
-    uint8_t crc8 = 0xFF;
+    uint8_t ssiv2header[SSI_HEADER_SIZE];
+    uint8_t sync = SSI_SYNC_DATA;
+    uint8_t rsvd = 0;
+    uint16_t u16len = (ilen + 6);
+    uint32_t seqnum = ssi_seqnum_update(channel);
+    uint8_t crc8 = 0;
+
+    ssiv2header[0] = sync;
+    ssiv2header[1] = (u16len >> 0) & 0xff;
+    ssiv2header[2] = (u16len >> 8) & 0xff;
+    ssiv2header[3] = rsvd;
+    ssiv2header[4] = channel;
+    ssiv2header[5] = (seqnum >> 0) & 0xff;
+    ssiv2header[6] = (seqnum >> 8) & 0xff;
+    ssiv2header[7] = (seqnum >> 16) & 0xff;
+    ssiv2header[8] = (seqnum >> 24) & 0xff;
+
     // compute 8-bit checksum
-    crc8 = ssi_payload_checksum_get(p_source, ilen);
+    crc8 = crc8 ^ ssi_payload_checksum_get(ssiv2header+3, SSI_HEADER_SIZE-3);
+    crc8 = crc8 ^ ssi_payload_checksum_get(p_source, ilen);
 
-    // Send SYNC data
-    uint8_t sync_data = SSI_SYNC_DATA;
-    uart_tx_raw_buf(UART_ID_APP, &sync_data, sizeof(sync_data));
+    // Send SSI v2 header information
+    uart_tx_raw_buf(UART_ID_APP, ssiv2header, SSI_HEADER_SIZE);
 
-    // Add channel number
-    uart_tx_raw_buf(UART_ID_APP, &channel, sizeof(channel));
-
-    // Add sequence number
-    seqnum = ssi_seqnum_update(channel);
-    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&seqnum, sizeof(seqnum));
-
-    // Add payload length
-    u16len = ilen;
-    uart_tx_raw_buf(UART_ID_APP, (uint8_t *)&u16len, sizeof(u16len));
-
+    // Send channel data
     uart_tx_raw_buf(UART_ID_APP, p_source, ilen);
 
-    // Add 8-bit checksum
+    // Send 8-bit checksum
     uart_tx_raw_buf(UART_ID_APP, &crc8, 1);
 }

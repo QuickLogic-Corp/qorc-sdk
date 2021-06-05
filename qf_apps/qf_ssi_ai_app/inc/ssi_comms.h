@@ -28,6 +28,7 @@ extern "C" {
 
 #define SSI_JSON_CONFIG_VERSION    (2)     /* 2 => Use enhance SSI protocol, 1 => use original SSI protocol */
 #define SSI_SYNC_DATA              (0xFF)
+#define SSI_HEADER_SIZE            (9)     ///< SSI v2 header size in bytes
 #define SSI_MAX_CHANNELS           (4)
 #define SSI_CHANNEL_DEFAULT        (0)
 
