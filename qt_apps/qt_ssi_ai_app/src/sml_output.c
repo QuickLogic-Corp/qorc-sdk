@@ -60,7 +60,7 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
 	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d]}\n", sensor_ssss_ai_fv_arr[sensor_ssss_ai_fv_len-1]);
     wbytes += count;
     buflen -= count;
-    uart_tx_raw_buf(UART_ID_SSI, sensor_ssss_ai_result_buf, wbytes);
+    uart_tx_raw_buf(UART_ID_APP, sensor_ssss_ai_result_buf, wbytes);
 }
 
 static intptr_t last_output;
