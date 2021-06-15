@@ -24,7 +24,7 @@ _makedirs_:
 	@echo Starting Build ...
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control
+external_srcs: Startup HAL FreeRTOS Libraries BSP fsm DatablockProcessor Control Gateware
 	@echo "External sources built"
 
 .PHONY: Appdir
@@ -121,6 +121,15 @@ clean_Control:
 	make -f makefiles/Makefile_Control clean
 
 CLEAN_TARGET += Control
+
+.PHONY:Gateware
+Gateware:
+	make -f makefiles/Makefile_freertos_gateware
+clean_Gateware:
+	make -f makefiles/Makefile_freertos_gateware clean
+
+CLEAN_TARGET += Gateware
+
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

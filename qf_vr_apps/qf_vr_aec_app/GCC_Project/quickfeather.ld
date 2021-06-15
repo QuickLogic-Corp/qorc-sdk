@@ -2,12 +2,12 @@ OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 /* Internal Memory Map*/
 ENTRY(Reset_Handler)
 /*this is used at multiple locations in the ld file. So change it here only and not directly in the memory section.*/
-_ram1_start = 0x2003F000;
+_ram1_start = 0x2003FFFF;
 MEMORY
 {
-	rom (rx)    : ORIGIN = 0x00000000, LENGTH = 0x0003F000
-	RAM1 (rwx)  : ORIGIN = _ram1_start, LENGTH = 0x00025000
-	ram (rwx)   : ORIGIN = 0x20064000, LENGTH = 0x00017E00
+	rom (rx)    : ORIGIN = 0x00000000, LENGTH = 0x0003FFFF
+	RAM1 (rwx)  : ORIGIN = 0x20040000, LENGTH = 0x00010000
+	ram (rwx)   : ORIGIN = 0x20050000, LENGTH = 0x0002BE00
 	HWA (rw)    : ORIGIN = 0x2007BE00, LENGTH = 0x00000100
     spiram (rw) : ORIGIN = 0x2007C000, LENGTH = 0x00000C00
 }

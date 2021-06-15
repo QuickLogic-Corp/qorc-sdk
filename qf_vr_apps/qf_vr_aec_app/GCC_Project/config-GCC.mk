@@ -36,15 +36,19 @@ export MACROS=-D__FPU_USED=1 \
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)DSP$(DIR_SEP)Lib$(DIR_SEP)GCC
 export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)lib
+export LIBAEC_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)consilient$(DIR_SEP)lib
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
                  -I"$(APP_DIR)/fsm" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
+                 -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
                  -I"$(PROJ_ROOT)/Licensed3rdParty/amazon/inc" \
+                 -I"$(PROJ_ROOT)/Licensed3rdParty/consilient" \
+                 -I"$(PROJ_ROOT)/Licensed3rdParty/consilient/aec/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/Core/Include" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/DSP/Include" \
@@ -54,6 +58,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/cli/inc" \
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" \
                  -I"$(PROJ_ROOT)/Libraries/D2HProtocol/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/FPGA/inc" \
                  -I"$(PROJ_ROOT)/Tasks/Control/inc" \
                  -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
 
@@ -73,12 +78,14 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
+    -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
+    -L$(LIBAEC_DIR) \
     -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
 #   To enable pryon_lite-PRL1000 library, delete the top line, uncomment the following two lines \
 #   Order of the lines is important, first include pryon_lite library, then math library \
 #   Additionally, enable the AMAZON_DIR symbol export defined below
 #   -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
-#   -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
+#   -L$(LIBAEC_DIR) -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
 
 
 export ELF2BIN_OPTIONS=-O binary
@@ -95,6 +102,7 @@ export FSM_DIR          = $(APP_DIR)$(DIR_SEP)fsm
 export QUICKFEATHER_DIR = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
 export HAL_DIR          = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
 export FREERTOS_DIR     = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
+export FREERTOS_GATEWARE_DIR     = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware
 
 export LIB_DIR          = $(PROJ_ROOT)$(DIR_SEP)Libraries
 # Enable the below line to link with pryon_lite
@@ -106,6 +114,7 @@ export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
 export DBM_DIR          = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
 export D2H_DIR          = $(LIB_DIR)$(DIR_SEP)D2HProtocol$(DIR_SEP)src
 export CMSIS_DIR        = $(LIB_DIR)$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)NN$(DIR_SEP)Source
+export FPGA_DIR         = $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
 
 export DBP_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)DatablockProcessor$(DIR_SEP)src
 export CONTROL_DIR      = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)Control$(DIR_SEP)src

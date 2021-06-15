@@ -85,6 +85,9 @@
 //#include "ql_i2sRxTask.h"
 #endif
 
+extern void HAL_FB_FLL_Set_Sample_Time( int sample_count);
+extern int HAL_FB_FLL_Get_Sample_Time(void);
+
 extern void ql_smart_remote_example();
 extern const struct cli_cmd_entry my_main_menu[];
 
@@ -215,49 +218,9 @@ void banner(void)
     dbg_str("   - No Transport \n");
 #endif
 }
-PadConfig pincfg_table_2[] = 
-{
-  { 
-    .ucPin = PAD_5,
-    .ucFunc = PAD5_FUNC_SEL_FBIO_5,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-  { 
-    .ucPin = PAD_7,
-    .ucFunc = PAD7_FUNC_SEL_FBIO_7,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-
-  { 
-    .ucPin = PAD_32,
-    .ucFunc = PAD32_FUNC_SEL_FBIO_32,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-
-};
-int16_t *temp_buf_ptr = (int16_t *)axFPGABitStream;
-int16_t *temp_buf_ptr_end;// = (sizeof(axFPGABitStream)/2) - 3*240;
-
 int main(void)
 {
     SOFTWARE_VERSION_STR = "QORC-SDK-VR-AEC-App";
-
-temp_buf_ptr_end = &temp_buf_ptr[((sizeof(axFPGABitStream)/2) - 3*240)];
 
     qf_hardwareSetup();
 
@@ -266,14 +229,9 @@ temp_buf_ptr_end = &temp_buf_ptr[((sizeof(axFPGABitStream)/2) - 3*240)];
     // length of axFPGABitStream array in bytes
     int axFPGABitStream_FLL_length = sizeof(axFPGABitStream);
 
-#if (ENABLE_I2S_16KHz_RX_SLAVE == 1)
+
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 3*1024*1000); //for 48K sample rate = 2*32*16K *3= 3*1024000 
     S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*6*1024*1000); //for FIR decimation at 16Khz
-#else    
-    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 1*1024*1000 - 2*32768); //for 16K sample rate = 2*32*16K = 1024000
-    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 1*1024*1000); //for 16K sample rate = 2*32*16K = 1024000    
-//S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24*1000*1000); 
-#endif
     
     S3x_Clk_Enable(S3X_FB_21_CLK);
     S3x_Clk_Enable(S3X_FB_16_CLK);
@@ -338,11 +296,6 @@ temp_buf_ptr_end = &temp_buf_ptr[((sizeof(axFPGABitStream)/2) - 3*240)];
 #if (ENABLE_I2S_16KHz_RX_SLAVE == 1)
     //StartRtosTaskI2S_Rx();
     StartRtosTaskAEC();
-//extern void enable_aec_task(void);
-//enable_aec_task();
-//printf("==AEC_2 Enabled===\n");
-extern void configure_s3_pads(PadConfig *p_table, int nitems);
-configure_s3_pads(pincfg_table_2, 3);
 #endif    
     
     /* Start the tasks and timer running. */
