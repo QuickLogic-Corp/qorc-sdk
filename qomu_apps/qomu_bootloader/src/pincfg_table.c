@@ -159,6 +159,38 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
+
+  // Touch Pads
+  { // Pad 17 -- TouchPad 2
+	      .ucPin = PAD_17,
+	      .ucFunc = PAD17_FUNC_SEL_FBIO_17,
+	      .ucCtrl = PAD_CTRL_SRC_FPGA,
+	      .ucMode = PAD_MODE_OUTPUT_EN,
+	      .ucPull = PAD_NOPULL,
+	      .ucDrv = PAD_DRV_STRENGHT_4MA,
+	      .ucSpeed = PAD_SLEW_RATE_SLOW,
+	      .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 0 -- TouchPad 3
+	      .ucPin = PAD_0,
+	      .ucFunc = PAD0_FUNC_SEL_FBIO_0,
+	      .ucCtrl = PAD_CTRL_SRC_FPGA,
+	      .ucMode = PAD_MODE_OUTPUT_EN,
+	      .ucPull = PAD_NOPULL,
+	      .ucDrv = PAD_DRV_STRENGHT_4MA,
+	      .ucSpeed = PAD_SLEW_RATE_SLOW,
+	      .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // Pad 29 -- TouchPad 4
+	      .ucPin = PAD_29,
+	      .ucFunc = PAD29_FUNC_SEL_FBIO_29,
+	      .ucCtrl = PAD_CTRL_SRC_FPGA,
+	      .ucMode = PAD_MODE_OUTPUT_EN,
+	      .ucPull = PAD_NOPULL,
+	      .ucDrv = PAD_DRV_STRENGHT_4MA,
+	      .ucSpeed = PAD_SLEW_RATE_SLOW,
+	      .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =
