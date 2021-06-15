@@ -317,7 +317,7 @@ uint32_t DFS_FreqCPUSleep(void) {
 void DFS_SwitchToSleepPolicy(void)
 {    
     uint32_t    cruReg0x000SleepVal;
-    
+
     policyBeforeSleep = policyCurrent;
     policyDuringSleep = (dfs_node[policyCurrent].policySleep == 0xFF) ? policyCurrent : dfs_node[policyCurrent].policySleep;
     
@@ -452,3 +452,9 @@ void s3x_disable_dfs(void) {
     s3x_dfs_enable = DFS_DIS;
 }
 
+void print_dfs_policies(void)
+{
+  printf("DFS:%d,%d,%d:", policyCurrent, policyBeforeSleep, policyDuringSleep);
+  //printf(":%d,%d::", policyMaxrate, dfs_min_policy);
+  printf(":%d::", s3x_dfs_enable);
+}

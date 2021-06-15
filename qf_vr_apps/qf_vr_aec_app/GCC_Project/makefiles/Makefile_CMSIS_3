@@ -1,0 +1,11 @@
+
+export NN_3_DIR = $(CMSIS_DIR)$(DIR_SEP)NNSupportFunctions
+CMSIS_SRCS:=$(NN_3_DIR)/NNSupportFunctions/arm_nntables.c
+       
+SRCS:=$(notdir $(CMSIS_SRCS))  
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(NN_3_DIR)
+
+
+include $(COMMON_STUB)
+

@@ -296,7 +296,9 @@ void post_first_pdm_dma_after_lpsd()
   }
   uint8_t *p_dest = (uint8_t *)o_hal_info.pdata_block_prev + offsetof(QAI_DataBlock_t, p_data);
   voice_dmac_dst_set_addr0((int32_t)p_dest);
-  o_hal_info.pdata_block_prev->dbHeader.Tstart = xTaskGetTickCountFromISR();//g_seqNumber++;
+  //o_hal_info.pdata_block_prev->dbHeader.Tstart = xTaskGetTickCountFromISR();//g_seqNumber++;
+  //Note: This is not called by any ISR
+  o_hal_info.pdata_block_prev->dbHeader.Tstart = xTaskGetTickCount();
 
 }
 static void SetVoiceDmacConfig(bool fUsingLeftChannel, bool fUsingRightChannel, bool fUsingDualBuffers)
