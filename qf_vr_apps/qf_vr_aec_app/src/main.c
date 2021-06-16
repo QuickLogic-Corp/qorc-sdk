@@ -71,9 +71,9 @@
 //#include "AEC_FPGA_sepmodules_spde_dbg_2021_05_18a.h"
 
 //no debug pins, clean with SPDE
-#include "AEC_FPGA_sepmodules_spde_2021_05_18b.h"
+//#include "AEC_FPGA_sepmodules_spde_2021_05_18b.h"
 
-//#include "top_bit_05_24_2021.h"
+#include "top_bit_05_24_2021.h"
 
 #else
 #include "FLL_top_bit_12_01_2020.h"

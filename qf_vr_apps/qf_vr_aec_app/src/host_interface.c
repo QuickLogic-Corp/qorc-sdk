@@ -704,8 +704,9 @@ static void sendto_mch_queue(void)
     //}
     //empty the queue
     while(count > 0) {
+      pdatablk = 0;
       ret = xQueueReceive(q_mch_inQ_hif, &pdatablk, 0);
-      configASSERT(ret != pdFAIL);
+//      configASSERT(ret != pdFAIL);
       if(pdatablk) { 
           if(pdatablk->dbHeader.numUseCount > 0)
             datablk_mgr_release_generic(pdatablk);
