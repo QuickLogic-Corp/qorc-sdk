@@ -1,0 +1,10 @@
+FREERTOS_GATEWARE_SRCS :=$(wildcard $(FREERTOS_GATEWARE_DIR)/*.c)
+
+filters=eoss3_hal_fpga_ad7476.c eoss3_hal_fpga_clk_sync.c eoss3_hal_fpga_gpio.c \
+        eoss3_hal_fpga_ltc1859.c eoss3_hal_fpga_sdma.c eoss3_hal_fpga_uart.c \
+        eoss3_hal_fpga_usbserial.c
+SRCS:=$(filter-out $(filters), $(notdir $(FREERTOS_GATEWARE_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FREERTOS_GATEWARE_DIR)
+
+include $(COMMON_STUB)

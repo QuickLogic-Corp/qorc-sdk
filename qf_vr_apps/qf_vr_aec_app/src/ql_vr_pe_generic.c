@@ -140,6 +140,7 @@ static int vr_frame_sz_adapter(uint16_t *p_buffer, uint32_t num_samples, int16_t
   
   return p_last_buff_tail_sz; 
 }
+extern void set_signal_detect_state(int state);
 extern int host_i2s_enabled;
 extern int aec_vr_process_count;
 extern int aec_vr_process_count2;
@@ -179,8 +180,8 @@ aec_vr_process_count++;
          ret = vr_engine_process((short*)&a_audio_brick[0]);
         
          if ( ret ==  e_ql_vr_status_detection_ok) {
-extern void set_signal_detect_state(int state);
-set_signal_detect_state(1);
+           //indicate that Alexa is detected to AEC
+           set_signal_detect_state(1);
 //printf("Time0=%d %d***\n",xTaskGetTickCount(),S3x_Clkd_Get_Cpu_Rate());
            vr_clear_static_mem();
            disable_stream_VR(); //disable VR automatically

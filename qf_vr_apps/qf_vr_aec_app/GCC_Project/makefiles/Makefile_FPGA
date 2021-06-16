@@ -1,0 +1,12 @@
+
+FPGA_SRCS:=$(wildcard $(FPGA_DIR)/*.c )
+
+filters=
+
+
+SRCS:=$(filter-out $(filters),$(notdir $(FPGA_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FPGA_DIR)
+
+include $(COMMON_STUB)
+

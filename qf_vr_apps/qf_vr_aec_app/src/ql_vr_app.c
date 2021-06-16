@@ -85,7 +85,7 @@ extern void set_VR_status(uint8_t enable_flag);
 #if (FEATURE_MULTI_CHANNEL_STREAM_DEVICE == 1)
 //we use the same datablocks to store multichannel data interspersed
 //#define NUM_AUDIO_BRICKS (2*120)//(3*120)
-#define NUM_AUDIO_BRICKS (60)
+#define NUM_AUDIO_BRICKS (50)
 #else
 #define NUM_AUDIO_BRICKS (120)
 #endif

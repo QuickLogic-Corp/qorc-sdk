@@ -1,5 +1,5 @@
 
-1. Flash the ESP32 binary "qf_wifi_server_02_04_2021.bin"
+1. Flash the ESP32 binary "qf_wifi_server_06_15_2021.bin"
 
 2. Open the COM port associated with ESP32 in TeraTerm.
    Note: Make sure you select "CR" under Setup->Terminal->Transmit
@@ -20,6 +20,7 @@ Note: To use it along with the Python Client first get the Server
        -mypassword is your wifi network passphrase
        -3333 is Server port number that the Python client needs
          to connect to
+     Note: Port number (3333) may be default
 
 4. Disconnect and reconnect. (If ESP32 does not reset, open and
    close the Teraterm). You should see messages similar to the  

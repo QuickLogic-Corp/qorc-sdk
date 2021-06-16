@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs Appdir AMAZON
+all: _makedirs_ external_srcs Appdir AMAZON Consilient
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	@echo Copy output files ...
@@ -89,6 +89,14 @@ clean_DSPC_Schematics:
 	make -f makefiles/Makefile_DSPC_Schematics clean
 
 CLEAN_TARGET += DSPC_Schematics
+
+.PHONY:Consilient
+Consilient:
+	make -f makefiles/Makefile_Consilient
+clean_Consilient:
+	make -f makefiles/Makefile_Consilient clean
+
+CLEAN_TARGET += Consilient
 
 .PHONY:Libraries
 Libraries:
