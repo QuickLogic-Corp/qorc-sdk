@@ -16,12 +16,13 @@ Building and running the project for data collection mode:
 ----------------------------------------------------------
 
 1. Verify that the following macros are set for data collection mode in
-   the source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
+   the source file `app_config.h <inc/app_config.h>`__.
 
 ::
 
-   #define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
-   #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
+   #define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection    */
+   #define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition */
+
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
@@ -35,16 +36,19 @@ Building and running the project for data collection mode:
    Lab <https://sensiml.com/products/data-capture-lab/>`__ to connect,
    stream and capture the sensor data.
 
+   Audio data stream could also be captured using the python script
+   `getaudio.py <../../Tools/uartaudio/getaudio.py>`__. 
+
 Building and running the project for recognition mode:
 ------------------------------------------------------
 
 1. Verify that the following macros are set for recognition mode in the
-   source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
+the source file `app_config.h <inc/app_config.h>`__.
 
 ::
 
-   #define SENSOR_SSSS_RECOG_ENABLED      1    /* Enable SensiML recognition */
-   #define SENSOR_SSSS_LIVESTREAM_ENABLED 0    /* Enable live-streaming for data collection */
+   #define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection    */
+   #define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition */
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project

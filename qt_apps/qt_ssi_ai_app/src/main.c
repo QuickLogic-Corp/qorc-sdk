@@ -84,7 +84,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_ssi_app";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qt_apps/qt_ssi_app";
     
     qf_hardwareSetup();
     nvic_init();
@@ -100,7 +100,7 @@ int main(void)
 #endif
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather SensiML AI Data Collection/Recognition App\n");
+    dbg_str( "Quicklogic QuickThing+ SensiML AI Data Collection/Recognition App\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
@@ -121,7 +121,10 @@ int main(void)
 #endif
     HAL_I2C_Init(i2c0config);
 
+#if (S3AI_FIRMWARE_IS_RECOGNITION == 1)
     kb_model_init(); /* initialize the knowledgepack */
+#endif
+
 #if (SSI_SENSOR_SELECT_SSSS == 1)
     sensor_ssss_block_processor();
 #endif
