@@ -1,66 +1,83 @@
-Voice recognition with audio streaming example application
-==========================================================
+Voice recognition with AEC example application
+==============================================
 
 The purpose of this application is to provide a software framework to
-easily plug-in a 3rd party voice recognition engine for keyword
-detection applications. The example application waits for an LPSD event
-indicating a valid speech signal (WAIT_ON_LPSD event). The example
-application then enters Keyword detection state. Audio data is processed
-by the VR engine to scan for the keyword. When a keyword is detected,
-the application enters audio data streaming mode, audio data is sent
-over SPI to the host. The host quickfeather board in turn sends the
-audio data over USB-serial to an attached terminal application program.
+easily plug-in a 3rd party Achostic Echo Canceller and Voice Recognition
+engine for keyword detection. The example application waits for Audio
+data to be played on Speaker and tries to do Keyword detection.
+The Audio data that is being played on the Speaker is estimated by
+the reference signal over I2S peripheral and removed from the signal
+given to VR Engine using AEC Algorithm.
 
-This application project should be used with qf_host_app project.
+This application project should be used with a HUZZAH32 binary on a 
+QF-DUO board.
 
-Hardware Setup
---------------
+The Application:
+----------------
 
-Refer `VR raw streaming Hardware
-Setup <../readme.md#qf_vr_raw_app-companion-app-implementing-vr-host-communications-over-spi-packetizing-raw-audio-with-and-streaming-the-audio-packets-over-spir>`__
-for details on hardware setup
+Generally the Application will have a Host Processor along with the Device
+Processor (ie S3). Device Processor (S3) will be monitoring the Devices like
+Microphone, Accelerometer, Gyroscope etc. When a voice command like "Alexa"
+is said, S3 recognizes that and immediately wakes up the Host processor.
 
-Building and running the project
---------------------------------
+The Alexa phrase is recognized by Amazons Voice Recognition Engine (in the
+example project) which takes ~28MHz on S3 processor. Once the Host processor
+is woken up by S3, the Audio data is transmitted over SPI (for example) using
+D2H Protocol from S3 to Host. Also, after the first recognition of "Alexa",
+the VR Engine is turned off, which reduces the MHz needed by the S3.
 
-1. Use the Makefile provided in qf_vr_apps/qf_vr_raw_app/GCC_Project
-   folder and an appropriate ARM GCC toolchain to build the project
+The current AEC project allows Host to play Music or Audio on its own I2S 
+peripheral, which will be picked up by the PDM Microphone connected to S3.
+Since Host is up and running during this time, S3 need not worry about the
+power while Host is playing the Audio. While the Host is playing the Audio,
+the User may want to give an Alexa command. Since the playing of the Audio
+can be loud, S3 may not be able to recognize the Alexa command.
 
-2. Convert the resulting binary to "C" source file named
-   firmware_raw_image.h. Copy this firmware_raw_image.h source file to
-   the qf_apps/qf_host_app/inc folder
+To reduce the "noise" due to this play but recognize the Alexa phrase, S3
+needs to run the AEC algorithm on the PDM signal before passing it to VR 
+Engine. This is achieved through some Hardware and Software.
 
-3. Use the Makefile provided in qf_vr_apps/qf_host_app/GCC_Project
-   folder and an appropriate ARM GCC toolchain to build the project
+The Hardware:
+-------------
 
-4. Use the flash programming procedure to flash the qf_host_app binary
-   to a host Quickfeather board.
+The Audio data that is played by the Host on the Speaker needs to be obtained
+by S3. So, it is sent to S3 over I2S (only 3 Pins) and a GPIO pin to indicate
+it is valid. The I2S should connect CLK, WCLK, DIN. The GPIO pin can be any pin.
 
-5. Reset the host Quickfeather board to start running the VR raw
-   streaming application.
+The Software:
+-------------
 
-Building using a 3rd party VR engine
-------------------------------------
+S3 grabs the Audio data when the GPIO pin says it is valid, and uses it
+to estimate the value picked up by the PDM microphone. It is done by the AEC
+software which takes ~51MHz. The estimate is subtracted from the PDM input
+and the VR Engine is fed with that.
 
-The default project does not provide any voice recognition engine,
-consequently no keyword detection will be performed. To plug-in the
-desired 3rd party engine follow these steps:
+Since AEC and VR Engine together (51MHz + 28MHz) along with the other Interrupt
+processing (~5MHz) exceeds the S3 processor capacity of 80MHz, "VR Engine is
+disabled" when I2S data from Host is valid.
 
-1. Implement the functions specified in the
-   qf_vr_apps/qf_vr_raw_app/inc/vr_engine_api.h
+The AEC algorithm starts when GPIO pin from  Host goes up. It stays high
+as long as there is some Audio data on I2S line.
 
-2. Update the build system in qf_vr_apps/qf_vr_raw_app/GCC_Project to
-   add the implemented source files.
+The delay between the PDM data and I2S reference data should be less than 32ms
+due to the AEC Algorithm used in the Example. Since the DataBlock of size 15ms 
+are used, the delay varies and should be within 32ms.
 
-3. Convert the resulting binary to "C" source file named
-   firmware_raw_image.h. Copy this firmware_raw_image.h source file to
-   the qf_apps/qf_host_app/inc folder
+(Note that I2S Data from Host can be made to be 5ms instead of 15ms to increase
+the accuracy of delay by reducing the size of I2S SDMA buffers.)
 
-4. Use the Makefile provided in qf_vr_apps/qf_host_app/GCC_Project
-   folder and an appropriate ARM GCC toolchain to build the project
 
-5. Use the flash programming procedure to flash the qf_host_app binary
-   to a host Quickfeather board.
+HUZZAH32 Software:
+------------------
 
-6. Reset the host Quickfeather board to start running the VR raw
-   streaming application.
+The software on Huzzah32 (ie ESP32 processor with Wi-Fi) will send 30sec of 
+a song on I2S and will wait 2 minutes. This repeats continuously.
+
+Everytime I2S data is sent, it is played on the UDA1334, which converts I2S data
+to be played on the Speaker. By increasing the Speaker Volume, the data picked up
+by S3 PDM can increased.
+
+
+
+
+
