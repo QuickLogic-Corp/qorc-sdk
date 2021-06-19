@@ -1,5 +1,5 @@
 
-1. Flash the ESP32 binary "qf_wifi_server_06_15_2021.bin"
+1. Flash the ESP32 binary "qf_wifi_server_06_18_2021.bin"
 
 2. Open the COM port associated with ESP32 in TeraTerm.
    Note: Make sure you select "CR" under Setup->Terminal->Transmit
