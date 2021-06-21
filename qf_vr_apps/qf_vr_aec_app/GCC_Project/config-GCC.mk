@@ -4,7 +4,7 @@
 export RTL_TOP_MODULE=
 
 #
-# GCC Configuration options for Quick-AI SDK
+# GCC Configuration options for QORC SDK
 #
 
 DASH_G=-gdwarf-4
