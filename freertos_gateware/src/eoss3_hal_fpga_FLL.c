@@ -104,8 +104,10 @@ void HAL_FB_FLL_Disable(void) {
 #endif
 
   FB_FLL->CNTRL_REG = 0;
-//  S3x_Clk_Disable(S3X_FB_21_CLK);
-//  S3x_Clk_Disable(S3X_FB_16_CLK);
+#if (AEC_ENABLED == 0)
+  S3x_Clk_Disable(S3X_FB_21_CLK);
+  S3x_Clk_Disable(S3X_FB_16_CLK);
+#endif
   
   dac_end = get_hsosc_dac();
   disable_hsosc_dac_debug();
@@ -152,11 +154,13 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
     slow_down_fn = slow_down_ISR;
   if(speed_up_fn == 0)
     speed_up_fn  = speed_up_ISR;
-  
-  // set the Local clk rate and wishbone clock rate
-  //S3x_Clk_Set_Rate(S3X_FB_21_CLK, FLL_I2S_LOCAL_CLK); //for 16K sample rate = 2*32*16K = 1024000
-  //S3x_Clk_Set_Rate(S3X_FB_16_CLK, FLL_I2S_LOCAL_CLK); //since no data transfer, keep it low
 
+#if (AEC_ENABLED == 0)  
+  // set the Local clk rate and wishbone clock rate
+  S3x_Clk_Set_Rate(S3X_FB_21_CLK, FLL_I2S_LOCAL_CLK); //for 16K sample rate = 2*32*16K = 1024000
+  S3x_Clk_Set_Rate(S3X_FB_16_CLK, FLL_I2S_LOCAL_CLK); //since no data transfer, keep it low
+#endif
+  
   // set the time counts to default
   HAL_FB_FLL_Set_Sample_Time(FLL_SAMPLE_TIME_DEFAULT);
   HAL_FB_FLL_Set_Gap_Time(FLL_GAP_TIME_DEFAULT);
@@ -178,10 +182,10 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
   FB_ConfigureInterrupt(FB_INTERRUPT_1, FB_INTERRUPT_TYPE_EDGE,
                         FB_INTERRUPT_POL_LEVEL_HIGH,
                         FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
-
+#if (AEC_ENABLED == 0)
   //Enable the FPGA interrupts
-  //NVIC_EnableIRQ(FbMsg_IRQn);
-
+  NVIC_EnableIRQ(FbMsg_IRQn);
+#endif
   //Enable the FLL by default
   //HAL_FB_FLL_Enable();
   

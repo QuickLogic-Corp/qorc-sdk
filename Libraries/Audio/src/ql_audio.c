@@ -170,7 +170,7 @@ enum process_state LPSD_FSMAction(enum process_action pa, void* pv) {
     case PACTION_START_ON:
         if (LPSD_State == PSTATE_STOPPED) {
             S3x_Clk_Enable(S3X_LPSD);
-              HAL_Audio_LPSD_Enable(true); 
+            HAL_Audio_LPSD_Enable(true); 
             HAL_Audio_LPSD_Int(true);
         }
         LPSD_State = PSTATE_LPSD_ON;
@@ -183,7 +183,7 @@ enum process_state LPSD_FSMAction(enum process_action pa, void* pv) {
     case PACTION_START_OFF:
         if (LPSD_State == PSTATE_STOPPED) {
             S3x_Clk_Enable(S3X_LPSD);
-              HAL_Audio_LPSD_Enable(true);
+            HAL_Audio_LPSD_Enable(true);
             HAL_Audio_LPSD_Int(true);
         }
         LPSD_State = PSTATE_LPSD_OFF;
