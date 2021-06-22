@@ -142,7 +142,7 @@ int S3x_Set_Policy(uint8_t policy,  uint32_t src, uint32_t* pcruval)
         S3x_Policy_Node dfs_policy = dfs_node[policy];
         max = SIZEOF_ARRAY(dfs_policy.clk_domain);
         for(i = 0; i < max ; i++){
-            if (i == 1) HAL_GPIO_Write(GPIO_1, 0);
+            //if (i == 1) HAL_GPIO_Write(GPIO_1, 0);
             clkd = S3x_Id_To_Domain(dfs_policy.clk_domain[clkd_index[i]]);
             ret = s3x_update_clk_rate(clkd, dfs_policy.rate[clkd_index[i]], src, pcruval);
             //TIM 24 if (pcruval) CRU_WVAL(0x000, *pcruval); //TIM 24
@@ -317,7 +317,7 @@ uint32_t DFS_FreqCPUSleep(void) {
 void DFS_SwitchToSleepPolicy(void)
 {    
     uint32_t    cruReg0x000SleepVal;
-    
+
     policyBeforeSleep = policyCurrent;
     policyDuringSleep = (dfs_node[policyCurrent].policySleep == 0xFF) ? policyCurrent : dfs_node[policyCurrent].policySleep;
     
@@ -336,7 +336,7 @@ void DFS_SwitchToSleepPolicy(void)
        //S3x_Reduce_Hsosc(policyMaxrate, acruval2, &icruval2);
         S3x_Reduce_Hsosc(policyMaxrate);
     }
-    HAL_GPIO_Write(GPIO_1, 1);
+    //HAL_GPIO_Write(GPIO_1, 1);
 }
 
 void DFS_RestoreFromSleep(void)
@@ -452,3 +452,9 @@ void s3x_disable_dfs(void) {
     s3x_dfs_enable = DFS_DIS;
 }
 
+void print_dfs_policies(void)
+{
+  printf("DFS:%d,%d,%d:", policyCurrent, policyBeforeSleep, policyDuringSleep);
+  //printf(":%d,%d::", policyMaxrate, dfs_min_policy);
+  printf(":%d::", s3x_dfs_enable);
+}

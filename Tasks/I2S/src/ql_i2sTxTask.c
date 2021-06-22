@@ -68,7 +68,11 @@
 //Single DMA Buffer size is directly related to the number of I2S interrupts
 //Intention is to minimize the number of interrupts to as low as possible
 //The minimum #interrupts (=66) are for 15ms DataBlock, with mono channel at 16K rate
+#if (FEATURE_I2S_MASTER_DATA == 1)
+#define I2S_MIN_DATA_BLOCK_BYTES   (15*48*2) //in bytes 15ms mono, 16bit @48K sample buffer
+#else
 #define I2S_MIN_DATA_BLOCK_BYTES   (15*16*2) //in bytes 15ms mono @16K sample buffer
+#endif
 
 //This will be size of one DMA buffer needed to keep 66 interrupts per second 
 //Note: DMA size must be multple of words
@@ -294,9 +298,9 @@ static int fill_i2s_DMA_buf_mono_16K(int buf_index, int offset, QAI_DataBlock_t 
 static int fill_i2s_DMA_buf(int buf_index, int offset, QAI_DataBlock_t *pIn)
 {
   int filled;
-#if I2S_INTP_FACTOR == 3
+#if (I2S_INTP_FACTOR == 3)
 
-#if I2S_CHANNEL_COUNT == 2
+#if (I2S_CHANNEL_COUNT == 2)
   filled = fill_i2s_DMA_buf_stereo_48K(buf_index, offset, pIn);
 #else
   filled = fill_i2s_DMA_buf_mono_48K(buf_index, offset, pIn);
@@ -304,7 +308,7 @@ static int fill_i2s_DMA_buf(int buf_index, int offset, QAI_DataBlock_t *pIn)
   
 #else  //16K channels
   
-#if I2S_CHANNEL_COUNT == 2
+#if (I2S_CHANNEL_COUNT == 2)
   filled = fill_i2s_DMA_buf_stereo_16K(buf_index, offset, pIn);
 #else
   filled = fill_i2s_DMA_buf_mono_16K(buf_index, offset, pIn);
@@ -313,6 +317,29 @@ static int fill_i2s_DMA_buf(int buf_index, int offset, QAI_DataBlock_t *pIn)
 #endif // I2S_INTP_FACTOR
   return filled;
 }
+#if (FEATURE_I2S_MASTER_DATA == 1)
+/* The left and right channels are copied interleaved for DMA
+* Note: The loop uses the Stereo element count in the Data Block
+*/
+static int fill_i2s_DMA_buf_stereo_48K_32bit(uint8_t buf_index, int offset, QAI_DataBlock_t *pIn, int datablock_count)
+{
+  int16_t *left = (int16_t *)&pIn->p_data; //interleaved left and right samples
+  
+  int16_t *stereo = (int16_t *)&i2sDMABuffers[I2S_SINGLE_DMA_SIZE*buf_index + (offset/4)];
+  for(int i =0; i < pIn->dbHeader.numDataElements; i++)
+  {
+    *stereo++ = (int32_t)*left++; //first left
+    *stereo++ = (int32_t)*left++;
+  }
+  
+  int bytes_copied = pIn->dbHeader.numDataElements*4;//4 since explicitly copying 2 16bit samples 
+  configASSERT(bytes_copied == (I2S_SINGLE_DMA_SIZE * sizeof(uint32_t)/datablock_count));
+  
+  return pIn->dbHeader.numDataElements*pIn->dbHeader.dataElementSize;
+}
+#endif
+
+
 /* set the ISR for I2S transmit mode 
 * Need to handle 4 cases for stereo or mono, 16K or 48K I2S bus rate
 */
@@ -340,15 +367,19 @@ static void setup_i2s_tx(void)
 
 #endif
 
+#if (FEATURE_I2S_MASTER_DATA == 1)
+  p_i2s_cfg.i2s_wd_clk = 32;
+#endif  
+
   /* setup the config and register ISR callback  */
   ret_val = HAL_I2S_Init(I2S_SLAVE_ASSP_TX, &p_i2s_cfg, I2S_SDMA_callback);
   printf("ret_val=%x, HAL_SUCCESS=%x\n", ret_val,  HAL_I2S_SUCCESS); 
   configASSERT(ret_val == HAL_I2S_SUCCESS)
 
 
-#if ENABLE_I2S_48K_TRANSMIT == 1
+#if (ENABLE_I2S_48K_TRANSMIT == 1)
   int output_blk_size = 0;
-#if ENABLE_I2S_STEREO_TRANSMIT == 1
+#if (ENABLE_I2S_STEREO_TRANSMIT == 1)
   //init stereo interpolator from 16K to 48K
   output_blk_size = init_interpolate_by_3_stereo();
   
@@ -450,6 +481,13 @@ void i2sTaskHandler(void *pParameter)
     BaseType_t qret;
     QAI_DataBlock_t *pIn;
     int queue_count;
+    int datablock_count;
+
+#if (FEATURE_I2S_MASTER_DATA == 1)
+    datablock_count = 3*I2S_CHANNEL_COUNT; //since 48K = 3*16Khz
+#else
+    datablock_count = I2S_CHANNEL_COUNT; //since 16Khz
+#endif
     
     init_i2s_buffers();
     setup_i2s_tx();
@@ -474,7 +512,7 @@ void i2sTaskHandler(void *pParameter)
       /* check how many data blocks are waiting in the Queue */
       queue_count = uxQueueMessagesWaiting(I2SDataQ);
       /* need 1 or 2 Data Blocks to create one DMA buffer */
-      if(queue_count < I2S_CHANNEL_COUNT)
+      if(queue_count < datablock_count)
       {
         vTaskDelay(3);//it may take upto 7.5ms for next datablock
         continue;
@@ -506,20 +544,30 @@ void i2sTaskHandler(void *pParameter)
         continue;
       }
       int offset = 0;
-      for(int i= 0;i < I2S_CHANNEL_COUNT; i++)
+      for(int i= 0;i < datablock_count; i++)
       {
         /* get a data blk from queue first */
         qret = xQueueReceive(I2SDataQ, &pIn, 0);
         configASSERT(qret == pdTRUE);
 
+#if (FEATURE_I2S_MASTER_DATA == 1)
+        /* fill partial/full DMA buffer at 48KHz, 32bit samples*/
+        offset += fill_i2s_DMA_buf_stereo_48K_32bit(i2s_buf_wr_index, offset, pIn, datablock_count);
+#else
         /* fill partial/full DMA buffer */
         offset += fill_i2s_DMA_buf(i2s_buf_wr_index, offset, pIn);
+#endif
         
         /* if in the queue, the usecount must greater than 0 */ 
         if(pIn->dbHeader.numUseCount > 0)
           datablk_mgr_release_generic(pIn);
       }
       
+#if (FEATURE_I2S_MASTER_DATA == 1)
+extern int fill_i2s_queue(void);
+      fill_i2s_queue();
+#endif
+
       /* set state to filled */
       set_i2s_buf_state(i2s_buf_wr_index++);
       if(i2s_buf_wr_index >= I2S_DMA_BUFFER_COUNT)

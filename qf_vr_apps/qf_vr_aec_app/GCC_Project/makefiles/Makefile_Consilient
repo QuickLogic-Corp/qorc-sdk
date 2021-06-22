@@ -1,0 +1,11 @@
+
+CONSILIENT_SRCS:=$(wildcard $(CONSILIENT_DIR)/*.c)
+
+filters=
+
+SRCS:=$(filter-out $(filters),$(notdir $(CONSILIENT_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(CONSILIENT_DIR)
+
+include $(COMMON_STUB)
+

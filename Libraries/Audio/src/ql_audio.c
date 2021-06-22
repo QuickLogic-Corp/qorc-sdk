@@ -242,5 +242,10 @@ void QL_Audio_Voice_Stop(void)
   HAL_Audio_Stop(&gPdmConnector, &Audio_Config_Local);
 }
 
+void QL_Audio_Voice_Start(void)
+{
+  //S3x_Clk_Enable(S3X_LPSD);
+  HAL_Audio_Start(&gPdmConnector, 0, true, &Audio_Config_Local);
+}
 
 

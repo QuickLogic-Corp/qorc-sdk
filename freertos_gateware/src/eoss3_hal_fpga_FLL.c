@@ -104,13 +104,15 @@ void HAL_FB_FLL_Disable(void) {
 #endif
 
   FB_FLL->CNTRL_REG = 0;
+#if (AEC_ENABLED == 0)
   S3x_Clk_Disable(S3X_FB_21_CLK);
   S3x_Clk_Disable(S3X_FB_16_CLK);
+#endif
   
   dac_end = get_hsosc_dac();
   disable_hsosc_dac_debug();
   
-#if 1 //enable for debug 
+#if 0 //enable for debug 
   //convert to KHz(1024Hz)
   int dac_start_hz = (dac_start +3)*32;
   int dac_end_hz = (dac_end +3)*32;
@@ -152,11 +154,13 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
     slow_down_fn = slow_down_ISR;
   if(speed_up_fn == 0)
     speed_up_fn  = speed_up_ISR;
-  
+
+#if (AEC_ENABLED == 0)  
   // set the Local clk rate and wishbone clock rate
   S3x_Clk_Set_Rate(S3X_FB_21_CLK, FLL_I2S_LOCAL_CLK); //for 16K sample rate = 2*32*16K = 1024000
   S3x_Clk_Set_Rate(S3X_FB_16_CLK, FLL_I2S_LOCAL_CLK); //since no data transfer, keep it low
-
+#endif
+  
   // set the time counts to default
   HAL_FB_FLL_Set_Sample_Time(FLL_SAMPLE_TIME_DEFAULT);
   HAL_FB_FLL_Set_Gap_Time(FLL_GAP_TIME_DEFAULT);
@@ -178,10 +182,10 @@ void HAL_FB_FLL_Init(HAL_FBISRfunction slow_down_fn, HAL_FBISRfunction speed_up_
   FB_ConfigureInterrupt(FB_INTERRUPT_1, FB_INTERRUPT_TYPE_EDGE,
                         FB_INTERRUPT_POL_LEVEL_HIGH,
                         FB_INTERRUPT_DEST_AP_DISBLE, FB_INTERRUPT_DEST_M4_ENABLE);
-
+#if (AEC_ENABLED == 0)
   //Enable the FPGA interrupts
   NVIC_EnableIRQ(FbMsg_IRQn);
-
+#endif
   //Enable the FLL by default
   //HAL_FB_FLL_Enable();
   
@@ -196,7 +200,7 @@ void set_hsosc_dac(int bits)
   AIP->OSC_CTRL_4 = 0x30; //enable write
   int count =0;
   AIP->OSC_CTRL_6 = 0x0; //clk low
-  bits = bits & 0x1FF; //only 9bits
+  bits = bits; // & 0x1FF; //only 9bits
   while(count != 12)
   {
     AIP->OSC_CTRL_5 = (bits >> (11-count)) & 0x1; //sdi bit - MSB first
@@ -230,7 +234,7 @@ int get_hsosc_dac(void)
   //AIP->OSC_CTRL_4 = 0x00; //reset 
   AIP->OSC_CTRL_4 = 0x08; //reserved 
   //printf("OSC_DAC = 0x%8x \n", bits);
-  return bits & 0x1ff;
+  return bits; // & 0x1ff;
 }
 void enable_hsosc_dac_debug(void)
 {
@@ -247,6 +251,13 @@ void disable_hsosc_dac_debug(void)
 int check_fll_drift(int dac_bits)
 {
   int drift = abs(dac_bits - dac_start);
+  //if the drift is a lot change the dac_start
+  if(drift > (8*MAX_FLL_DAC_DRIFT))
+  {
+    //dac_start = get_hsosc_dac();
+    dac_start = dac_bits; 
+    return 1;
+  }
   if(drift < MAX_FLL_DAC_DRIFT)
     return 0;
   else
@@ -264,7 +275,7 @@ void slow_down_ISR(void)
       return;
     }
     
-    bits2 = (bits - 1) & 0x1FF;
+    bits2 = (bits - 1); // & 0x1FF;
     if(bits2 < bits)
     {
       set_hsosc_dac(bits2);
@@ -287,7 +298,7 @@ void speed_up_ISR(void)
       return;
     }
 
-    bits2 = (bits + 1) & 0x1FF;
+    bits2 = (bits + 1);// & 0x1FF;
     if(bits2 > bits)
     {
       set_hsosc_dac(bits2);

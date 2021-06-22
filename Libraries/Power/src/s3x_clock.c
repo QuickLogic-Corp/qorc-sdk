@@ -235,7 +235,7 @@ void s3x_clkd_update_all_src_div(UINT32_t rate, UINT32_t mode)
             /* temp bumpup CPU to finish faster*/
             if (S3clk[i].clkd_id == CLK_C10)
             {
-                HAL_GPIO_Write(GPIO_1, 0);
+                //HAL_GPIO_Write(GPIO_1, 0);
                 div_reg = CRU_RVAL(0);
                 CRU_WVAL(0, 0);
             }
