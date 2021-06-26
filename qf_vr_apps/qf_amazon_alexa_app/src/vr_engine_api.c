@@ -15,25 +15,23 @@
  *==========================================================*/
 
 #include "vr_engine_api.h"
-#include "ql_vr_amazon.h"
-   
+
 // These 3 APIs need to be provided by every VR engine
-void vr_engine_init(void)
+__attribute__((weak)) void vr_engine_init(void)
 {
   // initialize the VR engine
-  init_amazon_wwe();
+  dbg_str("vr_engine_init: Using a STUB VR engine API, replace with desired VR engine");
   return;
 }
 
-int vr_engine_get_samples_per_frame(void)
+__attribute__((weak)) int vr_engine_get_samples_per_frame(void)
 {
   // return samples per frame size used by the VR engine
-  return amazon_samples_per_frame();
+  return 240; // default samples per frame size
 }
 
-int vr_engine_process(short *samples)
+__attribute__((weak)) int vr_engine_process(short *samples)
 {
   // process input samples and return if wakeword is detected
-  // 0 = no wakeword detected, 1 = wakeword detected
-  return amazon_vr_process(samples);
+  return 0; // 0 = no wakeword detected, 1 = wakeword detected
 }

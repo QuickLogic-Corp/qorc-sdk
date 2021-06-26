@@ -51,17 +51,6 @@ endif
 #Set the toolchain (IAR/GCC)
 export TOOLCHAIN=GCC
 
-ifeq ($(TOOLCHAIN),IAR)
-$(info Building using $(TOOLCHAIN) Toolchain)
-include config-IAR.mk
-else ifeq  ($(TOOLCHAIN),GCC)
-$(info Building using $(TOOLCHAIN) Toolchain)
-include config-GCC.mk
-else
-$(error Invalid Toolchain $(TOOLCHAIN))
-exit
-endif
-
 ################ Windows ###################
 ifeq ($(BUILD_SYS),WINCMD)
 ################
@@ -180,3 +169,15 @@ export OUTPUT_FILE=${PROJ_NAME}
 
 #Libraries to include
 export LIBS=
+
+ifeq ($(TOOLCHAIN),IAR)
+$(info Building using $(TOOLCHAIN) Toolchain)
+include config-IAR.mk
+else ifeq  ($(TOOLCHAIN),GCC)
+$(info Building using $(TOOLCHAIN) Toolchain)
+include config-GCC.mk
+else
+$(error Invalid Toolchain $(TOOLCHAIN))
+exit
+endif
+

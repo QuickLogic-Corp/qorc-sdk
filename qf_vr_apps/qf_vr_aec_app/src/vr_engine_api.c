@@ -15,7 +15,6 @@
  *==========================================================*/
 
 #include "vr_engine_api.h"
-#if 0 //0 = disable this
 // These 3 APIs need to be provided by every VR engine
 __attribute__((weak)) void vr_engine_init(void)
 {
@@ -35,4 +34,27 @@ __attribute__((weak)) int vr_engine_process(short *samples)
   // process input samples and return if wakeword is detected
   return 0; // 0 = no wakeword detected, 1 = wakeword detected
 }
-#endif
+
+// The below APIs need to be provided by every AEC engine
+#include "datablk_mgr.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
+__attribute__((weak)) SemaphoreHandle_t  ql_pre_proc_sem;
+
+__attribute__((weak))  void set_signal_detect_state(int state)
+{
+	return;
+}
+
+__attribute__((weak)) void datablk_pe_process_ql_pre_process(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_DataBlock_t **pRet,
+                                 void (*p_event_notifier)(int pid, int event_type, void *p_event_data, int num_data_bytes))
+{
+	// process input samples
+	return;
+}
+
+__attribute__((weak)) void datablk_pe_config_ql_pre_process(void *p_pe_object)
+{
+	// configure the PE
+	return;
+}

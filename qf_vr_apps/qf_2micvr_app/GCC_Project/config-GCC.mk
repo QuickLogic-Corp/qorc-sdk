@@ -36,7 +36,6 @@ export MACROS=-D__FPU_USED=1 \
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS_5$(DIR_SEP)CMSIS$(DIR_SEP)DSP$(DIR_SEP)Lib$(DIR_SEP)GCC
 export LIBAWWE_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)lib
-export LIBDSPC_DIR=$(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)dspc$(DIR_SEP)ns$(DIR_SEP)lib$(DIR_SEP)AWELibs$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
@@ -46,9 +45,6 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
                  -I"$(PROJ_ROOT)/Licensed3rdParty/amazon/inc" \
-                 -I"$(PROJ_ROOT)/Licensed3rdParty/dspc/ns/inc" \
-                 -I"$(PROJ_ROOT)/Licensed3rdParty/dspc/ns/Schematics" \
-                 -I"$(PROJ_ROOT)/Licensed3rdParty/dspc/ns/lib/AWEInclude" \
                  -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/Core/Include" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS_5/CMSIS/DSP/Include" \
@@ -76,16 +72,9 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	$(DASH_G) -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
 	-Wl,--fatal-warnings -Wl,--print-memory-usage -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
-    -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
-    -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
-#   To enable pryon_lite-PRL1000 library, delete the top line, uncomment the following two lines \
-#   Order of the lines is important, first include pryon_lite library, then math library \
-#   Additionally, enable the AMAZON_DIR symbol export defined below
-#   -L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000  \
-#   -L$(LIBDSPC_DIR) -lAdvanced -lCFramework -ldspc_beamformer  -lStandard -lVectorLib -lModuleHelperLib -ldspc_scnr \
-#   -L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
+    -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" 
 
-
+export LD_FLAGS_2=-L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
 export ELF2BIN_OPTIONS=-O binary
 
 #
@@ -117,3 +106,7 @@ export CONTROL_DIR      = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)Control$(DIR_SEP)
 export AMAZON_DIR       = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)amazon$(DIR_SEP)src
 export DSPC_DIR         = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)dspc$(DIR_SEP)ns$(DIR_SEP)src
 export DSPC_SCHEMATICS_DIR   = $(PROJ_ROOT)$(DIR_SEP)Licensed3rdParty$(DIR_SEP)dspc$(DIR_SEP)ns$(DIR_SEP)Schematics
+
+ifneq ("", "$(strip $(wildcard $(AMAZON_DIR)/*.c))")
+export LIBS+=-L$(LIBAWWE_DIR) -lpryon_lite-U -lpryon_lite-PRL1000
+endif
