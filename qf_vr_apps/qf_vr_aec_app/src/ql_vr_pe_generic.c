@@ -142,8 +142,6 @@ static int vr_frame_sz_adapter(uint16_t *p_buffer, uint32_t num_samples, int16_t
 }
 extern void set_signal_detect_state(int state);
 extern int host_i2s_enabled;
-extern int aec_vr_process_count;
-extern int aec_vr_process_count2;
 static uint32_t vr_cycle_count_buf[20];
 static int vr_cycle_counter = 0;
 void datablk_pe_process_ql_vr(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_DataBlock_t **pRet,
@@ -161,7 +159,6 @@ void datablk_pe_process_ql_vr(QAI_DataBlock_t *pIn, QAI_DataBlock_t *pOut, QAI_D
      }
 #endif
 uint32_t vr_dwt_start_count = get_timer();     
-aec_vr_process_count2++; 
 
      //Note:if VR Amazon is enabled, it takes ~28Mips, which combined with 
      //Consilient AEC (~51Mips) will exceed the processor Mips
@@ -171,7 +168,6 @@ aec_vr_process_count2++;
      
      if(!fVRenabled) // If VR is disabled, bypass VR process and return.
        return;
-aec_vr_process_count++;
      uint32_t ksamplesNew = pIn->dbHeader.numDataElements/pIn->dbHeader.numDataChannels;
      while(1)
      {
