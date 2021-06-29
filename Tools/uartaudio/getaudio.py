@@ -34,6 +34,8 @@ with open(args.audio_file, 'wb') as af:
            indx = s.find( syncString )
            print('Audio stream started', indx, s)
            af.write(s[indx+16:])
+        else:
+           af.write(s)
         start = time.time()
         while True:
              try:
