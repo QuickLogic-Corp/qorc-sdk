@@ -36,8 +36,8 @@
 /*######################## DATA CAPTURE METHOD  ################################*/
 
 
-#define S3AI_FIRMWARE_LIVESTREAM 1   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
-#define S3AI_FIRMWARE_DATASAVE 0     /* Enable SD card for collection        (supports sensor and recognition) */
+#define S3AI_FIRMWARE_LIVESTREAM 0   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
+#define S3AI_FIRMWARE_DATASAVE 1     /* Enable SD card for collection        (supports sensor and recognition) */
 
 
 
