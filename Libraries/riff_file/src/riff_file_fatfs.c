@@ -100,6 +100,7 @@ void RIFF_file_enqueue_object(  struct riff_file *pFile, struct riff_object *pOb
 * This function performs the actual write to the file
 * it is called from the sd card task.
 */
+static size_t riffFileSizeSinceLastSync = 0;
 int RIFF_file_write_object( struct riff_object *pObject )
 {
     FRESULT fresult;
@@ -114,11 +115,26 @@ int RIFF_file_write_object( struct riff_object *pObject )
         /* RIFF length is value 1 */
         nBytes = pObject->byte_wr_index;
     }
+#define RIFF_FILE_SYNC_SIZE  (1024*4*4)   // file sync every 16kB
 #if ((RIFF_FILE_SIZE_MAX > 0) && (RIFF_AUTO_SEQUENCE_FILENAMES == 1))
-    size_t fileSize = 0; // f_size(pObject->pFile->pFile);
+    if (riffFileSizeSinceLastSync > RIFF_FILE_SYNC_SIZE)
+    {
+        //dbg_str_int_noln("riff sync size limit reached", riffFileSizeSinceLastSync);
+        uint32_t sticks, eticks;
+        sticks = xTaskGetTickCount();
+        f_sync(pObject->pFile->pFile);
+        eticks = xTaskGetTickCount();
+        //dbg_str_int_noln("f_sync took", eticks-sticks);
+        //dbg_str("ms \n");
+        riffFileSizeSinceLastSync = 0;
+    }
+
+    size_t fileSize = f_size(pObject->pFile->pFile);
     if (fileSize > RIFF_FILE_SIZE_MAX)
     {
         dbg_str_int("riff file size limit reached", fileSize);
+        uint32_t sticks, eticks;
+        sticks = xTaskGetTickCount();
         f_close(pObject->pFile->pFile);
 
         char *nextfilename = riff_get_newfilename();
@@ -127,6 +143,8 @@ int RIFF_file_write_object( struct riff_object *pObject )
         {
             dbg_str_str("datafile", nextfilename);
         }
+        eticks = xTaskGetTickCount();
+        dbg_str_int("f_close + f_open took", eticks-sticks);
     }
 #endif
     /* update the actual bytes in the riff header */
@@ -149,6 +167,7 @@ int RIFF_file_write_object( struct riff_object *pObject )
     }
     if( actual == nBytes ){
 		/* All is well */
+        riffFileSizeSinceLastSync += actual;
         return 0;
 	} else {
 		return -1;

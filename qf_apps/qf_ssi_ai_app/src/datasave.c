@@ -981,7 +981,7 @@ static void drain_blocks(void)
             dbg_str("q-svc\n");
         }
 
-#if (RIFF_FILE_SIZE_MAX > 0)
+#if (0) && (RIFF_FILE_SIZE_MAX > 0)
         if (currentFileSize > RIFF_FILE_SIZE_MAX)
         {
             dbg_str_int("riff file size limit reached", currentFileSize);
@@ -1292,6 +1292,8 @@ static const char * const use_this_table[] = {
     NULL
 };
 
+static uint64_t prev_rec_start_time = 0;
+static uint64_t curr_rec_start_time = 0;
 void
 create_datasave_task(void)
 {
@@ -1343,10 +1345,6 @@ void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes)
     return;
 }
 
-#endif
-
-static uint64_t prev_rec_start_time = 0;
-static uint64_t curr_rec_start_time = 0;
 void set_recognition_start_time(void)
 {
 	prev_rec_start_time = convert_to_uSecCount(xTaskGetTickCount());
@@ -1359,4 +1357,6 @@ void set_recognition_current_block_time(void)
 	curr_rec_start_time = convert_to_uSecCount(xTaskGetTickCount());
 	return;
 }
+
+#endif
 

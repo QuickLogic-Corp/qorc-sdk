@@ -114,11 +114,11 @@ extern uint32_t DBG_flags;
 #define QLFS_MAX_FILENAME_COMPONENT 50
 
 /* Select the maximum file size for storing the sensor data */
-#define RIFF_FILE_SIZE_MAX   (1024*4*25)  // 100KB
+#define RIFF_FILE_SIZE_MAX   (1024*4*256*1024)  // 1GB
 
 // Select one of the file naming generation when RIFF_FILE_SIZE_MAX is defined
-#define RIFF_AUTO_SEQUENCE_FILENAMES        (0)  // Set to 1 to use sequential count appended to filename
-#define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (1)  // Set to 1 to use timestamp appended to filename
+#define RIFF_AUTO_SEQUENCE_FILENAMES        (1)  // Set to 1 to use sequential count appended to filename
+#define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (0)  // Set to 1 to use timestamp appended to filename
 #define USE_DCL_FILENAME_ONLY               (0)
 #define SSI_RECOGNITION_RIFF_ID     (0x12345678) // ID stored in SD card datafile for recognition results
 
