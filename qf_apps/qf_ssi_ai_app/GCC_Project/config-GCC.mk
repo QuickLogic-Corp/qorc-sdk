@@ -70,7 +70,8 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/MQTTSN/inc" \
                  -I"$(PROJ_ROOT)/Libraries/MQTTSN_SML/inc" \
                  -I"$(PROJ_ROOT)/Libraries/SensorFramework/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635" 
+                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635" \
+                 -I"$(PROJ_ROOT)/Tasks/fs_monitor/inc"
     
 
 # C compiler flags
@@ -127,3 +128,4 @@ export FREERTOS_FAT_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT
 export FREERTOS_FAT_COMMON_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)common
 export FREERTOS_FAT_QL_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)QL
 endif
+export FS_MONITOR_DIR = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)fs_monitor$(DIR_SEP)src

@@ -142,6 +142,22 @@ in the source file `app_config.h <inc/acpp_config.h>`__.
    application, set its baud to 4608000 bps to start saving the
    sensor data to the SD card.
 
+Disk full indication
+---------------
+
+A file system monitor task checks the SD card available disk space every 60-seconds
+and reports an error message if the available free space falls below 5% of the total
+available disk space. To modify this default behavior, provide desired functionality
+in the function 
+
+::
+
+  void riff_low_disk_space(void)
+  {
+     // provide application specific function here
+  }
+
+
 Adding a sensor
 ---------------
 

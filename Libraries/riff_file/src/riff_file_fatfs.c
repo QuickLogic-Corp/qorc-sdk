@@ -119,12 +119,13 @@ int RIFF_file_write_object( struct riff_object *pObject )
 #if ((RIFF_FILE_SIZE_MAX > 0) && (RIFF_AUTO_SEQUENCE_FILENAMES == 1))
     if (riffFileSizeSinceLastSync > RIFF_FILE_SYNC_SIZE)
     {
-        dbg_str_int("riff sync size limit reached", riffFileSizeSinceLastSync);
+        //dbg_str_int_noln("riff sync size limit reached", riffFileSizeSinceLastSync);
         uint32_t sticks, eticks;
         sticks = xTaskGetTickCount();
         f_sync(pObject->pFile->pFile);
         eticks = xTaskGetTickCount();
-        dbg_str_int("f_sync took", eticks-sticks);
+        //dbg_str_int_noln("f_sync took", eticks-sticks);
+        //dbg_str("ms \n");
         riffFileSizeSinceLastSync = 0;
     }
 
