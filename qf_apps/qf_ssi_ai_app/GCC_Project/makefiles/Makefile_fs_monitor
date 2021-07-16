@@ -1,0 +1,9 @@
+
+FS_MONITOR_SRCS:=$(wildcard $(FS_MONITOR_DIR)/*.c)
+
+SRCS:=$(notdir $(FS_MONITOR_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(FS_MONITOR_DIR)
+$(info FS_MONITOR_SRCS = ${FS_MONITOR_SRCS}, SRCS=${SRCS})
+include $(COMMON_STUB)
+
