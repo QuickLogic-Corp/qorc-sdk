@@ -3,7 +3,14 @@
 #include "ql_riff.h"
 #include "riff_internal.h"
 #include <string.h>
+#include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
 #include "dbg_uart.h"
+
+#if (RIFF_AUTO_SEQUENCE_FILENAMES == 1)
+void riff_delete_oldest_qlsm(void);
+#endif
 
 /* list of all known RIFF files */
 static struct riff_file all_riff_files[ RIFF_MAX_FILES ];
@@ -132,7 +139,7 @@ int RIFF_file_write_object( struct riff_object *pObject )
     size_t fileSize = f_size(pObject->pFile->pFile);
     if (fileSize > RIFF_FILE_SIZE_MAX)
     {
-        dbg_str_int("riff file size limit reached", fileSize);
+        //dbg_str_int("riff file size limit reached", fileSize);
         uint32_t sticks, eticks;
         sticks = xTaskGetTickCount();
         f_close(pObject->pFile->pFile);
@@ -143,8 +150,10 @@ int RIFF_file_write_object( struct riff_object *pObject )
         {
             dbg_str_str("datafile", nextfilename);
         }
+        // Now delete the oldest file
+        riff_delete_oldest_qlsm();
         eticks = xTaskGetTickCount();
-        dbg_str_int("f_close + f_open took", eticks-sticks);
+        //dbg_str_int("f_close + f_open took", eticks-sticks);
     }
 #endif
     /* update the actual bytes in the riff header */
@@ -175,11 +184,164 @@ int RIFF_file_write_object( struct riff_object *pObject )
 }
 
 #if (RIFF_AUTO_SEQUENCE_FILENAMES == 1)
-static int riff_file_count = 0;
-static char riff_file_basename[64]= "data_";
-static char riff_file_nextname[64];
+#include <stdbool.h>
+#define RIFF_FILE_COUNT_MAX  (10)
+#define RIFF_FILE_BASENAME   ("data_")
+/* Hold the file numbers (in sorted order) that are present on the card
+ * (data_<file number>.qlsm). A 0 indicates there is no file with that number
+ */
+static int riff_file_num_buff[RIFF_FILE_COUNT_MAX] = {0};
+static int sfilenumHead = -1; // new/next file number to be created
+static int sfilenumTail = -1; // oldest file number to be deleted
 
-/** @brief RIFF fileformat initialization function using the
+static bool riff_file_num_buff_init_done = false;
+static int riff_file_count = 0;
+static char riff_file_basename[64]= RIFF_FILE_BASENAME;
+static char riff_file_nextname[64];
+static char riff_file_oldname[64];
+/* File number management */
+void riff_filenum_print_buf(void)
+{
+    char tmpb[16];
+    dbg_str("File numbers: ");
+    for (int k = 0; k < RIFF_FILE_COUNT_MAX; k++)
+    {
+        dbg_str(itoa(riff_file_num_buff[k], tmpb, 10));
+        dbg_str(", ");
+    }
+    dbg_str_int_noln("Head", sfilenumHead);
+    dbg_str_int_noln(", Tail", sfilenumTail);
+    dbg_str("\n");
+}
+
+/** @brief Get head and tail of file numbers
+ *
+ * riff_file_num_buff[] contains the file numbers currently on the
+ * SD card. Scan for a gap to identify the new filename to be created
+ * and the oldest file that needs to be deleted.
+ *
+ * If scan identifies following file numbers
+ * 001, 002, 003, 004, 005,           008, 009, 010
+ * then delete 008 and create 006 as in the below
+ * 001, 002, 003, 004, 005, 006,           009, 010
+ *
+ */
+int riff_filenum_get_head_tail(int *pfilenumTail)
+{
+    int filenumHead, filenumTail;
+    filenumHead = -1;
+    filenumTail = -1;
+
+    for (int k = 1; k <= RIFF_FILE_COUNT_MAX; k++)
+    {
+        if (riff_file_num_buff[k-1] == 0)
+        {  // first break
+            if (riff_file_num_buff[(k%RIFF_FILE_COUNT_MAX)] == 0)
+            {
+                // we have a break
+                filenumHead = k;   // new file name will be k
+                filenumTail = (k+1)%(RIFF_FILE_COUNT_MAX) + 1; // old filename to delete
+            }
+            else if (k==1)
+            {
+                 filenumHead = RIFF_FILE_COUNT_MAX;
+                 filenumTail = 2;
+            }
+            else
+            {   // there is an error, force a break
+                filenumHead = k;   // new file name will be k
+                // delete the file (k+1)
+                sfilenumTail = k%(RIFF_FILE_COUNT_MAX) + 1; // delete the extra file
+                riff_delete_oldest_qlsm();
+                filenumTail = (k+1)%(RIFF_FILE_COUNT_MAX) + 1; // old filename to delete
+            }
+            break;
+        }
+    }
+
+    *pfilenumTail = filenumTail;
+    return filenumHead;
+}
+
+/** @brief Search a directory for to identify new file number to be created and
+ * oldest *.qlsm file to be deleted. The new file number is returned
+ * and the oldest file number is stored at the address `pfilenumTail`
+ *
+ * @param pdir directory to be searched
+ * @param pfilenumTail address to store the oldest file number to be deleted
+ *
+ * @return new file number to be created
+ */
+int riff_file_scan_qlsm_files (TCHAR *pdir, int *pfilenumTail)
+{
+    FRESULT fr;     /* Return value */
+    DIR dj;         /* Directory object */
+    FILINFO fno;    /* File information */
+    FILINFO oldest_fno;
+    int ifilenum, tot_count, nitems;
+    int filenumHead, filenumTail, filenumOffset;
+
+    if (riff_file_num_buff_init_done == false)
+    {
+        for (int k = 0; k < RIFF_FILE_COUNT_MAX; k++)
+            riff_file_num_buff[k] = 0;
+        tot_count = 0;
+        fr = f_findfirst(&dj, &fno, pdir, "?*.qlsm");   /* Start to search for QLSM files */
+
+        while (fr == FR_OK && fno.fname[0]) {           /* Repeat while an item is found */
+            ifilenum = 0;
+            nitems = 0;
+            filenumOffset = strlen(riff_file_basename);
+            if (strncmp (fno.fname, riff_file_basename, filenumOffset) == 0)
+            {
+                nitems = sscanf(fno.fname+filenumOffset, "%d.qlsm", &ifilenum); /* scan for the file number */
+            }
+            if (nitems <= 0)
+                continue;
+            if ((ifilenum > 0) && (ifilenum <= RIFF_FILE_COUNT_MAX)) {
+                tot_count++;
+                riff_file_num_buff[ifilenum-1] = ifilenum;
+            }
+            fr = f_findnext(&dj, &fno);               /* Search for next item */
+        }
+
+        f_closedir(&dj);
+    }
+
+    filenumHead = riff_filenum_get_head_tail(&filenumTail);
+    *pfilenumTail = filenumTail;
+    return filenumHead;
+}
+
+void riff_filenum_init(void)
+{
+    sfilenumHead = riff_file_scan_qlsm_files("", &sfilenumTail);
+    return;
+}
+
+/** @brief Delete oldest file identified by the file number in sfilenumTail
+ *  static variable
+ */
+void riff_delete_oldest_qlsm(void)
+{
+    int filenum;
+
+    filenum = sfilenumTail;
+    snprintf(riff_file_oldname, sizeof(riff_file_oldname), "%s%08d.qlsm", riff_file_basename, filenum);
+    dbg_str_str_nonl("Deleting", riff_file_oldname);
+    if (f_unlink(riff_file_oldname) == FR_OK)
+    {
+        dbg_str(" Successful\n");
+    }
+    else
+    {
+        dbg_str(" Failed\n");
+    }
+    riff_file_num_buff[filenum-1] = 0;
+
+}
+
+/** @brief RIFF file format initialization function using the
  *  user provided basename and the initial file number integer
  *  New riff filenames will be constructed in the format
  *  basenameIIIIIIII.qlsm where IIIIIIII is an integer
@@ -189,24 +351,47 @@ static char riff_file_nextname[64];
  */
 void riff_filename_format_init(char *basename, int ifilenum)
 {
-	strncpy(riff_file_basename, basename, sizeof(riff_file_basename));
-	riff_file_count = ifilenum;
+    extern int riff_file_scan_qlsm_files (TCHAR *pdir, int *pfilenumTail);
+    if (riff_file_num_buff_init_done == true)
+        return;
+
+    strncpy(riff_file_basename, basename, sizeof(riff_file_basename));
+    riff_filenum_init();
+    riff_file_num_buff_init_done = true;
 }
 
 /** @brief Get a new RIFF filename for storing the sensor data
- *  A new filename of the format
- *  @param[out] newfilename pointer a char array of atleast 64 bytes
+ *  A new filename of the format: <basename><NNNNNNNN>.qlsm where
+ *  <basename> is the file basename specified in riff_file_basename
+ *  and <NNNNNNNN> is the new file number
+ *
+ *  @return newfilename pointer to a char array of atleast 64 bytes
+ *
  */
 char *riff_get_newfilename(void)
 {
-	riff_file_count++;
-	snprintf(riff_file_nextname, sizeof(riff_file_nextname), "%s%08d.qlsm", riff_file_basename, riff_file_count);
-	return riff_file_nextname;
+    extern int riff_file_scan_qlsm_files (TCHAR *pdir, int *pfilenumTail);
+
+    int k, filenumHead, filenumTail;
+    if (riff_file_num_buff_init_done == false)
+        riff_filename_format_init(riff_file_basename, 0);
+
+    sfilenumHead = riff_file_scan_qlsm_files("", &sfilenumTail);
+    riff_filenum_print_buf();
+    riff_file_count = sfilenumHead;
+    snprintf(riff_file_nextname, sizeof(riff_file_nextname), "%s%08d.qlsm", riff_file_basename, riff_file_count);
+    dbg_str_str_nonl("Next filename", riff_file_nextname);
+    riff_file_num_buff[riff_file_count-1] = riff_file_count;
+    dbg_str("\n");
+
+    return riff_file_nextname;
 }
 
 size_t RIFF_get_filesize(void)
 {
 
 }
+
+
 #endif /* RIFF_AUTO_SEQUENCE_FILENAMES */
 #endif /* USE_FATFS_APIS */

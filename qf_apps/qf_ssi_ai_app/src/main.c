@@ -155,7 +155,23 @@ int main(void)
       ((SSI_SENSOR_SELECT_AUDIO == 1) && (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)) )
     StartSimpleStreamingInterfaceTask();
 #endif
-    xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
+    // set current date and time
+    struct tm curtim;
+    char currtimeStr[32] = "2021-07-15 00:00:00";
+    sscanf(currtimeStr, "%d-%d-%d %d:%d:%d",
+            &curtim.tm_year, &curtim.tm_mon, &curtim.tm_mday,
+            &curtim.tm_hour, &curtim.tm_min, &curtim.tm_sec);
+    curtim.tm_year -= 1900;
+    curtim.tm_mon--;
+    snprintf(currtimeStr, 32, "%04d-%02d-%02d %02d:%02d:%02d ",
+            curtim.tm_year+1900, curtim.tm_mon+1, curtim.tm_mday,
+            curtim.tm_hour, curtim.tm_min, curtim.tm_sec);
+    dbg_str(currtimeStr);
+
+    uint32_t unixTime = 1546300800UL;
+    unixTime = mktime(&curtim);
+    ql_sys_settime(unixTime);
+    xTaskSet_uSecCount((uint64_t)unixTime * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
 #if (S3AI_FIRMWARE_DATASAVE == 1)
     start_fs_monitor_task();

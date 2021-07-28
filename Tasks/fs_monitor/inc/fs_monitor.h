@@ -21,6 +21,9 @@
 
 #include "Fw_global_config.h"
 
+// Set this to 1 to print disk usage at monitor intervals
+#define FS_MONITOR_ENABLE_PRINTS              (1)
+
 // Default low threshold value of available free space as a percentage of total available space
 // Override in Fw_global_config.h to set a different value
 #ifndef FS_MONITOR_LOW_DISK_SPACE_THRESHOLD
