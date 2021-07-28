@@ -129,16 +129,16 @@ files on the SD card are as below:
 
 ::
 
-{ data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
-                                          data_00000008.qlsm, data_00000009.qlsm, data_00000010.qlsm }
+  { data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
+                                            data_00000008.qlsm, data_00000009.qlsm, data_00000010.qlsm }
 
 the applicaion would remove the file data_00000008.qlsm and create data_00000006.qlsm,
 resulting in the following list of files:
 
 ::
 
-{ data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
-  data_00000006.qlsm,                                         data_00000009.qlsm, data_00000010.qlsm }
+  { data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
+    data_00000006.qlsm,                                         data_00000009.qlsm, data_00000010.qlsm }
 
 
 
