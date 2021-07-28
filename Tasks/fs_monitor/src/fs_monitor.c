@@ -23,6 +23,8 @@
 #include "dbg_uart.h"
 #include "fs_monitor.h"
 
+#include <stdio.h>
+
 #if (USE_FATFS_APIS == 1)
 #include "ff.h"
 #else
@@ -48,6 +50,9 @@ __attribute__ ((weak)) void riff_low_disk_space(void)
  */
 void fs_monitor_task(void *pParameter)
 {
+#if FS_MONITOR_ENABLE_PRINTS == 1
+    char buff[256];
+#endif /* FS_MONITOR_ENABLE_PRINTS */
 	while (1)
 	{
 		vTaskDelay(1000 * pdMS_TO_TICKS(FS_MONITOR_INTERVAL));
@@ -58,10 +63,10 @@ void fs_monitor_task(void *pParameter)
         	totsect = (pfs->n_fatent - 2) * pfs->csize;
         	nsect = nclust * pfs->csize;
         	iperc = (nsect * 100L) / totsect ;
-        	//dbg_str_int_noln("Free space: ", nsect/2);
-        	//dbg_str_int_noln("  Total space: ", totsect/2);
-        	//dbg_str_int_noln(" ", iperc);
-        	//dbg_str("% disk space available\n");
+#if FS_MONITOR_ENABLE_PRINTS == 1
+            snprintf(buff, 256, "%10d kB [%3d%%] free of %10d kB total\n", nsect, iperc, totsect);
+            dbg_str(buff);
+#endif
         	if ( iperc <= FS_MONITOR_LOW_DISK_SPACE_THRESHOLD)
         	{
         		riff_low_disk_space();

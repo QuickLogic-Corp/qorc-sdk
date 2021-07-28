@@ -102,7 +102,7 @@ to use a new file each time the size reaches the limit specified in this macro.
 ::
 
     /* Select the maximum file size for storing the sensor data */
-    #define RIFF_FILE_SIZE_MAX   (1024*4*25)  // 100KB
+    #define RIFF_FILE_SIZE_MAX   (1024*4*256*1024)  // 1GB
 
 Filename conventions
 ~~~~~~~~~~~
@@ -117,6 +117,29 @@ source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
     #define RIFF_AUTO_SEQUENCE_FILENAMES        (0)  // Set to 1 to use sequential count appended to filename
     #define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (1)  // Set to 1 to use timestamp appended to filename
     #define USE_DCL_FILENAME_ONLY               (0)
+
+
+When RIFF_AUTO_SEQUENCE_FILENAMES is selected, filenames are auto sequenced 
+from the set of { data_00000001, data_00000002, ..., data_<RIFF_FILE_MAX_COUNT>}, where
+the macro RIFF_FILE_MAX_COUNT defined `riff_file_fatfs.c <Libraries/riff_file/src/riff_file_fatfs.c>`__
+is the number of files that would be managed by this application. When the 
+count approaches this maximum value, old files are removed a new file is
+created. As an example, for RIFF_FILE_MAX_COUNT=10,  if the current set of 
+files on the SD card are as below:
+
+::
+
+  { data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
+                                            data_00000008.qlsm, data_00000009.qlsm, data_00000010.qlsm }
+
+the applicaion would remove the file data_00000008.qlsm and create data_00000006.qlsm,
+resulting in the following list of files:
+
+::
+
+  { data_00000001.qlsm, data_00000002.qlsm, data_00000003.qlsm, data_00000004.qlsm, data_00000005.qlsm,
+    data_00000006.qlsm,                                         data_00000009.qlsm, data_00000010.qlsm }
+
 
 
 1. Verify that the following macros is set for saving data to SD card 
