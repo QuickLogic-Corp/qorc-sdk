@@ -86,10 +86,15 @@ void system_init(void)
 static void ldo_init(void)
 {
     /* LDO Settings */
+#if ( ENABLE_INTERNAL_LDO == 1)
     AIP->LD0_30_CTRL_0 = 0x1ac; // LDO Enable       /* 0x1ac -> Vo =1.01V, imax = 7.2mA, LDO enabled. */
     AIP->LD0_50_CTRL_0 = 0x1ac; // LDO Enable
     AIP->LD0_30_CTRL_0 = 0x28c; // LDO Enable       /* 0x28c -> Vo =1.15V, imax = 7.2mA, LDO enabled. */
     AIP->LD0_50_CTRL_0 = 0x28c; // LDO Enable
+#else
+    AIP->LD0_30_CTRL_0 = 0x1a1; // LDO Disable     /* 0x1a1 -> Vo = 1.01 V, LDO Disabled */
+    AIP->LD0_50_CTRL_0 = 0x1a1; // LDO Disable
+#endif
 }
 
 static void uart_setup()
@@ -100,7 +105,11 @@ static void uart_setup()
     memset( (void *)&(uartObj), 0, sizeof(uartObj) );
 
     uart_id = UART_ID_HW;
+#if (CONST_FREQ == 1)
 	brate = BAUD_460800;
+#else
+	brate = BAUD_57600;
+#endif
 	uartObj.baud = brate;
 	uartObj.wl = WORDLEN_8B;
 	uartObj.parity = PARITY_NONE;

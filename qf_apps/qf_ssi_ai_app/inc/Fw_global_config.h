@@ -29,7 +29,13 @@
 /***************   CONFIGURE HARDWARE OUTPUT    *****************/
 
 #define FEATURE_FPGA_UART   0       // Set to 1 to enable the FPGA UART port if present
-#define FEATURE_USBSERIAL   1       // Set to 1 to enable the USBSERIAL port if present
+
+#if (CONST_FREQ == 0)
+#define FEATURE_USBSERIAL   0       // Set to 0 when power management mode enabled
+#else
+#define FEATURE_USBSERIAL   1       // Set to 1 to enable USBSERIAL port if present
+#endif
+
 #define USE_SEMIHOSTING     0       // Set to 1 to enable the semihosting port if present
 
 
@@ -179,7 +185,9 @@ extern int FPGA_FFE_LOADED;
 //#define FFE_DRIVERS	0 // 1
 //
 ///* do or do not perform dynamic frequency scaling */
+#ifndef CONST_FREQ
 #define CONST_FREQ (1)
+#endif
 //
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1
