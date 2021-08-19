@@ -73,8 +73,8 @@ void system_init(void)
     PMU->M4SRAM_SSW_LPMF = 0xFFFF;
     PMU->M4SRAM_SSW_LPMH_MASK_N = 0xFFFF;
 
-    S3x_Clk_Enable(S3X_FB_16_CLK);
-    S3x_Clk_Enable(S3X_FB_21_CLK);
+    //S3x_Clk_Enable(S3X_FB_16_CLK);
+    //S3x_Clk_Enable(S3X_FB_21_CLK);
 
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
