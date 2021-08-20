@@ -21,8 +21,8 @@
 /*######################## FIRMAWARE MODE SETTINGS  ################################*/
 
 
-#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection       */
-#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition    */
+#define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection       */
+#define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition    */
 
 
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
@@ -36,7 +36,7 @@
 /*######################## DATA CAPTURE METHOD  ################################*/
 
 
-#define S3AI_FIRMWARE_LIVESTREAM 1   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
+#define S3AI_FIRMWARE_LIVESTREAM 0   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
 #define S3AI_FIRMWARE_DATASAVE 0     /* Enable SD card for collection        (supports sensor and recognition) */
 
 
