@@ -212,7 +212,9 @@ void audio_ai_data_processor(
     int nChannels = pIn->dbHeader.numDataChannels;
 
     int batch_sz = nSamples / nChannels;
-    //set_recognition_current_block_time();
+#if S3AI_FIRMWARE_DATASAVE
+    set_recognition_current_block_time();
+#endif
     sml_recognition_run_batch(p_data, batch_sz, nChannels, SENSOR_AUDIO_ID);
 
     *pRet = NULL;

@@ -510,7 +510,9 @@ void sensor_ssss_ai_data_processor(
     // Invoke the SensiML recognition API
     int nSamples = pIn->dbHeader.numDataElements;
     int nChannels = pIn->dbHeader.numDataChannels;
-    //set_recognition_current_block_time();
+#if S3AI_FIRMWARE_DATASAVE
+    set_recognition_current_block_time();
+#endif
     int batch_sz = nSamples / nChannels;
     int classification = sml_recognition_run_batch(p_data, batch_sz, nChannels, sensor_ssss_config.sensor_id);
     *pRet = NULL;
