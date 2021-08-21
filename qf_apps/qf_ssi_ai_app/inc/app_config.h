@@ -21,8 +21,8 @@
 /*######################## FIRMAWARE MODE SETTINGS  ################################*/
 
 
-#define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection       */
-#define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition    */
+#define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection       */
+#define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition    */
 
 
 /*######################## SENSOR CONFIGURATION SETTINGS  ################################*/
@@ -37,7 +37,7 @@
 
 
 #define S3AI_FIRMWARE_LIVESTREAM 0   /* Enable livestream via SSI Interface  (supports sensor or recognition)  */
-#define S3AI_FIRMWARE_DATASAVE 1     /* Enable SD card for collection        (supports sensor and recognition) */
+#define S3AI_FIRMWARE_DATASAVE 0     /* Enable SD card for collection        (supports sensor and recognition) */
 
 
 
@@ -73,6 +73,12 @@
 #define SENSOR_SSSS_RECOG_ENABLED     (S3AI_FIRMWARE_IS_RECOGNITION) && (SSI_SENSOR_SELECT_SSSS)
 #define DATASAVE_RECOGNITION_RESULTS  (S3AI_FIRMWARE_IS_RECOGNITION) && (S3AI_FIRMWARE_DATASAVE)
 
+/* Enable power-management when in recognition mode */
+#if (S3AI_FIRMWARE_IS_RECOGNITION == 1) || (S3AI_FIRMWARE_DATASAVE == 1)
+#define CONST_FREQ                    (0)
+#else
+#define CONST_FREQ                    (1)
+#endif
 
 
 // Toggle GPIO whenever a datablock buffer is dispatched to the UART

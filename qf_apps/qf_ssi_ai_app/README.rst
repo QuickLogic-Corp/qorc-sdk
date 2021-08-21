@@ -59,7 +59,7 @@ the source file `app_config.h <inc/app_config.h>`__.
 4. Reset the board to start running the qf_ssi_ai_app application.
 
 5. Connect a UART to the Quickfeather board. Open a terminal
-   application, set its baud to 4608000 bps to get the recognition
+   application, set its baud to 57600 bps to get the recognition
    results from the running application.
 
 For details on data collection, building an AI model, and recognition
@@ -139,7 +139,7 @@ in the source file `app_config.h <inc/acpp_config.h>`__.
 4. Reset the board to start running the qf_ssi_ai_app application.
 
 5. Connect a UART to the Quickfeather board. Open a terminal
-   application, set its baud to 4608000 bps to start saving the
+   application, set its baud to 57600 bps to start saving the
    sensor data to the SD card.
 
 Disk full indication

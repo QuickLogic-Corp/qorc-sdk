@@ -70,8 +70,13 @@ S3x_ClkD S3clk [] = {
         .sync_clk = SYNC_CLKD (0, 0, 0),
         .cru_ctrl = CRU_CTRL (0x14, 0x1fe, 9, 0x138, 0x54, 0x1, 3),
         .flags = LOCK_KEY,
+#if (CONST_FREQ == 1)
         .def_max_rate = (F_24MHZ),
         .init_state = INIT_STATE(F_24MHZ, 0, INIT_GATE_OFF),
+#else
+        .def_max_rate = (F_12MHZ),
+        .init_state = INIT_STATE(F_3MHZ, 0, INIT_GATE_OFF),
+#endif
     },
     [CLK_C16] = {
         .name = "C16",
@@ -247,6 +252,7 @@ S3x_Pi S3Pi [] = {
 
 uint8_t policyInitial = 1;  // Policy value to start with
 
+#if (CONST_FREQ == 1)
 S3x_Policy_Node dfs_node[]  = {
 /* 0th Policy is only for lpm not for run mode */
     [0] = { // Sleep
@@ -268,7 +274,6 @@ S3x_Policy_Node dfs_node[]  = {
         .policySleep = 0,                       // When idle, go to deep sleep (node 0)
         .minHSOSC = F_48MHZ,
     },
-#if 1
     [2] = {
         .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
         .rate = {C01_N2_CLK, C09_N2_CLK, C10_N2_CLK, C8X4_N2_CLK},
@@ -289,8 +294,60 @@ S3x_Policy_Node dfs_node[]  = {
         .step_width = STEP_3,/* msec */
         .cpuload_downthreshold = CPU_DOWN4,
     },
-#endif
 };
+#else /* power management enabled */
+S3x_Policy_Node dfs_node[]  = {
+/* 0th Policy is only for lpm not for run mode */
+    [0] = { // Sleep
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {F_256KHZ, F_256KHZ, F_3MHZ, F_3MHZ},
+        .step_width =  800,/* msec */
+        .cpuload_downthreshold = 0,
+        .cpuload_upthreshold = 98,
+        .policySleep = 0xFF,                   // Sleep policy: this is the sleep state, do nothing
+        .minHSOSC = F_3MHZ,
+    },
+
+    [1] = { // Read sensor data
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {F_3MHZ, F_3MHZ, F_6MHZ, F_6MHZ},
+        .step_width = 100,/* msec */
+        .cpuload_downthreshold = 10,
+        .cpuload_upthreshold = 90,
+        .policySleep = 0,                       // When idle, go to deep sleep (node 0)
+        .minHSOSC = F_6MHZ,
+    },
+
+    [2] = {
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {F_3MHZ, F_3MHZ, F_12MHZ, F_12MHZ},
+        .step_width =  100, // STEP_2,/* msec */
+        .cpuload_downthreshold = CPU_DOWN2,
+        .cpuload_upthreshold = 90,
+        .policySleep = 0,                       // When idle, go to deep sleep (node 0)
+        .minHSOSC = F_12MHZ,
+    },
+    [3] = {
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {F_3MHZ, F_3MHZ, F_24MHZ, F_12MHZ},
+        .step_width = 100, // STEP_3,/* msec */
+        .cpuload_downthreshold = CPU_DOWN3,
+        .cpuload_upthreshold = 90,
+        .policySleep = 0,                       // When idle, go to deep sleep (node 0)
+        .minHSOSC = F_24MHZ,
+    },
+
+    [4] = {
+        .clk_domain = {CLK_C01, CLK_C09, CLK_C10, CLK_C08X4},
+        .rate = {F_3MHZ, F_3MHZ, F_48MHZ, F_12MHZ},
+        .step_width = 100, // STEP_3,/* msec */
+        .cpuload_downthreshold = CPU_DOWN4,
+        .cpuload_upthreshold = 90,
+        .policySleep = 0,                       // When idle, go to deep sleep (node 0)
+        .minHSOSC = F_48MHZ,
+    },
+};
+#endif
 
 void S3x_pwrcfg_init(void)
 {
