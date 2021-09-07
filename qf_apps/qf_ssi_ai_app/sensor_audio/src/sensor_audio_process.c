@@ -30,6 +30,7 @@
 #if (SSI_SENSOR_SELECT_AUDIO == 1)
 /* BEGIN JSON descriptor for the sensor configuration */
 
+#if (SSI_JSON_CONFIG_VERSION == 1)
 const char json_string_sensor_config[] = \
 "{"\
    "\"sample_rate\":16000,"\
@@ -38,6 +39,19 @@ const char json_string_sensor_config[] = \
 	"  \"Microphone\":0"\
    "}"\
 "}\r\n" ;
+#elif (SSI_JSON_CONFIG_VERSION == 2)
+const char json_string_sensor_config[] = \
+"{"\
+   "\"version\":2,"\
+   "\"sample_rate\":16000,"\
+   "\"samples_per_packet\":240,"\
+   "\"column_location\":{"\
+	"  \"Microphone\":0"\
+   "}"\
+"}\r\n" ;
+#else
+#error "Unknown SSI json config version"
+#endif
 /* END JSON descriptor for the sensor data */
 #endif /* SSI_SENSOR_SELECT_AUDIO */
 
@@ -287,7 +301,7 @@ void audio_livestream_data_processor(
 	  memcpy (pIn->p_data, audio_debug_buffer, nSamples * sizeof(int16_t));
 #endif
 
-      ssi_publish_sensor_data(pIn->p_data, nSamples * (pIn->dbHeader.dataElementSize));
+      ssiv2_publish_sensor_data(SSI_CHANNEL_DEFAULT, pIn->p_data, nSamples * (pIn->dbHeader.dataElementSize));
       //ble_send( &sdi );
     }
     *pRet = NULL;
