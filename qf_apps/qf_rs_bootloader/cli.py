@@ -104,9 +104,7 @@ cmdacts = { 'help': help_cmd,
             'runfpga': run_fpga_cmd,
             'change-boot-mode': change_boot_mode_cmd,
             'quit': quit_cmd,
-            'comport': set_comport_cmd,
-            'flashm4app': flash_m4app_cmd,
-            'runm4app': run_m4app_cmd
+            'comport': set_comport_cmd
           }
 
 cmdhelptxt = { 'help': 'List available commands and basic usage', 
@@ -114,9 +112,7 @@ cmdhelptxt = { 'help': 'List available commands and basic usage',
             'runfpga': 'Configure FPGA and run the program',
             'change-boot-mode': 'Change boot mode, 1 => change to boot-loader-mode, 2 => change to application-mode ',
             'quit': 'Quit this program',
-            'comport': 'Usage: comport <comport>, set comport',
-            'flashm4app': 'Usage: flashm4app <filename> Write file contents to the M4APP flash region',
-            'runm4app': 'Usage: runm4app, run the m4 application program',
+            'comport': 'Usage: comport <comport>, set comport'
           }
 
 def readAndExecuteCommandLineInput():

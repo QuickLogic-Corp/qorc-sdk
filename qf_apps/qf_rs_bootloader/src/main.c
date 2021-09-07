@@ -46,23 +46,23 @@
 static void nvic_init(void);
 extern void BL_Task_Init(void);
 
-const char *SOFTWARE_VERSION_STR="QF_BL 1.0" ;
+const char *SOFTWARE_VERSION_STR="QF_BL 2.2" ;
 
 
 // The entry Function of the BL when the system boots up.
 int main(void)
 {
 #if defined(__ICCARM__)
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2.1) (IAR)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_rs_bootloader(v2.2) (IAR)";
 #elif defined(__GNUC__)
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_bootloader(v2.1) (GCC)";
+    SOFTWARE_VERSION_STR = "qorc-sdk/qf-apps/qf_rs_bootloader(v2.2) (GCC)";
 #endif
 
     qf_hardwareSetup();
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather Bootloader\n");
+    dbg_str( "Quicklogic QuickFeather RS Bootloader\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );

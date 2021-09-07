@@ -36,3 +36,38 @@ Quickfeather Flash and run the FPGA application
 
    $ python cli.py
    
+
+Flashing and running an FPGA bitstream
+-----------------------
+
+First-time setup
+----------
+
+Build qf_apps/qf_rs_bootloader application project. Flash the quickfeather
+board using this bootloader qf_rs_bootloader.bin binary using the 
+TinyFPGA-Programmer-Application. Refer qorc-sdk documentation for instructions
+to flash the quickfeather board.
+
+::
+
+   $ python tinyfpga-programmer-gui.py --bootloader qf_rs_bootloader.bin
+   
+
+Now, power cycle the quickfeather board and put the quickfeather in Flash 
+mode by pressing the userbutton on the board within 5 secs of power cycling 
+the board. Run the cli.py application and change the boot-mode so the 
+bootloader stays in the bootloader mode.
+
+::
+
+   $ python cli.py
+   [S3] comport <COMxx>                  // set the comport to <COMxx>
+   [S3] change-boot-mode 1
+   
+Now the board is ready to Flash an FPGA bitstream and run this FPGA bitstream.
+Issue the following commands in the running python cli.py command line interface.
+
+   [S3] comport   <COMxx>                      // set the comport to <COMxx>
+   [S3] flashfpga <fpga-bitstream-file>        // flash the bitstream <fpga-bitstream-file>
+   [S3] runfpga
+
