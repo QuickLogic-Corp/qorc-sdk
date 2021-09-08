@@ -45,9 +45,6 @@ The bootloader application qf_rs_bootloader running on the QuickFeather and
 the python application code cli.py could be used to flash and run an FPGA
 bitstream on the quickfeather board.
 
-First-time setup
-----------
-
 Build qf_apps/qf_rs_bootloader application project. Flash quickfeather
 board with qf_rs_bootloader.bin binary using TinyFPGA-Programmer-Application. 
 
@@ -63,8 +60,7 @@ board with qf_rs_bootloader.bin binary using TinyFPGA-Programmer-Application.
   4. Use tinyfpga-programmer-gui to load the new qf_rs_bootloader.bin 
      binary file.
 
-    ``$ python tinyfpga-programmer-gui.py --bootloader qf_rs_bootloader.bin``
-   
+     $ python tinyfpga-programmer-gui.py --bootloader qf_rs_bootloader.bin
 
   5. Now, power cycle the quickfeather board and put the quickfeather in 
      Flash mode by pressing the reset button followed by userbutton on the 
@@ -95,6 +91,6 @@ board with qf_rs_bootloader.bin binary using TinyFPGA-Programmer-Application.
      design.
      
   Note: Repeat steps d) and e) for each generated FPGA bit file for EOS S3B device
-  Note: to restore the EVK function to execute M4 application, type: ``change-boot-mode 2``
+  Note: to restore the EVK function to execute M4 application, type: change-boot-mode 2
         to restore bootloader to the original behavior
   
