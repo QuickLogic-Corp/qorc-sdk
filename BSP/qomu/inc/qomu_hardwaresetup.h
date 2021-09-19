@@ -21,4 +21,4 @@
 *                                                          
 *=========================================================*/
 
-extern void qomu_hardwareSetup(void);
+extern void qomu_hardwaresetup(void);
