@@ -125,7 +125,7 @@ if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
 
     printf "    extracting toolchain archive.\n"
     tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${PWD}/arm_toolchain_install
-
+    rm -rf $ARM_TOOLCHAIN_ARCHIVE_FILE
 fi
 
 
