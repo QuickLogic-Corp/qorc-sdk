@@ -121,7 +121,9 @@ int main(void)
 #endif
     HAL_I2C_Init(i2c0config);
 
+#if (S3AI_FIRMWARE_IS_RECOGNITION)
     kb_model_init(); /* initialize the knowledgepack */
+#endif
 #if (SSI_SENSOR_SELECT_SSSS == 1)
     sensor_ssss_block_processor();
 #endif
