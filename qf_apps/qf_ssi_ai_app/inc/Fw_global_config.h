@@ -131,8 +131,6 @@ extern int FPGA_FFE_LOADED;
 ///* enable the FFE or not, see SW_ENABLE_FFE only 1 should exist */
 //#define FFE_DRIVERS	0 // 1
 //
-///* do or do not perform dynamic frequency scaling */
-#define CONST_FREQ (1)
 //
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1

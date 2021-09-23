@@ -75,7 +75,7 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
             -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
-    -L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR) -lsensiml -lm -larm_cortexM4lf_math 
+    -L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR)  -lm -larm_cortexM4lf_math 
 
 
 export ELF2BIN_OPTIONS=-O binary
