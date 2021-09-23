@@ -27,6 +27,7 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
 #endif
 
+
 static char serial_out_buf[SERIAL_OUT_CHARS_MAX];
 
 static void sml_output_led(uint16_t model, uint16_t classification)
@@ -39,9 +40,6 @@ uint8_t sensor_ssss_ai_fv_arr[MAX_VECTOR_SIZE];
 uint8_t sensor_ssss_ai_fv_len;
 char    sensor_ssss_ai_result_buf[SENSOR_SSSS_RESULT_BUFLEN];
 
-#if (DATASAVE_RECOGNITION_RESULTS==1)
-extern void data_save_recognition_results(char *sensor_ssss_ai_result_buf, int wbytes);
-#endif
 static void sml_output_serial(uint16_t model, uint16_t classification)
 {
     int count;
@@ -49,38 +47,20 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
     int buflen = sizeof(sensor_ssss_ai_result_buf)-1;
 	int ret;
     kb_get_feature_vector(model, sensor_ssss_ai_fv_arr, &sensor_ssss_ai_fv_len);
-
-    
     count = snprintf(sensor_ssss_ai_result_buf, buflen,
-             "{\"ModelNumber\":%d,\"Classification\":%d", (int)model, (int)classification);
+             "{\"ModelNumber\":%d,\"Classification\":%d,\"FeatureLength\":%d,\"FeatureVector\":[",(int)model,(int)classification, (int)sensor_ssss_ai_fv_len);
     wbytes += count;
     buflen -= count;
-
-#if (SSI_OUTPUT_FEATURE_VECTOR ==1)
-        count = snprintf(sensor_ssss_ai_result_buf, buflen,",\"FeatureLength\":%d, \"FeatureVector\":[",(int)sensor_ssss_ai_fv_len);   
+    for(int j=0; j < (int)(sensor_ssss_ai_fv_len-1); j++)
+    {
+    	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d,", sensor_ssss_ai_fv_arr[j]);
         wbytes += count;
-        buflen -= count;    
-        for(int j=0; j < (int)(sensor_ssss_ai_fv_len-1); j++)
-        {
-            count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d,", sensor_ssss_ai_fv_arr[j]);
-            wbytes += count;
-            buflen -= count;
-        }
-        count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d]", sensor_ssss_ai_fv_arr[sensor_ssss_ai_fv_len-1]);
-        wbytes += count;
-        buflen -= count;
-#endif
-    
-    count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "}\n");
+	    buflen -= count;
+    }
+	count = snprintf(&sensor_ssss_ai_result_buf[wbytes], buflen, "%d]}\n", sensor_ssss_ai_fv_arr[sensor_ssss_ai_fv_len-1]);
     wbytes += count;
     buflen -= count;
-   
     uart_tx_raw_buf(UART_ID_APP, sensor_ssss_ai_result_buf, wbytes);
-
-#if (DATASAVE_RECOGNITION_RESULTS==1)    
-    data_save_recognition_results(sensor_ssss_ai_result_buf, wbytes);
-#endif
-
 }
 
 static intptr_t last_output;

@@ -1,0 +1,16 @@
+
+QLFS_SRCS:=$(wildcard $(QLFS_DIR)/*.c )
+
+filters=freeRTOSFs_test.c #mmc_s3.c media_drv_spi_sd.c
+
+SRCS:=$(filter-out $(filters),$(notdir $(QLFS_SRCS)))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(QLFS_DIR)
+
+
+include $(COMMON_STUB)
+
+$(info QLFS_SRCS=$(QLFS_SRCS))
+$(info SRCS=$(SRCS))
+$(info OBJS=$(OBJS))
+$(info SRC_PATH=$(SRC_PATH))

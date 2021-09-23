@@ -1,10 +1,6 @@
 # -*- mode: Makefile -*-
 
-all:  POWER SYSFLASH UTILS FPGA CLI DATABLOCKMANAGER SENSOR_DRIVERS \
-      RIFF_FILE MQTTSN MQTTSN_SML \
-      FATFS \
-      QLFS \
-      FREERTOS_FAT_COMMON FREERTOS_FAT FREERTOS_FAT_QL
+all:  POWER SYSFLASH UTILS FPGA CLI DATABLOCKMANAGER SENSOR_DRIVERS
 
 .PHONY: SENSOR_FRAMEWORK
 SENSOR_FRAMEWORK:
@@ -42,38 +38,6 @@ CLI:
 DATABLOCKMANAGER:
 	make -f makefiles/Makefile_DatablockManager
 
-.PHONY: FATFS
-FATFS:
-	make -f makefiles/Makefile_FatFs
-
-.PHONY: RIFF_FILE
-RIFF_FILE:
-	make -f makefiles/Makefile_riff_file
-
-.PHONY: QLFS
-QLFS:
-	make -f makefiles/Makefile_qlfs
-
-.PHONY: MQTTSN
-MQTTSN:
-	make -f makefiles/Makefile_MQTTSN
-
-.PHONY: MQTTSN_SML
-MQTTSN_SML:
-	make -f makefiles/Makefile_MQTTSN_SML
-
-.PHONY: FREERTOS_FAT
-FREERTOS_FAT:
-	make -f makefiles/Makefile_FreeRTOS_FAT
-
-.PHONY: FREERTOS_FAT_QL
-FREERTOS_FAT_QL:
-	make -f makefiles/Makefile_FreeRTOS_FAT_QL
-
-.PHONY: FREERTOS_FAT_COMMON
-FREERTOS_FAT_COMMON:
-	make -f makefiles/Makefile_FreeRTOS_FAT_Common
-
 clean:
 	make -f makefiles/Makefile_Power clean
 	make -f makefiles/Makefile_SysFlash clean
@@ -82,12 +46,4 @@ clean:
 	make -f makefiles/Makefile_cli clean
 	make -f makefiles/Makefile_DatablockManager clean
 	make -f makefiles/Makefile_M4 clean
-	make -f makefiles/Makefile_FatFs clean
-	make -f makefiles/Makefile_riff_file clean
-	make -f makefiles/Makefile_qlfs clean
-	make -f makefiles/Makefile_MQTTSN clean
-	make -f makefiles/Makefile_MQTTSN_SML clean
-	make -f makefiles/Makefile_FREERTOS_FAT clean
-	make -f makefiles/Makefile_FREERTOS_FAT_COMMON clean
-	make -f makefiles/Makefile_FREERTOS_FAT_QL clean
 	

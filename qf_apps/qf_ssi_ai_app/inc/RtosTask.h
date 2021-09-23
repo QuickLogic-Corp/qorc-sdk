@@ -51,17 +51,6 @@ typedef enum {
     PRIORITY_HIGHEST = configMAX_PRIORITIES,
 } TaskPriorities;
 
-#define PRIORITY_TASK_MQTTSN_APP           ((unsigned)(PRIORITY_NORMAL))
-#define STACK_SIZE_TASK_MQTTSN_APP         (256)
-extern xTaskHandle xHandleTaskIO;
-extern QueueHandle_t MqttsnApp_InMsgQ;
-extern signed portBASE_TYPE StartRtosTaskMqttsnApp( void);
-
-#define PRIORITY_TASK_MQTTSN           ((unsigned)(PRIORITY_NORMAL))
-#define STACK_SIZE_TASK_MQTTSN         (256)
-extern xTaskHandle xHandleTaskMQTTSN;
-extern QueueHandle_t MQTTSN_MsgQ;
-extern signed portBASE_TYPE StartRtosTaskMqttsnMsgHandler( void);
 
 #define PRIORITY_TASK_BLE              ((unsigned)(PRIORITY_NORMAL))
 #define STACK_SIZE_TASK_BLE            (256)

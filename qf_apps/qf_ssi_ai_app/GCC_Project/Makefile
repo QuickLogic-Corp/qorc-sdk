@@ -25,7 +25,7 @@ _makedirs_:
 
 .PHONY: external_srcs
 external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED \
-    SENSOR_AUDIO FS_MONITOR
+    SENSOR_AUDIO
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -106,14 +106,6 @@ clean_DatablockProcessor:
 	make -f makefiles/Makefile_DatablockProcessor clean
 
 CLEAN_TARGET += DatablockProcessor
-
-.PHONY:FS_MONITOR
-FS_MONITOR:
-	make -f makefiles/Makefile_fs_monitor
-clean_FS_MONITOR:
-	make -f makefiles/Makefile_fs_monitor clean
-
-CLEAN_TARGET += FS_MONITOR
 
 .PHONY: GENERATED
 GENERATED:

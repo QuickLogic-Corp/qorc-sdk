@@ -1,0 +1,140 @@
+{
+    "name": "QuickFeather SimpleStream",
+    "uuid": "10b1db20-48a5-4442-a40e-fc530b456c89",
+    "collection_methods": [
+        {
+            "name": "live",
+            "display_name": "Live Stream Capture",
+            "storage_path": null,
+            "is_default": true
+        }
+    ],
+    "device_connections": [
+        {
+            "name": "serial_simple_stream",
+            "display_name": "Data Stream Serial Port",
+            "value": 1,
+            "is_default": true,
+            "serial_port_configuration": {
+                "com_port": null,
+                "baud": 460800,
+                "stop_bits": 1,
+                "parity": 0,
+                "handshake": 0,
+                "max_live_sample_rate": 3301
+            }
+        },
+        {
+            "name": "wifi_simple",
+            "display_name": "Simple Stream over WiFi",
+            "value": 2,
+            "is_default": true,
+            "wifi_configuration": {
+                "use_mqttsn": false,
+                "use_external_broker": false,
+                "external_broker_address":"",
+                "broker_port":1885,
+                "device_ip_address": null,
+                "device_port": 0,
+                "max_live_sample_rate": 1000000
+            }
+        }
+    ],
+    "capture_sources": [
+        {
+            "max_throughput": 0,
+            "name": "Motion",
+            "part": "MC3635",
+            "sample_rates": [
+                333, 250, 200, 100, 50
+            ],
+            "is_default": true,
+            "sensors": [
+                {
+                    "column_count": 3,
+                    "is_default": true,
+                    "column_suffixes": [
+                        "X",
+                        "Y",
+                        "Z"
+                    ],
+                    "type": "Accelerometer",
+                    "parameters": [],
+                    "sensor_id": 1229804865,
+                    "can_live_stream": true
+                }
+            ]
+        },
+        {
+            "max_throughput": 0,
+            "name": "Audio",
+            "part": "Default",
+            "sample_rates": [
+                16000
+            ],
+            "is_default": true,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [""],
+                    "type": "Microphone",
+                    "parameters": [],
+                    "sensor_id": 1096107087,
+                    "can_live_stream": true
+                }
+            ]
+        },
+        {
+            "max_throughput": 0,
+            "name": "Qwiic Scale",
+            "part": "NAU7802",
+            "sample_rates": [
+                333, 250, 200, 100, 50
+            ],
+            "is_default": false,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [
+                        ""
+                    ],
+                    "type": "Weight",
+                    "parameters": [],
+                    "units": null
+                }
+            ],
+            "sensor_id": 1334804865,
+            "can_live_stream": true
+        },
+        {
+            "max_throughput": 0,
+            "name": "ADC",
+            "part": "ADS1015",
+            "sample_rates": [
+                100,
+                250,
+                500,
+                1000,
+                1600,
+                2400,
+                3300
+            ],
+            "is_default": false,
+            "sensors": [
+                {
+                    "column_count": 1,
+                    "is_default": true,
+                    "column_suffixes": [
+                        ""
+                    ],
+                    "type": "Analog Channel"
+                }
+            ],
+            "sensor_id": 1184532964,
+            "can_live_stream": true
+        },
+    ],
+    "is_little_endian": true
+}

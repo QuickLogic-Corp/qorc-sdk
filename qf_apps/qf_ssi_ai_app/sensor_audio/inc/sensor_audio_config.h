@@ -18,7 +18,6 @@
 #define __SENSOR_AUDIO_CONFIG_H__
 
 #include "Fw_global_config.h"
-
 #define SENSOR_AUDIO_ID              (0x4155444F)
 #define SENSOR_AUDIO_NAME             audio
 #define SENSOR_AUDIO_NAME_UPPERCASE   AUDIO

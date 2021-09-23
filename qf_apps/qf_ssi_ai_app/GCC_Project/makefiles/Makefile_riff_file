@@ -1,9 +1,7 @@
 
 RIFF_FILE_SRCS:=$(wildcard $(RIFF_FILE_DIR)/*.c )
 
-filters=
-
-SRCS:=$(filter-out $(filters),$(notdir $(RIFF_FILE_SRCS)))
+SRCS:=$(notdir $(RIFF_FILE_SRCS))
 OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
 SRC_PATH:= $(RIFF_FILE_DIR)
 

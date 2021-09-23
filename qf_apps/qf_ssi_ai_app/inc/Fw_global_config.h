@@ -14,7 +14,14 @@
  * limitations under the License.
  *==========================================================*/
 
-#ifndef FW_GLOBAL_CONFIG_H_INCLUDED   
+/*==========================================================
+ *
+ *    File   : Fw_global_config.h
+ *    Purpose:
+ *
+ *=========================================================*/
+
+#ifndef FW_GLOBAL_CONFIG_H_INCLUDED     /* Avoid multiple inclusion             */
 #define FW_GLOBAL_CONFIG_H_INCLUDED
 
 #include <stdint.h>
@@ -52,14 +59,11 @@
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
 
-#define DEBUG_UART  (UART_ID_USBSERIAL)  // Set the output of debug messages
-#define UART_ID_APP  (UART_ID_HW)       // Set the output for application messages
-
+#define DEBUG_UART  (UART_ID_HW)  // Set the output of debug messages
+#define UART_ID_APP  (UART_ID_USBSERIAL)       // Set the output for application messages
 
 
 /*######################## ADVANCED SETTINGS  ################################*/
-
-#define SIZEOF_DBGBUFFER    512    // Number of characters in circular debug buffer
 
 #define ENABLE_VOICE_SOLUTION   1
 #define PDM2DEC_FACT  48
@@ -67,22 +71,9 @@
 #define FEATURE_CLI_DEBUG_INTERFACE  1
 #define FEATURE_CLI_FILESYSTEM       0
 
-/* The following macros select the filesystem used in the QLFS Library */
 /* Select the filesystem API to use */
-#define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
-#define USE_FATFS                1  ///< Set this to 1 to use FATFs filesystem
-
-/* Select one of these APIs for use in the RIFF Library */
-/* Make sure config-GCC.mk is properly configured based on these selections */
-#define USE_QLFS_APIS            0 ///< Set this to 1 to use QLFS APIs for the RIFF Library
-#define USE_FATFS_APIS           USE_FATFS ///< Set this to 1 to use FATFS filesystem APIs for the RIFF Library
-#define USE_FREERTOS_FAT_APIS    USE_FREERTOS_FAT ///< Set this to 1 to use FREERTOS filesystem APIs for the RIFF Library
-#if (USE_QLFS_APIS == 1)
-#undef  USE_FATFS_APIS
-#undef  USE_FREERTOS_FAT_APIS
-#define USE_FATFS_APIS           0
-#define USE_FREERTOS_FAT_APIS    0
-#endif
+#define USE_FREERTOS_FAT         1  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
+#define USE_FATFS                0  ///< Set this to 1 to use FATFs filesystem
 
 /* use this flag to check the data block header */
 /* can be used only iff the QL_XPORT_INCLUDE_HEADER is defined for Device */
@@ -91,6 +82,8 @@
 /* future may have other modes? */
 
 #define uartHandlerUpdate(id,x)
+
+#define SIZEOF_DBGBUFFER    2048    // Number of characters in circular debug buffer
 
 
 #define DBG_flags_default 0 //  (DBG_FLAG_ble_cmd + DBG_FLAG_sensor_rate+DBG_FLAG_datasave_debug)
@@ -101,41 +94,6 @@
 extern uint32_t DBG_flags;
 #endif
 
-#define DBG_FLAG_recog_result   (0x00000001)
-#define DBG_FLAG_q_drop         (0x00000002)
-#define DBG_FLAG_ble            (0x00000004)
-#define DBG_FLAG_ble_cmd        (0x00000008)
-#define DBG_FLAG_ble_background (0x00000010)
-#define DBG_FLAG_datasave_debug (0x00000020)
-#define DBG_FLAG_ble_details    (0x00000040)
-#define DBG_FLAG_data_collect   (0x00000080)
-#define DBG_FLAG_sensor_rate    (0x00000100)
-#define DBG_FLAG_ffe            (0x00000100)
-#define DBG_FLAG_adc_task       (0x00000200)
-
-#define DEFAULT_STORAGE_LOCATION    FREERTOS_SPI_SD
-/* Entire filename, volume + path + filename */
-#define QLFS_MAX_ABS_PATHLEN (200+1)
-/* no component of the filename can be larger then this */
-#define QLFS_MAX_FILENAME_COMPONENT 50
-
-/* Select the maximum file size for storing the sensor data */
-#define RIFF_FILE_SIZE_MAX   (1024*4*256*1024)  // 1GB
-
-// Select one of the file naming generation when RIFF_FILE_SIZE_MAX is defined
-#define RIFF_AUTO_SEQUENCE_FILENAMES        (1)  // Set to 1 to use sequential count appended to filename
-#define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (0)  // Set to 1 to use timestamp appended to filename
-#define USE_DCL_FILENAME_ONLY               (0)
-#define SSI_RECOGNITION_RIFF_ID     (0x12345678) // ID stored in SD card datafile for recognition results
-
-#define UUID_TOTAL_BYTES     16
-extern uint8_t DeviceClassUUID[UUID_TOTAL_BYTES];
-
-#if 1 //sensorTile has only SD card //QAI_CHILKAT
-#define NUM_SUPPORTED_PATHS 1
-#else
-#define NUM_SUPPORTED_PATHS 2
-#endif //QAI_CHILKAT
 
 extern const char *SOFTWARE_VERSION_STR;
 
@@ -165,17 +123,6 @@ extern int FPGA_FFE_LOADED;
 #define	QL_LOG_WARN_150K(X,...)	  printf(X,##__VA_ARGS__)
 #define	QL_LOG_TEST_150K(X,...)	  printf(X,##__VA_ARGS__)
 
-#define IMU_M4_DRIVERS     0  ///< enable IMU sensors (Accel, Gyro, ...)
-                              ///< using M4 driver to probe and collect data from
-                              ///< the sensors
-
-#define IMU_FFE_DRIVERS    0  ///< option to enable IMU sensor data collection
-                              ///< using onchip FFE (availble on EOS-S3 only)
-
-#define IMU_DRIVERS        (IMU_M4_DRIVERS || IMU_FFE_DRIVERS)
-
-#define USE_IMU_FIFO_MODE   (0)    ///< Use FIFO mode to read from Accelerometer device
-
 
 ///* enable via sw the FFE or disable it, TODO: Make this real instead of a hack */
 //#define SW_ENABLE_FFE   0
@@ -185,9 +132,7 @@ extern int FPGA_FFE_LOADED;
 //#define FFE_DRIVERS	0 // 1
 //
 ///* do or do not perform dynamic frequency scaling */
-#ifndef CONST_FREQ
 #define CONST_FREQ (1)
-#endif
 //
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1
@@ -240,6 +185,5 @@ extern int FPGA_FFE_LOADED;
 /* this should always be the last #define in this file */
 /* it insures that we have completely processed this entire file */
 #define _EnD_Of_Fw_global_config_h  1
-
 
 #endif

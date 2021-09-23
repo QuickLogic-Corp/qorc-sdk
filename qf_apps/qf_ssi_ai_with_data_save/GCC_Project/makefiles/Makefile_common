@@ -1,0 +1,48 @@
+# -*- mode: Makefile -*-
+# This is the common stub to be included in each make file
+
+D_FILES:=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS:.c=.d))
+O_FILES:=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS:.c=.o))
+R_FILES:=$(addprefix $(MAIN_FPGA_RTL_DIR)$(DIR_SEP),$(FPGA_RTL_SRCS))
+D_FILES+=$(addprefix $(DEPEND_PATH)$(DIR_SEP),$(SRCS_CPP:.cpp=.d))
+O_FILES+=$(addprefix $(OUTPUT_PATH)$(DIR_SEP),$(SRCS_CPP:.cpp=.o))
+
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPEND_PATH)/$*.d
+
+all: $(OBJS) $(OBJS_CPP) # $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ)
+
+#$(info QLFS SOURCE: ${SRCS})
+#$(info QLFS OBJS: ${OBJS})
+#$(info SRC_PATH: ${SRC_PATH})
+
+
+%.o:%.c
+$(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
+	$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
+	
+%.o:%.cpp
+$(OUTPUT_PATH)/%.o: $(SRC_PATH)/%.cpp $(DEPEND_PATH)/%.d
+	$(CPLUSPLUS) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
+	
+SYMBIFLOW_WARN_PATTERN="^Warning [0-9]\{1,\}:.*no timing specification"
+$(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ): $(R_FILES)
+	ql_symbiflow  -compile -src $(MAIN_FPGA_RTL_DIR) -d ql-eos-s3 -t $(RTL_TOP_MODULE) -v $(FPGA_RTL_SRCS) -p quickfeather.pcf -k PU64 -dump header | grep -v $(SYMBIFLOW_WARN_PATTERN)
+
+-include $(D_FILES))
+	
+
+$(DEPEND_PATH)/%.d: ;
+.PRECIOUS: $(DEPEND_PATH)/%.d
+
+DELETEME=$(D_FILES) $(O_FILES)
+clean:
+	@echo Cleaning ...
+ifneq (,${DELETEME})
+	-$(HIDE)$(RM) $(D_FILES)
+	-$(HIDE)$(RM) $(O_FILES)
+ifneq (,$(FPGA_RTL_OBJ))
+	-$(HIDE)$(RM) $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ)
+endif
+	-$(HIDE)$(RMDIR) $(MAIN_FPGA_RTL_DIR)/build
+endif
+

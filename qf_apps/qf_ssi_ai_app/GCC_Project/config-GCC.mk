@@ -39,10 +39,8 @@ export LIBSENSIML_DIR=$(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
-                 -I"$(APP_DIR)/IOP_MQTTSN/inc" \
                  -I"$(APP_DIR)/sensor_audio/inc" \
                  -I"$(APP_DIR)/knowledgepack/inc" \
-                 -I"$(APP_DIR)/knowledgepack/sensiml" \
                  -I"$(APP_DIR)/knowledgepack/sensiml/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware/" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
@@ -61,17 +59,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/Audio/inc" \
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" \
                  -I"$(PROJ_ROOT)/Tasks/DatablockProcessor/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT/include" \
-                 -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT/portable/QL" \
-                 -I"$(PROJ_ROOT)/Libraries/FreeRTOS_FAT" \
-                 -I"$(PROJ_ROOT)/Libraries/FatFs/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/riff_file/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/QLFS/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/MQTTSN/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/MQTTSN_SML/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/inc" \
-                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635" \
-                 -I"$(PROJ_ROOT)/Tasks/fs_monitor/inc"
+                 -I"$(PROJ_ROOT)/Libraries/SensorFramework/drivers/M4/mc3635"
     
 
 # C compiler flags
@@ -87,7 +75,8 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
             -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" \
-    -L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR) -lsensiml -lm -larm_cortexM4lf_math
+    -L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR) -lsensiml -lm -larm_cortexM4lf_math 
+
 
 export ELF2BIN_OPTIONS=-O binary
 
@@ -116,16 +105,3 @@ export DBM_DIR        = $(LIB_DIR)$(DIR_SEP)DatablockManager$(DIR_SEP)src
 export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
 export GENERATED_DIR = $(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)src
 export SENSOR_AUDIO_DIR = $(APP_DIR)$(DIR_SEP)sensor_audio$(DIR_SEP)src
-# Comment the following if FATFS is not used and FreeRTOS FAT is used
-export FATFS_DIR       = $(LIB_DIR)$(DIR_SEP)FatFs$(DIR_SEP)src
-export RIFF_FILE_DIR    = $(LIB_DIR)$(DIR_SEP)riff_file$(DIR_SEP)src
-export MQTTSN_DIR     = $(LIB_DIR)$(DIR_SEP)MQTTSN$(DIR_SEP)src
-export MQTTSN_SML_DIR = $(LIB_DIR)$(DIR_SEP)MQTTSN_SML$(DIR_SEP)src
-ifeq (x"${FATFS_DIR}",x"")
-# Compile and Link these only if FatFs is not used
-export QLFS_DIR        = $(LIB_DIR)$(DIR_SEP)QLFS$(DIR_SEP)src
-export FREERTOS_FAT_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT
-export FREERTOS_FAT_COMMON_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)common
-export FREERTOS_FAT_QL_DIR  = $(LIB_DIR)$(DIR_SEP)FreeRTOS_FAT$(DIR_SEP)portable$(DIR_SEP)QL
-endif
-export FS_MONITOR_DIR = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)fs_monitor$(DIR_SEP)src

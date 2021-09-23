@@ -70,6 +70,15 @@ extern "C" {
 #define SENSOR_SSSS_BYTES_PER_BLOCK      ( (SENSOR_SSSS_SAMPLES_PER_BLOCK) * (SENSOR_SSSS_BIT_DEPTH) / 8 )
 #define SENSOR_SSSS_MEMSIZE_MAX          ((SENSOR_SSSS_MAX_DATA_BLOCKS) * ((SENSOR_SSSS_BYTES_PER_BLOCK)+32))
 
+
+/* Settings for the sensor processing modes, Enable only one of these mode */
+#define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
+#define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
+
+#if (((SENSOR_SSSS_RECOG_ENABLED) + (SENSOR_SSSS_LIVESTREAM_ENABLED)) > 1)
+#error "Enable only one of the modes SENSOR_SSSS_RECOG_ENABLED or SENSOR_SSSS_LIVESTREAM_ENABLED"
+#endif
+
 extern const char json_string_sensor_config[];
 extern sensor_generic_config_t sensor_ssss_config;
 

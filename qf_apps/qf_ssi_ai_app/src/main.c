@@ -49,7 +49,6 @@
 #include "kb.h"
 #include "sensor_audio_config.h"
 #include "sensor_audio_process.h"
-#include "micro_tick64.h"
 extern const struct cli_cmd_entry my_main_menu[];
 
 
@@ -59,17 +58,6 @@ const char *SOFTWARE_VERSION_STR;
 /*
  * Global variable definition
  */
-
-#if DBG_FLAGS_ENABLE
-uint32_t DBG_flags = DBG_flags_default;
-#endif
-
-uint8_t DeviceClassUUID[UUID_TOTAL_BYTES] =
-{ 0x4d, 0x36, 0xe9, 0x78,
-  0xe3, 0x25, 0x11, 0xce,
-  0xbf, 0xc1, 0x08, 0x00,
-  0x2b, 0xe1, 0x03, 0x18
-};
 
 static const fw_global_config_t fw_global_config_vars =
 {
@@ -133,10 +121,7 @@ int main(void)
 #endif
     HAL_I2C_Init(i2c0config);
 
-#if (S3AI_FIRMWARE_IS_RECOGNITION == 1)
     kb_model_init(); /* initialize the knowledgepack */
-#endif
-
 #if (SSI_SENSOR_SELECT_SSSS == 1)
     sensor_ssss_block_processor();
 #endif
@@ -155,12 +140,7 @@ int main(void)
       ((SSI_SENSOR_SELECT_AUDIO == 1) && (SENSOR_AUDIO_LIVESTREAM_ENABLED == 1)) )
     StartSimpleStreamingInterfaceTask();
 #endif
-    xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 
-#if (S3AI_FIRMWARE_DATASAVE == 1)
-    start_fs_monitor_task();
-    create_datasave_task();
-#endif
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");
@@ -185,6 +165,4 @@ void SystemInit(void)
 
 }
 
-//missing functions for S3 project
-void wait_ffe_fpga_load(void){ return; };
 

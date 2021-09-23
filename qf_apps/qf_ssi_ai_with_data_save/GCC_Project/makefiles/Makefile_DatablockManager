@@ -1,0 +1,9 @@
+
+DBM_SRCS:=$(wildcard $(DBM_DIR)/*.c )
+
+SRCS:=$(notdir $(DBM_SRCS))
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(DBM_DIR)
+
+include $(COMMON_STUB)
+

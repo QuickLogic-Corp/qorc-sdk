@@ -16,13 +16,12 @@ Building and running the project for data collection mode:
 ----------------------------------------------------------
 
 1. Verify that the following macros are set for data collection mode in
-   the source file `app_config.h <inc/app_config.h>`__.
+   the source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
 
 ::
 
-   #define S3AI_FIRMWARE_IS_COLLECTION  1		/* Enable sensor data collection    */
-   #define S3AI_FIRMWARE_IS_RECOGNITION 0		/* Enable knowledgepack recognition */
-
+   #define SENSOR_SSSS_RECOG_ENABLED      0    /* Enable SensiML recognition */
+   #define SENSOR_SSSS_LIVESTREAM_ENABLED 1    /* Enable live-streaming for data collection */
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
@@ -36,19 +35,16 @@ Building and running the project for data collection mode:
    Lab <https://sensiml.com/products/data-capture-lab/>`__ to connect,
    stream and capture the sensor data.
 
-   Audio data stream could also be captured using the python script
-   `getaudio.py <../../Tools/uartaudio/getaudio.py>`__. 
-
 Building and running the project for recognition mode:
 ------------------------------------------------------
 
 1. Verify that the following macros are set for recognition mode in the
-the source file `app_config.h <inc/app_config.h>`__.
+   source file `sensor_ssss.h <inc/sensor_ssss.h>`__.
 
 ::
 
-   #define S3AI_FIRMWARE_IS_COLLECTION  0		/* Enable sensor data collection    */
-   #define S3AI_FIRMWARE_IS_RECOGNITION 1		/* Enable knowledgepack recognition */
+   #define SENSOR_SSSS_RECOG_ENABLED      1    /* Enable SensiML recognition */
+   #define SENSOR_SSSS_LIVESTREAM_ENABLED 0    /* Enable live-streaming for data collection */
 
 2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
    appropriate ARM GCC toolchain to build the project
@@ -59,104 +55,12 @@ the source file `app_config.h <inc/app_config.h>`__.
 4. Reset the board to start running the qf_ssi_ai_app application.
 
 5. Connect a UART to the Quickfeather board. Open a terminal
-   application, set its baud to 57600 bps to get the recognition
+   application, set its baud to 4608000 bps to get the recognition
    results from the running application.
 
 For details on data collection, building an AI model, and recognition
 please refer to `SensiML Getting
 Started <https://sensiml.com/documentation/guides/getting-started/index.html>`__
-
-Building and running the project for saving data to an SD card:
-----------------------------------------------------------
-
-Saving sensor data and recognition results to a QLSM file format is supported
-in this version. The QLSM file can later be imported into the `Data Capture
-Lab <https://sensiml.com/products/data-capture-lab/>`__
-
-Quickfeather does not have a built-in SD card. Use an Adalogger featherwing
-connected to the Quickfeather to use the sensor data saving to SD card feature.
-
-File system library selection
-~~~~~~~~~~
-
-Select the desired filesystem library to use by updating the following macros 
-in the source file `Fw_global_config.h <inc/Fw_global_config.h>`__. FatFs is
-the default and recommended library to use with qorc-sdk
-
-::
-
-    /* The following macros select the filesystem used in the QLFS Library */
-    /* Select the filesystem API to use */
-    #define USE_FREERTOS_FAT         0  ///< Set this to 1 to use FreeRTOS FAT filesystem (Merced default)
-    #define USE_FATFS                1  ///< Set this to 1 to use FATFs filesystem
-
-File size selection
-~~~~~~~~~~~
-
-The amount of data collected and saved to the SD card can quickly grow in size 
-based on the number of channels being recorded and the sensor data sample rate
-selections. Assigning a positive value to the following macro in the source file
-`Fw_global_config.h <inc/Fw_global_config.h>`__ will cause the data save task
-to use a new file each time the size reaches the limit specified in this macro.
-
-::
-
-    /* Select the maximum file size for storing the sensor data */
-    #define RIFF_FILE_SIZE_MAX   (1024*4*25)  // 100KB
-
-Filename conventions
-~~~~~~~~~~~
-
-A timestamp or a sequential counter may be used as suffix to the auto generated
-filenames where the sensor data will be stored. Enable the desired macro in the 
-source file `Fw_global_config.h <inc/Fw_global_config.h>`__.
-
-::
-
-    // Select one of the filenaming generation when RIFF_FILE_SIZE_MAX is defined
-    #define RIFF_AUTO_SEQUENCE_FILENAMES        (0)  // Set to 1 to use sequential count appended to filename
-    #define RIFF_TIMESTAMP_SEQUENCE_FILENAMES   (1)  // Set to 1 to use timestamp appended to filename
-    #define USE_DCL_FILENAME_ONLY               (0)
-
-
-1. Verify that the following macros is set for saving data to SD card 
-
-To save recognition results to the SD card, enable the macro S3AI_FIRMWARE_DATASAVE in 
-in the source file `app_config.h <inc/acpp_config.h>`__.
-
-::
-
-    #define S3AI_FIRMWARE_LIVESTREAM 0   		/* Enable livestream via SSI Interface  (supports only sensor or recogntion not both)  */
-    #define S3AI_FIRMWARE_DATASAVE 1 			/* Enable SD card for collection        (supports sensor and recogntion not both)      */
-
-
-2. Use the provided `Makefile <GCC_Project/Makefile>`__ and an
-   appropriate ARM GCC toolchain to build the project
-
-3. Use the flash programming procedure to flash the binary to
-   Quickfeather board.
-
-4. Reset the board to start running the qf_ssi_ai_app application.
-
-5. Connect a UART to the Quickfeather board. Open a terminal
-   application, set its baud to 57600 bps to start saving the
-   sensor data to the SD card.
-
-Disk full indication
----------------
-
-A file system monitor task checks the SD card available disk space every 60-seconds
-and reports an error message if the available free space falls below 5% of the total
-available disk space. To modify this default behavior, provide desired functionality
-in the function 
-
-::
-
-  void riff_low_disk_space(void)
-  {
-     // provide application specific function here
-  }
-
 
 Adding a sensor
 ---------------
@@ -466,9 +370,6 @@ SDA            J2.12
 GND            J8.16
 Vcc            J8.15
 ============== ============
-
-Building and running the project for data collection mode:
-----------------------------------------------------------
 
 Refer `Qwiic Scale Hookup
 Guide <https://learn.sparkfun.com/tutorials/qwiic-scale-hookup-guide?_ga=2.193267885.1228472612.1605042107-1202899191.1566946929>`__
