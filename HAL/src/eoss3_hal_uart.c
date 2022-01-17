@@ -435,6 +435,20 @@ void uart_isr_handler( int uartid )
         }
         if( r32 & UART_DR_FRAMING_ERR ){
             uart_vars.framing_err_count += 1;
+            // FIX for UART Rx scenario when UART Cable from HOST is not connected to EOSS3:
+            // (1) when the UART driver (from HOST) is not connected to the EOSS3 Rx pin,
+            // due to the Rx pin floating, we continuously get spurious rx bytes,
+            // all of which have a 'framing error' - hence, we should be ignoring these
+            // bytes, so 'return' from here, without adding the data bytes to the rx buffer.
+            // (2) Also, in this scenario, the spurious rx is continuous, so this interrupt keeps
+            // firing indefinitely, hogging the CPU completely - so, if the error count
+            // reaches a 'threshold' then disable the UART interrupts altogether.
+            // ideally, we get 0 framing errors in our use cases, so we use a nominal threshold of '5':
+            if (uart_vars.framing_err_count >= 5)
+            {
+                uart_disable_irqs();
+            }
+            return;
         }
         if( r32 & UART_DR_PARITY_ERR ){
             uart_vars.parity_err_count += 1;
