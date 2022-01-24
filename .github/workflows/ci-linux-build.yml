@@ -36,6 +36,7 @@ jobs:
 
     - name: "info-build-env"
       run: |
+        source envsetup.sh
         which arm-none-eabi-gcc
         which python
         which pip
@@ -43,12 +44,13 @@ jobs:
 
     - name: "build-qf-apps"
       run: |
+        source envsetup.sh
         cd qf_apps
         make all
-        cd -
 
     - name: "build-qorc-testapps"
       run: |
+        source envsetup.sh
         cd qorc-testapps
         make all
         cd -
