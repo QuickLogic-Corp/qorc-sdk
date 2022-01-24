@@ -1,0 +1,54 @@
+name: ci-linux-build
+
+on:  
+  pull_request:
+  push:
+    branches:
+      - master
+      # testing only:
+      - use-github-actions
+
+jobs:
+
+  build:
+    name: "build-qorc-sdk-apps"
+    runs-on: ubuntu-20.04
+
+    steps:
+
+    - name: "check-out-repo"
+      uses: actions/checkout@v2
+      with:
+        # latest code only
+        fetch-depth: 1
+        # we will checkout submodules as needed in the "setup-build-env" step
+        submodules: false
+
+    - name: "check-changes"
+      run:  |
+        printf "add steps here to check if there are any source files modified\n"
+        printf "we don't want to run CI for changes in readme files for example\n"
+        printf "TBD\n"
+
+    - name: "setup-build-env"
+      run: |
+        source envsetup.sh
+
+    - name: "info-build-env"
+      run: |
+        which arm-none-eabi-gcc
+        which python
+        which pip
+        ql_symbiflow -h
+
+    - name: "build-qf-apps"
+      run: |
+        cd qf_apps
+        make all
+        cd -
+
+    - name: "build-qorc-testapps"
+      run: |
+        cd qorc-testapps
+        make all
+        cd -
