@@ -40,7 +40,7 @@ jobs:
         which arm-none-eabi-gcc
         which python
         which pip
-        ql_symbiflow -h
+        which ql_symbiflow
 
     - name: "build-qf-apps"
       run: |

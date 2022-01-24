@@ -7,18 +7,18 @@ then
     exit 1
 fi
 
+# usage
+# source "${QORC_SDK_PATH}/envsetup.sh"
 
-# cd ${QORC_SDK_DIR_PATH}
-# source ./envsetup.sh
+# obtain the directory path of this script, which must be the qorc-sdk path
+QORC_SDK_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export QORC_SDK_PATH
 
-# TODOs
-# intelligent decision of which steps are complete (optional) instead of just checking if file/dir exist
-# using json or similar to store state, and allow ctrl-c, later resume from correct place. overkill ?
-# all prints go to log...
-# either we fail and show error on console, or pass and only show all ok print
-# fpga toolchain verif step
-# flash programmer verif step
+# save dir path from where the 'source' is being executed
+CURRENT_DIR=$(pwd)
 
+# move into the QORC_SDK_PATH
+cd "$QORC_SDK_PATH"
 
 
 # we want to have the structure as:
@@ -31,22 +31,28 @@ fi
 # remember to add the stuff installed here into gitignore - so we don't have things clouding git status
 
 
-QORC_SDK_ENVSETUP_VER=1.5.0
+QORC_SDK_ENVSETUP_VER=1.5.1
 
 GIT_REPO_URL_EXPECTED_LOWERCASE=https://github.com/quicklogic-corp/qorc-sdk.git
 GIT_REPO_URL_EXPECTED_LOWERCASE_ALT=https://github.com/quicklogic-corp/qorc-sdk
 
-ARM_TOOLCHAIN_ARCHIVE_FILE=gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-ARM_TOOLCHAIN_INSTALL_DIR=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update
-EXPECTED_ARM_TOOLCHAIN_GCC_PATH=${PWD}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+ARM_TOOLCHAIN_ARCHIVE_URL="https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
+ARM_TOOLCHAIN_ARCHIVE_FILE="gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2"
+ARM_TOOLCHAIN_INSTALL_BASE_DIR="${QORC_SDK_PATH}/arm_toolchain_install"
+ARM_TOOLCHAIN_INSTALL_DIR="${ARM_TOOLCHAIN_INSTALL_BASE_DIR}/gcc-arm-none-eabi-9-2020-q2-update"
+EXPECTED_ARM_TOOLCHAIN_GCC_PATH="${ARM_TOOLCHAIN_INSTALL_DIR}/bin/arm-none-eabi-gcc"
 
 
-FPGA_TOOLCHAIN_INSTALLER=Symbiflow_v1.3.1.gz.run
-FPGA_TOOLCHAIN_INSTALL_DIR=${PWD}/fpga_toolchain_install/v1.3.1
-EXPECTED_FPGA_TOOLCHAIN_QLSYMBIFLOW_OUTPUT=""
+FPGA_TOOLCHAIN_INSTALLER_URL="https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run"
+FPGA_TOOLCHAIN_INSTALLER_FILE="Symbiflow_v1.3.1.gz.run"
+FPGA_TOOLCHAIN_INSTALLER_LOG="fpga_toolchain_install_v1.3.1.log"
+FPGA_TOOLCHAIN_INSTALL_BASE_DIR="${QORC_SDK_PATH}/fpga_toolchain_install"
+FPGA_TOOLCHAIN_INSTALL_DIR="${FPGA_TOOLCHAIN_INSTALL_BASE_DIR}/v1.3.1"
+EXPECTED_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH="${FPGA_TOOLCHAIN_INSTALL_DIR}/quicklogic-arch-defs/bin/ql_symbiflow"
 
 
-FLASH_PROGRAMMER_INSTALL_DIR=${PWD}/TinyFPGA-Programmer-Application
+FLASH_PROGRAMMER_REPO_URL="https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git"
+FLASH_PROGRAMMER_INSTALL_DIR="${QORC_SDK_PATH}/TinyFPGA-Programmer-Application"
 EXPECTED_FLASH_PROGRAMMER_QFPROG_OUTPUT=""
 
 
@@ -55,45 +61,7 @@ printf "qorc-sdk envsetup %s\n" ${QORC_SDK_ENVSETUP_VER}
 printf "=========================\n\n\n"
 
 
-printf "executing envsetup.sh from:\n%s\n" ${PWD}
-
-
-#---------------------------------------------------------
-printf "\n[0] are we inside qorc-sdk?\n"
-
-# there seems to be strange behaviour on certain systems, the URL obtained below
-# seems to have some letter lowercase, whereas on most, it is as it should be.
-# to avoid this stuff we do all lowercase only comparison, use "tr" to do this.
-GIT_REPO_URL_LOWERCASE=`git config --get remote.origin.url | tr '[:upper:]' '[:lower:]'`
-
-if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE" ]; then
-
-    if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE_ALT" ]; then
-
-        printf "This script should be executed from within the qorc-sdk directory!\n"
-        #return
-
-    fi
-
-fi
-
-# # we can also add check for if we are in the git repo root as well...
-# # this is probably overkill, we will enable if needed in the future.
-# GIT_REPO_GIT_DIR=`git rev-parse --git-dir`
-
-# # if we are in root, we should get ".git", else we will get different path, should cd to that.
-
-# if [ ! "$GIT_REPO_GIT_DIR" = ".git" ]; then
-
-#     printf "We are not in repo root, cd to repo root dir: [%s]\n" $GIT_REPO_GIT_DIR/..
-
-#     cd $GIT_REPO_GIT_DIR/..
-
-# fi
-
-printf "    ok.\n"
-#---------------------------------------------------------
-
+printf "executing envsetup.sh from:\n%s\n" ${QORC_SDK_PATH}
 
 #---------------------------------------------------------
 printf "\n[1] check (minimal) qorc-sdk submodules\n"
@@ -111,38 +79,43 @@ printf "    ok.\n"
 # ARM GCC TOOLCHAIN
 #---------------------------------------------------------
 printf "\n[2] check arm gcc toolchain\n"
-if [ ! -d $ARM_TOOLCHAIN_INSTALL_DIR ]; then
 
-    printf "    creating toolchain directory : %s\n" "${PWD}/arm_toolchain_install"
-    mkdir arm_toolchain_install
+# if not installed, obtain archive and extract it
+if [ ! -d "$ARM_TOOLCHAIN_INSTALL_DIR" ]; then
 
-    if [ ! -f $ARM_TOOLCHAIN_ARCHIVE_FILE ]; then
+    printf "    creating arm toolchain directory : %s\n" "${ARM_TOOLCHAIN_INSTALL_BASE_DIR}"
+    mkdir "$ARM_TOOLCHAIN_INSTALL_BASE_DIR"
 
-        printf "    downloading toolchain archive.\n"
-        wget -O gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -q --show-progress --progress=bar:force 2>&1 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
+    if [ ! -f "$ARM_TOOLCHAIN_ARCHIVE_FILE" ]; then
+
+        printf "    downloading arm toolchain archive.\n"
+        wget -O "$ARM_TOOLCHAIN_ARCHIVE_FILE" -q --show-progress --progress=bar:force 2>&1 "$ARM_TOOLCHAIN_ARCHIVE_URL"
 
     fi
 
-    printf "    extracting toolchain archive.\n"
-    tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${PWD}/arm_toolchain_install
+    printf "    extracting arm toolchain archive.\n"
+    tar -xf "$ARM_TOOLCHAIN_ARCHIVE_FILE" -C "${ARM_TOOLCHAIN_INSTALL_BASE_DIR}"
+
+    rm "$ARM_TOOLCHAIN_ARCHIVE_FILE"
 
 fi
 
+# add toolchain to path, and set the QORC_TC_PATH to the toolchain dir
+printf "    initializing arm toolchain.\n"
+export QORC_TC_PATH="$ARM_TOOLCHAIN_INSTALL_DIR/bin"
+export PATH="$ARM_TOOLCHAIN_INSTALL_DIR/bin:$PATH"
 
-printf "    initializing toolchain.\n"
-export PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin:$PATH
-export QORC_TC_PATH=$ARM_TOOLCHAIN_INSTALL_DIR/bin
-
-
+# check if expected toolchain is available in the env now
 ACTUAL_ARM_TOOLCHAIN_GCC_PATH=`which arm-none-eabi-gcc`
-
-if [ $ACTUAL_ARM_TOOLCHAIN_GCC_PATH == $EXPECTED_ARM_TOOLCHAIN_GCC_PATH ]; then
+if [ "$ACTUAL_ARM_TOOLCHAIN_GCC_PATH" == "$EXPECTED_ARM_TOOLCHAIN_GCC_PATH" ]; then
 
     printf "    ok.\n"
 
 else
 
-    printf "    !!ARM GCC Toolchain path not as expected, are there multiple toolchains on the path?!!\n"
+    printf "    !!ARM GCC Toolchain path not as expected, install/permission problems?!!\n"
+    printf "    expected: %s\n" "$EXPECTED_ARM_TOOLCHAIN_GCC_PATH"
+    printf "         got: %s\n" "$ACTUAL_ARM_TOOLCHAIN_GCC_PATH"
     return
 
 fi
@@ -154,29 +127,48 @@ fi
 #---------------------------------------------------------
 printf "\n[3] check fpga toolchain\n"
 
-if [ ! -d $FPGA_TOOLCHAIN_INSTALL_DIR ]; then
+# if not installed, obtain installer and run it
+if [ ! -d "$FPGA_TOOLCHAIN_INSTALL_DIR" ]; then
 
-    if [ ! -f $FPGA_TOOLCHAIN_INSTALLER ]; then
+    printf "    creating fpga toolchain directory : %s\n" "${FPGA_TOOLCHAIN_INSTALL_BASE_DIR}"
+    mkdir "$FPGA_TOOLCHAIN_INSTALL_BASE_DIR"
+
+    if [ ! -f "$FPGA_TOOLCHAIN_INSTALLER_FILE" ]; then
 
         printf "    downloading toolchain installer.\n"
-        wget -O $FPGA_TOOLCHAIN_INSTALLER  -q --show-progress --progress=bar:force 2>&1 https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain/releases/download/v1.3.1/Symbiflow_v1.3.1.gz.run
+        wget -O "$FPGA_TOOLCHAIN_INSTALLER_FILE"  -q --show-progress --progress=bar:force 2>&1 "$FPGA_TOOLCHAIN_INSTALLER_URL"
 
     fi
 
-    export INSTALL_DIR=$FPGA_TOOLCHAIN_INSTALL_DIR
     printf "    installing toolchain.\n"
-    bash Symbiflow_v1.3.1.gz.run
+    export INSTALL_DIR="$FPGA_TOOLCHAIN_INSTALL_DIR"
+    #bash "$FPGA_TOOLCHAIN_INSTALLER_FILE" > "${FPGA_TOOLCHAIN_INSTALL_BASE_DIR}/${FPGA_TOOLCHAIN_INSTALLER_LOG}" 2>&1 
+    bash "$FPGA_TOOLCHAIN_INSTALLER_FILE"
+
+    rm "$FPGA_TOOLCHAIN_INSTALLER_FILE"
 
 fi
 
-printf "    initializing toolchain.\n"
+# add fpga toolchain to path and activate conda env
+printf "    initializing fpga toolchain.\n"
 export PATH="$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin:$FPGA_TOOLCHAIN_INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
 source "$FPGA_TOOLCHAIN_INSTALL_DIR/conda/etc/profile.d/conda.sh"
 conda activate
 
-# ql_symbiflow -h
-# TODO check expected output to verify
-printf "    ok.\n"
+# check if expected toolchain is available in the env now
+ACTUAL_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH=`which ql_symbiflow`
+if [ "$ACTUAL_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH" == "$EXPECTED_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH" ]; then
+
+    printf "    ok.\n"
+
+else
+
+    printf "    !!fpga toolchain path not as expected, install/permission problems?!!\n"
+    printf "    expected: %s\n" "$EXPECTED_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH"
+    printf "         got: %s\n" "$ACTUAL_FPGA_TOOLCHAIN_QLSYMBIFLOW_PATH"
+    return
+
+fi
 #---------------------------------------------------------
 
 
@@ -188,12 +180,12 @@ printf "\n[4] check flash programmer\n"
 if [ ! -d $FLASH_PROGRAMMER_INSTALL_DIR ]; then
 
     printf "    downloading flash programmer.\n"
-    git clone --recursive https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application.git
+    git clone --recursive "$FLASH_PROGRAMMER_REPO_URL"
 
 fi
 
 
-IS_TINYFPGAB_INSTALLED=`python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("tinyfpgab") else 0)'`
+IS_TINYFPGAB_INSTALLED=$(python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("tinyfpgab") else 0)')
 if [ ! $IS_TINYFPGAB_INSTALLED == "1" ]; then
 
     printf "    setting up tinyfpgab.\n"
@@ -201,7 +193,7 @@ if [ ! $IS_TINYFPGAB_INSTALLED == "1" ]; then
 
 fi
 
-IS_APIO_INSTALLED=`python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("apio") else 0)'`
+IS_APIO_INSTALLED=$(python3 -c 'import pkgutil; print(1 if pkgutil.find_loader("apio") else 0)')
 if [ ! $IS_APIO_INSTALLED == "1" ]; then
 
     printf "    setting up drivers.\n"
@@ -213,14 +205,25 @@ fi
 printf "    initializing flash programmer.\n"
 alias qfprog="python3 $FLASH_PROGRAMMER_INSTALL_DIR/tinyfpga-programmer-gui.py"
 
-# qfprog --help
-# TODO check expected output to verify
-printf "    ok.\n"
+# check if expected programmer is available in the env now
+qfprog -h > /dev/null
+QFPROG_STATUS=$?
+
+if [ $QFPROG_STATUS -eq 0 ] ; then
+
+    printf "    ok.\n"
+
+else
+
+    printf "    flash programmer installation problem detected!\n"
+    return
+
+fi
 #---------------------------------------------------------
 
 
 #---------------------------------------------------------
-printf "\n\nqorc-sdk env initialized.\n\n\n"
+printf "\n\nqorc-sdk build env initialized.\n\n\n"
 #---------------------------------------------------------
 
 
