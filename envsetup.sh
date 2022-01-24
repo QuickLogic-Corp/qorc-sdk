@@ -71,7 +71,7 @@ if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE" ]; then
     if [ ! "$GIT_REPO_URL_LOWERCASE" = "$GIT_REPO_URL_EXPECTED_LOWERCASE_ALT" ]; then
 
         printf "This script should be executed from within the qorc-sdk directory!\n"
-        return
+        #return
 
     fi
 
