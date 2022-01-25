@@ -84,7 +84,7 @@ printf "\n[2] check arm gcc toolchain\n"
 if [ ! -d "$ARM_TOOLCHAIN_INSTALL_DIR" ]; then
 
     printf "    creating arm toolchain directory : %s\n" "${ARM_TOOLCHAIN_INSTALL_BASE_DIR}"
-    mkdir "$ARM_TOOLCHAIN_INSTALL_BASE_DIR"
+    mkdir -p "$ARM_TOOLCHAIN_INSTALL_BASE_DIR"
 
     if [ ! -f "$ARM_TOOLCHAIN_ARCHIVE_FILE" ]; then
 
@@ -131,7 +131,7 @@ printf "\n[3] check fpga toolchain\n"
 if [ ! -d "$FPGA_TOOLCHAIN_INSTALL_DIR" ]; then
 
     printf "    creating fpga toolchain directory : %s\n" "${FPGA_TOOLCHAIN_INSTALL_BASE_DIR}"
-    mkdir "$FPGA_TOOLCHAIN_INSTALL_BASE_DIR"
+    mkdir -p "$FPGA_TOOLCHAIN_INSTALL_BASE_DIR"
 
     if [ ! -f "$FPGA_TOOLCHAIN_INSTALLER_FILE" ]; then
 
