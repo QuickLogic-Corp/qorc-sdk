@@ -203,7 +203,12 @@ if [ ! $IS_APIO_INSTALLED == "1" ]; then
 fi
 
 printf "    initializing flash programmer.\n"
-alias qfprog="python3 $FLASH_PROGRAMMER_INSTALL_DIR/tinyfpga-programmer-gui.py"
+QORC_FLASH_PROGRAMMER_PATH="${FLASH_PROGRAMMER_INSTALL_DIR}/tinyfpga-programmer-gui.py"
+export QORC_FLASH_PROGRAMMER_PATH
+qfprog() {
+    python3 "$QORC_FLASH_PROGRAMMER_PATH" "$@"
+}
+export -f qfprog
 
 # check if expected programmer is available in the env now
 qfprog -h > /dev/null
