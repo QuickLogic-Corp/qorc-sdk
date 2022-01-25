@@ -54,6 +54,12 @@ jobs:
         cd qomu_apps
         make all
 
+    - name: "build-qt-apps"
+      run: |
+        source envsetup.sh
+        cd qt_apps
+        make all
+
     - name: "build-qorc-testapps"
       run: |
        source envsetup.sh
