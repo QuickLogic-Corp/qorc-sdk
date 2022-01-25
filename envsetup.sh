@@ -233,49 +233,9 @@ printf "\n\nqorc-sdk build env initialized.\n\n\n"
 
 
 
-#---------------------------------------------------------
-# FUTURE STUFF - maybe overkill for now.
-#
-# for each component, check install, if already done, initialize (if any)
-# qorc-sdk
-# arm gcc toolchain
-# quicklogic fpga toolchain
-# quicklogic tinyfpga programmer application
-
-# check install : local file which tracks status, and we update the file as we proceed with the steps.
-# use json ?
-# components : {
-
-#     qorc-sdk : {
-
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-
-#     },
-
-#     arm-gcc-toolchain : {
-
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyy
-
-#     },
-
-#     quicklogic-fpga-toolchain : {
-
-#         download : true,
-#         install : true,
-#         timestamp : xxxxxx,
-#         version : yyyyendif #QORC_TC_PATH
-
-#---------------------------------------------------------
-
 # references for choices made while writing the sh script:
 # https://unix.stackexchange.com/questions/424492/how-to-define-a-shell-script-to-be-sourced-not-run
 # https://stackoverflow.com/a/2237103/3379867
 # https://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo/65819
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_08_02.html
-
+# functions are better than aliases: https://www.gnu.org/software/bash/manual/html_node/Aliases.html
