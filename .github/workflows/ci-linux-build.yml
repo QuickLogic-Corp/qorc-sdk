@@ -2,6 +2,8 @@ name: ci-linux-build
 
 on:  
   pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
@@ -11,7 +13,7 @@ on:
 jobs:
 
   build:
-    name: "build-qorc-sdk-apps"
+    name: "ci-linux-build-qorc-sdk"
     runs-on: ubuntu-20.04
 
     steps:
@@ -37,10 +39,11 @@ jobs:
     - name: "info-build-env"
       run: |
         source envsetup.sh
-        which arm-none-eabi-gcc
         which python
         which pip
+        which arm-none-eabi-gcc
         which ql_symbiflow
+        qfprog -h
 
     - name: "build-qf-apps"
       run: |
