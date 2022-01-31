@@ -56,6 +56,25 @@ FLASH_PROGRAMMER_INSTALL_DIR="${QORC_SDK_PATH}/TinyFPGA-Programmer-Application"
 EXPECTED_FLASH_PROGRAMMER_QFPROG_OUTPUT=""
 
 
+# OpenOCD: https://github.com/xpack-dev-tools/openocd-xpack/releases/ -> get the linux-x64 archive from this page
+# also, some systems may need udev rules depending on debug probe used, put into /etc/udev/rules -> this is upto the end user.
+OPENOCD_ARCHIVE_URL="https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.11.0-3/xpack-openocd-0.11.0-3-linux-x64.tar.gz"
+OPENOCD_ARCHIVE_FILE="xpack-openocd-0.11.0-3-linux-x64.tar.gz"
+OPENOCD_INSTALL_BASE_DIR="${QORC_SDK_PATH}/openocd_install"
+OPENOCD_INSTALL_DIR="${OPENOCD_INSTALL_BASE_DIR}/xpack-openocd-0.11.0-3"
+EXPECTED_OPENOCD_PATH="${OPENOCD_INSTALL_DIR}/bin/openocd"
+
+# JLink: https://www.segger.com/downloads/jlink/ -> get the Linux/'64-bit TGZ Archive' from this page
+# note that there is a EULA which needs a POST request, as described here: https://github.com/ScoopInstaller/Scoop/issues/4336
+# also, some systems may need the udev rules from the JLink archive put into /etc/udev/rules -> this is upto the end user.
+JLINK_ARCHIVE_URL="https://www.segger.com/downloads/jlink/JLink_Linux_V760d_x86_64.tgz"
+JLINK_ARCHIVE_FILE="JLink_Linux_V760d_x86_64.tgz"
+JLINK_INSTALL_BASE_DIR="${QORC_SDK_PATH}/jlink_install"
+JLINK_INSTALL_DIR="${JLINK_INSTALL_BASE_DIR}/JLink_Linux_V760d_x86_64"
+EXPECTED_JLINK_GDBSERVER_PATH="${JLINK_INSTALL_DIR}/JLinkGDBServerCLExe"
+
+
+
 printf "\n\n=========================\n"
 printf "qorc-sdk envsetup %s\n" ${QORC_SDK_ENVSETUP_VER}
 printf "=========================\n\n\n"
@@ -221,6 +240,102 @@ if [ $QFPROG_STATUS -eq 0 ] ; then
 else
 
     printf "    flash programmer installation problem detected!\n"
+    return
+
+fi
+#---------------------------------------------------------
+
+
+#---------------------------------------------------------
+# OpenOCD
+#---------------------------------------------------------
+printf "\n[1] check openocd\n"
+if [ ! -d "$OPENOCD_INSTALL_DIR" ]; then
+
+    printf "    creating openocd directory : %s\n" "${OPENOCD_INSTALL_BASE_DIR}"
+    mkdir "${OPENOCD_INSTALL_BASE_DIR}"
+
+    if [ ! -f "$OPENOCD_ARCHIVE_FILE" ]; then
+
+        printf "    downloading openocd archive.\n"
+        wget -O "$OPENOCD_ARCHIVE_FILE" -q --show-progress --progress=bar:force 2>&1 "$OPENOCD_ARCHIVE_URL"
+
+    fi
+
+    printf "    extracting openocd archive.\n"
+    tar -xf "$OPENOCD_ARCHIVE_FILE" -C "${OPENOCD_INSTALL_BASE_DIR}"
+
+    rm "$OPENOCD_ARCHIVE_FILE"
+
+    if [ ! -f "$EXPECTED_OPENOCD_PATH" ]; then
+        printf "\n    ERROR: openocd installation problem detected!\n"
+        return 1
+    else
+        printf "    openocd installation looks good\n"
+    fi
+
+fi
+
+# add OpenOCD to path
+export PATH="${OPENOCD_INSTALL_DIR}/bin:$PATH"
+ACTUAL_OPENOCD_GDBSERVER_PATH=`which openocd`
+if [ $ACTUAL_OPENOCD_GDBSERVER_PATH == $EXPECTED_OPENOCD_PATH ]; then
+
+    printf "    ok.\n"
+
+else
+
+    printf "    !!openocd path not as expected, install/permission problems?!!\n"
+    printf "    expected: %s\n" ${EXPECTED_OPENOCD_PATH}
+    printf "         got: %s\n" ${ACTUAL_OPENOCD_GDBSERVER_PATH}
+    return
+
+fi
+#---------------------------------------------------------
+
+
+#---------------------------------------------------------
+# JLink
+#---------------------------------------------------------
+printf "\n[2] check jlink\n"
+if [ ! -d "$JLINK_INSTALL_DIR" ]; then
+
+    printf "    creating jlink directory : %s\n" "${JLINK_INSTALL_BASE_DIR}"
+    mkdir "${JLINK_INSTALL_BASE_DIR}"
+
+    if [ ! -f "$JLINK_ARCHIVE_FILE" ]; then
+
+        printf "    downloading jlink archive.\n"
+        # https://github.com/ScoopInstaller/Scoop/issues/4336
+        wget --post-data "accept_license_agreement=accepted" -O "$JLINK_ARCHIVE_FILE" -q --show-progress --progress=bar:force 2>&1 "$JLINK_ARCHIVE_URL"
+
+    fi
+
+    printf "    extracting jlink archive.\n"
+    tar -xf "$JLINK_ARCHIVE_FILE" -C "${JLINK_INSTALL_BASE_DIR}"
+
+    rm "$JLINK_ARCHIVE_FILE"
+
+    if [ ! -f "$EXPECTED_JLINK_GDBSERVER_PATH" ]; then
+        printf "\n    ERROR: jlink installation problem detected!\n"
+    else
+        printf "    jlink installation looks good\n"
+    fi
+
+fi
+
+# add JLink to path
+export PATH="${JLINK_INSTALL_DIR}:$PATH"
+ACTUAL_JLINK_GDBSERVER_PATH=`which JLinkGDBServerCLExe`
+if [ $ACTUAL_JLINK_GDBSERVER_PATH == $EXPECTED_JLINK_GDBSERVER_PATH ]; then
+
+    printf "    ok.\n"
+
+else
+
+    printf "    !!jlink path not as expected, install/permission problems?!!\n"
+    printf "    expected: %s\n" ${EXPECTED_JLINK_GDBSERVER_PATH}
+    printf "         got: %s\n" ${ACTUAL_JLINK_GDBSERVER_PATH}
     return
 
 fi
