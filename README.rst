@@ -6,7 +6,7 @@ needed to get started on the QuickLogic's EOSS3 device and open source
 development boards such as Quickfeather.
 
 
-|travis-ci|   |rtd-docs|
+|gha-ci|   |rtd-docs|
 
 
 Currently, the following boards are supported:
@@ -21,72 +21,18 @@ Easiest way to get started on quickfeather development kit is to build
 and run example application projects included in this SDK on a
 quickfeather development kit.
 
-| Clone this QORC SDK repository using
-| ``git clone --recursive https://github.com/QuickLogic-Corp/qorc-sdk``
-
-Install the items listed in Pre-requisites section below.
-
 Pre-requisites
 --------------
 
-Toolchain
-~~~~~~~~~
+Software
+~~~~~~~~
 
--  Firmware
+1. Clone this repository using:`git clone https://github.com/QuickLogic-Corp/qorc-sdk`
+2. Navigate to the directory where the repo is cloned: `cd qorc-sdk`
+3. Install/Initialize all required tooling using: `source envsetup.sh`
 
-   1. Download tarball according to the system configuration from:
-      https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+For detailed steps or manual installation of each of the tools needed, refer to the docs here: `Quickstart <https://qorc-sdk.readthedocs.io/en/latest/qorc-setup/quickstart.html>`_
 
-      Current stable version tested with is ``9-2020-q2-update``
-
-   2. Extract the tarball to a preferred path(/BASEPATH/TO/TOOCHAIN/)
-
-      ``sudo tar xvjf gcc-arm-none-eabi-your-version.tar.bz2 -C /BASEPATH/TO/TOOCHAIN/``
-
-      The usual preferred path is for example ``/usr/share``
-
-      ``sudo tar xvjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /usr/share/``
-
-   3. Add the /BASEPATH/TO/TOOCHAIN/gcc-arm-none-eabi-your-version/bin/
-      to PATH (only for current terminal session)
-
-      ``export PATH=/BASEPATH/TO/TOOCHAIN/gcc-arm-none-eabi-your-version/bin/:$PATH``
-
-      For the preferred path of ``/usr/share`` and current tested stable
-      version ``9-2020-q2-update`` for example:
-
-      ``export PATH=/usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH``
-
-   4. If the path settings need to be permanent, it can be added to the
-      ``~/.bashrc`` or ``~/.bash_profile.``
-
-      Examples and illustrations are for example here:
-      https://stackabuse.com/how-to-permanently-set-path-in-linux/
-
--  Gateware
-
-   -  QuickLogic Symbiflow: Refer `QuickLogic
-      Symbiflow <https://github.com/QuickLogic-Corp/quicklogic-fpga-toolchain>`__
-      to install the QuickLogic Symbiflow toolchain
-
-Utilities
-~~~~~~~~~
-
--  Flash programmer: TinyFPGA programmer
-
-   Refer to `TinyFPGA
-   programmer <https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application>`__
-   for installation instructions.
-
--  Terminal application program such as: `putty <https://putty.org/>`__
-
-   ::
-
-      sudo apt-get install putty -y
-
--  Miscellaneous: `GNU make
-   3.8.1 <https://sourceforge.net/projects/gnuwin32/files/make/3.81/>`__
-   or equivalent
 
 Hardware
 ~~~~~~~~
@@ -396,6 +342,13 @@ directory and copy the app there, for example
 qorc-sdk/qf_myprojects/qf_myapp, or put it in one of the existing
 project directories, for example qorc-sdk/qf_apps/qf_myapp
 
+
+Using Eclipse to Build/Debug applications
+-----------------------------------------
+
+Please refer to `Using Eclipse <https://github.com/QuickLogic-Corp/qorc-sdk/blob/master/using_eclipse.rst>`__ .
+
+
 .. |qf_helloworldsw banner| image:: docs/getting-started/images/qf_helloworldsw-banner.png
 .. |qf_helloworld CLI Help| image:: docs/getting-started/images/qf_helloworldsw-cli-help.png
 .. |qf_helloworld CLI diag| image:: docs/getting-started/images/qf_helloworldsw-cli-diag.png
@@ -405,12 +358,7 @@ project directories, for example qorc-sdk/qf_apps/qf_myapp
     :alt: Read the Docs
     :target: https://qorc-sdk.readthedocs.io/en/latest
     
-.. |travis-ci| image:: https://img.shields.io/travis/com/QuickLogic-Corp/qorc-sdk/master?label=TRAVIS-CI&logo=travis&style=for-the-badge   
-    :alt: Travis (.com) branch
-    :target: https://travis-ci.com/QuickLogic-Corp/qorc-sdk
+.. |gha-ci| image:: https://img.shields.io/github/workflow/status/quicklogic-corp/qorc-sdk/ci-linux-build?logo=github&style=for-the-badge
+    :alt: GitHub Workflow Status
+    :target: https://github.com/quicklogic-corp/qorc-sdk/actions/workflows/ci-linux-build.yml
 
-
-Using Eclipse to Build/Debug applications
------------------------------------------
-
-Please refer to `Using Eclipse <https://github.com/QuickLogic-Corp/qorc-sdk/blob/master/using_eclipse.rst>`__ .
