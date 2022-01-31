@@ -17,8 +17,10 @@ export QORC_SDK_PATH
 # save dir path from where the 'source' is being executed
 CURRENT_DIR=$(pwd)
 
-# move into the QORC_SDK_PATH
-cd "$QORC_SDK_PATH"
+# move into the QORC_SDK_PATH, if not already in it:
+if [ ! "$CURRENT_DIR" == "$QORC_SDK_PATH" ] ; then
+    cd "$QORC_SDK_PATH"
+fi
 
 
 # structure :
@@ -348,7 +350,10 @@ fi
 printf "\n\nqorc-sdk build env initialized.\n\n\n"
 #---------------------------------------------------------
 
-
+# move back into the original dir, if it was different from QORC_SDK_PATH:
+if [ ! "$CURRENT_DIR" == "$QORC_SDK_PATH" ] ; then
+    cd - > /dev/null
+fi
 
 # references for choices made while writing the sh script:
 # https://unix.stackexchange.com/questions/424492/how-to-define-a-shell-script-to-be-sourced-not-run
