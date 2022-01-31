@@ -41,6 +41,8 @@
 # toolchain installation
 arm_toolchain_install/
 fpga_toolchain_install/
+jlink_install/
+openocd_install/
 gcc-arm-none-eabi-*.tar.bz2
 Symbiflow_v*.gz.run
 

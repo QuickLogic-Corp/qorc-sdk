@@ -1,5 +1,4 @@
 all:	1micvr_app 2micvr_app vr_raw_app host_app \
-        amazon_alexa_app \
         vr_i2s_app \
         vr_opus_app \
         vr_raw_wifi_app \
