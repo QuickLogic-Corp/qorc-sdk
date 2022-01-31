@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - master
-      # testing only:
-      - use-github-actions
 
 jobs:
 

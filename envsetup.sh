@@ -21,20 +21,22 @@ CURRENT_DIR=$(pwd)
 cd "$QORC_SDK_PATH"
 
 
-# we want to have the structure as:
-# qorc-sdk : ${PWD}
-# - arm toolchain install at : ${PWD}/arm_toolchain_install/VERSION
-# - fpga toolchain install at : ${PWD}/fpga_toolchain_install/VERSION
-# - flash programmer install at : ${PWD}/TinyFPGA-Programmer-Application (skip this if adding as submodule!)
+# structure :
+# qorc-sdk : ${QORC_SDK_PATH}
+# - arm toolchain install at : ${QORC_SDK_PATH}/arm_toolchain_install/VERSION
+# - fpga toolchain install at : ${QORC_SDK_PATH}/fpga_toolchain_install/VERSION
+# - flash programmer install at : ${QORC_SDK_PATH}/TinyFPGA-Programmer-Application (skip this if adding as submodule!)
+# - jlink tooling install at : ${QORC_SDK_PATH}/jlink_install
+# - openocd tooling install at : ${QORC_SDK_PATH}/openocd_install
 # - rest as is from the git repo.
 # this will be a self contained installation with all tools internal to qorc-sdk repo directory.
-# remember to add the stuff installed here into gitignore - so we don't have things clouding git status
 
 
 QORC_SDK_ENVSETUP_VER=1.5.1
 
-GIT_REPO_URL_EXPECTED_LOWERCASE=https://github.com/quicklogic-corp/qorc-sdk.git
-GIT_REPO_URL_EXPECTED_LOWERCASE_ALT=https://github.com/quicklogic-corp/qorc-sdk
+GIT_REPO_OWNER="quicklogic-corp"
+GIT_REPO_NAME="qorc-sdk"
+
 
 ARM_TOOLCHAIN_ARCHIVE_URL="https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118"
 ARM_TOOLCHAIN_ARCHIVE_FILE="gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2"
@@ -249,7 +251,7 @@ fi
 #---------------------------------------------------------
 # OpenOCD
 #---------------------------------------------------------
-printf "\n[1] check openocd\n"
+printf "\n[5] check openocd\n"
 if [ ! -d "$OPENOCD_INSTALL_DIR" ]; then
 
     printf "    creating openocd directory : %s\n" "${OPENOCD_INSTALL_BASE_DIR}"
@@ -297,7 +299,7 @@ fi
 #---------------------------------------------------------
 # JLink
 #---------------------------------------------------------
-printf "\n[2] check jlink\n"
+printf "\n[6] check jlink\n"
 if [ ! -d "$JLINK_INSTALL_DIR" ]; then
 
     printf "    creating jlink directory : %s\n" "${JLINK_INSTALL_BASE_DIR}"
