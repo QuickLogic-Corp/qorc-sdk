@@ -12,8 +12,8 @@ development boards such as Quickfeather.
 Currently, the following boards are supported:
 
 -  `Quickfeather Development Kit <https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/>`__
--  `SparkFun Thing Plus <https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/>`__
--  `Qomu Development Kit <https://www.quicklogic.com/products/eos-s3/quickfeather-development-kit/>`__
+-  `SparkFun Thing Plus <https://www.quicklogic.com/products/eos-s3/sparkfun-thing-plus/>`__
+-  `Qomu Development Kit <https://www.quicklogic.com/products/eos-s3/qomu-dev-kit//>`__
 
 Getting started on Quickfeather board
 -------------------------------------
