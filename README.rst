@@ -27,9 +27,9 @@ Pre-requisites
 Software
 ~~~~~~~~
 
-1. Clone this repository using:`git clone https://github.com/QuickLogic-Corp/qorc-sdk`
-2. Navigate to the directory where the repo is cloned: `cd qorc-sdk`
-3. Install/Initialize all required tooling using: `source envsetup.sh`
+1. Clone this repository using: ``git clone https://github.com/QuickLogic-Corp/qorc-sdk``
+2. Navigate to the directory where the repo is cloned: ``cd qorc-sdk``
+3. Install/Initialize all required tooling using: ``source envsetup.sh``
 
 For detailed steps or manual installation of each of the tools needed, refer to the docs here: `Quickstart <https://qorc-sdk.readthedocs.io/en/latest/qorc-setup/quickstart.html>`_
 
