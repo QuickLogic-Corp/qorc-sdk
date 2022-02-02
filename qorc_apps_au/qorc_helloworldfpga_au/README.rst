@@ -65,25 +65,6 @@ Clean/Build/Load/Flash
 
     .scaffolding/load_fpga_jlink_au.sh
 
-  -OR-
-
-  directly using JLinkExe:
-
-  Note that we have to add the following lines at the top of the generated JLink Commander File (fpga/rtl/config_bit_gen/QLAL4S3B_helloworldfpga.jlink) :
-  [To ensure that we first keep the M4 Core in reset (using the scipt :code:`.scaffolding/load_fpga_jlink_au.sh` does this automatically)]
-
-  ::
-
-    connect
-    RSetType 3
-    r
-
-  
-
-  ::
-
-    JLinkExe -Device Cortex-M4 -If SWD -Speed 4000 -commandFile fpga/rtl/config_bit_gen/QLAL4S3B_helloworldfpga.jlink
-
 - Flash and run the design on the board using qfprog:
   (assumes the board is put into :code:`programming` mode)
 
