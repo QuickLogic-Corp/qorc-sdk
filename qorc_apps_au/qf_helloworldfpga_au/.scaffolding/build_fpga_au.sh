@@ -57,13 +57,11 @@ done
 
 # arg checks
 if [ -z "$AURORA_INSTALL_PATH" ] ; then
-    printf "\nERROR: AURORA_INSTALL_PATH is not defined!\n\n"
-    exit 1
+    printf "\nWARNING: AURORA_INSTALL_PATH is not defined!\n\n"
 fi
 
 if [ -z "$AURORA_LICENSE_PATH" ] ; then
-    printf "\nERROR: AURORA_LICENSE_PATH is not defined!\n\n"
-    exit 1
+    printf "\nWARNING: AURORA_LICENSE_PATH is not defined!\n\n"
 fi
 
 
