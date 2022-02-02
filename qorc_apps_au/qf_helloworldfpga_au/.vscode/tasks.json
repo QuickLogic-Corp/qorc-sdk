@@ -1,14 +1,15 @@
 // NOTE: remember to set the qorc_sdk_path in the settings.json (derive from settings.template.jsonc)
+// also the aurora_install_path and aurora_license_path
 // shortcut to run task from keyboard: CTRL+p -> enter "task" and then a space ('t' 'a' 's' 'k' 'spacebar')
 //      and you get the list of tasks
 {
     "version": "2.0.0",
     "tasks": [
         {
-            // build-fpga : invoke ql_symbiflow to build verilog code
+            // build-fpga : invoke AURORA to build verilog code
             "label": "build-fpga",
             "type": "shell",
-            "command": "./build_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "./build_fpga_au.sh --aurora-install-path=${config:aurora_install_path} --aurora-license-path=${config:aurora_license_path}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -25,7 +26,7 @@
             // clean-fpga : remove fpga build artifacts
             "label": "clean-fpga",
             "type": "shell",
-            "command": "./clean_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "./clean_fpga_au.sh",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -43,7 +44,7 @@
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
             "label": "flash-fpga",
             "type": "shell",
-            "command": "./flash_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "./flash_fpga_au.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -53,35 +54,16 @@
                 "revealProblems": "onProblem",
                 "close": true
             },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "build-fpga",
-            ]
-        },
-        {
-            // load-fpga : load the fpga image into EOS_S3 using OpenOCD and a selectable probe
-            "label": "load-fpga (OpenOCD)",
-            "type": "shell",
-            "command": "./load_fpga_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
-            "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
-            },
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "close": false
-            },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "build-fpga"
-            ]
+            // "dependsOrder": "parallel",
+            // "dependsOn":[
+            //     "build-fpga",
+            // ]
         },
         {
             // load-fpga : load the fpga image into EOS_S3 using JLink Commander and a JLink probe
             "label": "load-fpga (JLink)",
             "type": "shell",
-            "command": "./load_fpga_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "./load_fpga_jlink_au.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -92,10 +74,10 @@
                 "revealProblems": "onProblem",
                 "close": false
             },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "build-fpga"
-            ]
+            // "dependsOrder": "parallel",
+            // "dependsOn":[
+            //     "build-fpga"
+            // ]
         },
     ],
     "inputs": [
@@ -117,17 +99,5 @@
                 "env" : {}
             },
         },
-        {
-            "id": "openocdProbe",
-            "description": "select debug probe to use with OpenOCD",
-            "type": "pickString",
-            "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
-                "interface/stlink-v2.cfg",
-                "interface/cmsis-dap.cfg"
-            ],
-            "default": "jlink_swd.cfg"
-        }
     ],
 }

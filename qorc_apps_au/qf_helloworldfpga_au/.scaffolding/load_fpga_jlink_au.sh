@@ -38,7 +38,7 @@ usage()
     printf "\n"
     printf "[%s] usage:\n" $(basename $0)
     printf "\n"
-    printf "build the fpga design\n"
+    printf "load the fpga design using JLink Commander\n"
     printf "\n"
     printf " syntax: $0 --jlink-exe-path=/path/to/JLinkExe\n"
     printf "\n"

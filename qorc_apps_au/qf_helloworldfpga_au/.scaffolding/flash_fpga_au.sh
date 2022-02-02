@@ -73,11 +73,6 @@ printf "\n"
 ################################################################################
 
 
-# scripts are run in non-interactive mode in bash, so aliases are not expanded by default.
-# we need to enable this as we want to use aliases *before* sourcing the script creating the alias
-# https://unix.stackexchange.com/a/1498
-shopt -s expand_aliases
-
 # setup QORC_SDK environment
 if [ ! -z "$QORC_SDK_PATH" ] ; then
     cd $QORC_SDK_PATH
@@ -86,21 +81,16 @@ if [ ! -z "$QORC_SDK_PATH" ] ; then
 fi
 
 
-# setup QORC_SDK debug environment (optional)
-# if [ ! -z "$QORC_SDK_PATH" ] ; then
-#     cd $QORC_SDK_PATH/qorc-onion-apps/qorc_utils
-#     source debugenvsetup.sh
-#     cd - > /dev/null
-# fi
-
-
-
 PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 
 PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
-PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin)
+# we want the bin file which is NOT _cfgData.bin OR _iomux.bin OR _meminit.bin
+PROJECT_FPGA_DESIGN_BIN=$(ls -1 "$PROJECT_RTL_DIR"/config_bit_gen/*.bin | grep -v cfgData.bin | grep -v iomux.bin | grep -v meminit.bin)
 
 printf "flash using port [%s], design [%s] with mode [%s]\n\n" "$PORT" "$PROJECT_FPGA_DESIGN_BIN" "fpga"
 
-# qfprog is a function(earlier alias) created in envsetup.sh
+# qfprog is a function exported by envsetup.sh
+printf "running flash command:\n\n"
+printf "qfprog --port $PORT --appfpga $PROJECT_FPGA_DESIGN_BIN --mode fpga --reset\n\n"
+
 qfprog --port "$PORT" --appfpga "$PROJECT_FPGA_DESIGN_BIN" --mode fpga --reset

@@ -31,7 +31,13 @@
     "qorc_jlink_server_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkGDBServerCLExe",
     
     // svd file path is optional, can be used to view device registers in peripherals view
-    "qorc_svd_file_path": "${config:qorc_sdk_path}/eos_s3.svd"
+    "qorc_svd_file_path" : "${config:qorc_sdk_path}/eos_s3.svd",
+
+    // aurora installation path
+    "aurora_install_path" : "${env:HOME}/aurora_64",
+
+    // aurora license path
+    "aurora_license_path" : "${env:HOME}/aurora_64/aurora.lic"
 }
 // Why is this file called jsonc?
 // VSCode treats settings.json (and other specific files) as a jsonc file, but not any other.
