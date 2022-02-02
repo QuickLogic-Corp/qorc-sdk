@@ -1,0 +1,26 @@
+// [WLCSP PACKAGE]  WR42    set_io <signal name> <QFN_pin_num>
+// [BGA PACKAGE]    PD64    set_io <signal_name> <PD64_pin_num>
+// [QFN PACKAGE]    PU64    set_io <signal_name> <PU64_pin_num>
+// COMMON :                 set_io <signal_name> <IO_x_alias>
+// ref: https://quicklogic-quicklogic-fpga-toolchain.readthedocs-hosted.com/en/latest/tutorial/eos-s3/PcfDescription.html
+// pin_nums are as per the IO Location column for the corresponding package
+
+// [WLCSP PACKAGE]  WR42 : the pins used are not available in this package!
+//set_io redled       X
+//set_io greenled     X
+//set_io blueled      X
+
+// [BGA PACKAGE]    PD64
+//set_io redled       G7
+//set_io greenled     H7
+//set_io blueled      E8
+
+// [QFN PACKAGE]    PU64
+//set_io redled       34
+//set_io greenled     39
+//set_io blueled      38
+
+// COMMON (recommended, as long as it is understood that these pins are available in the used package)
+set_io redled       IO_22
+set_io greenled     IO_21
+set_io blueled      IO_18

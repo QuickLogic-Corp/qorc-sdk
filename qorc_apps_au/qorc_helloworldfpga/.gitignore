@@ -1,0 +1,73 @@
+### vscode ++ ###
+
+# ignore vscode/ dir and everything inside
+/.vscode/*
+
+# template for settings.json
+!/.vscode/settings.template.jsonc
+
+# tasks for build/clean/...
+!/.vscode/tasks.json
+
+# debug/attach/...
+!/.vscode/launch.json
+
+# needed extensions for using this project
+!/.vscode/extensions.json
+
+# C/C++ intellisense configuration: defines/compiler args/...
+!/.vscode/c_cpp_properties.json
+
+# unused right now
+#!/.vscode/*.code-snippets
+
+# local history
+/.history/
+
+# built extensions
+*/.vsix
+
+# local file history
+/.history
+/.ionide
+### vscode -- ###
+
+
+### build artifacts ++ ###
+# gcc build artifacts
+/GCC_Project/output/
+
+# gcc build generated db
+/GCC_Project/compile_commands.json
+
+# fpga build artifacts
+/**/rtl/*.bin
+/**/rtl/*_bit.h
+/**/rtl/*.jlink
+/**/rtl/*.openocd
+/**/rtl/build
+/**/rtl/Makefile.symbiflow
+
+# au generated files and dirs
+fpga/rtl/config_bit_gen
+fpga/rtl/helloworldfpga_linux_cache
+fpga/rtl/logic_optimizer/
+fpga/rtl/*_yosys.log
+fpga/rtl/*.blif
+fpga/rtl/*.edf
+fpga/rtl/*.html
+fpga/rtl/*.log
+fpga/rtl/*.rpt
+fpga/rtl/*.tcl
+fpga/rtl/*.ys
+fpga/rtl/*.timing.db
+
+### build artifacts -- ###
+
+### scaffolding artifacts ++ ###
+custom_eoss3_*.jlink
+custom_eoss3_*.log
+fpga_load_custom_openocd_gdb.log
+fpga_m4_load_custom_openocd_gdb.log
+m4_load_custom_openocd_gdb.log
+### scaffolding artifacts -- ###

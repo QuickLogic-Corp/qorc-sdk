@@ -124,7 +124,6 @@
             "options": [
                 "jlink_swd.cfg",
                 "ft2232h_swd.cfg",
-                "interface/stlink-v2.cfg",
                 "interface/cmsis-dap.cfg"
             ],
             "default": "jlink_swd.cfg"
