@@ -70,6 +70,7 @@ Clean/Build/Load/Flash
   The INTERFACE_CFG file depends on the debug adapter chosen.
 
   Here are a few common adapters that can be used with the EOS_S3:
+  
   1. JLink EDU/EDU-Mini/BASE... : :code:`--openocd-if-cfg=.scaffolding/jlink_swd.cfg` (available in the current dir)
   2. FT2232H Breakout Boards : :code:`--openocd-if-cfg=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
   3. DAPLink Boards: :code:`--openocd-if-cfg=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
