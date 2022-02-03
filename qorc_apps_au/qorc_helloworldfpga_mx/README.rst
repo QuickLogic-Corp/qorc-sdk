@@ -11,7 +11,7 @@ Usage
 
 This section describes the usage of the current project and how to test it.
 
-Once the code(fpga+m4) is loaded and running 
+Once the code(fpga) is loaded and running 
 (load using debugger/reset after flashing on the board), 
 you should see the green LED toggling periodically.
 
@@ -124,7 +124,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
-   To be able to run the 'flash task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
+   To be able to run the 'flash' task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
 
    On opening the folder, VS Code should prompt to install "recommended extensions" and this can install them automatically.
 
