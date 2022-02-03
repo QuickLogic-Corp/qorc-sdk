@@ -2,7 +2,7 @@
 
 
 # fpga-m4 load:
-# load both fpga 'image' -> fpga openocd script generated from symbiflow tools
+# load fpga 'image' -> fpga openocd script generated from symbiflow tools
 
 # run openocd in background, run gdb and send appropriate sequence of commands.
 

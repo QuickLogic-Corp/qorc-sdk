@@ -26,6 +26,9 @@ opt -value true
 fixplace_ff -floptocell { \
 }
 fixplace_io -iotocell { \
+    {led_b_o IO_18} \
+    {led_g_o IO_21} \
+    {led_r_o IO_22} \
 }
 placer_effort -value 5
 placer_goal -value {area}

@@ -56,7 +56,9 @@ Clean/Build/Load/Flash
 
   ::
 
+    cd fpga/rtl
     aurora --console --compile_design helloworldfpga.v --top helloworldfpga -o helloworldfpga.qdc -d QLAL4S3B -k PU64 --run_all
+    cd -
 
 - Load and run the design on the board using JLinkExe, using:
   (assumes the board has been booted in DEBUG mode)

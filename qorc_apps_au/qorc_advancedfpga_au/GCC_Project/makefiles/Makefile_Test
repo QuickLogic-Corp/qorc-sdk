@@ -1,0 +1,14 @@
+$(error This makefile should not be used)
+
+TEST_SRCS:=$(wildcard $(TEST_DIR)/*.c )
+
+#SRCS:=$(notdir $(TEST_SRCS))
+filters=DoubleTapApp.c M4_Accel_Example.c
+SRCS:=$(filter-out $(filters),$(notdir $(TEST_SRCS)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(TEST_DIR)
+
+include $(COMMON_STUB)
+
+
