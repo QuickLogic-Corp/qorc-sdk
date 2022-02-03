@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# fpga load:
-# load both fpga image -> fpga jlink script generated from matrixide tools
+# fpga-m4 load:
+# load both fpga and m4 'images' -> m4 binary generated from gcc, fpga jlink script generated from matrixide tools
 
 # note that the entire sequence is done using jlink gdb server itself, without gdb due to the scripting interface it exposes.
 # alternatively, it can also be done with gdb script, talking to jlink gdb server.
@@ -38,7 +38,7 @@ usage()
     printf "\n"
     printf "[%s] usage:\n" $(basename $0)
     printf "\n"
-    printf "load the fpga design using JLink Commander\n"
+    printf "load the fpga and m4 using JLink Commander\n"
     printf "\n"
     printf " syntax: $0 --jlink-exe-path=/path/to/JLinkExe\n"
     printf "\n"
@@ -84,6 +84,14 @@ printf "\n"
 
 PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 
+PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
+PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
+
+if [ ! -f "$PROJECT_M4_BIN" ] ; then
+    printf "\nERROR: m4 binary does not exist!\n"
+    exit 1
+fi
+
 PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 PROJECT_FPGA_DESIGN_JLINK=$(ls "$PROJECT_RTL_DIR"/config_bit_gen/*.jlink)
 
@@ -96,9 +104,10 @@ fi
 # generate a 'custom' jlink script to:
 # [step 1] init the EOS_S3 (reset)
 # [step 2] load the fpga design (.jlink generated)
+# [step 3] load the m4 binary into RAM and run it
 
-CUSTOM_JLINK_SCRIPT="custom_eoss3_fpga.jlink"
-CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_fpga.jlink.log"
+CUSTOM_JLINK_SCRIPT="custom_eoss3_m4_fpga.jlink"
+CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_m4_fpga.jlink.log"
 
 # write "NOTHING" into file, i.e. reset the contents, faster than delete + touch.
 #https://askubuntu.com/a/549672
@@ -107,6 +116,8 @@ CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_fpga.jlink.log"
 # [step 1] init the EOS_S3 (reset) and load the m4 binary
 echo "connect" >> "$CUSTOM_JLINK_SCRIPT"
 echo "RSetType 3" >> "$CUSTOM_JLINK_SCRIPT"
+echo "r" >> "$CUSTOM_JLINK_SCRIPT"
+echo "loadbin $PROJECT_M4_BIN, 0x0" >> "$CUSTOM_JLINK_SCRIPT"
 echo "r" >> "$CUSTOM_JLINK_SCRIPT"
 echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
@@ -118,9 +129,11 @@ echo "" >> "$CUSTOM_JLINK_SCRIPT"
 echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
 
+# [step 3] run the m4 code
+echo "g" >> "$CUSTOM_JLINK_SCRIPT"
 # note we can automatically quit jlink after this point, uncomment the below line this is needed.
 #echo "q" >> "$CUSTOM_JLINK_SCRIPT"
-#echo "" >> "$CUSTOM_JLINK_SCRIPT"
+echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
 
 # moar: https://wiki.segger.com/J-Link_Commander

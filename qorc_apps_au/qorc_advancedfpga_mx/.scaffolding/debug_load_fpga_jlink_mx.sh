@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# fpga load:
-# load both fpga image -> fpga jlink script generated from matrixide tools
+# fpga-load-quit:
+# load fpga 'image' -> fpga jlink script generated from matrixide tools, and then quit
 
 # note that the entire sequence is done using jlink gdb server itself, without gdb due to the scripting interface it exposes.
 # alternatively, it can also be done with gdb script, talking to jlink gdb server.
@@ -94,8 +94,7 @@ fi
 
 
 # generate a 'custom' jlink script to:
-# [step 1] init the EOS_S3 (reset)
-# [step 2] load the fpga design (.jlink generated)
+# load the fpga design (.jlink generated), quit jlink
 
 CUSTOM_JLINK_SCRIPT="custom_eoss3_fpga.jlink"
 CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_fpga.jlink.log"
@@ -104,23 +103,15 @@ CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_fpga.jlink.log"
 #https://askubuntu.com/a/549672
 : > "$CUSTOM_JLINK_SCRIPT"
 
-# [step 1] init the EOS_S3 (reset) and load the m4 binary
-echo "connect" >> "$CUSTOM_JLINK_SCRIPT"
-echo "RSetType 3" >> "$CUSTOM_JLINK_SCRIPT"
-echo "r" >> "$CUSTOM_JLINK_SCRIPT"
-echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
-
-# [step 2] load the fpga design (.jlink generated)
+# load the fpga design (.jlink generated)
 # copy the contents of the generated .jlink as is
 cat "$PROJECT_FPGA_DESIGN_JLINK" >> "$CUSTOM_JLINK_SCRIPT"
 echo "" >> "$CUSTOM_JLINK_SCRIPT"
+
+# quit jlink
+echo "q" >> "$CUSTOM_JLINK_SCRIPT"
 echo "" >> "$CUSTOM_JLINK_SCRIPT"
-
-
-# note we can automatically quit jlink after this point, uncomment the below line this is needed.
-#echo "q" >> "$CUSTOM_JLINK_SCRIPT"
-#echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
 
 # moar: https://wiki.segger.com/J-Link_Commander

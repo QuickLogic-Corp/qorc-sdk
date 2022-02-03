@@ -1,0 +1,64 @@
+# ---------------------------ConstraintsFile--------------------------- #
+
+#synthesis
+generate_verilog -value false
+no_abc_opt -value true
+no_adder -value true
+no_ff_map -value true
+
+
+#verifier
+dont_use_clock_network -assignsignal { \
+}
+use_clock_network -assignsignal { \
+}
+
+
+#logicoptimizer
+assign_default_signal -assignsignal { \
+}
+insert_buffer -value false
+net_load_limit -value 100
+opt -value true
+
+
+#placer
+fixplace_ff -floptocell { \
+}
+fixplace_io -iotocell { \
+    {led_b_o IO_18} \
+    {led_g_o IO_21} \
+    {led_r_o IO_22} \
+}
+placer_effort -value 5
+placer_goal -value {area}
+
+
+#router
+pnr_attempts -value 4
+router_goal -value {area}
+
+
+#timingengine
+default_clock_period -value 10
+device_cell_base_timing_report -value true
+select_process_corner -flow_type {FPGA} -value {Typical}
+
+
+#powerestimation
+activity_factor -activity { \
+}
+capacitance -componentval { \
+}
+clocknet_frequency -clock { \
+}
+operating_iovoltage -value 1
+operating_voltage -value 1
+system_frequency -value 10
+
+#programmer
+config_io -io { \
+{IO_22 func_sel:0 ctrl_sel:fabric mode:inout pull:none drive:2 slew:slow schmitt:0}\
+{IO_21 func_sel:0 ctrl_sel:fabric mode:inout pull:none drive:2 slew:slow schmitt:0}\
+{IO_18 func_sel:0 ctrl_sel:fabric mode:inout pull:none drive:2 slew:slow schmitt:0}\
+}
