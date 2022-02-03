@@ -8,6 +8,46 @@ The original example has the m4 code include the fpga code (in a C header form) 
 This example test app can be used as a guide for apps which have both m4 code and fpga rtl to be built within the same application project, and flashed as separate binary images.
 
 
+Usage
+-----
+
+This section describes the usage of the current project and how to test it.
+
+Once the code(fpga+m4) is loaded and running 
+(load using debugger/debug using debugger/reset after flashing on the board), you should see a banner like below:
+
+::
+
+  ##########################
+  Quicklogic QuickFeather Advanced FPGA Example
+  SW Version: qorc-sdk/qf_apps/qf_advancedfpga
+  Sep 20 2020 14:24:43
+  ##########################
+  
+  #*******************
+  Command Line Interface
+  App SW Version: qorc-sdk/qf_apps/qf_advancedfpga
+  #*******************
+  [0] >
+
+
+| The :code:`ledctlr` submenu option is available, and can be used to set RGB led to change color at specific intervals.
+|
+| :code:`ledctlr` test sequence:
+| At the :code:`[0] >` prompt, which is the level 0 prompt, use: 
+
+  1. :code:`ledctlr` to enter the submenu
+  2. :code:`color0 1` sets the color0 (for timeslot0) to blue, you should see the blue led turn on
+  3. :code:`color1 2` sets the color1 (for timeslot1) to green, no visible change
+  4. :code:`color2 4` sets the color2 (for timeslot2) to red, no visible change
+  5. :code:`duration0 500` sets the duration of timeslot0 (for color0)
+  6. | :code:`duration1 500` sets the duration of timeslot1 (for color1)
+     | Now, color0(blue) should be seen for 500ms, and color1(green) should be seen for 500ms and should repeat.
+  7. | :code:`duration2 1000` sets the duration of timeslot2 (for color2)
+     | Now, color0(blue) for 500ms, color1(green) for 500ms and color2(red) for 1000ms should be seen, and should repeat.
+
+
+
 How To
 ------
 
@@ -56,6 +96,7 @@ Clean/Build/Load/Flash (Command Line)
   m4: :code:`make -C GCC_Project/`
 
 - Load and run the design on the board using JLinkExe, using:
+
   (assumes the board has been booted in DEBUG mode)
 
   ::
@@ -63,6 +104,7 @@ Clean/Build/Load/Flash (Command Line)
     .scaffolding/load_fpga_m4_jlink_au.sh
 
 - Flash and run the design on the board using qfprog:
+
   (assumes the board is put into :code:`programming` mode)
 
   ::

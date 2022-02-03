@@ -5,6 +5,17 @@ This test/example contains the the fpga design available as an independent compo
 
 The FPGA design is a simple LED-toggle, which toggles the green LED regularly.
 
+
+Usage
+-----
+
+This section describes the usage of the current project and how to test it.
+
+Once the code(fpga+m4) is loaded and running 
+(load using debugger/reset after flashing on the board), 
+you should see the green LED toggling periodically.
+
+
 How To
 ------
 
@@ -25,8 +36,8 @@ Before clean/build/load/flash, ensure that the bash environment is setup by doin
      cd <QORC_SDK_PATH> && source envsetup.sh && cd -
 
 
-Clean/Build/Load/Flash
-**********************
+Clean/Build/Load/Flash (Command Line)
+*************************************
 
 - Clean the design using:
 
@@ -54,6 +65,7 @@ Clean/Build/Load/Flash
     ql_symbiflow -compile -src $PWD/fpga/rtl -d ql-eos-s3 -t helloworldfpga -v helloworldfpga.v -p quickfeather.pcf -P PU64 -dump binary openocd jlink
 
 - Load and run the design on the board using JLinkExe, using:
+
   (assumes the board has been booted in DEBUG mode)
 
   ::
@@ -61,6 +73,7 @@ Clean/Build/Load/Flash
     .scaffolding/load_fpga_jlink.sh
 
 - Load and run the design on the board using OpenOCD, using:
+
   (assumes the board has been booted in DEBUG mode)
 
   ::
@@ -78,6 +91,7 @@ Clean/Build/Load/Flash
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
 - Flash and run the design on the board using qfprog:
+
   (assumes the board is put into :code:`programming` mode)
 
   ::
@@ -124,8 +138,8 @@ The first time the project is going to be used from VS Code, we need to do the f
    On opening the folder, VS Code should prompt to install "recommended extensions" and this can install them automatically.
 
 
-Clean/Build/Load/Flash
-**********************
+Clean/Build/Load/Flash (VS Code)
+********************************
 
 Any "task" can be run in VS Code using the :code:`Terminal > Run Task` menu, which shows a drop down list of tasks
 
@@ -142,11 +156,13 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
   :code:`build-fpga` task
 
 - Load and run the design on the board using JLinkExe, using:
+
   (assumes the board has been booted in DEBUG mode)
 
   :code:`load-fpga (JLink)` task
 
 - Load and run the design on the board using OpenOCD, using:
+
   (assumes the board has been booted in DEBUG mode)
 
   :code:`load-fpga (OpenOCD)` task
@@ -160,9 +176,11 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
   select the appropriate one.
 
 - Flash and run the design on the board using qfprog:
+
   (assumes the board is put into :code:`programming` mode)
 
   :code:`flash-fpga` task
 
   This will show a drop down menu with the available serial ports in the system, select the appropriate one.
+  
   (This is usually :code:`/dev/ttyACM0`)
