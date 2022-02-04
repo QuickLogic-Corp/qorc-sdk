@@ -48,7 +48,7 @@
 /**/rtl/build
 /**/rtl/Makefile.symbiflow
 
-# au generated files and dirs
+# au/mx generated files and dirs
 fpga/rtl/config_bit_gen
 fpga/rtl/*_linux_cache
 fpga/rtl/logic_optimizer/
