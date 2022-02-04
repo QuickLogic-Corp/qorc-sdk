@@ -1,5 +1,5 @@
 #
-# Makefile for Quick-AI SDK
+# Makefile for QORC SDK
 #
 
 include config.mk

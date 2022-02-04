@@ -50,7 +50,7 @@
 
 # au generated files and dirs
 fpga/rtl/config_bit_gen
-fpga/rtl/helloworldfpga_linux_cache
+fpga/rtl/*_linux_cache
 fpga/rtl/logic_optimizer/
 fpga/rtl/*_yosys.log
 fpga/rtl/*.blif

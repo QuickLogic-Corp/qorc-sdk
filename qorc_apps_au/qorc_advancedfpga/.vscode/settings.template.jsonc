@@ -1,16 +1,13 @@
-// The env variables defined here are using the 'launch.json' for the debug configurations.
-// TL;DR
-// if you are using 'source debugenvsetup.sh' from qorc_utils/ in this repo, then you can use this file as is.
-// just rename this file to 'settings.json' and you are set.
-// [ensure that this repo (qorc-onion-apps) is inside the qorc-sdk dir at the top level, same as 'qf_apps']
+// The env variables defined here are used by the 'launch.json' (debug) and 'tasks.json' (clean/build/load/flash)
 //
-// fill in the appropriate paths below as applicable:
+// first, copy this file as 'settings.json' : "mv settings.template.jsonc settings.json"
+// second, fill in the appropriate paths below as applicable:
 // qorc_sdk_path : relative or abs path to the qorc-sdk repo                [if this app is 2 levels down from qorc-sdk, leave as is]
 // qorc_arm_toolchain_path : path to toolchain binaries                     [if using 'envsetup.sh' leave as is]
-// if using OpenOCD : openocd binary path and openocd script dir path       [if using 'debugenvsetup.sh', leave as is]
-// if using JLink : JLinkGDBServerCLExe binary path                         [if using 'debugenvsetup.sh', leave as is]
-// if using svd : eos_s3 svd file path                                      [if using 'debugenvsetup.sh', leave as is]
-// Finally, rename this file to settings.json : "mv settings.template.jsonc settings.json"
+// if using OpenOCD : openocd binary path and openocd script dir path       [if using 'envsetup.sh', leave as is]
+// if using JLink : JLinkGDBServerCLExe binary path                         [if using 'envsetup.sh', leave as is]
+// if using svd : eos_s3 svd file path                                      []
+
 {
     // path to the qorc-sdk
     "qorc_sdk_path" : "${workspaceFolder}/../..",
@@ -36,6 +33,3 @@
 // Why is this file called jsonc?
 // VSCode treats settings.json (and other specific files) as a jsonc file, but not any other.
 // Using '.jsonc' allows us to add useful comments like this one here.
-// 
-// we will probably replace this file by 'settings.json' in git once we have the JLink/OpenOCD/SVD 
-//    also included in the envsetup.sh script.
