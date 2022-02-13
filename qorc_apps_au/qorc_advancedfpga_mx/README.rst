@@ -35,16 +35,15 @@ Once the code(fpga+m4) is loaded and running
 | :code:`ledctlr` test sequence:
 | At the :code:`[0] >` prompt, which is the level 0 prompt, use: 
 
-  1. :code:`ledctlr` to enter the submenu
-  2. :code:`color0 1` sets the color0 (for timeslot0) to blue, you should see the blue led turn on
-  3. :code:`color1 2` sets the color1 (for timeslot1) to green, no visible change
-  4. :code:`color2 4` sets the color2 (for timeslot2) to red, no visible change
-  5. :code:`duration0 500` sets the duration of timeslot0 (for color0)
-  6. | :code:`duration1 500` sets the duration of timeslot1 (for color1)
-     | Now, color0(blue) should be seen for 500ms, and color1(green) should be seen for 500ms and should repeat.
-  7. | :code:`duration2 1000` sets the duration of timeslot2 (for color2)
-     | Now, color0(blue) for 500ms, color1(green) for 500ms and color2(red) for 1000ms should be seen, and should repeat.
-
+1. :code:`ledctlr` to enter the submenu
+2. :code:`color0 1` sets the color0 (for timeslot0) to blue, you should see the blue led turn on
+3. :code:`color1 2` sets the color1 (for timeslot1) to green, no visible change
+4. :code:`color2 4` sets the color2 (for timeslot2) to red, no visible change
+5. :code:`duration0 500` sets the duration of timeslot0 (for color0)
+6. | :code:`duration1 500` sets the duration of timeslot1 (for color1)
+    | Now, color0(blue) should be seen for 500ms, and color1(green) should be seen for 500ms and should repeat.
+7. | :code:`duration2 1000` sets the duration of timeslot2 (for color2)
+    | Now, color0(blue) for 500ms, color1(green) for 500ms and color2(red) for 1000ms should be seen, and should repeat.
 
 
 How To
