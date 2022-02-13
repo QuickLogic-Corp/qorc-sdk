@@ -5,19 +5,21 @@
     "version": "2.0.0",
     "tasks": [
         {
-            // build-fpga : invoke ql_symbiflow to build verilog code
+            // build-fpga : build fpga design
             "label": "build-fpga",
             "type": "shell",
-            "command": "./build_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
                 "revealProblems": "onProblem",
-                "panel": "new",
                 "close": true
             }
         },
@@ -25,9 +27,9 @@
             // clean-fpga : remove fpga build artifacts
             "label": "clean-fpga",
             "type": "shell",
-            "command": "./clean_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -38,14 +40,12 @@
             }
         },
         {
-            // flash-fpga : flash the fpga image into the board's flash via UART
-            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
-            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
-            "label": "flash-fpga",
+            // flash : flash the fpga, m4, or both images into the board's flash via UART
+            "label": "flash",
             "type": "shell",
-            "command": "./flash_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -56,21 +56,40 @@
             "dependsOrder": "parallel",
             "dependsOn":[
                 "build-fpga",
+                "x-get-ports"
             ]
         },
         {
-            // load-fpga : load the fpga image into EOS_S3 using OpenOCD and a selectable probe
-            "label": "load-fpga (OpenOCD)",
+            // x-get-ports : get serial ports available on the system using python from the qorc sdk installation
+            //               and save the list into a file, which will be read in the flash task to display a 
+            //               pickstring dropdown for the user to select.
+            "label": "x-get-ports",
+            "detail": "internal task used by the 'flash' task, do not run this directly",
             "type": "shell",
-            "command": "./load_fpga_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && python get_serial_ports_list.py > custom_eoss3_ports.log",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
             "problemMatcher": [],
             "presentation": {
+                "reveal": "never", 
+                "revealProblems": "never",
+                "close": true
+            }
+        },
+        {
+            // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
+            "label": "load (OpenOCD)",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
                 "reveal": "always",
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -78,19 +97,19 @@
             ]
         },
         {
-            // load-fpga : load the fpga image into EOS_S3 using JLink Commander and a JLink probe
-            "label": "load-fpga (JLink)",
+            // load (JLink) : load the fpga, m4, or both images into EOS-S3 using JLink Commander and a JLink probe
+            "label": "load (JLink)",
             "type": "shell",
-            "command": "./load_fpga_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -104,12 +123,13 @@
             // 'quickpick' dropdown in vscode for the user to select the serial port while
             // flashing the images into the board
             // - requires the extension to be installed.
-            // - requires that python and pySerial are installed on the HOST machine already.
             "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",
             "args" : {
-                "command": "python ./get_serial_ports_list.py",
+                // we should have run the x-get-ports task, which populates the file containing
+                // serial ports available on the system using the qorc sdk python installation
+                "command": "cat custom_eoss3_ports.log && rm custom_eoss3_ports.log",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
                 "description": "select serial port [>> ensure it is not opened in another program <<]",
@@ -122,11 +142,11 @@
             "description": "select debug probe to use with OpenOCD",
             "type": "pickString",
             "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
                 "interface/cmsis-dap.cfg"
             ],
-            "default": "jlink_swd.cfg"
+            "default": ".scaffolding/jlink_swd.cfg"
         }
     ],
 }

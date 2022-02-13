@@ -1,5 +1,4 @@
 ### vscode ++ ###
-
 # ignore vscode/ dir and everything inside
 /.vscode/*
 
@@ -61,13 +60,9 @@ fpga/rtl/*.rpt
 fpga/rtl/*.tcl
 fpga/rtl/*.ys
 fpga/rtl/*.timing.db
-
 ### build artifacts -- ###
 
 ### scaffolding artifacts ++ ###
 custom_eoss3_*.jlink
 custom_eoss3_*.log
-fpga_load_custom_openocd_gdb.log
-fpga_m4_load_custom_openocd_gdb.log
-m4_load_custom_openocd_gdb.log
 ### scaffolding artifacts -- ###

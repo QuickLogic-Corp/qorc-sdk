@@ -30,12 +30,12 @@
             "group": "build"
         },
         {
-            // build-m4 : invoke make to build the cortex-m4 code
+            // build-m4 : build m4 code
             "label": "build-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project",
+                "cwd": "${workspaceFolder}",
             },
             "group": "build",
             "problemMatcher": {
@@ -54,17 +54,17 @@
             },
             "presentation": {
                 "reveal": "always",
-                "revealProblems": "onProblem",
+                "revealProblems": "never",
                 "close": true
             }
         },
         {
-            // clean-m4 : invoke make clean to clean the cortex-m4 code
+            // clean-m4 : clean m4 build
             "label": "clean-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": {
@@ -77,12 +77,12 @@
             }
         },
         {
-            // build-fpga : invoke ql_symbiflow to build verilog code
+            // build-fpga : build fpga design
             "label": "build-fpga",
             "type": "shell",
-            "command": "./build_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -96,9 +96,9 @@
             // clean-fpga : remove fpga build artifacts
             "label": "clean-fpga",
             "type": "shell",
-            "command": "./clean_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -109,40 +109,57 @@
             }
         },
         {
-            // flash-fpga-m4 : flash the fpga and m4 images into the board's flash via UART
-            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
-            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
-            "label": "flash-fpga-m4",
+            // flash : flash the fpga, m4, or both images into the board's flash via UART
+            "label": "flash",
             "type": "shell",
-            "command": "./flash_fpga_m4.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
-               "build-m4",
-               "build-fpga",
+                "build-m4",
+                "build-fpga",
+                "x-get-ports"
             ]
         },
         {
-            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a selectable probe
-            "label": "load-fpga-m4 (OpenOCD)",
+            // x-get-ports : get serial ports available on the system using python from the qorc sdk installation
+            //               and save the list into a file, which will be read in the flash task to display a 
+            //               pickstring dropdown for the user to select.
+            "label": "x-get-ports",
+            "detail": "internal task used by the 'flash' task, do not run this directly",
             "type": "shell",
-            "command": "./load_fpga_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && python get_serial_ports_list.py > custom_eoss3_ports.log",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
             "problemMatcher": [],
             "presentation": {
+                "reveal": "never", 
+                "revealProblems": "never",
+                "close": true
+            }
+        },
+        {
+            // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
+            "label": "load (OpenOCD)",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
                 "reveal": "always",
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -151,19 +168,19 @@
             ]
         },
         {
-            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using JLink Commander and a JLink probe
-            "label": "load-fpga-m4 (JLink)",
+            // load (JLink) : load the fpga, m4, or both images into EOS-S3 using JLink Commander and a JLink probe
+            "label": "load (JLink)",
             "type": "shell",
-            "command": "./load_fpga_m4_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -172,27 +189,27 @@
             ]
         },
         {
-            // debug-load-fpga (JLink) : used only for debugging, with JLink GDB Server
+            // load-fpga-debug (JLink) : used only for debugging, with JLink GDB Server
             // in launch.json 'Debug (JLink)', ensure we have run to entrypoint "main", and start debugging
             // once we are at "main" -> run this task -> continue debugging as usual
             // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
-            "label": "debug-load-fpga (JLink)",
+            "label": "load-fpga-debug (JLink)",
             "detail": "run this task *after* entrypoint main is hit when debugging with JLink GDB Server",
             "type": "shell",
-            "command": "./debug_load_fpga_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/load_fpga_x_jlink_debug_only.sh",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
-               "build-m4",
-               "build-fpga"
+                "build-m4",
+                "build-fpga"
             ]
         },
         {
@@ -205,7 +222,7 @@
             "label": "generate-json-db",
             "detail": "generate compile_commands.json using bear",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean && bear make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
             },
@@ -223,12 +240,13 @@
             // 'quickpick' dropdown in vscode for the user to select the serial port while
             // flashing the images into the board
             // - requires the extension to be installed.
-            // - requires that python and pySerial are installed on the HOST machine already.
             "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",
             "args" : {
-                "command": "python ./get_serial_ports_list.py",
+                // we should have run the x-get-ports task, which populates the file containing
+                // serial ports available on the system using the qorc sdk python installation
+                "command": "cat custom_eoss3_ports.log && rm custom_eoss3_ports.log",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
                 "description": "select serial port [>> ensure it is not opened in another program <<]",
@@ -241,11 +259,11 @@
             "description": "select debug probe to use with OpenOCD",
             "type": "pickString",
             "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
                 "interface/cmsis-dap.cfg"
             ],
-            "default": "jlink_swd.cfg"
+            "default": ".scaffolding/jlink_swd.cfg"
         }
     ],
 }

@@ -9,14 +9,13 @@ This example test app can be used as a guide for apps which have both m4 code an
 
 
 Usage
------
+-------
 
-This section describes the usage of the current project and how to test it.
 
 Once the code(fpga+m4) is loaded and running 
 (load using debugger/debug using debugger/reset after flashing on the board), you should see a banner like below:
 
-::
+.. code-block:: none
 
   ##########################
   Quicklogic QuickFeather Advanced FPGA Example
@@ -54,25 +53,26 @@ How To
 Command Line Usage
 ~~~~~~~~~~~~~~~~~~
 
-Note that, all the commands below are run from the root of this directory.
+:code:`note: all the commands below are run from the root of this directory.`
 
 Initialize Environment
 **********************
 
-Before clean/build/load/flash, ensure that the bash environment is setup by doing the below in the same order:
+Before clean/build/load/flash, ensure that the bash environment is setup by doing the below:
 
-1. Ensure that QORC-SDK is initialized and ready (to use :code:`JLinkExe` for loading, :code:`qfprog` for flashing):
+:code:`note: the order below is important, initialize Aurora *after* QORC SDK is initialized!`
 
-   ::
+1. Ensure that QORC-SDK is initialized and ready:
 
-     cd <QORC_SDK_PATH> && source envsetup.sh && cd -
+   .. code-block:: bash
+
+     source <QORC_SDK_PATH>/envsetup.sh
 
 2. Ensure Aurora is initialized and ready: (assumes install path is :code:`$HOME/aurora_64`)
 
-   ::
+   .. code-block:: bash
 
      cd $HOME/aurora_64 && source setup_au.sh && export quicklogic_LICENSE=<PATH_TO_LIC_FILE> && cd -
-
 
 
 Clean/Build/Load/Flash (Command Line)
@@ -80,48 +80,61 @@ Clean/Build/Load/Flash (Command Line)
 
 - Clean using:
 
-  fpga: :code:`.scaffolding/clean_fpga_au.sh`
+  fpga: :code:`make clean-fpga`
 
-  m4: :code:`make -C GCC_Project/ clean`
+  m4: :code:`make clean-m4`
+
+  both: :code:`make clean`
 
 - Build using:
 
-  fpga: :code:`.scaffolding/build_fpga_au.sh`
-  
-  -OR-
+  fpga: :code:`make fpga`
 
-  fpga: :code:`cd fpga/rtl && aurora --console --compile_design AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_Registers.v AL4S3B_FPGA_Top.v LED_controller.v --top AL4S3B_FPGA_top -o AL4S3B_FPGA_top.qdc -d QLAL4S3B -k PU64 --run_all && cd -`
+  m4: :code:`make m4`
 
+  both: :code:`make`
 
-  m4: :code:`make -C GCC_Project/`
-
-- Load and run the design on the board using JLinkExe, using:
+- Load and run the code/design on the board using JLinkExe, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  ::
+  .. code-block:: bash
 
-    .scaffolding/load_fpga_m4_jlink_au.sh
+    make load-jlink
 
-- Flash and run the design on the board using qfprog:
-
+- Flash and run the code/design on the board using qfprog:
+  
   (assumes the board is put into :code:`programming` mode)
 
-  ::
+  .. code-block:: bash
 
-    .scaffolding/flash_fpga_m4_au.sh --port=/dev/ttyACM0
+    export QORC_PORT=/path/to/serial/port   # needs to be done only once in current shell
+    make flash
 
-  -OR-
-
-  directly using qfprog:
-
-  ::
-
-    qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_advancedfpga_au.bin --appfpga fpga/rtl/config_bit_gen/QLAL4S3B_AL4S3B_FPGA_top.bin --mode fpga-m4 --reset
+  Set the serial port as applicable, this is generally :code:`export QORC_PORT=/dev/ttyACM0`
 
 
 VS Code Usage
 ~~~~~~~~~~~~~
+
+Dependencies
+************
+
+- | VS Code Extension: :code:`ms-vscode.cpptools`
+  | link: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+  | why: C/C++ Intellisense, Debugging
+  |
+
+- | VS Code Extension: :code:`marus25.cortex-debug`
+  | link: https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
+  | why: Cortex-M Debug Launch Configuration
+  |
+
+- | VS Code Extension: :code:`augustocdias.tasks-shell-input`
+  | link: https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input
+  | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
+  |
+
 
 Initialize Project Configuration
 ********************************
@@ -132,7 +145,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    Ensure the following variables are correctly defined:
 
-   ::
+   .. code-block:: none
 
      "qorc_sdk_path" : "${workspaceFolder}/../..",
      "aurora_install_path" : "${env:HOME}/aurora_64",
@@ -144,7 +157,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    :code:`${workspaceFolder}` refers to the current directory
 
-   Remaining variables don't need to be changed
+   Remaining variables don't need to be changed.
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
@@ -152,7 +165,8 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    To be able to 'debug' the code with gdb, remember to install the extension: :code:`marus25.cortex-debug`
 
-   On opening the folder, VS Code should prompt to install "recommended extensions" and this can install them automatically.
+   On opening the folder, VS Code should prompt to install these "recommended extensions", if not already installed, 
+   select :code:`Install All` to automatically install them.
 
 
 Clean/Build/Load/Flash (VS Code)
@@ -166,35 +180,39 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
 - Clean using:
   
-  - fpga: :code:`clean-fpga` task
-  - m4: :code:`clean-m4` task
-  - both: :code:`clean` task
+  - fpga: run the :code:`clean-fpga` task
+  - m4: run the :code:`clean-m4` task
+  - both: run the :code:`clean` task
 
 - Build using:
 
-  - fpga: :code:`build-fpga` task
-  - m4: :code:`build-m4` task
-  - both: :code:`build` task
+  - fpga: run the :code:`build-fpga` task
+  - m4: run the :code:`build-m4` task
+  - both: run the :code:`build` task
 
-- Load and run the design on the board using JLinkExe, using:
+- Load and run the code/design on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-fpga-m4 (JLink)` task
+  run the :code:`load (JLink)` task
 
-- Flash and run the design on the board using qfprog:
+- Flash and run the code/design on the board using qfprog:
 
   (assumes the board is put into :code:`programming` mode)
 
-  :code:`flash-fpga-m4` task
+  run the :code:`flash` task
 
-  This will show a drop down menu with the available serial ports in the system, select the appropriate one.
-
+  This will show a 'pickstring' drop down menu with the available serial ports in the system, select the appropriate one.
+  
   (This is usually :code:`/dev/ttyACM0`)
 
-- :code:`debug-load-fpga (JLink)` : this is a special task used only while debugging the code with JLink.
+- :code:`load-fpga-debug (JLink)` : This is a special task required only while debugging the code with JLink.
 
-  Refer to the Debug section for details.
+  Refer to the Debug sections for details.
+
+- :code:`x-get-ports` : this is an **internal** task, which is used by the :code:`flash` task to obtain a list of
+  available serial ports on the system to use for flashing. This list is displayed to the user as a 'pickstring'
+  dropdown menu, as described in the :code:`flash` task above.
 
 
 Debug
@@ -210,7 +228,7 @@ Debug
   
   4. The code should load and break at :code:`main()`
   
-  5. Run the task :code:`debug-load-fpga (JLink)` at this point, to load the FPGA design
+  5. Run the :code:`load-fpga-debug (JLink)` task at this point, to load the FPGA design
   
   6. Resume/Continue debugging using the blue :code:`Continue/Break` button at the top or using :code:`F8`
 

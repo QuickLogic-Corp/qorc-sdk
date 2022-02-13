@@ -3,6 +3,7 @@
 #
 MAIN_SRCS:=$(wildcard $(MAIN_DIR)/*.c)
 
+filters=
 
 SRCS:=$(filter-out $(filters),$(notdir $(MAIN_SRCS)))
 

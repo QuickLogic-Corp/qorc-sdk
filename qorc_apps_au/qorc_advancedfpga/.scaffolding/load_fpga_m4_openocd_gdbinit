@@ -1,0 +1,15 @@
+# gdbinit file for loading fpga, m4 using OpenOCD
+# only hooks are added here, remaining are passed directly to gdb using -ex ""
+
+# https://stackoverflow.com/a/17975687
+
+# on quitting gdb:
+# 1. ensure that openocd is closed, using monitor shutdown
+# 2. don't ask for confirmation to exit
+define hook-quit
+monitor shutdown
+set confirm off
+end
+
+# remove all pagination and type c to continue blah blah
+set pagination off

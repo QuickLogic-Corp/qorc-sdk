@@ -4,12 +4,12 @@
         {
             // Debug - JLink GDB Server - JLink probe
             // ensure we have run to entrypoint "main", and start debugging
-            // once we are at "main" -> run the task "debug-load-fpga (JLink)" -> continue debugging as usual
+            // once we are at "main" -> run the task "load-fpga-debug (JLink)" -> continue debugging as usual
             // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
             "name": "Debug (JLink)",
             "type": "cortex-debug",
             "request": "launch",
-            "cwd": "${workspaceFolder}/.scaffolding",
+            "cwd": "${workspaceFolder}",
             "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
             "runToEntryPoint": "main",
             "interface": "swd",
@@ -21,8 +21,10 @@
             "armToolchainPath": "${config:qorc_arm_toolchain_path}",
             "armToolchainPrefix": "arm-none-eabi",
             // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-            //"preLaunchTask": "build"
+            //"svdFile": "${config:qorc_svd_file_path}",
+            "preLaunchTask": "build",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
         },
     ],
     "inputs": [
