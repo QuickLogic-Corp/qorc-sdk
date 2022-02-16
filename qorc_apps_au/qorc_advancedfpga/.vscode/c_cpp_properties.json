@@ -1,0 +1,65 @@
+{
+    "configurations": [
+        {
+            "name": "qorc",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${config:qorc_sdk_path}/FreeRTOS/include",
+                "${config:qorc_sdk_path}/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX",
+                "${config:qorc_sdk_path}/HAL/inc",
+                "${config:qorc_sdk_path}/freertos_gateware/inc",
+                "${config:qorc_sdk_path}/s3-gateware",
+                "${config:qorc_sdk_path}/Libraries/**"
+            ],
+            "defines": [
+                "__FPU_USED=1",
+                "__M4_DEBUG",
+                "__EOSS3_CHIP",
+                "__RTOS",
+                "__GNU_SOURCE",
+                "_DEFAULT_SOURCE",
+                "ARM_MATH_CM4",
+                "FFE_NEWARCH",
+                "ARM_MATH_MATRIX_CHECK",
+                "ARM_MATH_ROUNDING",
+                "__FPU_PRESENT",
+                "configUSE_STATS_FORMATTING_FUNCTIONS",
+                "configUSE_TRACE_FACILITY",
+                "GCC",
+                "NDEBUG",
+                "GCC_MAKE"
+            ],
+            "compilerPath": "${config:qorc_arm_toolchain_path}/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mcpu=cortex-m4",
+                "-mthumb",
+                "-mlittle-endian",
+                "-mfloat-abi=hard",
+                "-mfpu=fpv4-sp-d16",
+                "-Os",
+                "-fmerge-constants",
+                "-fomit-frame-pointer",
+                "-fcrossjumping",
+                "-fexpensive-optimizations",
+                "-ftoplevel-reorder",
+                "-fmessage-length=0",
+                "-fsigned-char",
+                "-ffunction-sections",
+                "-fdata-sections",
+                "-gdwarf-4",
+                "-std=c99"
+            ],
+            // optional: use 'bear' or 'compiledb' to generate the json db and use below
+            //   from GCC_Project/ run 'make clean' and then 'bear make' to generate the
+            // 'tasks.json' defines a couple of tasks which can be run to generate this file, 
+            //   if bear/compiledb are installed - look there for more info.
+            // compile_commands.json file - this gives the best intellisense configuration,
+            //   without needing to manually figure out the defines/compiler args/...
+            "compileCommands": "${workspaceFolder}/GCC_Project/compile_commands.json",
+            "cStandard": "c99",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

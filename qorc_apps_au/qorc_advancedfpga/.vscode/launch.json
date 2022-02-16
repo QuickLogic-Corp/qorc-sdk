@@ -1,0 +1,104 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Debug - OpenOCD GDB Server - selectable probe
+            "name": "Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "interface": "swd",
+            // gdb server
+            "servertype": "openocd",
+            "serverpath": "${config:qorc_openocd_server_path}",
+            "openOCDLaunchCommands": [
+                "init",
+                "reset halt"
+            ],
+            "searchDir": [
+                "${config:qorc_openocd_scripts_path}"
+            ],
+            "configFiles": [
+                //"${workspaceFolder}/fpga/rtl/AL4S3B_FPGA_Top.openocd", // replaced by 'auto' select using 'input' below
+                "${input:openocdFPGAcfg}",
+                "${input:openocdProbe}",
+                "target/eos_s3.cfg"
+            ],
+            // gdb
+            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
+            "armToolchainPrefix": "arm-none-eabi",
+            // svd
+            //"svdFile": "${config:qorc_svd_file_path}",
+            // call the load_bitstream proc from gdb to program fpga right after launch sequence is complete
+            // just before cortex-debug session is about to start -> postLaunchCommands
+            "postLaunchCommands": [
+                "monitor load_bitstream"
+            ],
+            // same thing goes for postRestartCommands, which is when we do a restart in the debug session
+            // as we need to load the fpga before restarting the m4 code as well.
+            "postRestartCommands": [
+                "monitor load_bitstream"
+            ],
+            "preLaunchTask": "build",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
+        },
+        {
+            // Debug - JLink GDB Server - JLink probe
+            // ensure we have run to entrypoint "main", and start debugging
+            // once we are at "main" -> run the task "load-fpga-debug (JLink)" -> continue debugging as usual
+            // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
+            "name": "Debug (JLink)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "interface": "swd",
+            // gdb server
+            "servertype": "jlink",
+            "serverpath": "${config:qorc_jlink_server_path}",
+            "device": "Cortex-M4",
+            // gdb
+            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
+            "armToolchainPrefix": "arm-none-eabi",
+            // svd
+            //"svdFile": "${config:qorc_svd_file_path}",
+            "preLaunchTask": "build",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
+        },
+    ],
+    "inputs": [
+        {
+            // uses the 'augustocdias.tasks-shell-input' extension to show a nice user friendly
+            // 'quickpick' dropdown in vscode for the user to select the fpga openocd script to use
+            // there should always be only *one* - so use single result directly without showing the quickpick
+            // - requires the extension to be installed.
+            "id": "openocdFPGAcfg",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args" : {
+                "command": "ls ${workspaceFolder}/fpga/rtl/*.openocd",
+                "cwd": "${workspaceFolder}/.scaffolding",
+                "fieldSeparator": "|",
+                "description": "select serial port [>> ensure it is not opened in another program <<]",
+                "useSingleResult": true,
+                "env" : {}
+            },
+        },
+        {
+            "id": "openocdProbe",
+            "description": "select debug probe to use with OpenOCD",
+            "type": "pickString",
+            "options": [
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
+                "interface/cmsis-dap.cfg"
+            ],
+            "default": ".scaffolding/jlink_swd.cfg",
+        }
+    ]
+}

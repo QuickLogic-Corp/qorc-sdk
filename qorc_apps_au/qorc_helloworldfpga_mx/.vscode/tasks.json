@@ -1,0 +1,123 @@
+// NOTE: remember to set the qorc_sdk_path in the settings.json (derive from settings.template.jsonc)
+// also the matrixide_install_path and matrixide_license_path
+// shortcut to run task from keyboard: CTRL+p -> enter "task" and then a space ('t' 'a' 's' 'k' 'spacebar')
+//      and you get the list of tasks
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // build-fpga : build fpga design
+            "label": "build-fpga",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && cd ${config:matrixide_install_path} && source setup.sh && cd - && export rapidsilic_LICENSE=${config:matrixide_license_path} && make fpga",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            // clean-fpga : remove fpga build artifacts
+            "label": "clean-fpga",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && cd ${config:matrixide_install_path} && source setup.sh && cd - && export rapidsilic_LICENSE=${config:matrixide_license_path} && make clean-fpga",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            // flash : flash the fpga, m4, or both images into the board's flash via UART
+            "label": "flash",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-fpga",
+                "x-get-ports"
+            ]
+        },
+        {
+            // x-get-ports : get serial ports available on the system using python from the qorc sdk installation
+            //               and save the list into a file, which will be read in the flash task to display a 
+            //               pickstring dropdown for the user to select.
+            "label": "x-get-ports",
+            "detail": "internal task used by the 'flash' task, do not run this directly",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && python get_serial_ports_list.py > custom_eoss3_ports.log",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "never", 
+                "revealProblems": "never",
+                "close": true
+            }
+        },
+        {
+            // load (JLink) : load the fpga, m4, or both images into EOS-S3 using JLink Commander and a JLink probe
+            "label": "load (JLink)",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-fpga"
+            ]
+        },
+    ],
+    "inputs": [
+        {
+            // uses the 'augustocdias.tasks-shell-input' extension to show a nice user friendly
+            // 'quickpick' dropdown in vscode for the user to select the serial port while
+            // flashing the images into the board
+            // - requires the extension to be installed.
+            "id": "serialPortFromExt",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args" : {
+                // we should have run the x-get-ports task, which populates the file containing
+                // serial ports available on the system using the qorc sdk python installation
+                "command": "cat custom_eoss3_ports.log && rm custom_eoss3_ports.log",
+                "cwd": "${workspaceFolder}/.scaffolding",
+                "fieldSeparator": "|",
+                "description": "select serial port [>> ensure it is not opened in another program <<]",
+                //"useSingleResult": true,
+                "env" : {}
+            },
+        },
+    ],
+}

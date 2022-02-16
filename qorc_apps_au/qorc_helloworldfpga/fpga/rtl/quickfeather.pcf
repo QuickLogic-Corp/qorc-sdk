@@ -1,0 +1,46 @@
+// [WLCSP PACKAGE]  WR42    set_io <signal name> <QFN_pin_num>
+// [BGA PACKAGE]    PD64    set_io <signal_name> <PD64_pin_num>
+// [QFN PACKAGE]    PU64    set_io <signal_name> <PU64_pin_num>
+// COMMON :                 set_io <signal_name> <IO_x_alias>
+// ref: https://quicklogic-quicklogic-fpga-toolchain.readthedocs-hosted.com/en/latest/tutorial/eos-s3/PcfDescription.html
+// pin_nums are as per the IO Location column for the corresponding package
+//
+//
+// QuickFeather uses the QFN package, others mostly use the BGA package.
+// 
+// RED LED, for example is on IO_22, which is QFN_PIN_NUM 34 (BGA BALL G7)
+// so, 
+// (QFN)    :   set_io   red_led     34 
+// (BGA)    :   set_io   red_led     G7
+// (ALL)    :   set_io   red_led     IO_22
+// are equivalent
+// NOTE that the WLSCP version of EOSS3 does not have IO_22 brought out at all!
+// So, this signal cannot be used with the WLCSP package.
+//
+// by using the IO_PAD_NUM -> we don't need to change PCF across chip package variants.
+// However, we need to be careful that the relevant IO_PAD is actually brought out in the variant we are using.
+// WLCSP package of EOSS3 has a much lower number of IOs compared to the BGA/QFN package.
+//
+// signals defined here, can be directly accessed in the Verilog code.
+//
+// [WLCSP PACKAGE]  WR42 : the pins used are not available in this package!
+//set_io redled       X
+//set_io greenled     X
+//set_io blueled      X
+//
+// [BGA PACKAGE]    PD64
+//set_io redled       G7
+//set_io greenled     H7
+//set_io blueled      E8
+//
+// [QFN PACKAGE]    PU64
+//set_io redled       34
+//set_io greenled     39
+//set_io blueled      38
+
+
+
+// COMMON (recommended, as long as it is understood that these pins are available in the used package)
+set_io redled       IO_22
+set_io greenled     IO_21
+set_io blueled      IO_18

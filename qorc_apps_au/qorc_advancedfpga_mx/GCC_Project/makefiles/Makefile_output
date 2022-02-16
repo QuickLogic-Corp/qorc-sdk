@@ -1,0 +1,21 @@
+#OUT_OBJS:=$(wildcard $(OUTPUT_PATH)/*.o )
+
+all: $(OUTPUT_PATH)/*.o
+	@echo Linking ...
+	$(HIDE)$(LD) $(OUTPUT_PATH)$(DIR_SEP)*.o $(LD_FLAGS_1) $(LIBS) $(LD_FLAGS_2)
+	@echo Convert ELF to BIN
+	$(HIDE)$(ELF2BIN) $(ELF2BIN_OPTIONS) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin
+	@echo Create text symbol table.
+	$(HIDE)$(NM) $(OUTPUT_PATH)${DIR_SEP}$(OUTPUT_FILE).elf > $(OUTPUT_PATH)${DIR_SEP}$(OUTPUT_FILE).sym.txt
+	
+DELETEME=
+DELETEME+= $(wildcard $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin)
+DELETEME+= $(wildcard $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf)
+DELETEME+= $(wildcard $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).map)
+DELETEME+= $(wildcard $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).sym.txt)
+DELETEME := $(strip ${DELETEME})
+clean:
+	@echo Cleaning ...
+ifneq (,${DELETEME})
+	-$(HIDE)$(RM) $(DELETEME)   
+endif
