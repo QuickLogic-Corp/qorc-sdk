@@ -30,6 +30,8 @@
 #include "bootloader_defines.h"
 #include "dbg_uart.h"
 
+extern uint8_t g_m4app_selection_gpio_value[2];
+
 /*
 * Important: The following function must be kept in a region where copying
 * does not overwrite BootLoder code. So, protected by the pragma for absolute
@@ -140,13 +142,43 @@ int load_m4app(void)
   unsigned char *bufPtr;
   uint32_t app_crc, app_size;
   unsigned char *flash_start = (unsigned char *)FLASH_APP_ADDRESS;
-    
+  unsigned char *meta_address;
+  int meta_size;
+  uint32_t flash_app_size;
+  uint8_t combined_gpio_value = g_m4app_selection_gpio_value[0] + g_m4app_selection_gpio_value[1]*2 ;
+  switch (combined_gpio_value)
+  {
+  case 1:
+	  flash_start = (unsigned char *)FLASH_APP2_ADDRESS;
+	  flash_app_size = FLASH_APP2_SIZE;
+	  meta_address = (unsigned char *)FLASH_APP2_META_ADDRESS;
+	  meta_size = FLASH_APP2_META_SIZE;
+	  break;
+  case 2:
+	  flash_start = (unsigned char *)FLASH_APP3_ADDRESS;
+	  flash_app_size = FLASH_APP3_SIZE;
+	  meta_address = (unsigned char *)FLASH_APP3_META_ADDRESS;
+	  meta_size = FLASH_APP3_META_SIZE;
+	  break;
+  case 3:
+	  flash_start = (unsigned char *)FLASH_APP4_ADDRESS;
+	  flash_app_size = FLASH_APP_SIZE;
+	  meta_address = (unsigned char *)FLASH_APP4_META_ADDRESS;
+	  meta_size = FLASH_APP4_META_SIZE;
+	  break;
+  default:
+	  flash_start = (unsigned char *)FLASH_APP_ADDRESS;
+	  flash_app_size = FLASH_APP_SIZE;
+	  meta_address = (unsigned char *)FLASH_APP_META_ADDRESS;
+	  meta_size = FLASH_APP_META_SIZE;
+	  break;
+  }
   //first get the meta data sector for App
   bufPtr = (unsigned char *)image_metadata; 
-  read_flash((unsigned char *)FLASH_APP_META_ADDRESS, FLASH_APP_META_SIZE, bufPtr);
+  read_flash(meta_address, meta_size, bufPtr);
   app_crc = image_metadata[0];
   app_size = image_metadata[1];
-  if(app_size > FLASH_APP_SIZE)
+  if(app_size > flash_app_size)
   {
     dbg_str("M4 App size exceeded bootable size \n");
     return BL_ERROR;
