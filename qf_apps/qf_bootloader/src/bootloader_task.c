@@ -198,9 +198,6 @@ static void BLTaskHandler(void *pvParameters)
       // green led indicates waiting for button press
       toggle_waiting_led(200);
       
-      HAL_GPIO_Read(M4APP_SELECTION_GPIO_NUM, &g_m4app_selection_gpio_value[0]);
-      g_m4app_selection_gpio_value[1] = 0; // default value
-      //HAL_GPIO_Read(M4APP_SELECTION_GPIO_NUM2, &g_m4app_selection_gpio_value[1]);
       //if User button is pressed load USB FPGA image
       check_user_button();
       if(user_button_pressed)
@@ -226,6 +223,11 @@ static void BLTaskHandler(void *pvParameters)
       wait_time_msec++;
       if(wait_time_msec > MAX_BOOTLOADER_WAIT_MSEC)
       {
+        // Check the GPIO state to select the M4 image to load
+        HAL_GPIO_Read(M4APP_SELECTION_GPIO_NUM, &g_m4app_selection_gpio_value[0]);
+        g_m4app_selection_gpio_value[1] = 0; // default value
+        //HAL_GPIO_Read(M4APP_SELECTION_GPIO_NUM2, &g_m4app_selection_gpio_value[1]);
+
         dbg_str("User button not pressed: proceeding to load application\n");
         set_waiting_led(0);
 
