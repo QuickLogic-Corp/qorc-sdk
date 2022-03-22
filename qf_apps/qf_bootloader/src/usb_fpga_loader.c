@@ -36,6 +36,7 @@
 #include "eoss3_hal_pad_config.h"
 #include "eoss3_hal_fpga_usbserial.h"
 #include "dbg_uart.h"
+#include "eoss3_hal_uart.h"
 
 extern uint32_t image_metadata[FLASH_APP_META_SIZE/4];
 extern void read_flash(unsigned char *start_address, int length, unsigned char *destination);
