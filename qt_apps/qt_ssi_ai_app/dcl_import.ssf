@@ -1,7 +1,7 @@
 {
     "uuid": "00000000-0000-0000-0000-000000000000",
     "device_name": "SparkFun QuickLogic Thing Plus EOS S3 Custom",
-    "device_manufacturer": "QuickLogic",
+    "device_manufacturer": "SparkFun",
     "plugin_developer": "QuickLogic",
     "firmware_download_links": [
         {
