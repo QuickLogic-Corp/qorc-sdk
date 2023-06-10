@@ -59,6 +59,11 @@
 */      
 #define  PAD_MODE_INPUT_EN			((uint8_t)0x01)
 
+/** \def PAD_MODE_DISABLE_INPUT_OUTPUT
+    \brief Pad mode disable input and output
+*/
+ #define  PAD_MODE_DISABLE_INPUT_OUTPUT        ((uint8_t)0x00)
+
 /*! \def PAD_NOPULL
     \brief Pad no pull.
 */      
