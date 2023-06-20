@@ -21,7 +21,14 @@
 #include "eoss3_hal_uart.h"
 #include "ql_time.h"
 #include <stdio.h>
+
+#if SML_PROFILER
+#define SERIAL_OUT_CHARS_MAX 2048
+float recent_fv_times[MAX_VECTOR_SIZE];
+unsigned int recent_fv_cycles[MAX_VECTOR_SIZE];
+#else
 #define SERIAL_OUT_CHARS_MAX 512
+#endif
 
 #ifdef __GNUC__
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -48,6 +55,14 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
     int wbytes = 0;
     int buflen = sizeof(sensor_ssss_ai_result_buf)-1;
 	int ret;
+
+    #if SML_PROFILER
+    for (count=0; count <= model; count++)
+    {
+        wbytes = kb_print_model_cycles(count, serial_out_buf, recent_fv_cycles);
+        uart_tx_raw_buf(UART_ID_APP, serial_out_buf, wbytes);
+    }
+    #else
     kb_get_feature_vector(model, sensor_ssss_ai_fv_arr, &sensor_ssss_ai_fv_len);
 
     
@@ -80,6 +95,7 @@ static void sml_output_serial(uint16_t model, uint16_t classification)
 #if (DATASAVE_RECOGNITION_RESULTS==1)    
     data_save_recognition_results(sensor_ssss_ai_result_buf, wbytes);
 #endif
+#endif //SML_PROFILER
 
 }
 
